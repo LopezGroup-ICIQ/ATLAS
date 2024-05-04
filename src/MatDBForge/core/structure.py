@@ -2,6 +2,7 @@ import uuid
 
 import pandas as pd
 import pymatgen.io.vasp as vasp
+import numpy as np
 from pymatgen.core.units import Energy
 
 from MatDBForge.core import initial_db as mdb_indb
@@ -178,45 +179,46 @@ class Structure:
     #     return dict_obj
 
     def save_to_db(self, db_obj):
-        new_row = pd.Series(
-            {
-                "material_id": str(self.material_id),
-                "structure": self.structure,
-                "temperature": self.temperature,
-                "perturb": self.perturb,
-                "formula": self.formula,
-                "symmetry": self.symmetry,
-                "base": self.base,
-                "surface": self.surface,
-                "surface_miller": self.surface_miller,
-                "phase": self.phase,
-                "magnetic_properties": self.magnetic_properties,
-                "energy_per_atom": None,
-                "unique_id": self.unique_id,
-                "material_name": self.material_name,
-                "replacement": self.replacement,
-                "replacement_ind": self.replacement_ind,
-                "supercell": self.supercell,
-                "bulk": self.bulk,
-                "cluster": self.cluster,
-                "calc_energy": self.calc_energy,
-                "calc_energy_per_atom": self.calc_energy_per_atom,
-                "calc_energy_toten": self.calc_energy_toten,
-                "calc_performed": self.calc_performed,
-                "calc_type": self.calc_type,
-                "calc_output": self.calc_output,
-            }
-        )
         bool_columns = {
-            "perturb": bool,
-            "base": bool,
-            "bulk": bool,
-            "surface": bool,
-            "cluster": bool,
-            "calc_performed": bool,
-            "replacement": bool,
+            # "replacement": np.bool_,
+            "perturb": np.bool_,
+            "base": np.bool_,
+            "bulk": np.bool_,
+            "surface": np.bool_,
+            "cluster": np.bool_,
+            "calc_performed": np.bool_,
         }
-        new_row = new_row.to_frame().T.astype(bool_columns)
+
+        data_dict = {
+            "material_id": str(self.material_id),
+            "structure": self.structure,
+            "temperature": self.temperature,
+            "perturb": self.perturb,
+            "formula": self.formula,
+            "symmetry": self.symmetry,
+            "base": self.base,
+            "surface": self.surface,
+            "surface_miller": self.surface_miller,
+            "phase": self.phase,
+            "magnetic_properties": self.magnetic_properties,
+            "energy_per_atom": None,
+            "unique_id": self.unique_id,
+            "material_name": self.material_name,
+            "replacement": self.replacement,
+            "replacement_ind": self.replacement_ind,
+            "supercell": self.supercell,
+            "bulk": self.bulk,
+            "cluster": self.cluster,
+            "calc_energy": self.calc_energy,
+            "calc_energy_per_atom": self.calc_energy_per_atom,
+            "calc_energy_toten": self.calc_energy_toten,
+            "calc_performed": self.calc_performed,
+            "calc_type": self.calc_type,
+            "calc_output": self.calc_output,
+        }
+
+        new_row = pd.DataFrame.from_dict(data_dict, orient='index').T
+        new_row = new_row.astype(bool_columns)
 
         is_InitialDatabase = isinstance(db_obj, mdb_indb.InitialDatabase)
 

@@ -21,7 +21,7 @@ results_dir = ""
 # The database will be stored in the extxyz format
 final_db_name = "final_data_test"
 
-# Maximum number of AL loop iterations.
+# Maximum number of AL loop iterations. (int)
 max_iterations = 3
 
 # Sets total structures in AL seed as a function of the training db size.
@@ -30,38 +30,67 @@ seed_size_frac = 0.01
 
 # Multiplier for model accuracy. Loosens model accuracy threshold.
 # Tighter thresholds (lower values) will result in more DFT calculations.
-# Any RMSE E/F values above chem_acc*chem_acc_multiplier will be considered wrong.
+# Any RMSE E/F > chem_acc*chem_acc_multiplier will be considered wrong.
 model_acc_multiplier = 10
 
-# Every how many ps of MD simulation keep a structure. 
-# Influences the total number of energy evaluations and possibly DFT calculations.
+# Every how many ps of MD simulation keep a structure. (float)
+# Influences the total number of energy evaluations and DFT calculations.
 al_keep_struct_every_n_ps = 1
 
 # Whether to check for extrapolation using the MACE descriptors
 check_extrapolation = true
 
-###############################################
+### MD Settings ###############################################################
 
 [md]
 [md.parameters]
 # List of different temperatures (in K) to be used for the MD simulations.
+# For single T, use one float in a list, e.g.: temperature_list_K = [300.0]
 temperature_list_K = [300.0, 500.0, 900.0]
 
 # Multiplier for the user-specified MD temperature to determine the upper 
 # bound of the temperature at the end of the simulation run.
 max_temp_multiplier = 1.3
 
-# Total number of timesteps for each MD simulations
+# Total number of timesteps for each MD simulation (int)
 num_steps = 1000
 
-# Duration of each timestep (in ps).
+# Duration of each timestep (in ps, float).
 timestep_duration_ps = 0.003
 
 # Consider constant lattice when gathering trajectories
 gather_traj_cnt_lattice = true
 
+[md.safeguard]
+# Enable or disable the safeguard check
+enable = true
+
+# Target structure selection method.
+# Either "random" or "user-defined"
+structure_selection_method = "user-defined"
+
+# Absolute path to user-defined structure in extxyz format.
+user_defined_struct_path = ""
+
+# Single value for temperature (in K, float) to be used for the
+# safeguard MD simulation.
+# Ideally T should higher than the desired application.
+temperature_K = 450.0
+
+# Multiplier for the user-specified MD temperature to determine the upper
+# bound of the temperature at the end of the simulation run.
+max_temp_multiplier = 1.1
+
+# Total number of timesteps for each MD simulation (int)
+# Safeguard MD length should be higher than that of the desired application.
+num_steps = 5000
+
+# Duration of each timestep (in ps, float).
+timestep_duration_ps = 0.003
+
+
 # AiiDA options for the MD code to be used (only LAMMPS-MACE for now)
-[md.aiida_options]
+[md.queue]
 
 # AiiDA code name for MD software to be used
 code = "mace-lammps-gpu@tekla2-updated-2024"
@@ -75,7 +104,7 @@ metadata.options.max_wallclock_seconds = 117280000
 metadata.options.withmpi = false
 metadata.options.custom_scheduler_commands = "#$ -l gpu=1"
 
-###############################################
+###############################################################################
 
 # Committee Evaluation Settings (MACE)
 [committee_eval]
@@ -88,7 +117,7 @@ compute_stress = true # whether or not to compute stress (true/false)
 # Increases resources necessary for training.
 commitee_num_models = 4
 
-###############################################
+###############################################################################
 
 # MACE training code and scheduler settings (aiida)
 [mace_train]

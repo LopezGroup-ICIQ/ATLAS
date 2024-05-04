@@ -56,12 +56,40 @@ class InitialDatabase:
     ----------
     df : pd.Dataframe
         Dataframe containing the structures for the initial database.
-    secrets : dict
-        Object containing secrets related to the materials project database.
+    elements : list
+        List containing the elements from the material.
+    main_element : str | Element
+        Reference element for the material. Will be used to represent the phase diagram.
+    phases_dict : dict
+        Dictionary representing each of the phases of the material.
+        Uses the following format:
+        ```
+        phases_dict = {
+            {
+                "name": "alpha",
+                "base_elem": "Zn",
+                "cluster_elem": "Cu",
+                "base_elem_comp_min": 0,
+                "base_elem_comp_max": 0.3895,
+                "prototype": "mp-30",
+                "offset": 0.03,
+            },
+            {
+                "name": "beta",
+                ...
+            },
+        }
+        ```
+    use_offset : bool, optional
+        Use an offset for the phase ratios to allow them to overlap, by default True.
     database_name : str
         Orientative name for the database. Will be used for saving it into a file.
+    material_name : str
+        Orientative name for the material. Will be used for the PhaseDiagram definition.
     max_num_atoms: int
         Maximum number of atoms present in any structure generated.
+    secrets : dict
+        Object containing secrets related to the materials project database.
 
 
     Notes
@@ -84,8 +112,27 @@ class InitialDatabase:
     Eh2eV = 27.211386245988
     eV2Eh = 1 / Eh2eV
 
-    def __init__(self, database_name: str, max_num_atoms: int = 64) -> None:
+    def __init__(
+        self,
+        elements: list,
+        main_element: str,
+        phases_dict_list: dict,
+        database_name: str,
+        material_name: str,
+        max_num_atoms: int = 64,
+        use_offset: bool = True,
+    ) -> None:
         self.db_version = mdb.__version__
+
+        # Creating phase diagram object
+        self.db_phase_diagram: mdb_pd.BinaryPhaseDiagram = self._create_phase_diagram(
+            phases_dict_list, material_name
+        )
+
+        # Saving elements into a set
+        self.database_elements: set = set(elements)
+        self.main_element = main_element
+        self.material_name: str = material_name
 
         # Name of the database
         self.database_name = database_name
@@ -106,6 +153,13 @@ class InitialDatabase:
         # Loading materials project API key from a json file
         self.secrets = ut.gather_secrets()
 
+        # Using the offset
+        if use_offset:
+            ut.custom_print(
+                "Using an offset for computing the phases concentrations.", "info"
+            )
+            self.use_offset = use_offset
+
     def __repr__(self):
         # Getting the class name
         class_name = self.__class__.__name__
@@ -119,6 +173,36 @@ class InitialDatabase:
 
         return repr_string
 
+    # TODO: Implement this
+    def _create_phase_diagram(
+        self, phases_dict_list: list, material_name: str
+    ) -> mdb_pd.BinaryPhaseDiagram:
+        # Converting every phase dict into a Phase object
+        final_phases_list = []
+        for curr_phase in phases_dict_list:
+            curr_phase: dict
+            obj_Phase = mdb_pd.Phase(
+                name=curr_phase["name"],
+                base_elem=curr_phase["base_elem"],
+                cluster_elem=curr_phase["cluster_elem"],
+                base_elem_comp_min=curr_phase["base_elem_comp_min"],
+                base_elem_comp_max=curr_phase["base_elem_comp_max"],
+                prototype=curr_phase["prototype"],
+                offset=curr_phase["offset"],
+            )
+
+            final_phases_list.append(obj_Phase)
+
+        # TODO:
+        # Create a size independent PhaseDiagram object
+        # or
+        # Use the length of self.database_elements to get which type of PD to use
+
+        # Generating PhaseDiagam using the phases
+        db_phase_diagram = mdb_pd.BinaryPhaseDiagram(material_name, *final_phases_list)
+
+        return db_phase_diagram
+
     def _adapt_old_db(self, database_old):
         print("database_old: ", database_old.columns)
         columns_to_add = {
@@ -129,7 +213,7 @@ class InitialDatabase:
             "replacement": bool,
         }
 
-        for col in columns_to_add.keys():
+        for col in columns_to_add:
             database_old[col] = None
 
         return database_old
@@ -333,7 +417,7 @@ class InitialDatabase:
         structure_list = self.df.loc[self.df.phase == curr_phase].structure.values
 
         # species_list = set([a.symbol for a in curr_struct.species])
-        species_list = [el.Z for el in CuZnInitialDatabase.ALLOY_SET]
+        species_list = [el.Z for el in self.database_elements]
 
         r_cut = 6
         n_max = 8
@@ -391,7 +475,7 @@ class InitialDatabase:
         )
 
         # Getting the species from the current phase diagram
-        species = CuZnInitialDatabase.ALLOY_SET
+        species = self.database_elements
         species_str_list = [spec.symbol for spec in species]
 
         # Setting SOAP related parameters
@@ -507,34 +591,68 @@ class InitialDatabase:
                 "info",
             )
 
-    def gather_base_structures(self, target_structures):
-        # Checking which materials are already on the database
-        missing_mat = set(target_structures) - set(self.df["material_id"].values)
+    def gather_base_structures(
+        self, target_structures: list[str] = None, target_elements: list[str] = None
+    ):
+        if target_structures:
+            # Checking which materials are already on the database
+            missing_mat = set(target_structures) - set(self.df["material_id"].values)
 
-        # Querying materials project database.
-        with MPRester(self.secrets["API_KEY"]) as mpr:
-            query_result = mpr.summary.search(material_ids=missing_mat)
-            for material in query_result:
-                for phase in CuZnInitialDatabase.DB_PHASE_DIAGRAM.phases:
-                    if phase.prototype == material.material_id:
-                        curr_phase = phase.name
-                    else:
-                        curr_phase = np.nan
+            # Querying materials project database.
+            with MPRester(self.secrets["API_KEY"]) as mpr:
+                query_result = mpr.summary.search(material_ids=missing_mat)
+                for material in query_result:
+                    for phase in self.db_phase_diagram.phases:
+                        if phase.prototype == material.material_id:
+                            curr_phase = phase.name
+                        else:
+                            curr_phase = np.nan
 
-                curr_struct = mdb_struct.Bulk(
-                    material_id=str(material.material_id),
-                    structure=material.structure,
-                    temperature=np.nan,
-                    perturb=False,
-                    formula=material.composition_reduced,
-                    symmetry=material.get_space_group_info(),
-                    base=True,
-                    phase=curr_phase,
-                    magnetic_properties=material.total_magnetization,
-                    energy_per_atom=material.energy_per_atom,
+                    curr_struct = mdb_struct.Bulk(
+                        material_id=str(material.material_id),
+                        structure=material.structure,
+                        temperature=np.nan,
+                        perturb=False,
+                        formula=material.composition_reduced,
+                        symmetry=material.get_space_group_info(),
+                        base=True,
+                        phase=curr_phase,
+                        magnetic_properties=material.total_magnetization,
+                        energy_per_atom=material.energy_per_atom,
+                    )
+
+                    self.df = curr_struct.save_to_db(self.df)
+
+        elif target_elements:
+            # Querying materials project database.
+            with MPRester(self.secrets["API_KEY"]) as mpr:
+                query_result = mpr.summary.search(
+                    elements=target_elements, num_elements=len(target_elements)
                 )
 
-                self.df = curr_struct.save_to_db(self.df)
+                for material in query_result:
+                    for phase in self.db_phase_diagram.phases:
+                        if phase.prototype == material.material_id:
+                            curr_phase = phase.name
+                        else:
+                            curr_phase = np.nan
+
+                    print("material: ", material.structure.formula)
+                    curr_struct = mdb_struct.Bulk(
+                        material_id=str(material.material_id),
+                        structure=material.structure,
+                        temperature=np.nan,
+                        formula=material.composition_reduced,
+                        symmetry=material.structure.get_space_group_info(),
+                        base=True,
+                        replacement=False,
+                        perturb=False,
+                        phase=curr_phase,
+                        magnetic_properties=material.total_magnetization,
+                        energy_per_atom=material.energy_per_atom,
+                    )
+
+                    self.df = curr_struct.save_to_db(self.df)
 
         self.df.set_index("material_id", inplace=True, drop=False)
 
@@ -550,7 +668,7 @@ class InitialDatabase:
         if target_structures:
             selection_criteria = target_structures
         else:
-            selection_criteria = CuZnInitialDatabase.DB_PHASE_DIAGRAM.keys()
+            selection_criteria = self.db_phase_diagram.keys()
 
         folders = read_path.glob("./*")
         list_dir = [
@@ -571,13 +689,11 @@ class InitialDatabase:
             curr_run = vasp.Vasprun(xml_path, parse_potcar_file=False)
 
             # Gathering phase information
-            for phase in CuZnInitialDatabase.DB_PHASE_DIAGRAM.phase_names:
+            for phase in self.db_phase_diagram.phase_names:
                 for folder in xml_path.parts:
                     if slugify(folder) == slugify(phase):
                         curr_phase = phase
-                        curr_phase = CuZnInitialDatabase.DB_PHASE_DIAGRAM.get_phase(
-                            phase
-                        )
+                        curr_phase = self.db_phase_diagram.get_phase(phase)
                         curr_mat_id = curr_phase.prototype
                         curr_name = f"base_relax_{curr_phase.name}_MP"
 
@@ -596,6 +712,47 @@ class InitialDatabase:
 
             # Saving the structure to the database
             self.df = curr_struct.save_to_db(self.df)
+
+    # def get_base_structures_mp(self, optimize=True):
+    #     ut.custom_print("Getting base structures from the materials project...")
+
+    #     for calc_fold in list_dir:
+    #         # Getting information about the current calculation
+    #         curr_phase = pathlib.PurePath(calc_fold).name
+    #         ut.custom_print(
+    #             f"Loading calculation for '{curr_phase}' as a base structure.", "debug"
+    #         )
+
+    #         # Loading current calculation info
+    #         xml_path = pathlib.Path(calc_fold, "vasprun.xml")
+    #         curr_run = vasp.Vasprun(xml_path, parse_potcar_file=False)
+
+    #         # Gathering phase information
+    #         for phase in self.db_phase_diagram.phase_names:
+    #             for folder in xml_path.parts:
+    #                 if slugify(folder) == slugify(phase):
+    #                     curr_phase = phase
+    #                     curr_phase = self.db_phase_diagram.get_phase(
+    #                         phase
+    #                     )
+    #                     curr_mat_id = curr_phase.prototype
+    #                     curr_name = f"base_relax_{curr_phase.name}_MP"
+
+    #         # Creating the structure object
+    #         curr_struct = mdb_struct.Structure().from_vasprun(
+    #             vasprun=curr_run,
+    #             base=True,
+    #             phase=curr_phase,
+    #             material_name=curr_name,
+    #             bulk=True,
+    #             perturb=False,
+    #             cluster=False,
+    #             surface=False,
+    #             material_id=curr_mat_id,
+    #         )
+
+    #         # Saving the structure to the database
+    #         self.df = curr_struct.save_to_db(self.df)
 
     def save_database(self, path: str = None, suffix: str = None):
         """
@@ -800,150 +957,9 @@ class InitialDatabase:
 
         return perturb_structure
 
-
-class CuZnInitialDatabase(InitialDatabase):
-    """
-    Object representing a initial database for a CuZn alloy intented
-    to prepare a NNP. The database is stored as a pandas dataframe.
-    Contains methods related to gathering, preparing and modifying
-    the initial database.
-
-    Returns
-    -------
-    CuZnInitialDatabase
-        Object containing the database and methods.
-
-    Parameters
-    ----------
-    database_name : str
-        Name for the database. Will be used for internal reference and as a filename for
-        saving the dataframe.
-    use_offset : bool, optional
-        Use an offset for the phase ratios to allow them to overlap, by default True.
-    max_num_atoms : int
-        Maximum number of atoms present in any structure generated, by default 64.
-    secrets : dict
-        Object containing secrets related to the materials project database.
-
-    Raises
-    ------
-    KeyError
-        This error is raised when a wrong phase is given.
-    """
-
-    # CuZn alloy phase diagram data
-    alpha_phase = mdb_pd.Phase(
-        name="alpha",
-        base_elem="Zn",
-        cluster_elem="Cu",
-        base_elem_comp_min=0,
-        base_elem_comp_max=0.3895,
-        prototype="mp-30",
-        offset=0.03,
-    )
-    m1 = mdb_pd.Phase(
-        name="m1",
-        base_elem="Zn",
-        cluster_elem="Cu",
-        base_elem_comp_min=0.3895,
-        base_elem_comp_max=0.45,
-        prototype="mp-30",
-        offset=0.03,
-    )
-    beta_prime = mdb_pd.Phase(
-        name="beta-prime",
-        base_elem="Zn",
-        cluster_elem="Cu",
-        base_elem_comp_min=0.455,
-        base_elem_comp_max=0.507,
-        prototype="mp-987",
-        offset=0.05,
-    )
-    m2 = mdb_pd.Phase(
-        name="m2",
-        base_elem="Zn",
-        cluster_elem="Cu",
-        base_elem_comp_min=0.51,
-        base_elem_comp_max=0.577,
-        prototype="mp-987",
-        offset=0.05,
-    )
-    gamma = mdb_pd.Phase(
-        name="gamma",
-        base_elem="Zn",
-        cluster_elem="Cu",
-        base_elem_comp_min=0.577,
-        base_elem_comp_max=0.706,
-        prototype="mp-1368",
-        offset=0.03,
-    )
-    m3 = mdb_pd.Phase(
-        name="m3",
-        base_elem="Zn",
-        cluster_elem="Cu",
-        base_elem_comp_min=0.706,
-        base_elem_comp_max=0.785,
-        prototype="mp-1216020",
-        offset=0.05,
-    )
-    delta = mdb_pd.Phase(
-        name="delta",
-        base_elem="Zn",
-        cluster_elem="Cu",
-        base_elem_comp_min=0.7302,
-        base_elem_comp_max=0.765,
-        prototype="mp-1215518",
-        offset=0.05,
-    )
-    epsilon = mdb_pd.Phase(
-        name="epsilon",
-        base_elem="Zn",
-        cluster_elem="Cu",
-        base_elem_comp_min=0.785,
-        base_elem_comp_max=0.883,
-        prototype="mp-972042",
-        offset=0.05,
-    )
-    m4 = mdb_pd.Phase(
-        name="m4",
-        base_elem="Zn",
-        cluster_elem="Cu",
-        base_elem_comp_min=0.883,
-        base_elem_comp_max=0.9725,
-        prototype="mp-79",
-        offset=0.01,
-    )
-    eta = mdb_pd.Phase(
-        name="eta",
-        base_elem="Zn",
-        cluster_elem="Cu",
-        base_elem_comp_min=0.9725,
-        base_elem_comp_max=1,
-        prototype="mp-79",
-        offset=0.01,
-    )
-
-    DB_PHASE_DIAGRAM = mdb_pd.BinaryPhaseDiagram(
-        "CuZn", alpha_phase, m1, beta_prime, m2, gamma, m3, delta, epsilon, m4, eta
-    )
-
-    # Which atoms are involved in the alloy.
-    ALLOY_SET = {Element("Cu"), Element("Zn")}
-
-    def __init__(self, database_name, use_offset=True, **kwargs):
-        # Initializing the class' parent
-        super().__init__(database_name, **kwargs)
-
-        # Using the offset
-        if use_offset:
-            ut.custom_print(
-                "Using an offset for computing the phases concentrations.", "info"
-            )
-            self.use_offset = use_offset
-
     def _get_phase_from_id(self, idx: str) -> str:
         """
-        Searches for the corresponding phase in the self.DB_PHASE_DIAGRAM
+        Searches for the corresponding phase in the self.db_phase_diagram
         dict to a given a material projects id.
 
         Parameters
@@ -959,7 +975,7 @@ class CuZnInitialDatabase(InitialDatabase):
         # Creating a list of the phase diagram phase names
         phase_list = [
             phase.name
-            for phase in self.DB_PHASE_DIAGRAM.phases
+            for phase in self.db_phase_diagram.phases
             if phase.prototype == idx
         ]
 
@@ -988,7 +1004,7 @@ class CuZnInitialDatabase(InitialDatabase):
             anything other than Cu or Zn atoms.
         """
         # Checking if there are any other atoms than Cu or Zn in the structure
-        if len(set(structure.symbol_set) - self.ALLOY_SET) > 0:
+        if len(set(structure.symbol_set) - self.database_elements) > 0:
             # Creating a new structure using the base one as a template
             new_structure = structure.copy(sanitize=True)
 
@@ -996,8 +1012,8 @@ class CuZnInitialDatabase(InitialDatabase):
             for ind in range(len(structure.species)):
                 new_structure.replace(
                     ind,
-                    # Species(self.DB_PHASE_DIAGRAM.get_phase(phase).base_elem),
-                    Element(self.DB_PHASE_DIAGRAM.get_phase(phase).base_elem),
+                    # Species(self.db_phase_diagram.get_phase(phase).base_elem),
+                    Element(self.db_phase_diagram.get_phase(phase).base_elem),
                 )
 
             # Returning new structure with atoms replaced with Cu
@@ -1041,15 +1057,15 @@ class CuZnInitialDatabase(InitialDatabase):
         ------
         KeyError
             Raised if the given phase is not found. All of the available phases
-            are given on the self.DB_PHASE_DIAGRAM dictionary.
+            are given on the self.db_phase_diagram dictionary.
             More phases could be added there if necessary.
         """
         # Checking for correct phase input
         phase_name = slugify(phase.name)
-        if not self.DB_PHASE_DIAGRAM.get_phase(phase_name):
+        if not self.db_phase_diagram.get_phase(phase_name):
             raise KeyError(
                 "Wrong phase given. "
-                f"Please introduce one of: {[k for k in self.DB_PHASE_DIAGRAM.phases]}"
+                f"Please introduce one of: {[k for k in self.db_phase_diagram.phases]}"
             )
 
         # Reading structure from database
@@ -1122,8 +1138,8 @@ class CuZnInitialDatabase(InitialDatabase):
         structure_obj: mdb_struct.Structure,
     ):
         phase = structure_obj.phase
-        curr_phase_atom = self.DB_PHASE_DIAGRAM.get_phase(phase).base_elem
-        base_atom_set = list(self.ALLOY_SET - {curr_phase_atom})
+        curr_phase_atom = self.db_phase_diagram.get_phase(phase).base_elem
+        base_atom_set = list(self.database_elements - {curr_phase_atom})
 
         new_structure = structure.copy(sanitize=True)
 
@@ -1210,7 +1226,7 @@ class CuZnInitialDatabase(InitialDatabase):
     ):
         curr_comp = structure.composition
         base_elem = phase.base_elem
-        (other_elem,) = CuZnInitialDatabase.ALLOY_SET - {base_elem}
+        (other_elem,) = self.database_elements - {base_elem}
 
         tot_base_at_struct = curr_comp[base_elem]
 
@@ -1274,13 +1290,13 @@ class CuZnInitialDatabase(InitialDatabase):
         # will have been replaced beforehand with the base atom,
         # although this results in more randomness.
         base_elem = phase.base_elem
-        (other_elem,) = CuZnInitialDatabase.ALLOY_SET - {base_elem}
+        (other_elem,) = self.database_elements - {base_elem}
 
         # If the structure only has one type of Element, and that is not the base
         # element, this changes with what to replace.
         if not curr_comp.as_dict().get(base_elem.symbol):
             base_elem = structure.composition.elements[0]
-            (other_elem,) = CuZnInitialDatabase.ALLOY_SET - {base_elem}
+            (other_elem,) = self.database_elements - {base_elem}
             other_atom_change = n_atoms
 
         else:
@@ -1355,7 +1371,7 @@ class CuZnInitialDatabase(InitialDatabase):
         ------
         KeyError
             Raised if the given phase is not found. All of the available phases
-            are given on the self.DB_PHASE_DIAGRAM dictionary.
+            are given on the self.db_phase_diagram dictionary.
             More phases could be added there if necessary.
         """
         # Instantiating RNG
@@ -1441,7 +1457,7 @@ class CuZnInitialDatabase(InitialDatabase):
         base_structs = self.df.loc[self.df.base]
 
         if isinstance(phase, str):
-            phase = self.DB_PHASE_DIAGRAM.get_phase(phase=phase)
+            phase = self.db_phase_diagram.get_phase(phase=phase)
 
         # Getting the structures corresponding to the current phase
         phase_mask = base_structs.phase == phase
@@ -1522,7 +1538,7 @@ class CuZnInitialDatabase(InitialDatabase):
         """
         # Getting the current phase from the phase name.
         if isinstance(phase, str):
-            phase = CuZnInitialDatabase.DB_PHASE_DIAGRAM.get_phase(phase)
+            phase = self.db_phase_diagram.get_phase(phase)
 
         base_structs = self.get_base_structs_current_phase(phase)
 
@@ -1778,7 +1794,7 @@ class CuZnInitialDatabase(InitialDatabase):
         num_repeats: int,
     ):
         if isinstance(phase, str):
-            phase = CuZnInitialDatabase.DB_PHASE_DIAGRAM.get_phase(phase)
+            phase = self.db_phase_diagram.get_phase(phase)
 
         # Instantiating RNG
         rng = np.random.default_rng()
@@ -2073,8 +2089,8 @@ class CuZnInitialDatabase(InitialDatabase):
         if phases_to_use:
             num_phases = len(phases_to_use)
         else:
-            phases_to_use = self.DB_PHASE_DIAGRAM.phases
-            num_phases = len(self.DB_PHASE_DIAGRAM.phases)
+            phases_to_use = self.db_phase_diagram.phases
+            num_phases = len(self.db_phase_diagram.phases)
 
         # Maximum number of structures per phase
         max_struct_phase = structure_limit // num_phases
@@ -2083,7 +2099,7 @@ class CuZnInitialDatabase(InitialDatabase):
         # If the phase is not found, omitting.
         for curr_phase in phases_to_use:
             try:
-                curr_phase = self.DB_PHASE_DIAGRAM.get_phase(curr_phase)
+                curr_phase = self.db_phase_diagram.get_phase(curr_phase)
             except mdb_exc.PhaseNotFound:
                 pass
 
@@ -2145,7 +2161,7 @@ class CuZnInitialDatabase(InitialDatabase):
         num_repeat: int = 2,
     ):
         # Getting default phase
-        phase = CuZnInitialDatabase.DB_PHASE_DIAGRAM.get_phase("alpha")
+        phase = self.db_phase_diagram.get_phase("alpha")
 
         # Generate a list of mdb_struct.Cluster
         cluster_list = []
@@ -2181,6 +2197,138 @@ class CuZnInitialDatabase(InitialDatabase):
     def display_db_ase(self):
         structures = self.df.structure
         ut._display_indb_dataframe(structures)
+
+
+# class CuZnInitialDatabase(InitialDatabase):
+#     """
+#     Object representing a initial database for a CuZn alloy intented
+#     to prepare a NNP. The database is stored as a pandas dataframe.
+#     Contains methods related to gathering, preparing and modifying
+#     the initial database.
+
+#     Returns
+#     -------
+#     CuZnInitialDatabase
+#         Object containing the database and methods.
+
+#     Parameters
+#     ----------
+#     database_name : str
+#         Name for the database. Will be used for internal reference and as a filename for
+#         saving the dataframe.
+#     use_offset : bool, optional
+#         Use an offset for the phase ratios to allow them to overlap, by default True.
+#     max_num_atoms : int
+#         Maximum number of atoms present in any structure generated, by default 64.
+#     secrets : dict
+#         Object containing secrets related to the materials project database.
+
+#     Raises
+#     ------
+#     KeyError
+#         This error is raised when a wrong phase is given.
+#     """
+
+#     # TODO: This should be created in a function
+#     # CuZn alloy phase diagram data
+#     # alpha_phase = mdb_pd.Phase(
+#     #     name="alpha",
+#     #     base_elem="Zn",
+#     #     cluster_elem="Cu",
+#     #     base_elem_comp_min=0,
+#     #     base_elem_comp_max=0.3895,
+#     #     prototype="mp-30",
+#     #     offset=0.03,
+#     # )
+#     # m1 = mdb_pd.Phase(
+#     #     name="m1",
+#     #     base_elem="Zn",
+#     #     cluster_elem="Cu",
+#     #     base_elem_comp_min=0.3895,
+#     #     base_elem_comp_max=0.45,
+#     #     prototype="mp-30",
+#     #     offset=0.03,
+#     # )
+#     # beta_prime = mdb_pd.Phase(
+#     #     name="beta-prime",
+#     #     base_elem="Zn",
+#     #     cluster_elem="Cu",
+#     #     base_elem_comp_min=0.455,
+#     #     base_elem_comp_max=0.507,
+#     #     prototype="mp-987",
+#     #     offset=0.05,
+#     # )
+#     # m2 = mdb_pd.Phase(
+#     #     name="m2",
+#     #     base_elem="Zn",
+#     #     cluster_elem="Cu",
+#     #     base_elem_comp_min=0.51,
+#     #     base_elem_comp_max=0.577,
+#     #     prototype="mp-987",
+#     #     offset=0.05,
+#     # )
+#     # gamma = mdb_pd.Phase(
+#     #     name="gamma",
+#     #     base_elem="Zn",
+#     #     cluster_elem="Cu",
+#     #     base_elem_comp_min=0.577,
+#     #     base_elem_comp_max=0.706,
+#     #     prototype="mp-1368",
+#     #     offset=0.03,
+#     # )
+#     # m3 = mdb_pd.Phase(
+#     #     name="m3",
+#     #     base_elem="Zn",
+#     #     cluster_elem="Cu",
+#     #     base_elem_comp_min=0.706,
+#     #     base_elem_comp_max=0.785,
+#     #     prototype="mp-1216020",
+#     #     offset=0.05,
+#     # )
+#     # delta = mdb_pd.Phase(
+#     #     name="delta",
+#     #     base_elem="Zn",
+#     #     cluster_elem="Cu",
+#     #     base_elem_comp_min=0.7302,
+#     #     base_elem_comp_max=0.765,
+#     #     prototype="mp-1215518",
+#     #     offset=0.05,
+#     # )
+#     # epsilon = mdb_pd.Phase(
+#     #     name="epsilon",
+#     #     base_elem="Zn",
+#     #     cluster_elem="Cu",
+#     #     base_elem_comp_min=0.785,
+#     #     base_elem_comp_max=0.883,
+#     #     prototype="mp-972042",
+#     #     offset=0.05,
+#     # )
+#     # m4 = mdb_pd.Phase(
+#     #     name="m4",
+#     #     base_elem="Zn",
+#     #     cluster_elem="Cu",
+#     #     base_elem_comp_min=0.883,
+#     #     base_elem_comp_max=0.9725,
+#     #     prototype="mp-79",
+#     #     offset=0.01,
+#     # )
+#     # eta = mdb_pd.Phase(
+#     #     name="eta",
+#     #     base_elem="Zn",
+#     #     cluster_elem="Cu",
+#     #     base_elem_comp_min=0.9725,
+#     #     base_elem_comp_max=1,
+#     #     prototype="mp-79",
+#     #     offset=0.01,
+#     # )
+#     # db_phase_diagram = mdb_pd.BinaryPhaseDiagram(
+#     #     "CuZn", alpha_phase, m1, beta_prime, m2, gamma, m3, delta, epsilon, m4, eta
+#     # )
+#     ####
+
+#     # TODO: This should be passed to the original DB
+#     # Which atoms are involved in the alloy.
+#     # database_elements = {Element("Cu"), Element("Zn")}
 
 
 # def _add_cols_old_db_version(database_old):

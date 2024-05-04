@@ -74,6 +74,36 @@ def create_active_learning_builder(toml_dict: dict):
         "gather_traj_cnt_lattice"
     ]
 
+    # MD safeguard settings
+    safeguard_params = toml_dict["md"]["safeguard"]
+    builder.active_learning.safeguard_enable = safeguard_params["enable"]
+
+    print('#@# safeguard_params: ', safeguard_params)
+    if safeguard_params["enable"]:
+        sel_method = safeguard_params["structure_selection_method"]
+        builder.active_learning.structure_selection_method = sel_method
+
+        # If user-defined structure is given, read user structure
+        if sel_method == "user-defined":
+            builder.active_learning.safeguard_user_defined_struct_path = (
+                safeguard_params["user_defined_struct_path"]
+            )
+
+        builder.active_learning.safeguard_temperature_K = safeguard_params[
+            "temperature_K"
+        ]
+        builder.active_learning.safeguard_max_temp_multiplier = safeguard_params[
+            "max_temp_multiplier"
+        ]
+        builder.active_learning.safeguard_num_steps = int(safeguard_params["num_steps"])
+        builder.active_learning.safeguard_timestep_duration_ps = float(
+            safeguard_params["timestep_duration_ps"]
+        )
+
+        builder.active_learning.safeguard_gather_traj_cnt_lattice =  md_params[
+        "gather_traj_cnt_lattice"
+    ]
+
     # MACE training settings
     builder.active_learning.mace_train = Dict(value=toml_dict["mace_train"])
 

@@ -14,6 +14,7 @@ import pymatgen.io.ase as pmg_ase
 import torch
 from aiida.engine import (
     BaseRestartWorkChain,
+    ProcessSpec,
     WorkChain,
     append_,
     if_,
@@ -61,7 +62,7 @@ class ActiveLearningWorkChain(WorkChain):
     """
 
     @classmethod
-    def define(cls, spec):
+    def define(cls, spec: ProcessSpec):
         """Specify inputs and outputs."""
         super().define(spec)
 
@@ -74,16 +75,62 @@ class ActiveLearningWorkChain(WorkChain):
         spec.input("seed_size_frac", valid_type=Float, serializer=to_aiida_type)
         spec.input("commitee_num_models", valid_type=Int, serializer=to_aiida_type)
         spec.input("model_acc_multiplier", valid_type=Float, serializer=to_aiida_type)
+
+        # MD settings
         spec.input("md_temperature_list_K", valid_type=List, serializer=to_aiida_type)
         spec.input("md_num_steps", valid_type=Int, serializer=to_aiida_type)
         spec.input("md_max_temp_multiplier", valid_type=Float, serializer=to_aiida_type)
         spec.input(
-            "md_timestep_duration_ps", valid_type=Float, serializer=to_aiida_type
+            "md_timestep_duration_ps",
+            valid_type=Float,
+            serializer=to_aiida_type,
         )
         spec.input(
-            "al_keep_struct_every_n_ps", valid_type=Float, serializer=to_aiida_type
+            "al_keep_struct_every_n_ps",
+            valid_type=Float,
+            serializer=to_aiida_type,
         )
         spec.input("current_md_seed_structs", valid_type=List, serializer=to_aiida_type)
+        spec.input("gather_traj_cnt_lattice", valid_type=Bool, serializer=to_aiida_type)
+
+        # Safeguard settings
+        spec.input(
+            "safeguard_enable",
+            required=True,
+            valid_type=Bool,
+            serializer=to_aiida_type,
+        )
+        spec.input(
+            "structure_selection_method",
+            valid_type=Str,
+            serializer=to_aiida_type,
+        )
+        spec.input(
+            "safeguard_user_defined_struct_path",
+            valid_type=Str,
+            serializer=to_aiida_type,
+        )
+        spec.input(
+            "safeguard_temperature_K", valid_type=Float, serializer=to_aiida_type
+        )
+        spec.input(
+            "safeguard_max_temp_multiplier",
+            valid_type=Float,
+            serializer=to_aiida_type,
+        )
+        spec.input("safeguard_num_steps", valid_type=Int, serializer=to_aiida_type)
+        spec.input(
+            "safeguard_timestep_duration_ps",
+            valid_type=Float,
+            serializer=to_aiida_type,
+        )
+        spec.input(
+            "safeguard_gather_traj_cnt_lattice",
+            valid_type=Bool,
+            serializer=to_aiida_type,
+        )
+
+        # Path settings
         spec.input("seed_db_path", valid_type=Str, serializer=to_aiida_type)
         spec.input("training_db_path", valid_type=Str, serializer=to_aiida_type)
         spec.input(
@@ -105,7 +152,6 @@ class ActiveLearningWorkChain(WorkChain):
         spec.input("dft_settings", valid_type=Dict)
         spec.input("committee_eval", valid_type=Dict)
         spec.input("check_extrapolation", valid_type=Bool, serializer=to_aiida_type)
-        spec.input("gather_traj_cnt_lattice", valid_type=Bool, serializer=to_aiida_type)
 
         spec.outline(
             # Training the main mace model (M0) and the commitee models
@@ -415,6 +461,9 @@ class ActiveLearningWorkChain(WorkChain):
         structure: Structure,
         potential_path: str,
         current_temp: float,
+        temp_coeff: float,
+        timestep_val: float,
+        num_timestep: int,
     ) -> str:
         """
         Generate a MACE-LAMMPS input file for MD simulations using a template.
@@ -435,9 +484,15 @@ class ActiveLearningWorkChain(WorkChain):
             set species-specific parameters in the LAMMPS input file.
         potential_path : str
             Path to the potential file to be used in the pair_coeff directive.
-        current_temperature : float
+        current_temp : float
             The temperature value (in Kelvin) to be used for setting initial velocities
             and maintaining simulation temperature
+        temp_coeff : float
+            The temperature coefficient to calculate the maximum temperature.
+        timestep_val : float
+            The length of the timestep for the simulation (in picoseconds).
+        num_tsteps : int
+            The total number of timesteps to be executed in the simulation.
 
         Returns
         -------
@@ -479,14 +534,12 @@ class ActiveLearningWorkChain(WorkChain):
         lammps_template = lammps_template.replace("$ELEMS", elem_str)
 
         # Setting timestep size
-        timestep_val = self.inputs.md_timestep_duration_ps.value
         lammps_template = lammps_template.replace("$TSTEP_SIZE", str(timestep_val))
 
         # Setting start and end temperature and the damping parameter.
         # The max T is calculated using a multiplier applied to the initial T.
         # The damping coefficient is computed as 100*dt as by the lammps docs,
         # see note in: https://docs.lammps.org/fix_nh.html#description
-        temp_coeff = self.inputs.md_max_temp_multiplier.value
         temp_arr = f"{current_temp} {current_temp*temp_coeff} {100 * timestep_val}"
         lammps_template = lammps_template.replace("$TEMPARR", temp_arr)
 
@@ -496,8 +549,7 @@ class ActiveLearningWorkChain(WorkChain):
         lammps_template = lammps_template.replace("$VELOCITY", vel_str)
 
         # Setting number of timesteps
-        num_tstep_str = str(self.inputs.md_num_steps.value)
-        lammps_template = lammps_template.replace("$NSTEPS", num_tstep_str)
+        lammps_template = lammps_template.replace("$NSTEPS", str(num_timestep))
 
         return lammps_template
 
@@ -525,8 +577,8 @@ class ActiveLearningWorkChain(WorkChain):
 
         Notes
         -----
-        - This function assumes the availability of a trained MACE-LAMMPS potential file within
-        the workflow's context.
+        - This function assumes the availability of a trained MACE-LAMMPS potential file
+        within the workflow's context.
         - Submitted calculation jobs are added to an AiiDA group for organization and
         are tagged with additional information to link them back to their respective
         positions in the database.
@@ -536,9 +588,7 @@ class ActiveLearningWorkChain(WorkChain):
         # Creating a list in the context to store the nodes
         self.ctx.current_train_seed = []
 
-        # this string with the label used in the code setup.
-        # code = load_code("mace-lammps@localhost-mpirun.mpich")
-        # code = load_code("mace-lammps-gpu@tekla2-updated-2024")
+        # This string with the label used in the code setup.
         code_str = self.inputs.lammps_mace.get("code")
         builder = CalculationFactory("lammps.raw").get_builder()
         builder.code = load_code(code_str)
@@ -582,6 +632,9 @@ class ActiveLearningWorkChain(WorkChain):
                         structure=curr_structure,
                         potential_path=lmp_pot_filename,
                         current_temp=temp_val,
+                        temp_coeff=self.inputs.md_max_temp_multiplier.value,
+                        timestep_val=self.inputs.md_timestep_duration_ps.value,
+                        num_timestep=self.inputs.md_num_steps.value,
                     )
 
                     script = SinglefileData(io.StringIO(curr_input))
@@ -1264,7 +1317,6 @@ class ActiveLearningBaseWorkChain(BaseRestartWorkChain):
             cls.setup,
             # This part will loop to complete the process
             # It will loop `self.ctx.inputs.max_al_iterations` times.
-            # while_(cls.should_run_process)(
             while_(cls.check_al_loop_conditions)(
                 # Get random structures from Ds to generate the MD seed.
                 cls.get_training_seed,
@@ -1502,7 +1554,29 @@ class ActiveLearningBaseWorkChain(BaseRestartWorkChain):
         # This will be True if the workchain can be repeated.
         continue_cond = continue_loop_conditions and iterations_status_ok
 
+        # In order to trigger the safeguard check, no disagreement must happen
+        # in a single seed.
         if self.ctx.stop_md_seed_no_disagreement.value:
+            # If the MD safeguard is enabled, run it and check its outputs.
+            if self.inputs.active_learning.safeguard_enable:
+                # Run the safeguard md
+                self.run_md_safeguard()
+
+                # Gather the md results and store them into the current
+                # context, in `self.ctx.safeguard_results_df`
+                self.gather_safeguard_results()
+
+                # TESTING:
+                print(self.ctx.safeguard_results_df)
+
+                # If extrapolation check is enabled, check it for the safeguard MD
+                # frames
+                if self.inputs.active_learning.check_extrapolation:
+                    self.get_descriptors_from_safeguard()
+
+                # Check the safeguard MD results for disagreement.
+                self.check_disagreement_safeguard()
+
             self.report("Stopping AL Loop as all predictions agree for a MD seed.")
         elif self.ctx.seed_gen_db_all_structs_removed.value:
             self.report(
@@ -1517,6 +1591,270 @@ class ActiveLearningBaseWorkChain(BaseRestartWorkChain):
             self.ctx.inputs.al_loop_iteration = self.ctx.iteration
 
         return continue_cond
+
+    def run_md_safeguard(self):
+        """
+        Run MD safeguard for a structure using M0 to test the model readiness.
+
+        This function performs a molecular dynamics simulation for a single structure
+        either specified by the user or chooses a random structure within the current
+        training seed, utilizing a predefined main model (M0).
+        It generates and configures a MACE-LAMMPS calculation job, sets up the necessary
+        input files and parameters, and submits these jobs for execution.
+        Calculation nodes are stored and managed within the workflow's context for
+        later retrieval and analysis.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+            The function does not return a value but updates the workflow context with
+            futures of the submitted MD simulation jobs, facilitating tracking and
+            subsequent analysis of these simulations.
+
+        Notes
+        -----
+        - This function assumes the availability of a trained MACE-LAMMPS potential file within
+        the workflow's context.
+        - Submitted calculation jobs are added to an AiiDA group for organization and
+        are tagged with additional information to link them back to their respective
+        positions in the database.
+        """
+        self.report("Running MD safeguard before ending AL loop...")
+
+        # This string with the label used in the code setup.
+        code_str = self.inputs.lammps_mace.get("code")
+        builder = CalculationFactory("lammps.raw").get_builder()
+        builder.code = load_code(code_str)
+
+        # Getting the lammps potential file in a temporary folder
+        with self.ctx.lammps_potential_file.as_path() as lmp_pot_path:
+            lmp_pot_filename = Path(lmp_pot_path).name
+            lmp_pot_path = str(lmp_pot_path)
+
+            # Setting the trajectory to be retrieved and the
+            # potential file to be copied into the calculation folder
+            builder_settings = {
+                "additional_retrieve_list": ["structure.lammpstrj"],
+                "local_copy_list": [
+                    (
+                        self.ctx.lammps_potential_file.uuid,
+                        lmp_pot_path,
+                        lmp_pot_filename,
+                    )
+                ],
+            }
+
+            builder.settings = Dict(builder_settings)
+
+            # Select structure (user-defined/random)
+            sel_method = self.inputs.active.learning.structure_selection_method
+            if sel_method == "user-defined":
+                # Load the user selected structure
+                curr_structure = ase_read(
+                    self.inputs.active.learning.safeguard_user_defined_struct_path,
+                    format="extxyz",
+                )
+            elif sel_method == "random":
+                # Select a random structure from the database to use as the safeguard
+                curr_structure = ...
+                raise NotImplementedError(
+                    "Safeguard random structure selection not implemented yet."
+                )
+
+            # for idx, curr_structure in enumerate(self.inputs.current_md_seed_structs):
+            # Structures are stored as a dict in order to be json-serializable
+            for key in ["pbc", "cell", "numbers", "positions", "forces"]:
+                curr_structure[key] = np.array(curr_structure[key])
+
+            curr_structure = Atoms.fromdict(curr_structure)
+
+            # Converting structure to pymatgen
+            curr_structure = pmg_ase.AseAtomsAdaptor.get_structure(curr_structure)
+            struct_properties = curr_structure.properties
+
+            # TODO: Add to TOML.
+            # Preparing the MD calculation input using the parameters specified
+            temp_val = self.inputs.active_learning.safeguard_temperature_K
+            curr_input = self.gen_md_input(
+                structure=curr_structure,
+                potential_path=lmp_pot_filename,
+                current_temp=temp_val,
+                temp_coeff=self.inputs.active_learning.safeguard_max_temp_multiplier.value,
+                timestep_val=self.inputs.active_learning.safeguard_timestep_duration_ps.value,
+                num_timestep=self.inputs.active_learning.safeguard_num_steps.value,
+            )
+
+            script = SinglefileData(io.StringIO(curr_input))
+            builder.script = script
+
+            lammps_struct_str = LammpsData.from_structure(
+                curr_structure, atom_style="atomic"
+            ).get_str()
+
+            data = SinglefileData(io.StringIO(lammps_struct_str))
+            builder.files = {
+                "data": data,
+                "mace_potential": self.ctx.lammps_potential_file,
+            }
+            builder.filenames = {
+                "data": "structure.lammps",
+                "mace_potential": lmp_pot_filename,
+            }
+
+            # Loading metadata settings from workchain inputs
+            builder.metadata = self.inputs.lammps_mace.get("metadata")
+            builder.metadata.label = f"struct_safeguard_mace_lammps_md_{temp_val}_K"
+
+            # Submitting current calculation
+            future = self.submit(builder)
+
+            # Writing extra information that helps associating the calculation
+            # with its position on the database.
+            for key, val in struct_properties.items():
+                future.base.extras.set(key, val)
+
+            if sel_method == "user-defined":
+                future.base.extras.set("aiida_uuid", "safeguard")
+
+            future.base.extras.set("index_in_db", "safeguard")
+            future.base.extras.set("md_temperature", temp_val)
+
+            # Telling the work chain to wait for the md to finish
+            # before continuing the workflow.
+            # We append the future to a list of workflows.
+            self.to_context(md_safeguard=append_(future))
+
+    def gather_safeguard_results(self):
+        """
+        Gather safeguard MD simulation results for the specified structure.
+
+        This function collects the results from the MD simulation performed for
+        the safeguard before stopping an active learning loop.
+        It extracts trajectories, energies, and forces from the MD output and
+        aggregates these into a structured format. The collected data is then
+        organized into a pandas DataFrame, which is stored in the workflow's context.
+        """
+        self.report("Gathering safeguard MD results for the given structure...")
+        new_rows = []
+
+        # Gathering results for the single structure
+        for workchain in self.ctx.md_safeguard:
+            workchain_results = workchain.outputs.retrieved
+            steps_E_F_arr = self.gather_energies_from_workchain(workchain_results)
+            traj, forces = self.gather_traj_from_workchain(workchain_results)
+
+            new_rows.append(
+                {
+                    "trajectory": traj,
+                    "energy": {"m0": steps_E_F_arr[:, 1]},
+                    "forces": {"m0": forces},
+                    "al_step": self.inputs.al_loop_iteration.value,
+                    "index_in_db": workchain.base.extras.all["index_in_db"],
+                    "mdb_struct_type": workchain.base.extras.all["mdb_struct_type"],
+                    "material_name": workchain.base.extras.all["struct_name"],
+                    "unique_id": workchain.base.extras.all["aiida_uuid"],
+                    "md_temperature": workchain.base.extras.all["md_temperature"],
+                    "extrapolation": np.nan,
+                }
+            )
+
+        # Creating a DataFrame with all the results.
+        # This dataframe should only contain one row.
+        self.ctx.safeguard_results_df = pd.DataFrame(new_rows)
+
+    def get_descriptors_from_safeguard(self):
+        # Getting descriptors for generated structures
+        self.report("Getting descriptors for MD safeguard...")
+
+        # Store all frames from the trajectory into a list
+        for _, row in self.ctx.safeguard_results_df.iterrows():
+            # all_frames_list = []
+            curr_traj = row["trajectory"]
+            traj_frames = []
+
+            for frame in curr_traj:
+                curr_frame: Atoms = AseAtomsAdaptor.get_atoms(frame)
+                curr_frame.info["aiida_uuid"] = row["unique_id"]
+                curr_frame.info["md_temperature"] = row["md_temperature"]
+                traj_frames.append(curr_frame)
+
+            # Write xyz file into a string captured in the stdout,
+            # write it to a temporary file.
+            f = io.StringIO()
+            with redirect_stdout(f):
+                ase_write(
+                    filename="-",
+                    format="extxyz",
+                    images=traj_frames,
+                )
+            xyz_string = f.getvalue()
+
+            # Generating tmp file
+            md_xyz_file = SinglefileData(
+                file=io.BytesIO(str.encode(xyz_string)),
+                filename="md_db.xyz",
+            )
+
+            # Prepare GetMACEDescriptorsCalculation
+            mace_descr_calc = CalculationFactory("mace-get-descriptors")
+            mace_builder = mace_descr_calc.get_builder()
+            mace_builder.model_file = self.ctx.best_model_file
+            mace_builder.mace_train_file_path = md_xyz_file
+            descriptor_code_path = Path(f"{ROOT_DIR}/active_learning/mace_code")
+            code = PortableCode(
+                label="mace_get_descriptors",
+                filepath_files=descriptor_code_path,
+                filepath_executable="./mace_get_descriptors.py",
+                # TODO: Add to TOML
+                prepend_text="source /gpuscratch/psanz/mace/mace-venv/bin/activate",
+            )
+            mace_builder.code = code
+
+            # TODO: Add to TOML
+            mace_builder.metadata.options = {
+                "resources": {
+                    "parallel_env": "c128m1024ib_mpi_32slots",
+                    "tot_num_mpiprocs": 4,
+                },
+                "queue_name": "c128m1024ibgpu4.q",
+                "max_memory_kb": 102400000,
+                "parser_name": "mace-descriptors-parser",
+                "max_wallclock_seconds": 117280000,
+                "withmpi": False,
+                "custom_scheduler_commands": "#$ -l gpu=1",
+            }
+            mace_builder.metadata.label = (
+                row["unique_id"][:8] + "_md_descriptors_" + f"{row['md_temperature']}_K"
+            )
+            mace_builder.metadata.computer = load_computer("tekla2-new-test")
+
+            mace_builder.metadata.options.output_filename = (
+                f"descriptors_{self.ctx.best_model_name}_iter"
+                f"-{self.inputs.al_loop_iteration.value}"
+            )
+
+            future = self.submit(mace_builder)
+            future.base.extras.set("unique_id", row["unique_id"])
+            future.base.extras.set("md_temperature", row["md_temperature"])
+
+            self.to_context(safeguard_descriptor_results=append_(future))
+
+    def check_disagreement_safeguard(self):
+        # Load safeguard MD results
+        row = self.ctx.safeguard_results_df.iloc[0]
+
+        # Load descriptor results
+        if self.inputs.active_learning.check_extrapolation:
+            for curr_calc in self.ctx.safeguard_descriptor_results:
+                # [ ] Check if any of the frames results in extrapolation
+                # return a n_frames long array of true/false values
+
+                # [ ] Check for E/F disagreement with the models
+                ...
 
     def get_training_seed(self):
         """
