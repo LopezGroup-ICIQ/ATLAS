@@ -16,8 +16,8 @@ This key describes the main active learning settings:
 
 - `aiida_profile`: (str) Name of the aiida profile to be used.
 - `run_name`: (str) Internal name for the run
-- `data_path`: (str) Path to the folder where the initial database is contained.
-- `init_db_path`: (str) Path to the folder where the initial database is contained.
+- `data_path`: (str) Path to the folder where the initial database is contained. **#check @pol**
+- `init_db_path`: (str) Path to the folder where the initial database is contained. **#check @pol**
 - `results_dir`: (str) Path for final results. Will be created if not existent.
 It will contain a folder named `run_{uuid}`.
 - `final_db_name`: (str) Name for the final database. The database will be stored in the extxyz format
@@ -62,7 +62,7 @@ Settings for MD simulations using LAMMPS
 - `temperature_list_K`: (list[float]) List of different temperatures (in K) to be used for the MD simulations. Example: [300, 350, 400]
 - `max_temp_multiplier`: (int) Multiplier for the user-specified MD temperature to determine the upper bound of the temperature at the end of the simulation run. Set to 1 to disable the multiplier.
 - `num_steps` (int) Total number of MD steps to be run in each MD simulation
-- `timestep_duration_ps`: (float) Duration of each timestep (in ps).
+- `timestep_duration_ps`: (float) Duration of each timestep (in ps). **check unit, ps or fs**
 - `gather_traj_cnt_lattice`: (bool) Consider constant lattice when gathering trajectories
 - `use_kokkos`: (bool) Whether to use kokkos to run the LAMMPS MD on gpu
 
