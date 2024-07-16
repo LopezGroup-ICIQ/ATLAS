@@ -38,7 +38,7 @@ dependencies = [
     "torch==2.0.1",
     "wonderwords==2.2.0",
     "pymatgen",
-    "phonopy",
+    "phonopy",#comment this?
 ]
 
 [project.urls]
