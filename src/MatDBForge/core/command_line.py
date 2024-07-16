@@ -307,7 +307,7 @@ def gen_default_config():
     final_path: pl.Path = args.path / default_config_name
 
     if not final_path.exists() or args.overwrite:
-        shutil.copy(config_file_path, args.path)
+        shutil.copy(config_file_path, args.path) #if not active_learning in line 303, no config_file_path are generated.
         print(
             f"Saved file {default_config_name} in path '{final_path.absolute()}'",
         )
