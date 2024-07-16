@@ -38,7 +38,7 @@ Finally, enter the folder containing the repository and install the library usin
 
 ```shell
 cd MatDBForge
-python3 -m pip install MatDBForge
+python3 -m pip install MatDBForge **replace by . ?**
 ```
 
 The active learning (AL) loop uses the [aiida](https://github.com/aiidateam/aiida-core) library for managing the workflow. In order to run the
