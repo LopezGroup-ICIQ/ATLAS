@@ -38,6 +38,7 @@ dependencies = [
     "torch==2.0.1",
     "wonderwords==2.2.0",
     "pymatgen",
+    "tomli", #needed for mdb_conf_gen
     "phonopy",#comment this?
 ]
 
