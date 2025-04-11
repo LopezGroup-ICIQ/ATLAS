@@ -269,7 +269,7 @@ options.withmpi = ''
 # Autoencoder training settings
 [descriptors.autoencoder.train_settings]
 # model_path = "autoencoder_model.pth" # (REMOVE, str) Path to save the model
-# dataset = "all_descriptors.npy"      # (REMOVE, str) Path to the training dataset
+# dataset = "all_descriptors.npz"      # (REMOVE, str) Path to the training dataset
 load_model = false  # (bool) Load the model from the model path
 rng_seed = ""       # (int) Random seed for reproducibility
 l1_hidden_dim = 256 # (int) Number of units in the first hidden layer
