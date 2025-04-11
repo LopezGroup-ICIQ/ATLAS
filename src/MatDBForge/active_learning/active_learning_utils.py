@@ -372,7 +372,6 @@ def run_mace_md_ase(
             cov_rad_multiplier_min=explode_filter_dict.get('cov_rad_multiplier_min'),
             max_T=T_end,
             max_T_multiplier=explode_filter_dict.get('max_T_multiplier', 10),
-            remove_positive_E=explode_filter_dict.get('remove_positive_E', False),
         )
 
     if mode != 'normal':
@@ -402,7 +401,6 @@ def md_stop_explode_filter(
     cov_rad_multiplier_max,
     max_T,
     max_T_multiplier,
-    remove_positive_E,
 ):
     has_exploded = apply_filter_exploding_structures(
         dyn.atoms,
@@ -410,7 +408,6 @@ def md_stop_explode_filter(
         cov_rad_multiplier_max=cov_rad_multiplier_max,
         max_T=max_T,
         max_T_multiplier=max_T_multiplier,
-        remove_positive_E=remove_positive_E,
     )
     if has_exploded:
         raise RuntimeError(f'Wrong structure in step {dyn.nsteps} :(')

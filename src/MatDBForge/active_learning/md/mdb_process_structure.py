@@ -228,7 +228,7 @@ if __name__ == '__main__':
         traj_filename = res_folder / f'md_traj_final_temp-{T_start}.traj'
 
         # Not repeating MD simulations if the trajectory already exists.
-        # Mainly for testing, this should not happen during a normal run.
+        # Mainly for testing,  this should not happen during a normal run.
         if pl.Path(traj_filename).exists():
             mdb_cud.custom_print(
                 f"MD trajectory for 'T={T_start} K' already exists. Skipping...", 'warn'
@@ -313,11 +313,10 @@ if __name__ == '__main__':
                 'cov_rad_multiplier_max', 10.0
             )
             cov_rad_multiplier_min: float = explod_filt_settings.get(
-                'cov_rad_multiplier_min', 1.5
+                'cov_rad_multiplier_min', 0.78
             )
             max_T = curr_temp * md_params.get('max_temp_multiplier', 1)
             max_T_multiplier = explod_filt_settings.get('max_T_multiplier', 10)
-            remove_positive_E = explod_filt_settings.get('remove_positive_E', False)
 
             # Applying filter for every frame
             for idx, frame in enumerate(md_traj):
@@ -328,7 +327,6 @@ if __name__ == '__main__':
                         cov_rad_multiplier_min=cov_rad_multiplier_min,
                         max_T=max_T,
                         max_T_multiplier=max_T_multiplier,
-                        remove_positive_E=remove_positive_E,
                     )
                 )
                 if is_structure_wrong:

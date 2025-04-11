@@ -7,7 +7,12 @@ import numpy as np
 import rich.progress as riprg
 from ase import Atoms, geometry
 from ase import io as aseio
-from ase.neighborlist import NeighborList, NewPrimitiveNeighborList, natural_cutoffs
+from ase.data import covalent_radii
+from ase.neighborlist import (
+    NeighborList,
+    NewPrimitiveNeighborList,
+    natural_cutoffs,
+)
 from pymatgen.core import Structure as pmg_struct
 from pymatgen.io.ase import AseAtomsAdaptor
 
@@ -334,68 +339,73 @@ def get_available_filters() -> dict:
 
 def apply_filter_exploding_structures(
     struct: Atoms,
-    cov_rad_multiplier_max: float = 10.0,
-    cov_rad_multiplier_min: float = 1.5,
+    cov_rad_multiplier_max: float = 15.0,
+    cov_rad_multiplier_min: float = 0.78,
     max_T: float = None,
     max_T_multiplier: float = 10,
-    remove_positive_E: bool = False,
 ) -> bool:
     """
     Check if the given structure has an unrealistic structure (explosion).
+    This is done by checking if the distance betwen atoms is above or below the
+    covalent radius modified by an appropiate multiplier, or by checking if the
+    temperature is abnormally high, by checking a multiplier of the maximum
+    MD simulation temperature.
+    The function uses the ASE built-in function to compute the distances between
+    atoms, and the covalent radii from the ASE data module.
 
     Parameters
     ----------
     struct : ase.Atoms
         Structure to check.
-    max_distance : float
-        Maximum distance between atoms.
-    min_distance : float
-        Minimum distance between atoms.
+    cov_rad_multiplier_max : float, optional
+        Multiplier for the maximum covalent radius, by default 15.0.
+    cov_rad_multiplier_min : float, optional
+        Multiplier for the minimum covalent radius, by default 0.78.
+    max_T : float, optional
+        Maximum temperature of the MD simulation, by default None.
+        Necessary for the optional temperature check.
+    max_T_multiplier : float, optional
+        Multiplier for the maximum temperature, by default 10.
+        Necessary for the optional temperature check.
 
     Returns
     -------
     bool
         Returns `True` if the structure is exploding, `False` if otherwise.
     """
-    # Get the natural cutoffs and multiply them by the cov_rad_multiplier_max
-    # cutoffs will be used as the minimum and maximum distance between atoms possible
-    # for the structure to be considered stable
+    symbols = struct.get_chemical_symbols()
+    atomic_nums = struct.get_atomic_numbers()
+    num_atoms = len(symbols)
 
-    # Maximum possible distance between two atoms. Should be below the maximum cell size
-    # to avoid exploding structures
-    cutoffs_max: np.array = np.array(natural_cutoffs(struct)) * cov_rad_multiplier_max
+    # Create covalent radii array
+    cov_radii = covalent_radii[atomic_nums]
 
-    # Closest possible distance between two atoms.
-    cutoffs_min: np.array = np.array(natural_cutoffs(struct)) * cov_rad_multiplier_min
-    max_cell_arr = np.repeat(np.max(struct.cell), repeats=len(cutoffs_max))
+    # Compute distance thresholds (upper triangular only)
+    radii_sum_matrix = cov_radii[:, None] + cov_radii[None, :]
+    min_distances = radii_sum_matrix * cov_rad_multiplier_min
+    max_distances = radii_sum_matrix * cov_rad_multiplier_max
 
-    # If the cutoffs are smaller than the maximum cell size,
-    # set them to the maximum cell size
-    if np.all(max_cell_arr > cutoffs_max):
-        cutoffs_max = max_cell_arr
+    # Compute distances using ASE built-in function (upper triangular only)
+    distances = struct.get_all_distances(mic=True)
 
-    # Get the distances between atoms
-    all_distances = struct.get_all_distances(mic=True)
+    # Check upper triangular indices only (avoids duplicate checks)
+    upper_tri_idx = np.triu_indices(num_atoms, k=1)
 
-    # Change all zeros to NaN. Zeros will be there when the
-    # atom is compared to itself
-    all_distances[np.where(all_distances == 0)] = np.nan
+    relevant_distances = distances[upper_tri_idx]
+    relevant_min_distances = min_distances[upper_tri_idx]
+    relevant_max_distances = max_distances[upper_tri_idx]
 
-    # Get the maximum and minimum distances
-    max_dist = np.nanmax(all_distances, axis=0)
-    min_dist = np.nanmin(all_distances, axis=0)
+    # Quickly check violations
+    below_min = relevant_distances < relevant_min_distances
+    above_max = relevant_distances > relevant_max_distances
+    # Early termination if any violation found
+    if np.any(below_min) or np.any(above_max):
+        return True
 
-    # Check if the maximum distance is above the threshold
-    is_exploding = np.any(max_dist > cutoffs_max) or np.any(min_dist < cutoffs_min)
-
+    # Check if temperature is abnormally high
     if max_T and max_T_multiplier:
         curr_struct_T = struct.info.get('md_temperature', np.nan)
-        if curr_struct_T > (max_T * max_T_multiplier):
+        if curr_struct_T > max_T * max_T_multiplier:
             return True
 
-    if remove_positive_E:
-        curr_energy = struct.info.get('REF_energy')
-        if curr_energy > 0:
-            return True
-
-    return is_exploding
+    return False
