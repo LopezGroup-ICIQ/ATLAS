@@ -2,7 +2,7 @@
 
 `SchemaForm` reads ATLAS' `config_schema.yaml` and builds a hierarchy of
 `QFormLayout`-based widgets for one selected top-level section
-(`database_generation`, `active_learning`, ...).  It owns the section
+(`database_generation`, `active_learning`, ...). It owns the section
 selector, the scrollable form area, and the per-field schema metadata used
 by the coordinator to populate the description and TOML highlight panels.
 
@@ -14,10 +14,10 @@ section_changed(section_key)
     Emitted when the user (or code) switches the active top-level section.
 data_changed()
     Emitted whenever any field's value changes, including dynamic add/remove.
-field_focused(description, value_type, schema_path, schema_key, mandatory,
-              default_value)
-    Emitted when a form widget gains focus; consumers can update a
-    description panel or highlight the corresponding TOML line.
+field_focused(description, value_type, schema_path, schema_key,
+              mandatory, default_value)
+    Emitted when a form widget gains focus; consumers can update a description
+    panel or highlight the corresponding TOML line.
 """
 
 from __future__ import annotations

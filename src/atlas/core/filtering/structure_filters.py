@@ -33,14 +33,8 @@ def apply_struct_filters_atl_db(structures, config_dict: dict):
     -------
     dict
         Dictionary with filtered structure UUIDs and breakdown by phase,
-        type, modification, and filter trigger:
-        {
-            'filtered_uuids': list[str],
-            'by_phase': {'phase_name': count, ...},
-            'by_type': {'bulk': count, 'surface': count, ...},
-            'by_modification': {'perturb': count, 'vacancy': count, ...},
-            'by_filter': {'filter_name': count, ...},
-        }
+        type, modification, and filter trigger. Keys: 'filtered_uuids',
+        'by_phase', 'by_type', 'by_modification', 'by_filter'.
     """
     if 'struct_filters' in config_dict:
         filter_settings = config_dict.get('struct_filters', {})
@@ -356,15 +350,12 @@ def apply_filter_evaporation(struct, max_allowed_thickness: float) -> bool:
 
 
 def get_available_filters() -> dict:
-    """
-    Dynamically gathers all functions in the current module that start with
-    'apply_filter_' and creates a dictionary mapping filter names to functions.
+    """Dynamically gathers all module functions prefixed with ``apply_filter_``.
 
     Returns
     -------
     dict
-        A dictionary mapping filter names (without 'apply_filter_') to their
-        corresponding function objects.
+        Dictionary mapping filter names to their function objects.
     """
     # Get the current module
     current_module = sys.modules[__name__]

@@ -18,7 +18,6 @@ import torch
 from ase.io import read as ase_read
 from ase.io import write as ase_write
 from ase.io.trajectory import TrajectoryReader, TrajectoryWriter
-from mace.calculators import MACECalculator
 from shapely.affinity import scale
 from shapely.geometry import MultiPolygon, Point, Polygon
 
@@ -565,17 +564,18 @@ if __name__ == '__main__':
         # for model in model_file_list:
         # comm_results[model.stem] = {'REF_energy': [], 'REF_forces': []}
 
-        # Use torch.load with map_location to ensure model loads
-        # on the correct device
+        from atlas.active_learning.backends import get_backend
+
+        backend_name = settings.get('mlip', {}).get('training_backend', 'mace')
+        backend = get_backend(backend_name)
+        model_ext = backend.model_file_extension
+
         device_str = safe_md_params.get('device', 'cpu')
 
-        model_path = pl.Path(prepend_path) / 'sampler_model.model'
-        model_loaded = torch.load(model_path, map_location=torch.device(device_str))
-
-        calculator = MACECalculator(
-            models=[model_loaded],
+        calculator = backend.create_calculator(
+            model_path=pl.Path(prepend_path) / f'sampler_model{model_ext}',
             device=device_str,
-            default_dtype=safe_md_params.get('default_dtype', 'float32'),
+            dtype=safe_md_params.get('default_dtype', 'float32'),
         )
 
         atl_cut.custom_print(
@@ -597,13 +597,13 @@ if __name__ == '__main__':
                     )
                 )
             else:
-                descriptor_dict, descriptor_arr, uuids = (
-                    atl_al_ut.generate_descriptors_mace(
-                        model_path=prepend_path / 'sampler_model.model',
-                        database=md_traj_short,
-                        descriptor_settings=settings['descriptors'],
-                        verbose=True,
-                    )
+                descriptor_type = settings['descriptors'].get('descriptor_type', 'mace')
+                descriptor_dict, descriptor_arr, uuids = atl_al_ut.generate_descriptors(
+                    database=md_traj_short,
+                    descriptor_type=descriptor_type,
+                    descriptor_settings=settings['descriptors'],
+                    model_path=prepend_path / f'sampler_model{model_ext}',
+                    verbose=True,
                 )
 
             # Add is_extrapolating list which contains boolean values showing

@@ -366,11 +366,15 @@ def create_foundation_model_calculator(
 
     if library.lower() == 'mace':
         try:
-            from mace.calculators import mace_mp
+            from atlas.active_learning.backends import get_backend
 
             custom_print(f'Loading MACE foundation model: {model_name}', 'info')
-            calculator = mace_mp(
-                model=model_name, device=device, default_dtype=dtype, **kwargs
+            backend = get_backend('mace')
+            calculator = backend.create_calculator(
+                model_path=f'mace:mp-{model_name}',
+                device=device,
+                dtype=dtype,
+                **kwargs,
             )
             custom_print(f'Successfully loaded MACE model: {model_name}', 'done')
             return calculator
@@ -508,11 +512,11 @@ def create_calculator_for_model(model_path, device='cuda', dtype='float64', **kw
             **foundation_kwargs,
         )
     else:
-        # File-based model - assuming MACE for now
-        from mace.calculators import MACECalculator
+        from atlas.active_learning.backends import get_backend
 
-        return MACECalculator(
-            model_paths=str(model_path), device=device, default_dtype=dtype, **kwargs
+        backend = get_backend('mace')
+        return backend.create_calculator(
+            model_path=str(model_path), device=device, dtype=dtype, **kwargs
         )
 
 

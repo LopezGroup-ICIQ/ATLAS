@@ -15,13 +15,12 @@ import tomllib as toml
 import warnings
 from collections import Counter
 from contextlib import contextmanager, redirect_stdout, suppress
-from pathlib import Path, PosixPath
+from pathlib import Path
 from uuid import uuid4
 
 import matplotlib.pyplot as plt
 import numpy as np
 import slugify
-import torch
 import wonderwords as ww
 from aiida import orm
 from aiida.common.log import LOG_LEVEL_REPORT
@@ -43,14 +42,12 @@ from ase.md.velocitydistribution import (
     Stationary,
     ZeroRotation,
 )
-from e3nn.util import jit
 from pymatgen.io.ase import AseAtomsAdaptor
 from rich.pretty import pprint as rprint
 from shapely.geometry import Point, Polygon
 
 from atlas.active_learning import conversion as atl_conv
 from atlas.core import code_utils as atl_cut
-from atlas.core.exceptions import MissingMandatoryParameterError
 from atlas.core.filtering.structure_filters import (
     apply_filter_exploding_structures,
 )
@@ -320,14 +317,32 @@ def generate_descriptors(
             descriptor_settings=descriptor_settings,
             verbose=verbose,
         )
-    elif descriptor_type == 'mace':
-        return generate_descriptors_mace(
-            model_path=model_path,
-            database=database,
-            descriptor_settings=descriptor_settings,
-            outer_average=outer_average_mace,
-            verbose=verbose,
+
+    # Try to use a registered MLIP backend for descriptor generation
+    from atlas.active_learning.backends import get_backend
+    from atlas.active_learning.backends._base import MLIPDescriptorProvider
+
+    try:
+        backend = get_backend(descriptor_type)
+    except ValueError as err:
+        raise ValueError(
+            f"Unknown descriptor type '{descriptor_type}'. "
+            f"Available types: 'soap' and any registered MLIP backend."
+        ) from err
+
+    if not isinstance(backend, MLIPDescriptorProvider):
+        raise ValueError(
+            f"Backend '{descriptor_type}' does not support descriptor generation. "
+            f"Use 'soap' descriptors instead."
         )
+
+    return backend.generate_descriptors(
+        database=database,
+        model_path=model_path,
+        settings=descriptor_settings,
+        outer_average=outer_average_mace,
+        verbose=verbose,
+    )
 
 
 def save_descriptors(
@@ -548,10 +563,12 @@ def select_structures_uncertainty(
     if n_structures >= len(database):
         return database.copy()
 
-    from mace.calculators import MACECalculator
+    from atlas.active_learning.backends import get_backend
 
     device = descriptor_settings.get('device', 'cpu')
     dtype = descriptor_settings.get('dtype', 'float32')
+    backend_name = descriptor_settings.get('mlip_backend', 'mace')
+    backend = get_backend(backend_name)
 
     # Calculate energies and forces for each structure using all models
     uncertainties = []
@@ -562,8 +579,8 @@ def select_structures_uncertainty(
 
         for model_file in model_files:
             try:
-                calculator = MACECalculator(
-                    models=[model_file], device=device, default_dtype=dtype
+                calculator = backend.create_calculator(
+                    model_path=model_file, device=device, dtype=dtype
                 )
                 struct.calc = calculator
 
@@ -732,123 +749,17 @@ def generate_descriptors_mace(
     outer_average: bool = False,
     verbose: bool = False,
 ) -> tuple[dict, np.ndarray, list[str]]:
-    from mace.calculators import MACECalculator
-
-    if model_path is None:
-        raise MissingMandatoryParameterError(
-            'Missing model path for MACE descriptor generation.'
-        )
-
-    device = descriptor_settings.get('device', 'cpu')
-    dtype = descriptor_settings.get('dtype', 'float32')
-
-    is_mp_foundation = False
-    is_off_foundation = False
-
-    if isinstance(model_path, PosixPath | Path):
-        model_path = str(model_path)
-
-    with suppress_stdout():
-        try:
-            # Use torch.load with map_location to ensure model
-            # loads on the correct device
-            model_loaded = torch.load(model_path, map_location=torch.device(device))
-        except RuntimeError:
-            model_loaded = torch.load(model_path, map_location=torch.device('cpu'))
-        except FileNotFoundError as e:
-            # Check if the model path indicates a MACE foundation model
-            if 'mace:mp-' in model_path:
-                model_variant = model_path.split('mace:mp-')[-1]
-                if model_variant in ['small', 'medium', 'large', 'medium-mpa-0']:
-                    is_mp_foundation = True
-                    model_loaded = model_variant
-            elif 'mace:off-' in model_path:
-                model_variant = model_path.split('mace:off-')[-1]
-                if model_variant in ['small', 'medium', 'large']:
-                    is_off_foundation = True
-                    model_loaded = model_variant
-            else:
-                raise FileNotFoundError(
-                    'Model file not found. Please provide a valid model path'
-                    'or a mace foundation model name, using the following syntax:'
-                    ' "mace:mp-small", "mace:off-medium", etc.'
-                ) from e
-
-        if is_mp_foundation:
-            from mace.calculators import mace_mp
-
-            calculator = mace_mp(
-                model=model_loaded,
-                device=device,
-                default_dtype=dtype,
-            )
-        elif is_off_foundation:
-            from mace.calculators import mace_off
-
-            calculator = mace_off(
-                model=model_loaded,
-                device=device,
-                default_dtype=dtype,
-            )
-        else:
-            calculator = MACECalculator(
-                models=[model_loaded], device=device, default_dtype=dtype
-            )
-
-    descriptor_dict = {}
-    descriptor_list = []
-    uuid_list = []
-
-    # Getting descriptors for every structure
-    tot_num_structures = len(database)
-
-    iterable = (
-        atl_cut.atl_show_progress(
-            enumerate(database),
-            total=tot_num_structures,
-            interval=100,
-            prepend='MACE:',
-        )
-        if verbose
-        else enumerate(database)
+    from atlas.active_learning.backends.mace.descriptors import (
+        generate_descriptors_mace as _impl,
     )
 
-    for _, struct in iterable:
-        if struct.info.get('atl_id'):
-            struct_key = struct.info.get('atl_id')
-        elif struct.info.get('aiida_uuid'):
-            struct_key = struct.info.get('aiida_uuid')
-        else:
-            struct_key = str(uuid4())
-            uuid_list.append(struct_key)
-            struct.info['atl_id'] = struct_key
-
-        # Creating empty lists to store the descriptors if not already present
-        if descriptor_dict.get(struct_key) is None:
-            descriptor_dict[struct_key] = {
-                'descriptors': [],
-                'latent_space': [],
-            }
-
-        # Getting the descriptors for the current structure
-        curr_struct_descriptors = calculator.get_descriptors(struct)
-
-        # By averaging all vectors we get a single vector for the whole structure
-        # Similar to SOAP's "outer average"
-        if outer_average:
-            curr_struct_descriptors = np.mean(
-                curr_struct_descriptors, axis=0, keepdims=True
-            )
-
-        descriptor_list.append(curr_struct_descriptors)
-
-        # Appending the descriptors to the dictionary
-        descriptor_dict[struct_key]['descriptors'].append(curr_struct_descriptors)
-
-    # Generating a numpy array from the list of all descriptors, stacked
-    # vertically.
-    descriptor_arr = np.vstack(descriptor_list)
-    return descriptor_dict, descriptor_arr, uuid_list
+    return _impl(
+        model_path=model_path,
+        database=database,
+        descriptor_settings=descriptor_settings,
+        outer_average=outer_average,
+        verbose=verbose,
+    )
 
 
 def get_species_from_database(database: list[Atoms] | Atoms) -> list[str]:
@@ -995,8 +906,6 @@ def run_mace_md_ase(
     stage_name: str
         Name of the MD stage. Default is None.
     """
-    from mace.calculators import MACECalculator
-
     from atlas.active_learning.md.ase_calculators import ATLSafeCalculatorWrapper
 
     T_multiplier = md_params.get('max_temp_multiplier', 1.0)
@@ -1047,30 +956,36 @@ def run_mace_md_ase(
 
     T_list = []
 
-    if md_type == 'mace':
-        mace_foundation = md_params.get('mace_foundation')
+    # Create calculator via the backend registry
+    from atlas.active_learning.backends import get_backend
 
-        if mace_foundation:
-            from mace.calculators import mace_mp
+    backend = get_backend(md_type)
 
-            nn_calculator = mace_mp(
-                device=md_params.get('device', 'cpu'),
-                default_dtype=md_params.get('default_dtype', 'float64'),
-            )
+    if md_type == 'mace' and md_params.get('mace_foundation'):
+        # Foundation model shortcut for MACE
+        from atlas.active_learning.backends.mace.calculator import (
+            create_mace_calculator,
+        )
+
+        nn_calculator = create_mace_calculator(
+            model_path=f'mace:mp-{md_params.get("mace_foundation", "medium")}',
+            device=md_params.get('device', 'cpu'),
+            dtype=md_params.get('default_dtype', 'float64'),
+        )
+    else:
+        if model_name:
+            model_path = Path(prepend_path) / model_name
         else:
-            # Load the trained model as an ASE calculator and attach it to the
-            # atoms object
-            if model_name:
-                model_path = Path(prepend_path) / model_name
-            else:
-                model_path = Path(prepend_path) / 'curr_model.model'
-
-            nn_calculator = MACECalculator(
-                model_paths=model_path,
-                device=md_params.get('device', 'cpu'),
-                default_dtype=md_params.get('default_dtype', 'float64'),
-                enable_cueq=enable_cueq,
+            model_path = (
+                Path(prepend_path) / f'curr_model{backend.model_file_extension}'
             )
+
+        nn_calculator = backend.create_calculator(
+            model_path=model_path,
+            device=md_params.get('device', 'cpu'),
+            dtype=md_params.get('default_dtype', 'float64'),
+            enable_cueq=enable_cueq,
+        )
 
         # Wrap the calculator in a custom calculator to check for
         # unphysical states
@@ -1600,16 +1515,19 @@ def _clean_stress_info_for_mace(atoms: Atoms) -> None:
 def sampler_populate_E_and_F_list(
     structure_list: list[Atoms],
     model_file: orm.SinglefileData,
+    backend_name: str = 'mace',
 ):
-    from io import BytesIO
+    import tempfile
 
-    from mace.calculators import MACECalculator
+    from atlas.active_learning.backends import get_backend
 
-    # Load model from SinglefileData and pass it to MACE
+    backend = get_backend(backend_name)
     model_file_content = model_file.get_content(mode='rb')
-    model_file_io = BytesIO(model_file_content)
-    mace_model = torch.load(model_file_io)
-    calc = MACECalculator(models=[mace_model])
+
+    with tempfile.NamedTemporaryFile(suffix=backend.model_file_extension) as tmp:
+        tmp.write(model_file_content)
+        tmp.flush()
+        calc = backend.create_calculator(model_path=tmp.name)
 
     updated_struct_list = []
 
@@ -1847,47 +1765,18 @@ def update_mace_train_settings_dict(
     containerized: orm.Bool = False,
 ):
     """Update the MACE training settings dictionary with the new database path."""
-    if isinstance(settings_dict, orm.Dict):
-        settings_dict: dict = settings_dict.get_dict()
-
-    # Update training file path in mace train settings
-    # to include the new database.
-    if isinstance(train_data_path, orm.Str):
-        train_data_path: Path = Path(train_data_path.value)
-    elif isinstance(train_data_path, str):
-        train_data_path: Path = Path(train_data_path)
-
-    if containerized.value is True:
-        # When using containerized code, the training file
-        # is expected to be in the /atl_data folder inside the container
-        train_data_path = Path('/atl_data') / train_data_path.name
-        settings_dict['train_file'] = str(train_data_path)
-        settings_dict['results_dir'] = str(Path('/atl_data') / 'results')
-        settings_dict['checkpoints_dir'] = str(Path('/atl_data') / 'checkpoints')
-        settings_dict['model_dir'] = str(Path('/atl_data'))
-        settings_dict['log_dir'] = str(Path('/atl_data') / 'logs')
-    else:
-        settings_dict['train_file'] = str(train_data_path.name)
-
-    # Updating name to include model and iteration number
-    curr_name = settings_dict['name']
-
-    # For very small datasets (testing), the batch size must be lower than the
-    # database size
-    if db_size < settings_dict.get('batch_size', 0):
-        settings_dict['batch_size'] = db_size // 2
-
-    if isinstance(curr_model, orm.Str):
-        curr_model = curr_model.value
-
-    if isinstance(curr_iter, orm.Int):
-        curr_iter = curr_iter.value
-
-    settings_dict['name'] = (
-        str(curr_model) + '_' + curr_name + '_al-iteration_' + str(curr_iter)
+    from atlas.active_learning.backends.mace.training import (
+        update_mace_train_settings_dict as _impl,
     )
 
-    return orm.Dict(settings_dict)
+    return _impl(
+        settings_dict=settings_dict,
+        train_data_path=train_data_path,
+        curr_model=curr_model,
+        curr_iter=curr_iter,
+        db_size=db_size,
+        containerized=containerized,
+    )
 
 
 @calcfunction
@@ -1905,22 +1794,11 @@ def create_mace_lammps_model(model_file: orm.SinglefileData):
     orm.SinglefileData
         A LAMMPS potential file generated from the MACE model.
     """
-    from mace.calculators import LAMMPS_MACE
+    from atlas.active_learning.backends.mace.training import (
+        create_mace_lammps_model_impl,
+    )
 
-    with model_file.as_path() as model_path:
-        # Loading model
-        model = torch.load(model_path, map_location=torch.device('cpu'))
-        model = model.double().to('cpu')
-        lammps_model = LAMMPS_MACE(model)
-        lammps_model_compiled = jit.compile(lammps_model)
-
-        # Creating new path
-        new_model_path = str(model_path) + '-lammps.pt'
-
-        # Saving LAMMPS model
-        lammps_model_compiled.save(new_model_path)
-
-        return orm.SinglefileData(file=new_model_path)
+    return create_mace_lammps_model_impl(model_file=model_file)
 
 
 @calcfunction

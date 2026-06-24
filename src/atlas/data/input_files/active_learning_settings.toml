@@ -384,6 +384,13 @@ wandb_project = ""  # (str) Name of the wandb project
 
 ###############################################
 
+# MLIP Backend Settings
+# Controls which MLIP model is used for training, MD, and evaluation.
+# If omitted, defaults to "mace" for backward compatibility.
+# [mlip]
+# training_backend = "mace"
+# md_backend = "mace"     # defaults to training_backend if not set
+
 # MACE training code and scheduler settings (aiida)
 [mace_train]
 

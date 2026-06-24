@@ -30,7 +30,7 @@ from rich.pretty import Pretty
 
 from atlas import ATL_ROOT_DIR
 from atlas.active_learning import active_learning_utils as atl_al_ut
-from atlas.active_learning import conversion as atl_conv
+from atlas.active_learning.backends import get_backend
 from atlas.core.code_utils import (
     ATL_THEME,
     ATLHighlighter,
@@ -418,6 +418,18 @@ class SimpleActiveLearningWorkChain(WorkChain):
             self.logger.warning('Unable to import torch package. Assuming CPU only.')
             self.ctx.cuda_available = False
 
+        # Initialize MLIP backend from TOML settings (defaults to 'mace')
+        toml_path = Path(self.inputs.toml_file.value)
+        if toml_path.exists():
+            toml_settings = atl_al_ut.read_toml_settings(self.inputs.toml_file.value)
+            backend_name = toml_settings.get('mlip', {}).get('training_backend', 'mace')
+        else:
+            backend_name = 'mace'
+
+        self.ctx.mlip_backend_name = backend_name
+        self.ctx.mlip_backend = get_backend(backend_name)
+        self.report(f'Using MLIP backend: {backend_name}')
+
     def should_select_data_reduction_structures(self):
         """Check if we should select additional structures for data reduction mode."""
         return self.inputs.al_mode.value == 'data_reduction'
@@ -559,8 +571,8 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
         database_training = atl_al_ut.load_database(self.inputs.training_db_path.value)
 
-        # Generate new training data file
-        atl_conv.gen_mace_train_structure_list(
+        # Generate new training data file using the active backend
+        self.ctx.mlip_backend.prepare_training_data(
             path=updated_path,
             structure_list=database_training,
         )
@@ -617,7 +629,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
             )
 
             # Run training and save new model file
-            mace_train = CalculationFactory('mace-train')
+            mace_train = CalculationFactory(self.ctx.mlip_backend.calcjob_entry_point)
             mace_builder = mace_train.get_builder()
 
             mace_builder.multihead_finetuning = self.inputs.mace_train.get(
@@ -676,9 +688,10 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
             mace_builder.metadata.options = mace_train_calc_sched_options
 
-            # Manually setting parser. Default is 'mace-training-parser'
-            # It might be interesting to allow the user to override in the future?
-            mace_builder.metadata.options.parser_name = 'mace-training-parser'
+            # Set the parser from the backend
+            mace_builder.metadata.options.parser_name = (
+                self.ctx.mlip_backend.parser_entry_point
+            )
 
             mace_builder.metadata.options.output_filename = (
                 f'train_{model_name}_iter-{self.inputs.al_loop_iteration.value}'
@@ -826,9 +839,11 @@ class SimpleActiveLearningWorkChain(WorkChain):
                 # Convert model to LAMMPS compatible format
                 # and return it to workchain context
                 if hasattr(self.ctx, 'cuda_available') and self.ctx.cuda_available:
-                    self.ctx.lammps_potential_file = atl_al_ut.create_mace_lammps_model(
+                    lammps_potential = self.ctx.mlip_backend.create_lammps_potential(
                         model_file
                     )
+                    if lammps_potential is not None:
+                        self.ctx.lammps_potential_file = lammps_potential
                 else:
                     self.logger.warning(
                         'CUDA not available, skipping LAMMPS potential file creation.'
@@ -1073,7 +1088,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
         # Get portable code
         descriptor_code_path = Path(
-            f'{ATL_ROOT_DIR}/active_learning/mace_code/combined'
+            f'{ATL_ROOT_DIR}/active_learning/backends/mace/scripts/combined'
         )
 
         # Loading metadata settings
@@ -1831,6 +1846,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
                     dft_calc_list = atl_al_ut.sampler_populate_E_and_F_list(
                         structure_list=dft_calc_list,
                         model_file=self.ctx.best_model_file,
+                        backend_name=self.ctx.mlip_backend_name,
                     )
 
                 self.report(

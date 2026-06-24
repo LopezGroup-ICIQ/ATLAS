@@ -668,11 +668,11 @@ def get_mace_eval_results(
     folder_path: str | Path = None,
     enable_cueq: bool = False,
 ):
-    from mace.calculators import MACECalculator
-    from mace.tools import torch_tools
     from rich.progress import track
 
-    torch_tools.set_default_dtype('float32')
+    from atlas.active_learning.backends import get_backend
+
+    backend = get_backend('mace')
 
     # Getting children if not done yet
     if isinstance(al_loop_node, orm.Node):
@@ -744,12 +744,10 @@ def get_mace_eval_results(
         # Load the training database
         train_db = ase_read(training_db_cp_path, format='extxyz', index=':')
 
-        # Load model
-        mace_model = MACECalculator(
-            model_paths=model_path,
+        mace_model = backend.create_calculator(
+            model_path=model_path,
             device=device_str,
-            default_dtype='float32',
-            enable_cueq=enable_cueq,
+            dtype='float32',
         )
 
         if not folder_path:

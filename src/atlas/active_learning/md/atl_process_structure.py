@@ -22,7 +22,6 @@ from ase.io import read as ase_read
 from ase.io import write as ase_write
 from ase.io.trajectory import TrajectoryReader, TrajectoryWriter
 from ase.neighborlist import natural_cutoffs
-from mace.calculators import MACECalculator
 from shapely.affinity import scale
 from shapely.geometry import MultiPolygon, Point, Polygon
 
@@ -735,35 +734,24 @@ if __name__ == '__main__':
 
         # Running evaluation of the energies and forces using each commitee model
         atl_cut.custom_print('Running committee evaluation...', 'info', logger=logger)
-        model_file_list = list(prepend_path.glob('*.model'))
+        from atlas.active_learning.backends import get_backend
+
+        backend_name = settings.get('mlip', {}).get('training_backend', 'mace')
+        backend = get_backend(backend_name)
+
+        model_file_list = list(prepend_path.glob(f'*{backend.model_file_extension}'))
         comm_settings = settings.get('committee_eval', {})
-        comm_results = {}
-        for model in model_file_list:
-            comm_results[model.stem] = {'REF_energy': [], 'REF_forces': []}
+        backend_comm_settings = comm_settings.get(backend_name, comm_settings)
+        device_str = backend_comm_settings.get('device', 'cpu')
+        dtype_str = backend_comm_settings.get('default_dtype', 'float32')
 
-            # Use torch.load with map_location to ensure model loads
-            # on the correct device
-            device_str = comm_settings.get('mace', {}).get('device', 'cpu')
-            model_path = prepend_path / model
-            model_loaded = torch.load(model_path, map_location=torch.device(device_str))
-
-            calculator = MACECalculator(
-                models=[model_loaded],
-                device=device_str,
-                default_dtype=comm_settings.get('mace', {}).get(
-                    'default_dtype', 'float32'
-                ),
-                batch_size=comm_settings.get('mace', {}).get('batch_size', 12),
-            )
-
-            for _, frame in enumerate(md_traj_short):
-                frame.calc = calculator
-
-                # Get the energy [meV/at] and forces [meV/A]
-                comm_results[model.stem]['REF_energy'].append(
-                    frame.get_potential_energy() * 1000 / len(frame)
-                )
-                comm_results[model.stem]['REF_forces'].append(frame.get_forces() * 1000)
+        comm_results = backend.evaluate_committee(
+            structures=md_traj_short,
+            model_files=model_file_list,
+            device=device_str,
+            dtype=dtype_str,
+            batch_size=backend_comm_settings.get('batch_size', 12),
+        )
 
         ## Apply E/F commitee extrapolation filter
         model_acc_multiplier = settings.get('interpolation', {}).get(
@@ -1092,12 +1080,13 @@ if __name__ == '__main__':
                     )
                 )
             else:
-                descriptor_dict, descriptor_arr, uuids = (
-                    atl_al_ut.generate_descriptors_mace(
-                        model_path=prepend_path / 'curr_model.model',
-                        database=md_traj_short,
-                        descriptor_settings=settings['descriptors'],
-                    )
+                descriptor_type = settings['descriptors'].get('descriptor_type', 'mace')
+                model_ext = backend.model_file_extension
+                descriptor_dict, descriptor_arr, uuids = atl_al_ut.generate_descriptors(
+                    database=md_traj_short,
+                    descriptor_type=descriptor_type,
+                    descriptor_settings=settings['descriptors'],
+                    model_path=prepend_path / f'curr_model{model_ext}',
                 )
 
             # Add is_extrapolating list which contains boolean values showing
@@ -1247,10 +1236,15 @@ if __name__ == '__main__':
         )
 
         # Renaming result keys
+        model_ext = backend.model_file_extension
+        main_calc = backend.create_calculator(
+            model_path=prepend_path / f'curr_model{model_ext}',
+            device=device_str,
+            dtype=dtype_str,
+        )
         out_of_domain_frames_final = []
         for structure in out_of_domain_frames_struct:
-            # Setting the main model calculator for the current structure
-            structure.calc = calculator
+            structure.calc = main_calc
 
             # Getting the energy and forces for the structure
             structure.info['REF_energy'] = structure.get_potential_energy()

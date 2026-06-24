@@ -1777,6 +1777,22 @@ active_learning:
                 type: str
                 mandatory: false
                 example: "module load singularity\nexport PATH=$PATH:."
+    mlip:
+        name: "mlip"
+        name_pretty: "MLIP Backend Settings"
+        description: "Configuration for the MLIP backend used in the active learning workflow. If this section is absent, the workflow defaults to MACE for all stages."
+        training_backend:
+            description: "Which MLIP backend to use for model training, committee evaluation, and calculator creation. Available backends are registered in the atlas.active_learning.backends registry."
+            type: str
+            mandatory: false
+            default: "mace"
+            example: "mace"
+        md_backend:
+            description: "Which MLIP backend to use for MD simulations. Defaults to the training_backend value if not specified."
+            type: str
+            mandatory: false
+            default: null
+            example: "mace"
     mace_train:
         name: "mace_train"
         name_pretty: "MLIP Training Settings"

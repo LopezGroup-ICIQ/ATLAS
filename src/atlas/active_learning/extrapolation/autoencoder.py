@@ -76,17 +76,16 @@ class Autoencoder(nn.Module):
     input_dim : int
         Dimension of the input data.
     l1_dim : int
-        Dimension of the first hidden layer in the encoder (and the last hidden layer
-         in the decoder).
+        Dimension of the first hidden layer in the encoder (last hidden layer
+        in the decoder).
     l2_dim : int
-        Dimension of the second hidden layer in the encoder (and the second-to-last
-         hidden layer in the decoder).
+        Dimension of the second hidden layer in the encoder (second-to-last
+        hidden layer in the decoder).
     bottleneck_dim : int, optional, default=2
         Dimension of the bottleneck layer (latent space) where input is compressed.
     bias_flag : bool, optional, default=True
-        Whether to include a bias term in each linear layer.
-        bias_flag set to false in principle is less dependant on the training data
-         and is more generalizable to unseen data.
+        Whether to include a bias term in each linear layer. Setting to False makes the
+        model less dependent on training data and more generalizable to unseen data.
 
 
 
@@ -94,8 +93,7 @@ class Autoencoder(nn.Module):
     -------
     forward(x):
         Performs a forward pass through the encoder and decoder, compressing
-        the input to the bottleneck and then reconstructing it back to its
-         original dimension.
+        the input to the bottleneck and reconstructing it to its original dimension.
 
     Example Usage:
     --------------

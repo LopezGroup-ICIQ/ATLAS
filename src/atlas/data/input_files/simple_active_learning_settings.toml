@@ -291,6 +291,10 @@ wandb_project = ""  # (str) Name of the wandb project
 
 ###############################################
 
+# MLIP Backend Settings (optional, defaults to "mace")
+# [mlip]
+# training_backend = "mace"
+
 # MACE training code and scheduler settings (aiida)
 [mace_train]
 

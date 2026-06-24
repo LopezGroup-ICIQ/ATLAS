@@ -1074,6 +1074,21 @@ Container settings for code execution.
   - **Example**: `'module load singularity
 export PATH=$PATH:.'`.
 
+### MLIP Backend Settings - `[mlip]`
+
+Configuration for the MLIP backend used in the active learning workflow. If this section is absent, the workflow defaults to MACE for all stages.
+
+
+- {alt}`training_backend`:
+  - **Description**: Which MLIP backend to use for model training, committee evaluation, and calculator creation. Available backends are registered in the atlas.active_learning.backends registry.
+  - **Type**: `(optional, str)`
+  - **Default**: `'mace'`.
+
+- {alt}`md_backend`:
+  - **Description**: Which MLIP backend to use for MD simulations. Defaults to the training_backend value if not specified.
+  - **Type**: `(optional, str)`
+  - **Example**: `'mace'`.
+
 ### MLIP Training Settings - `[mace_train]`
 
 Settings for MACE model training.
