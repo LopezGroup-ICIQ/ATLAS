@@ -1,2 +1,2 @@
-graft src/ATLAS/data
-include src/ATLAS/data/*
+graft src/atlas/data
+include src/atlas/data/*

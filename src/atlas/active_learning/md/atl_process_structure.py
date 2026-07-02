@@ -89,8 +89,10 @@ def check_traj_in_domain(
     # polygon formed by the concave hull.
     # If the concave hull has multiple parts, create a MultiPolygon
     # from all the parts.
-    if len(concave_hull) == 1:
+    if isinstance(concave_hull, list) and len(concave_hull) == 1:
         polygon = Polygon(concave_hull[0])
+    elif isinstance(concave_hull, np.ndarray) and concave_hull.ndim == 2:
+        polygon = Polygon(concave_hull)
     else:
         polygons = []
         for part in concave_hull:

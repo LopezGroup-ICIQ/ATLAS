@@ -632,11 +632,13 @@ def select_structures_data_reduction(
     elif selection_method == 'fps':
         if descriptor_settings is None:
             raise ValueError('descriptor_settings required for fps selection method')
-        initial_structure_method = kwargs.get(
-            'initial_structure_method', 'lowest_energy'
-        )
         return select_structures_fps(
-            database, n_structures, descriptor_settings, initial_structure_method
+            candidate_db=database,
+            selected_db=[],
+            n_structures=n_structures,
+            descriptor_settings=descriptor_settings,
+            outer_average_mace=kwargs.get('outer_average_mace', False),
+            model_path=kwargs.get('model_path', None),
         )
     elif selection_method == 'uncertainty':
         if model_files is None:
