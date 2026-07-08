@@ -358,6 +358,7 @@ def gen_al_loop_report(
                         wandb=False,
                         l1_hidden_dim=256,
                         l2_hidden_dim=32,
+                        bottleneck_dim=2,
                         bias_flag=True,
                         loss='mse',
                         patience=5,
@@ -366,6 +367,7 @@ def gen_al_loop_report(
                         num_epochs=250,
                         model_path='./autoencoder_model.pth',
                         weight_decay=1e-5,
+                        standardize_data=False,
                         verbose=True,
                     )
                     autoencoder_model = run_training(autoencoder_args)
@@ -660,7 +662,7 @@ def get_loop_report(
     )
 
 
-def get_mace_eval_results(
+def get_mlip_eval_results(
     al_loop_node: list[orm.Node],
     database_path: str | Path,
     device_str: str = 'cpu',
@@ -876,7 +878,7 @@ def generate_error_plot(
     enable_cueq: bool = False,
     # train_db:list=None,
 ):
-    E_nn_list, F_nn_list = get_mace_eval_results(
+    E_nn_list, F_nn_list = get_mlip_eval_results(
         al_loop_node=al_loop_node,
         device_str=device_str,
         database_path=database_path,
@@ -1252,7 +1254,7 @@ def gen_batch_report(
         mace_f_plot.append(mace_f[-1])
 
         ## MAE and RMSD
-        E_nn_list, F_nn_list = get_mace_eval_results(
+        E_nn_list, F_nn_list = get_mlip_eval_results(
             al_loop_node=al_loop_node,
             device_str=device_str,
             folder_path=dir_path,
