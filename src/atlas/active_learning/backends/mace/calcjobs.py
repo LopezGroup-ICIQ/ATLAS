@@ -561,8 +561,12 @@ class EvaluateMACEConfigsCalculationParser(Parser):
         self.out('forces_result_list', orm.List(forces_dict_list))
 
 
-class RunMDCalculationGPULAMMPSMACE(LammpsRawCalculation):
-    """aiida-lammps raw calculation modified to run on gpu using kokkos."""
+class RunMDCalculationGPULAMMPS(LammpsRawCalculation):
+    """aiida-lammps raw calculation modified to run on GPU using Kokkos.
+
+    This CalcJob is backend-agnostic — the LAMMPS pair_style (mace,
+    allegro, etc.) is determined by the input script, not this class.
+    """
 
     def prepare_for_submission(self, folder: Folder) -> CalcInfo:
         """Prepare the calculation for submission.
@@ -612,6 +616,9 @@ class RunMDCalculationGPULAMMPSMACE(LammpsRawCalculation):
         calcinfo.codes_info = [codeinfo]
 
         return calcinfo
+
+
+RunMDCalculationGPULAMMPSMACE = RunMDCalculationGPULAMMPS
 
 
 class CheckMACECommitteeResultsCalculation(CalcJob):

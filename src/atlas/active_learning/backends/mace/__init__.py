@@ -76,9 +76,14 @@ class MACEBackend:
             containerized=containerized,
         )
 
-        builder.mace_settings_dict = orm.Dict(mace_train_settings)
+        builder.train_config_dict = orm.Dict(mace_train_settings)
         builder.model_name = model_name
-        builder.mace_train_file_path = train_data_path
+        builder.train_file_path = train_data_path
+        builder.mlip_settings = orm.Dict({'training_backend': 'mace'})
+
+        foundation_model = mace_train_settings.get('foundation_model')
+        if foundation_model is not None:
+            builder.pretrained_model_path = str(foundation_model)
 
         return builder
 
@@ -156,11 +161,60 @@ class MACEBackend:
 
         return create_mace_lammps_model_impl(model_file)
 
+    def run_training(self, config_path: str | Path) -> None:
+        import subprocess
+        import sys
+
+        subprocess.check_call(
+            [sys.executable, '-m', 'mace.cli.run_train', '--config', str(config_path)]
+        )
+
+    def parse_training_results(self, results_dir: Path) -> dict:
+        import json
+
+        results_dir = Path(results_dir)
+        model_file = None
+        rmse_e = None
+        rmse_f = None
+        train_log = None
+
+        for child_file in results_dir.rglob('*'):
+            if 'swa.model' in child_file.name:
+                model_file = str(child_file)
+                continue
+            if '.model' in child_file.name and 'compiled' not in child_file.name:
+                model_file = str(child_file)
+                continue
+            if 'train.txt' in child_file.name:
+                train_log = str(child_file)
+                last_dict = None
+                with open(child_file) as f:
+                    for line in f:
+                        line_dict = json.loads(line)
+                        if 'rmse_e' in line_dict:
+                            last_dict = line_dict
+                if last_dict:
+                    rmse_e = float(last_dict['rmse_e_per_atom']) * 1000
+                    rmse_f = float(last_dict['rmse_f']) * 1000
+
+        result = {
+            'model_file': model_file,
+            'rmse_e': rmse_e,
+            'rmse_f': rmse_f,
+        }
+        if train_log:
+            result['train_log'] = train_log
+        return result
+
     # -- MLIPCalculatorFactory ----------------------------------------------
 
     @property
     def model_file_extension(self) -> str:
         return '.model'
+
+    @property
+    def lammps_pair_style(self) -> str:
+        return 'mace'
 
     def create_calculator(
         self,

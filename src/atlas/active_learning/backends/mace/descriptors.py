@@ -7,7 +7,7 @@ the MLIP-agnostic refactoring.
 from __future__ import annotations
 
 import os
-from contextlib import redirect_stdout
+from contextlib import contextmanager, redirect_stdout
 from pathlib import Path, PosixPath
 from uuid import uuid4
 
@@ -19,9 +19,11 @@ from atlas.core import code_utils as atl_cut
 from atlas.core.exceptions import MissingMandatoryParameterError
 
 
+@contextmanager
 def _suppress_stdout():
     """Temporarily redirect standard output to devnull."""
-    return redirect_stdout(open(os.devnull, 'w'))
+    with open(os.devnull, 'w') as devnull, redirect_stdout(devnull):
+        yield
 
 
 def generate_descriptors_mace(
