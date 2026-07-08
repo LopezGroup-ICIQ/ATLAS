@@ -9,6 +9,8 @@ Subpackages
 
    atlas.core.command_line
    atlas.core.database
+   atlas.core.filtering
+   atlas.core.gui
 
 Submodules
 ----------

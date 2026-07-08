@@ -7,7 +7,12 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   atlas.active_learning.backends
+   atlas.active_learning.dashboard
+   atlas.active_learning.eval_test_db
    atlas.active_learning.extrapolation
+   atlas.active_learning.md
+   atlas.active_learning.safeguard
 
 Submodules
 ----------
