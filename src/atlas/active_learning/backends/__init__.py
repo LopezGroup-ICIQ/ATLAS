@@ -67,6 +67,7 @@ def list_backends() -> list[str]:
 
 
 # Import backends so they register themselves
+import atlas.active_learning.backends.allegro  # noqa: E402, F401
 import atlas.active_learning.backends.mace  # noqa: E402, F401
 
 __all__ = [

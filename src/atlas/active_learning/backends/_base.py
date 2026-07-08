@@ -125,6 +125,39 @@ class MLIPTrainer(Protocol):
         """
         ...
 
+    def run_training(self, config_path: str | Path) -> None:
+        """Execute model training from a config file.
+
+        Called by the remote training script on the HPC node.
+        Each backend dispatches to its own training CLI.
+
+        Parameters
+        ----------
+        config_path : str | Path
+            Path to the backend-specific training config file.
+        """
+        ...
+
+    def parse_training_results(self, results_dir: Path) -> dict:
+        """Extract model file path and metrics from training output.
+
+        Called by the remote training script after training completes.
+        Each backend knows its own output format.
+
+        Parameters
+        ----------
+        results_dir : Path
+            Directory containing training outputs.
+
+        Returns
+        -------
+        dict
+            Dictionary with keys 'model_file' (str), 'rmse_e' (float,
+            meV/atom), 'rmse_f' (float, meV/A), and optionally
+            'train_log' (str).
+        """
+        ...
+
 
 @runtime_checkable
 class MLIPCalculatorFactory(Protocol):
@@ -133,6 +166,11 @@ class MLIPCalculatorFactory(Protocol):
     @property
     def model_file_extension(self) -> str:
         """File extension for model files (e.g. '.model' for MACE)."""
+        ...
+
+    @property
+    def lammps_pair_style(self) -> str:
+        """LAMMPS pair_style string for this backend (e.g. 'mace', 'allegro')."""
         ...
 
     def create_calculator(
