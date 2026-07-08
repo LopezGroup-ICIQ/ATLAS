@@ -1556,12 +1556,12 @@ def sampler_populate_E_and_F_list(
     return updated_struct_list
 
 
-def get_dft_calc_builder_mace_list(
+def get_dft_calc_builder_mlip_list(
     struct_list: list,
     dft_settings: dict,
     container_settings: dict,
 ):
-    """Get a MACE calculation builder for a given structure list and row."""
+    """Get an MLIP evaluation builder for a given structure list."""
     updated_struct_list = []
 
     # Whether to use a containerized version of the evaluator
@@ -2301,10 +2301,10 @@ def get_outliers_from_calc_list(curr_struct_res, result_list, outlier_list):
 
 
 @calcfunction
-def gather_dft_calcs_mace(
+def gather_dft_calcs_mlip(
     dft_calc_list: list, results_dir: str, workchain=None
 ) -> orm.List:
-    """Collect and preprocess MACE DFT calculation results for active learning input."""
+    """Collect and preprocess MLIP evaluation results for active learning input."""
     result_list = []
     outlier_list = []
 
@@ -2362,15 +2362,15 @@ def gather_dft_calcs_mace(
                 structure.info[key] = val
 
             # Renaming temporary energy key
-            if 'atl_mace_eval_energy' in structure.info:
+            if 'atl_mlip_eval_energy' in structure.info:
                 structure.info['REF_energy'] = structure.info.pop(
-                    'atl_mace_eval_energy'
+                    'atl_mlip_eval_energy'
                 )
 
             # Renaming forces dict
-            if 'atl_mace_eval_forces' in structure.arrays:
+            if 'atl_mlip_eval_forces' in structure.arrays:
                 structure.arrays['REF_forces'] = structure.arrays.pop(
-                    'atl_mace_eval_forces'
+                    'atl_mlip_eval_forces'
                 )
 
             if 'forces' in structure.arrays:
@@ -2388,7 +2388,7 @@ def gather_dft_calcs_mace(
         node = orm.load_node(workchain.value)
         node.logger.log(
             level=LOG_LEVEL_REPORT,
-            msg=f'[{node.pk}|{node.process_label}|gather_dft_calcs_mace]:'
+            msg=f'[{node.pk}|{node.process_label}|gather_dft_calcs_mlip]:'
             f' Removed {len(outlier_list)} outliers.',
         )
 

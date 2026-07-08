@@ -3,7 +3,7 @@ requires = ["setuptools", "wheel", "setuptools-git-versioning", 'pip']
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "atlas"
+name = "atlas-learn"
 dynamic = ["version"]
 description = "An automatic workflow for streamlining training and data generation for MLIPs via active learning."
 readme = "README.md"
@@ -55,6 +55,12 @@ mace = [
     "cuequivariance-torch",
     "cuequivariance-ops-torch-cu12",
 ]
+nequip = [
+    "nequip>=0.6.0",
+]
+allegro = [
+    "nequip-allegro",
+]
 
 [project.urls]
 Homepage = "https://github.com/LopezGroup-ICIQ/ATLAS"
@@ -70,7 +76,10 @@ Homepage = "https://github.com/LopezGroup-ICIQ/ATLAS"
 "mace-get-descriptors" = "atlas.active_learning.mace_tools_aiida:GetMACEDescriptorsCalculation"
 "mace-eval" = "atlas.active_learning.mace_tools_aiida:EvaluateMACEConfigsCalculation"
 "mace-lammps-gpu-md" = "atlas.active_learning.mace_tools_aiida:RunMDCalculationGPULAMMPSMACE"
+"atl-lammps-gpu-md" = "atlas.active_learning.backends.mace.calcjobs:RunMDCalculationGPULAMMPS"
 "mace-committee-eval" = "atlas.active_learning.mace_tools_aiida:CheckMACECommitteeResultsCalculation"
+"allegro-train" = "atlas.active_learning.backends.allegro.calcjobs:TrainAllegroModelCalculation"
+"atl-train-mlip" = "atlas.active_learning.calcjobs.train_mlip:TrainMLIPCalculation"
 
 "atl-process-md-seed-struct" = "atlas.active_learning.mace_tools_aiida:ProcessMDSeedStructCalculation"
 
@@ -92,6 +101,8 @@ Homepage = "https://github.com/LopezGroup-ICIQ/ATLAS"
 "atl-eval-test-parser" = "atlas.active_learning.mace_tools_aiida:EvalTestDatabaseCalculationParser"
 "mace-committee-eval-parser" = "atlas.active_learning.mace_tools_aiida:CheckMACECommiteeResultsCalculationParser"
 "mace-lammps-raw-parser" = "atlas.active_learning.mace_tools_aiida:LAMMPSMACERawParser"
+"allegro-training-parser" = "atlas.active_learning.backends.allegro.calcjobs:TrainAllegroModelCalculationParser"
+"atl-train-mlip-parser" = "atlas.active_learning.calcjobs.train_mlip:TrainMLIPCalculationParser"
 "atl-process-md-seed-struct-parser" = "atlas.active_learning.mace_tools_aiida:ProcessMDSeedStructCalculationParser"
 "atl-descriptors-combined-parser" = "atlas.active_learning.mace_tools_aiida:GetDescriptorsCombinedParser"
 "atl-safeguard-md-parser" = "atlas.active_learning.safeguard.safeguard_utils:RunMDSafeguardCalculationParser"
@@ -118,6 +129,7 @@ Homepage = "https://github.com/LopezGroup-ICIQ/ATLAS"
 "atl_latent_space_analysis" = "atlas.core.command_line.cli_latent_space_analysis:run_latent_space_analysis"
 "atl_database_analysis" = "atlas.core.command_line.cli_db_analysis:run_database_analysis"
 "atl_gui" = "atlas.core.gui.app:main"
+"atl_train_mlip" = "atlas.active_learning.scripts.atl_train_mlip:main"
 
 # package managers are becoming dangerous
 [tool.uv]
