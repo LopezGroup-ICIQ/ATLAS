@@ -346,6 +346,25 @@ wandb = false
 
 ###############################################
 
+# Allegro training settings (used when training_backend = "allegro")
+# Requires nequip and allegro packages to be installed.
+# [allegro_train]
+# result_force_weight = 0.1
+# code = "nequip-train@cluster"
+#
+# [allegro_train.train_settings]
+# r_max = 6.0
+# num_layers = 2
+# l_max = 2
+# parity = true
+# num_features = 32
+# lr = 0.005
+# batch_size = 5
+# max_num_epochs = 100
+# default_dtype = "float32"
+
+###############################################
+
 # DFT Settings
 [dft]
 

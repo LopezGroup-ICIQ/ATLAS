@@ -1796,7 +1796,8 @@ active_learning:
     mace_train:
         name: "mace_train"
         name_pretty: "MLIP Training Settings"
-        description: "Settings for MACE model training."
+        description: "Settings for MACE model training. Used when mlip.training_backend is 'mace' (default)."
+        mandatory: false
         result_force_weight:
             description: "Weight of the force when considering model performance in weighted sum calculation."
             type: float
@@ -1810,15 +1811,15 @@ active_learning:
             min: 0.0
             max: 1.0
         code:
-            description: "AiiDA code name for MACE training."
+            description: "AiiDA code name for MLIP training. Optional when using PortableCode (omit to use the bundled training script)."
             type: str
-            mandatory: true
+            mandatory: false
             example: "mace_train@cluster"
             suggestions: "aiida_codes"
         computer:
-            description: "AiiDA computer name for MACE training."
+            description: "AiiDA computer name for MLIP training. Required when 'code' is not set (PortableCode mode)."
             type: str
-            mandatory: true
+            mandatory: false
             example: "my_cluster"
             suggestions: "aiida_computers"
         ignore_container:
@@ -1837,6 +1838,41 @@ active_learning:
             mandatory: false
         train_settings:
             description: "MACE training parameters and hyperparameters."
+            type: dict
+            mandatory: false
+    allegro_train:
+        name: "allegro_train"
+        name_pretty: "Allegro Training Settings"
+        description: "Settings for Allegro model training. Used when mlip.training_backend is 'allegro'."
+        mandatory: false
+        result_force_weight:
+            description: "Weight of the force when considering model performance in weighted sum calculation."
+            type: float
+            mandatory: false
+            default: 0.1
+        code:
+            description: "AiiDA code name for Allegro training. Optional when using PortableCode."
+            type: str
+            mandatory: false
+            example: "nequip-train@cluster"
+            suggestions: "aiida_codes"
+        computer:
+            description: "AiiDA computer name for Allegro training. Required when 'code' is not set."
+            type: str
+            mandatory: false
+            example: "my_cluster"
+            suggestions: "aiida_computers"
+        ignore_container:
+            description: "Whether to ignore container settings for Allegro training."
+            type: bool
+            mandatory: false
+            default: false
+        metadata:
+            description: "AiiDA metadata and scheduler options for Allegro training."
+            type: dict
+            mandatory: false
+        train_settings:
+            description: "Allegro/NequIP training parameters and hyperparameters."
             type: dict
             mandatory: false
     committee_eval:
@@ -1864,22 +1900,50 @@ active_learning:
             mandatory: false
         mace:
             name: "mace"
-            name_pretty: "Commitee Evaluation - MACE Settings"
-            description: "Settings for MACE evaluator."
+            name_pretty: "Committee Evaluation - MACE Settings"
+            description: "Settings for MACE evaluator. Used when training_backend is 'mace'."
+            mandatory: false
             device:
-                description: "Device for MACE evaluation."
+                description: "Device for MLIP evaluation."
                 type: str
                 mandatory: false
                 default: "cpu"
                 choices: ["cpu", "cuda"]
             default_dtype:
-                description: "Default data type for MACE evaluation."
+                description: "Default data type for MLIP evaluation."
                 type: str
                 mandatory: false
                 default: "float32"
                 choices: ["float32", "float64"]
             batch_size:
-                description: "Batch size for MACE evaluation."
+                description: "Batch size for MLIP evaluation."
+                type: int
+                mandatory: false
+                default: 32
+            compute_stress:
+                description: "Whether to compute stress during evaluation."
+                type: bool
+                mandatory: false
+                default: false
+        allegro:
+            name: "allegro"
+            name_pretty: "Committee Evaluation - Allegro Settings"
+            description: "Settings for Allegro evaluator. Used when training_backend is 'allegro'."
+            mandatory: false
+            device:
+                description: "Device for MLIP evaluation."
+                type: str
+                mandatory: false
+                default: "cpu"
+                choices: ["cpu", "cuda"]
+            default_dtype:
+                description: "Default data type for MLIP evaluation."
+                type: str
+                mandatory: false
+                default: "float32"
+                choices: ["float32", "float64"]
+            batch_size:
+                description: "Batch size for MLIP evaluation."
                 type: int
                 mandatory: false
                 default: 32
@@ -1949,13 +2013,13 @@ active_learning:
                 device:
                     description: "Device for autoencoder training."
                     type: str
-                    mandatory: true
+                    mandatory: false
                     default: "cuda"
                     choices: ["cpu", "cuda"]
                 dtype:
                     description: "Data type for autoencoder training."
                     type: str
-                    mandatory: true
+                    mandatory: false
                     default: "float32"
                     choices: ["float32", "float64"]
                 model_path:
@@ -2004,7 +2068,7 @@ active_learning:
                     mandatory: false
                     default: 2048
                 patience:
-                    description: "Patience for early stopping."
+                    description: "Early stopping patience (epochs without val loss improvement). Also controls LR reduction schedule."
                     type: int
                     mandatory: false
                     default: 5
@@ -2815,13 +2879,13 @@ latent_space_analysis:
                 device:
                     description: "Device for autoencoder training."
                     type: str
-                    mandatory: true
+                    mandatory: false
                     default: "cuda"
                     choices: ["cpu", "cuda"]
                 dtype:
                     description: "Data type for autoencoder training."
                     type: str
-                    mandatory: true
+                    mandatory: false
                     default: "float32"
                     choices: ["float32", "float64"]
                 model_path:
@@ -2870,7 +2934,7 @@ latent_space_analysis:
                     mandatory: false
                     default: 2048
                 patience:
-                    description: "Patience for early stopping."
+                    description: "Early stopping patience (epochs without val loss improvement). Also controls LR reduction schedule."
                     type: int
                     mandatory: false
                     default: 5
