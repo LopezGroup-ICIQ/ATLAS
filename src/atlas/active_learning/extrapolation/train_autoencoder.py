@@ -1,5 +1,6 @@
 """Train an autoencoder for dimensionality reduction."""
 
+import copy
 import pathlib as pl
 
 import numpy as np
@@ -260,7 +261,8 @@ def run_training(args):
         - batch_size : int
             Batch size for training.
         - patience : int
-            Number of epochs to wait before reducing the learning rate.
+            Early stopping patience: number of epochs without validation loss
+            improvement before stopping training. Also controls LR reduction.
         - train_frac : float
             Fraction of the dataset to use for training.
         - valid_frac : float
@@ -474,11 +476,17 @@ def run_training(args):
         mode='min',
         factor=0.5,
         patience=args.patience,
-        # threshold=1e-3,
+        min_lr=1e-6,
     )
 
+    best_val_loss = float('inf')
+    best_model_state = None
+    epochs_without_improvement = 0
+
     atl_cut.custom_print(
-        f'Starting autoencoder training for {args.num_epochs} epochs...', 'info'
+        f'Starting autoencoder training for {args.num_epochs} epochs '
+        f'(early stopping patience: {args.patience})...',
+        'info',
     )
 
     for epoch in range(args.num_epochs):
@@ -498,7 +506,6 @@ def run_training(args):
         )
 
         # Perform test evaluation every 5 epochs
-        # Specifically
         if epoch % 5 == 0:
             test_loss = val_loop(
                 data_loader=test_data,
@@ -554,6 +561,25 @@ def run_training(args):
                 )
 
         scheduler.step(metrics=val_loss)
+
+        if val_loss < best_val_loss:
+            best_val_loss = val_loss
+            best_model_state = copy.deepcopy(model.state_dict())
+            epochs_without_improvement = 0
+        else:
+            epochs_without_improvement += 1
+
+        if epochs_without_improvement >= args.patience:
+            atl_cut.custom_print(
+                f'Early stopping at epoch {epoch} '
+                f'(no improvement for {args.patience} epochs). '
+                f'Best val loss: {best_val_loss:.6f}',
+                'info',
+            )
+            break
+
+    if best_model_state is not None:
+        model.load_state_dict(best_model_state)
 
     atl_cut.custom_print('Training complete!', 'done')
 

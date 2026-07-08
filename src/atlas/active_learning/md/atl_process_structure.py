@@ -426,7 +426,7 @@ if __name__ == '__main__':
             filename=traj_filename,
             mode='w',
             atoms=init_conf,
-            properties=['energy', 'forces', 'REF_energy', 'REF_forces', 'MACE_energy'],
+            properties=['energy', 'forces', 'REF_energy', 'REF_forces', 'MLIP_energy'],
         )
         print()
 

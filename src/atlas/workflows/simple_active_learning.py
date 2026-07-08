@@ -188,6 +188,15 @@ class SimpleActiveLearningWorkChain(WorkChain):
             'mace_train',
             valid_type=orm.Dict,
             serializer=orm.to_aiida_type,
+            required=False,
+            default=None,
+        )
+        spec.input(
+            'mlip_train',
+            valid_type=orm.Dict,
+            serializer=orm.to_aiida_type,
+            required=False,
+            default=None,
         )
         spec.input('md_parameters', valid_type=orm.Dict)
         spec.input('dft_method', valid_type=orm.Str, serializer=orm.to_aiida_type)
@@ -238,11 +247,8 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
         spec.outline(
             cls.step_setup,
-            # Training the main mace model (M0) and the committee models
-            # using the training database (Dt).
-            cls.train_mace_model,
-            # Gathering results from mace training.
-            cls.get_mace_train_output,
+            cls.train_mlip_model,
+            cls.get_mlip_train_output,
             # If enabled, run evaluation of test database using M0 model.
             if_(cls.is_test_db_evaluation_enabled)(
                 cls.perform_test_db_evaluation,
@@ -293,7 +299,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
         spec.output('stop_al_loop_error', valid_type=orm.Bool)
 
         spec.exit_code(
-            420, 'ERROR_SCHEDULER_MACE', 'error when submitting a MACE calculation.'
+            420, 'ERROR_SCHEDULER_MLIP', 'error when submitting a MLIP calculation.'
         )
         spec.exit_code(
             421,
@@ -428,6 +434,11 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
         self.ctx.mlip_backend_name = backend_name
         self.ctx.mlip_backend = get_backend(backend_name)
+        self.ctx.mlip_train_settings = (
+            self.inputs.mlip_train
+            if self.inputs.mlip_train is not None
+            else self.inputs.mace_train
+        )
         self.report(f'Using MLIP backend: {backend_name}')
 
     def should_select_data_reduction_structures(self):
@@ -542,27 +553,16 @@ class SimpleActiveLearningWorkChain(WorkChain):
         )
         self.report(msg)
 
-    def train_mace_model(self):
-        """
-        Setup and submit TrainMACEModelCalculation for MACE model training.
+    def train_mlip_model(self):
+        """Submit MLIP training calculations using the active backend.
 
-        This function generates a new training database file by appending the
-        workchain UUID to the original database file name. It then proceeds to train
-        a specified number of MACE models using settings defined in the workflow
-        inputs. The function updates the workchain context with the futures of the
-        submitted calculation jobs, allowing for the tracking of these jobs. The most
-        accurate model from these trainings is selected in a later step to drive MD
-        simulations, while the others serve as committee models for energy evaluation.
-
-        Returns
-        -------
-        None
-            The function does not return a value but updates the workchain context with
-            futures of the submitted TrainMACEModelCalculation jobs for later reference.
+        Generates a training database, then submits N training calculations
+        (one per committee model). Uses PortableCode by default; falls back
+        to a registered AiiDA Code if the ``code`` key is present in the
+        training settings.
         """
         self.report('Generating new training database file.')
 
-        # Adding workchain uuid input.data filename to path
         updated_path, _ = atl_al_ut.get_final_db_path(
             result_dir_path=self.inputs.results_dir.value,
             final_db_name=self.inputs.final_db_name.value,
@@ -571,21 +571,13 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
         database_training = atl_al_ut.load_database(self.inputs.training_db_path.value)
 
-        # Generate new training data file using the active backend
         self.ctx.mlip_backend.prepare_training_data(
             path=updated_path,
             structure_list=database_training,
         )
 
-        # Determining if resume mode is activated
         self.ctx.resume_mode = self.inputs.al_start_mode.value == 'resume'
 
-        # Train n models (M0-Mn)
-        # The most accurate model (during validation) will be chosen as the main model,
-        # and used to drive the MD simulations. The remaining models will act as
-        # committee models and will only be used to evaluate energies.
-
-        # Stop the calculation if initial models must be loaded
         if (
             self.inputs.load_init_models and self.inputs.al_loop_iteration.value == 0
         ) or (
@@ -598,7 +590,6 @@ class SimpleActiveLearningWorkChain(WorkChain):
                 f"'{self.inputs.load_init_models.get_list()}'."
             )
             return
-        # Run the training
         else:
             self.report(
                 f'Training {self.inputs.committee_num_models.value} models using '
@@ -606,137 +597,165 @@ class SimpleActiveLearningWorkChain(WorkChain):
             )
 
         calc_count = 0
+        train_settings_dict = self.ctx.mlip_train_settings.get_dict()
 
-        # Getting container settings
         containerized = False
         container_dict = self.inputs.container_settings.get_dict()
         if container_dict.get('use_container'):
             containerized = container_dict.get('use_container', False)
-        if self.inputs.mace_train.get('ignore_container') is True:
+        if self.ctx.mlip_train_settings.get('ignore_container') is True:
             containerized = False
+
+        use_portable_code = 'code' not in train_settings_dict
+        sched_options = train_settings_dict['metadata'].get('options')
+
+        train_file_path, _ = atl_al_ut.get_final_db_path(
+            result_dir_path=self.inputs.results_dir.value,
+            final_db_name=self.inputs.final_db_name.value,
+            node=self.node,
+        )
 
         for _ in range(self.inputs.committee_num_models.value):
             model_name = atl_al_ut.generate_model_name()
 
-            # Load training settings from inputs and update path and model names.
-            mace_train_settings: orm.Dict = atl_al_ut.update_mace_train_settings_dict(
-                settings_dict=self.inputs.mace_train.get('train_settings'),
-                train_data_path=str(updated_path),
-                curr_model=model_name,
-                curr_iter=self.inputs.al_loop_iteration.value,
-                db_size=len(database_training),
-                containerized=containerized,
-            )
+            if use_portable_code:
+                train_calcjob = CalculationFactory('atl-train-mlip')
+                builder = train_calcjob.get_builder()
 
-            # Run training and save new model file
-            mace_train = CalculationFactory(self.ctx.mlip_backend.calcjob_entry_point)
-            mace_builder = mace_train.get_builder()
-
-            mace_builder.multihead_finetuning = self.inputs.mace_train.get(
-                'multihead_finetuning', False
-            )
-            mace_builder.model_name = model_name
-            mace_builder.mace_settings_dict = orm.Dict(mace_train_settings)
-
-            # Set the use container flag
-            mace_builder.use_container = orm.Bool(containerized)
-
-            mace_train_file_path, _ = atl_al_ut.get_final_db_path(
-                result_dir_path=self.inputs.results_dir.value,
-                final_db_name=self.inputs.final_db_name.value,
-                node=self.node,
-            )
-            mace_builder.mace_train_file_path = str(mace_train_file_path)
-
-            mace_train_calc_sched_options = self.inputs.mace_train.get_dict()[
-                'metadata'
-            ].get('options')
-
-            if containerized:
-                image_name = container_dict.get('image_name', '')
-                engine_command = container_dict.get('engine_command', '')
-                num_threads = mace_train_calc_sched_options.get('resources', {}).get(
-                    'num_cores_per_mpiproc', os.cpu_count()
+                self.ctx.mlip_backend.prepare_builder(
+                    builder=builder,
+                    settings_dict=train_settings_dict.get('train_settings', {}),
+                    train_data_path=str(train_file_path),
+                    model_name=model_name,
+                    iteration=self.inputs.al_loop_iteration.value,
+                    db_size=len(database_training),
+                    containerized=containerized,
                 )
-                mace_train_prepend = (
-                    self.inputs.mace_train.get_dict()
-                    .get('metadata', {})
-                    .get('prepend_text', '')
-                )
-                prepend_text = (
-                    mace_train_prepend
-                    + '\n'
-                    + container_dict.get('prepend_text', '')
-                    + f'\nexport OMP_NUM_THREADS={num_threads}'
-                )
-                computer = orm.load_computer(
-                    self.inputs.mace_train.get_dict().get('computer', None)
-                )
-                code = orm.ContainerizedCode(
-                    computer=computer,
-                    image_name=image_name,
-                    filepath_executable='mace_run_train',
-                    prepend_text=prepend_text,
-                    engine_command=engine_command,
-                )
+
+                train_cfg = train_settings_dict.get('train_settings', {})
+                if self.ctx.mlip_backend_name != 'mace':
+                    mace_only = []
+                    if train_cfg.get('foundation_model'):
+                        mace_only.append('foundation_model')
+                    if train_cfg.get('multihead_finetuning'):
+                        mace_only.append('multihead_finetuning')
+                    if mace_only:
+                        self.report(
+                            f'WARNING: {", ".join(mace_only)} '
+                            f'configured but backend is '
+                            f'"{self.ctx.mlip_backend_name}" '
+                            f'(MACE-only features, will be ignored)'
+                        )
+
+                if containerized:
+                    image_name = container_dict.get('image_name', '')
+                    engine_command = container_dict.get('engine_command', '')
+                    num_threads = sched_options.get('resources', {}).get(
+                        'num_cores_per_mpiproc', os.cpu_count()
+                    )
+                    prepend_text = (
+                        train_settings_dict.get('metadata', {}).get(
+                            'prepend_text', ''
+                        )
+                        + '\n'
+                        + container_dict.get('prepend_text', '')
+                        + f'\nexport OMP_NUM_THREADS={num_threads}'
+                    )
+                    computer = orm.load_computer(
+                        train_settings_dict.get('computer', None)
+                    )
+                    code = orm.ContainerizedCode(
+                        computer=computer,
+                        image_name=image_name,
+                        filepath_executable='atl_train_mlip',
+                        prepend_text=prepend_text,
+                        engine_command=engine_command,
+                    )
+                else:
+                    computer = orm.load_computer(
+                        train_settings_dict.get('computer', None)
+                    )
+                    prepend_text = (
+                        train_settings_dict.get('metadata', {})
+                        .get('options', {})
+                        .get('prepend_text', '')
+                    )
+                    code = get_or_create_portable_code(
+                        label='atl-train-mlip',
+                        filepath_files=Path(
+                            f'{ATL_ROOT_DIR}/active_learning/scripts'
+                        ),
+                        filepath_executable='atl_train_mlip.py',
+                        prepend_text=prepend_text,
+                    )
+
+                builder.code = code
+                builder.metadata.computer = computer
+                builder.metadata.options = sched_options
+                builder.metadata.options.parser_name = 'atl-train-mlip-parser'
             else:
-                code_str = self.inputs.mace_train.get_dict()['code']
+                # Legacy path: backend-specific CalcJob + registered Code
+                mace_train_settings = atl_al_ut.update_mace_train_settings_dict(
+                    settings_dict=train_settings_dict.get('train_settings'),
+                    train_data_path=str(updated_path),
+                    curr_model=model_name,
+                    curr_iter=self.inputs.al_loop_iteration.value,
+                    db_size=len(database_training),
+                    containerized=containerized,
+                )
+
+                train_calcjob = CalculationFactory(
+                    self.ctx.mlip_backend.calcjob_entry_point
+                )
+                builder = train_calcjob.get_builder()
+                builder.multihead_finetuning = self.ctx.mlip_train_settings.get(
+                    'multihead_finetuning', False
+                )
+                builder.model_name = model_name
+                builder.mace_settings_dict = orm.Dict(mace_train_settings)
+                builder.use_container = orm.Bool(containerized)
+                builder.mace_train_file_path = str(train_file_path)
+
+                code_str = train_settings_dict['code']
                 code = orm.load_code(code_str)
                 computer = code.computer
 
-            mace_builder.code = code
+                builder.code = code
+                builder.metadata.options = sched_options
+                builder.metadata.options.parser_name = (
+                    self.ctx.mlip_backend.parser_entry_point
+                )
 
-            mace_builder.metadata.options = mace_train_calc_sched_options
-
-            # Set the parser from the backend
-            mace_builder.metadata.options.parser_name = (
-                self.ctx.mlip_backend.parser_entry_point
-            )
-
-            mace_builder.metadata.options.output_filename = (
+            builder.metadata.options.output_filename = (
                 f'train_{model_name}_iter-{self.inputs.al_loop_iteration.value}'
             )
-            mace_builder.metadata.label = model_name
+            builder.metadata.label = model_name
 
-            if not hasattr(mace_builder.metadata.options, 'prepend_text'):
-                mace_builder.metadata.options.prepend_text = (
-                    self.inputs.mace_train.get_dict()
-                    .get('metadata', {})
+            if not hasattr(builder.metadata.options, 'prepend_text'):
+                builder.metadata.options.prepend_text = (
+                    train_settings_dict.get('metadata', {})
                     .get('options', {})
                     .get('prepend_text', '')
                 )
 
-            # future = self.submit(mace_builder)
-            # self.to_context(mace_training_results=append_(future))
             calc_limit = computer.metadata.get('atl_calc_limit', 0)
             if calc_limit != 0:
                 atl_al_ut.aiida_wait_submit(
-                    builder=mace_builder,
+                    builder=builder,
                     computer=computer,
                     calc_count=calc_count,
                 )
-            # Submit calculation
-            future = self.submit(mace_builder)
+
+            future = self.submit(builder)
             self.report(f'Submitted training calculation {future.pk}.')
-            self.to_context(mace_training_results=append_(future))
+            self.to_context(mlip_training_results=append_(future))
 
-    def get_mace_train_output(self):
-        """
-        Retrieve and process MACE training output for model selection.
+    def get_mlip_train_output(self):
+        """Retrieve and process MLIP training output for model selection.
 
-        This function evaluates MACE training results to identify the model with the
-        best performance based on a weighted sum of RMSE values for energy (E) and
-        forces (F). It selects the model with the lowest weighted E+F, considers
-        the importance of forces via a weighting factor, and processes the best model
-        to create a LAMMPS-compatible potential file. Information about the selected
-        model and committee models is updated in the context for further use.
-
-        Returns
-        -------
-        None
-            The function updates the workchain context with the best model's RMSE
-            values, the potential file, and the committee models' information
-            but does not return any value directly.
+        Evaluates training results to select the best model based on a
+        weighted sum of RMSE for energy and forces. Creates a
+        LAMMPS-compatible potential and updates context with model info.
         """
         # Get the current iteration and resume mode
         curr_iter = self.inputs.al_loop_iteration.value
@@ -746,21 +765,21 @@ class SimpleActiveLearningWorkChain(WorkChain):
             if curr_iter == 0 or (
                 self.ctx.resume_mode and not hasattr(self.ctx, 'loaded_init_models')
             ):
-                mace_training_results = [
+                mlip_training_results = [
                     orm.load_node(node) for node in self.inputs.load_init_models
                 ]
                 # Mark that models have been loaded
                 self.ctx.loaded_init_models = True
             else:
-                mace_training_results = self.ctx.mace_training_results
+                mlip_training_results = self.ctx.mlip_training_results
         else:
-            mace_training_results = self.ctx.mace_training_results
+            mlip_training_results = self.ctx.mlip_training_results
 
         model_name_list = []
         weighted_E_F_sum_list = []
 
         # Iterate over all models and get weighted sum of E and F
-        for calc in mace_training_results:
+        for calc in mlip_training_results:
             # Loading calculation node
             curr_calc: orm.CalcJobNode = orm.load_node(calc.uuid)
 
@@ -779,7 +798,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
             # Adding E + F multiplied by a weight value, in order to consider
             # forces when deciding which model to keep
-            force_weight = self.inputs.mace_train.get(
+            force_weight = self.ctx.mlip_train_settings.get(
                 'result_force_weight',
                 0.1,
             )
@@ -800,18 +819,18 @@ class SimpleActiveLearningWorkChain(WorkChain):
             raise ChildProcessError(
                 'No valid MLIP models were found after training! '
                 f'Check for issues in the training step. '
-                f'Calculation PKs: \n{mace_training_results}'
+                f'Calculation PKs: \n{mlip_training_results}'
             ) from e
 
         commitee_models_tupl_name_uuid = []
-        for calc in mace_training_results:
+        for calc in mlip_training_results:
             # Loading calculation node
             curr_calc: orm.CalcJobNode = orm.load_node(calc.uuid)
 
             # Skipping model if training hasn't finished correctly.
             if curr_calc.exit_status != 0:
                 self.report(
-                    f'Skipping MACE model that finished with errors (pk: {calc.pk}).'
+                    f'Skipping MLIP model that finished with errors (pk: {calc.pk}).'
                 )
                 continue
 
@@ -935,10 +954,10 @@ class SimpleActiveLearningWorkChain(WorkChain):
         eval_calc_builder.code = code
 
         # Loading AiiDA settings
-        mace_eval_aiida_settings_dict = eval_test_db_settings['metadata']['options']
+        mlip_eval_settings_dict = eval_test_db_settings['metadata']['options']
 
         # Load scheduler and resources options
-        eval_calc_builder.metadata.options = mace_eval_aiida_settings_dict
+        eval_calc_builder.metadata.options = mlip_eval_settings_dict
         eval_calc_builder.metadata.options.parser_name = 'atl-eval-test-parser'
 
         # Submit evaluation calculation
@@ -1113,10 +1132,10 @@ class SimpleActiveLearningWorkChain(WorkChain):
         desc_builder.code = code
 
         # Loading AiiDA settings
-        mace_eval_aiida_settings_dict = descriptor_settings['metadata']['options']
+        mlip_eval_settings_dict = descriptor_settings['metadata']['options']
 
         # Load scheduler and resources options
-        desc_builder.metadata.options = mace_eval_aiida_settings_dict
+        desc_builder.metadata.options = mlip_eval_settings_dict
         desc_builder.metadata.options.parser_name = 'atl-descriptors-combined-parser'
 
         # Get the calculation limit, from the computer metadata set to 0
@@ -1241,13 +1260,13 @@ class SimpleActiveLearningWorkChain(WorkChain):
                 'positions',
                 'forces',
                 'REF_forces',
-                'MACE_forces',
+                'MLIP_forces',
                 'momenta',
                 'initial_magmoms',
                 'bulk_equivalent',
                 'bulk_wyckoff',
                 'spacegroup_kinds',
-                'atl_mace_eval_forces',
+                'atl_mlip_eval_forces',
                 'curr_model_forces',
             ]:
                 if curr_structure.get(key):
@@ -1504,8 +1523,8 @@ class SimpleActiveLearningWorkChain(WorkChain):
                 ),
             )
 
-        mace_calcs_struct_list = []
-        mace_calcs_idx_list = []
+        mlip_calcs_struct_list = []
+        mlip_calcs_idx_list = []
         calcs_to_submit = []
         delete_indices = []
 
@@ -1667,13 +1686,14 @@ class SimpleActiveLearningWorkChain(WorkChain):
                     group = orm.load_group(self.inputs.train_seed_group.value)
                     group.add_nodes(future)
 
-            elif self.inputs.dft_method == 'mace':
-                mace_calcs_struct_list.append(struct)
-                mace_calcs_idx_list.append(calc_idx)
+            elif self.inputs.dft_method in ('mace', 'mlip'):
+                mlip_calcs_struct_list.append(struct)
+                mlip_calcs_idx_list.append(calc_idx)
 
-        if self.inputs.dft_method == 'mace' and len(mace_calcs_struct_list) > 0:
-            builder = atl_al_ut.get_dft_calc_builder_mace_list(
-                struct_list=mace_calcs_struct_list,
+        is_mlip = self.inputs.dft_method in ('mace', 'mlip')
+        if is_mlip and len(mlip_calcs_struct_list) > 0:
+            builder = atl_al_ut.get_dft_calc_builder_mlip_list(
+                struct_list=mlip_calcs_struct_list,
                 dft_settings=self.inputs.dft_settings.get_dict(),
                 container_settings=self.inputs.container_settings.get_dict(),
             )
@@ -1796,7 +1816,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
             except AttributeError:
                 dft_calc_list = ''
 
-        elif self.inputs.dft_method == 'mace':
+        elif self.inputs.dft_method in ('mace', 'mlip'):
             if hasattr(self.ctx, 'dft_struct_seed_calcs'):
                 dft_calcs = self.ctx.dft_struct_seed_calcs
             else:
@@ -1807,29 +1827,29 @@ class SimpleActiveLearningWorkChain(WorkChain):
                 dft_calcs_ok = [node.uuid for node in dft_calcs if node.is_finished_ok]
 
                 if len(dft_calcs_ok) == 0 and dft_calcs_len > 0:
-                    self.report('No MACE evaluations finished correctly.')
+                    self.report('No MLIP evaluations finished correctly.')
                     dft_calc_list = ''
                     self.ctx.stop_al_loop_error = orm.Bool(True)
                 elif len(dft_calcs_ok) == 0 and dft_calcs_len == 0:
-                    self.report('No MACE evaluation jobs performed.')
+                    self.report('No MLIP evaluation jobs performed.')
                     dft_calc_list = ''
                 else:
                     # Gather all MACE evaluations, storing results into a file,
                     # stored in `result_list_path`.
                     # Results are filtered to remove outliers. Outliers are
                     # stored in a separate file in the same folder.
-                    dft_calc_list: orm.List = atl_al_ut.gather_dft_calcs_mace(
+                    dft_calc_list: orm.List = atl_al_ut.gather_dft_calcs_mlip(
                         dft_calc_list=dft_calcs_ok,
                         results_dir=str(self.ctx.results_dir),
                         workchain=self.node.uuid,
                     )
                     self.report(
-                        f'Gathered {len(dft_calcs)} MACE evaluation calculation jobs.'
+                        f'Gathered {len(dft_calcs)} MLIP evaluation calculation jobs.'
                     )
             except AttributeError:
                 dft_calc_list = ''
                 self.report(
-                    'Exception raised when gathering MACE evaluation calculation jobs.'
+                    'Exception raised when gathering MLIP evaluation calculation jobs.'
                 )
 
         if len(dft_calc_list) > 0:
@@ -1842,7 +1862,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
                 # For non MLIP cases (DFT), the model predictions are not readily
                 # accessible, so they must be generated on the fly.
-                if self.inputs.dft_method != 'mace':
+                if self.inputs.dft_method not in ('mace', 'mlip'):
                     dft_calc_list = atl_al_ut.sampler_populate_E_and_F_list(
                         structure_list=dft_calc_list,
                         model_file=self.ctx.best_model_file,
