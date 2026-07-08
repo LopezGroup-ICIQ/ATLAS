@@ -5,6 +5,17 @@
     <img alt="ATLAS: A workflow for materials NNP generation" src="../_static/logo_light.png" width="600">
   </picture>
 
+ATLAS (Automated Training with Latent-space Aware Sampling) is a unified Python framework for building robust machine learning interatomic potentials (MLIPs). It combines a diversity-aware database generator with a manifold-aware active learning workflow to produce compact, high-quality training datasets.
 
-ATLAS is a Python library that enables the generation of chemical structures database for training NNPs (Neural Network Potential) for heterogeneous catalysis. It provides functionaliti
-es to create and manage a database of materials structures for training machine learning models, and allows to interact with workflow tools in order to automate the structure labelling.
+Key capabilities include:
+
+- **Structure generation** for bulk, surface, cluster, and isolated atom configurations across single-, binary-, and ternary-phase diagrams, with perturbations, vacancies, deformations, and adsorbates.
+- **Active learning** that iteratively trains MACE models, runs molecular dynamics simulations, detects extrapolating structures via descriptor-based or latent-space methods, and submits them for DFT labelling.
+- **Data reduction mode** for iteratively selecting structures from large pre-existing databases.
+- **Safeguard checks** to prevent premature convergence of active learning loops.
+- **Diversity metrics** including Vendi Score and Circles Metric.
+- **Benchmarking** tools for both MLIP and DFT evaluation.
+- **Interactive monitoring** via a Flask dashboard and a PySide6 desktop GUI (ATLAS Hub).
+- **Comprehensive reporting** of model performance and resource usage.
+
+The entire workflow is orchestrated through AiiDA for reproducible and provenance-tracked execution.

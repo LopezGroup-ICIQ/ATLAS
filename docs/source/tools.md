@@ -435,3 +435,53 @@ Use these flags to select which benchmarks to run. Multiple benchmarks can be ru
 
 - `--no_rich_ui`
   - **Description**: Disable the Rich UI and use plain text output.
+
+## DFT Benchmark - `atl_dft_benchmark`
+
+Runs DFT calculations to benchmark and select optimal VASP settings for a given material system.
+
+**Usage:** `atl_dft_benchmark [OPTIONS]`
+
+- `--config <PATH>`
+  - **Description**: Path to the TOML configuration file with benchmark settings.
+- `--db_file <PATH>`
+  - **Description**: Path to the structure database file.
+
+## Database Analysis - `atl_database_analysis`
+
+Analyzes database composition, diversity, and completeness metrics.
+
+**Usage:** `atl_database_analysis [OPTIONS]`
+
+- `--db_path <PATH>`
+  - **Description**: Path to the database file (xz-compressed InitialDatabase or extxyz).
+- `--metric <METRIC>`
+  - **Description**: Diversity metric to compute. Options: `vendi_score`, `circles_metric`.
+- `--descriptor_type <TYPE>`
+  - **Description**: Descriptor type for diversity calculations. Options: `soap`, `mace`.
+- `--output_dir <PATH>`
+  - **Description**: Directory to save analysis results and plots.
+
+## GUI - `atl_gui`
+
+Launches the ATLAS Hub, a PySide6 desktop application for configuring and running ATLAS workflows.
+
+**Usage:** `atl_gui [OPTIONS]`
+
+- `--help`
+  - **Description**: Show help message and exit.
+
+The ATLAS Hub provides a graphical interface for:
+
+- Project management with a dedicated workspace for each material system
+- Database generation configuration and execution
+- DFT calculation submission and monitoring
+- Active learning loop setup, launch, and live tracking
+- Report generation and visualization
+- Settings management (AiiDA profiles, computers, codes, Materials Project API key)
+
+To use the GUI, install the optional `gui` dependency:
+
+```bash
+pip install -e '.[gui]'
+```

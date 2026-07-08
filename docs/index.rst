@@ -37,4 +37,3 @@ ATLAS (Automated Training with Latent-space Aware Sampling) is a unified Python 
    :caption: Package information
 
    Package Information <source/modules.rst>
-   API and Package Information api/index

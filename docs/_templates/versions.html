@@ -1,12 +1,12 @@
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
   <span class="rst-current-version" data-toggle="rst-current-version">
     <span class="fa fa-book"> Other Versions</span>
-    {%- if current_version.name == 'master' %}
-    v: {{ current_version.name }} (#{{ commit_hash }})
-    {%- elif current_version.name == 'main' %}
-    v: {{ current_version.name }} (#{{ commit_hash }})
+    {%- if versions is defined and versions.tags %}
+    {%- set cv = current_version.name if current_version is mapping else current_version %}
+    {%- if cv == 'master' or cv == 'main' %}
+    v: {{ cv }} (#{{ commit_hash }})
     {% else %}
-    v: {{ current_version.name }}
+    v: {{ cv }}
     {%- endif %}
     <span class="fa fa-caret-down"></span>
   </span>
@@ -23,15 +23,12 @@
     <dl>
       <dt>Branches</dt>
       {%- for item in versions.branches %}
-      {%- if item.name == 'master' %}
-      <dd><a href="{{ item.url }}">{{ item.name }} (#{{ commit_hash }})</a></dd>
-      {%- elif item.name == 'main' %}
-      <dd><a href="{{ item.url }}">{{ item.name }} (#{{ commit_hash }})</a></dd>
-      {% else %}
       <dd><a href="{{ item.url }}">{{ item.name }}</a></dd>
-      {%- endif %}
       {%- endfor %}
     </dl>
     {%- endif %}
   </div>
+  {%- else %}
+    v: {{ current_version }}
+  {%- endif %}
 </div>

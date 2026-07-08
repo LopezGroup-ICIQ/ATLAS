@@ -68,6 +68,7 @@ There are several installation mechanisms, and several optional dependencies dep
 
 - `mace`
 - `dev`
+- `gui`
 
 Optional dependencies are installed using the following syntax:
 
@@ -89,6 +90,14 @@ python3 -m pip install ./ATLAS['mace']
 ```bash
 # Install the library and the MACE and dev dependencies using uv
 uv pip install ./ATLAS['mace', 'dev']
+
+#### Installing the GUI
+
+The ATLAS Hub desktop GUI requires the optional `gui` dependency:
+
+```bash
+pip install -e '.[gui]'
+```
 ```
 
 ### 4. Initialize configuration files

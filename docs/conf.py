@@ -27,7 +27,12 @@ def get_git_commit_hash():
     return commit_hash
 
 
-autodoc_mock_imports = ['aiida']
+autodoc_mock_imports = [
+    'aiida',
+    'PySide6',
+    'tomli',
+    'tomli_w',
+]
 
 
 def get_whitelist_pattern(version_list: list) -> str:
@@ -154,8 +159,6 @@ html_logo = '../media/logo_dark.png'
 html_theme_options = {
     'logo_only': True,
     'version_selector': True,
-    'display_version': True,
-    'github_url': 'https://github.com/pol-sb/ATLAS',
 }
 
 html_context = {
@@ -164,8 +167,10 @@ html_context = {
     'github_repo': 'ATLAS',  # Repo name
     'github_version': 'master',  # Version
     'conf_py_path': '/docs/',  # Path in the checkout to the docs root
-    'display_lower_left': True,
 }
+
+# Fallback for current_version (sphinx-multiversion provides this)
+html_context['current_version'] = 'master'
 
 html_context['commit_hash'] = get_git_commit_hash()
 
