@@ -242,6 +242,10 @@ def get_latent_space_autoencoder(
         all_lengths = []
         for u in uuids:
             d = descriptor_dict[u]['descriptors']
+            # Descriptor generators store descriptors as a list of arrays;
+            # unwrap to a single array for the autoencoder.
+            if isinstance(d, list):
+                d = d[0] if len(d) == 1 else np.vstack(d)
             if d.ndim == 1:
                 d = d.reshape(1, -1)
             all_descrs.append(d)

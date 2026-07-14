@@ -264,6 +264,18 @@ if __name__ == '__main__':
     if safe_md_params is None:
         safe_md_params = settings.get('safeguard', {}).get('md_parameters')
 
+    # The MD runs through the MLIP backend's ASE calculator; select the backend
+    # from the training backend so the MD matches the trained model (Allegro
+    # loads 'sampler_model.nequip.zip', not 'sampler_model.model'). An explicit
+    # '[safeguard.md.parameters].md_type' still wins.
+    from atlas.active_learning.backends import get_backend as _get_backend
+
+    md_backend_name = settings.get('mlip', {}).get('training_backend', 'mace')
+    safe_md_params.setdefault('md_type', md_backend_name)
+    sampler_model_name = (
+        f'sampler_model{_get_backend(md_backend_name).model_file_extension}'
+    )
+
     # Adding key explicitly to display it in the log
     if not safe_md_params.get('sample_frames_during_md'):
         safe_md_params['sample_frames_during_md'] = False
@@ -359,7 +371,7 @@ if __name__ == '__main__':
             prepend_path=prepend_path,
             explode_filter_dict=md_filters.get('exploding_structures', {}),
             enable_cueq=enable_cueq,
-            model_name='sampler_model.model',
+            model_name=sampler_model_name,
         )
         atl_cut.custom_print('MD simulation completed!', 'done', logger=logger)
 
@@ -564,7 +576,7 @@ if __name__ == '__main__':
         # for model in model_file_list:
         # comm_results[model.stem] = {'REF_energy': [], 'REF_forces': []}
 
-        from atlas.active_learning.backends import get_backend
+        from atlas.active_learning.backends import find_inference_model, get_backend
 
         backend_name = settings.get('mlip', {}).get('training_backend', 'mace')
         backend = get_backend(backend_name)
@@ -573,7 +585,7 @@ if __name__ == '__main__':
         device_str = safe_md_params.get('device', 'cpu')
 
         calculator = backend.create_calculator(
-            model_path=pl.Path(prepend_path) / f'sampler_model{model_ext}',
+            model_path=find_inference_model(prepend_path, 'sampler_model', backend),
             device=device_str,
             dtype=safe_md_params.get('default_dtype', 'float32'),
         )
@@ -657,13 +669,13 @@ if __name__ == '__main__':
 
                 if (prepend_path / 'autoencoder_model.pth').exists():
                     model_path = prepend_path / 'autoencoder_model.pth'
-                    model = torch.load(model_path)
+                    model = atl_ae.load_autoencoder_model(model_path)
                     atl_cut.custom_print(
                         f"Model loaded from:'{model_path}'", logger=logger
                     )
                 else:
                     model_path = prepend_path / aut_t_params.get('model_path')
-                    model = torch.load(model_path)
+                    model = atl_ae.load_autoencoder_model(model_path)
                     atl_cut.custom_print(
                         f"Model loaded from:'{model_path}'", logger=logger
                     )

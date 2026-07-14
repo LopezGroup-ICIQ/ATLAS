@@ -57,14 +57,15 @@ if __name__ == '__main__':
     true_forces = [struc.arrays['REF_forces'] for struc in test_db]
 
     # Initialize calculator using the MLIP backend
-    from atlas.active_learning.backends import get_backend
+    from atlas.active_learning.backends import find_inference_model, get_backend
 
     backend_name = settings.get('mlip', {}).get('training_backend', 'mace')
     backend = get_backend(backend_name)
-    model_ext = backend.model_file_extension
 
+    # Prefer a pre-compiled inference artifact if the compile-once step shipped
+    # one; otherwise fall back to the raw model (unchanged for MACE).
     mace_calc = backend.create_calculator(
-        model_path=prepend_path / f'curr_iter_best{model_ext}',
+        model_path=find_inference_model(prepend_path, 'curr_iter_best', backend),
         device=model_settings.get('device', 'cpu'),
         dtype=model_settings.get('default_dtype', 'float32'),
     )

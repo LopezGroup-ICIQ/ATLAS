@@ -323,6 +323,14 @@ if __name__ == '__main__':
     # Parse settings
     md_params = settings.get('md', {}).get('parameters')
 
+    # The MD runs through the MLIP backend's ASE calculator; select the backend
+    # from the training backend so the MD matches the trained model (e.g. Allegro
+    # loads 'curr_model.nequip.zip', not 'curr_model.model'). An explicit
+    # '[md.parameters].md_type' still wins.
+    md_params.setdefault(
+        'md_type', settings.get('mlip', {}).get('training_backend', 'mace')
+    )
+
     # Adding key explicitly to display it in the log
     if not md_params.get('sample_frames_during_md'):
         md_params['sample_frames_during_md'] = False
@@ -734,12 +742,17 @@ if __name__ == '__main__':
 
         # Running evaluation of the energies and forces using each commitee model
         atl_cut.custom_print('Running committee evaluation...', 'info', logger=logger)
-        from atlas.active_learning.backends import get_backend
+        from atlas.active_learning.backends import (
+            find_inference_model,
+            get_backend,
+            list_inference_models,
+        )
 
         backend_name = settings.get('mlip', {}).get('training_backend', 'mace')
         backend = get_backend(backend_name)
 
-        model_file_list = list(prepend_path.glob(f'*{backend.model_file_extension}'))
+        # Prefer pre-compiled artifacts (compile-once step) over raw models.
+        model_file_list = list_inference_models(prepend_path, backend)
         comm_settings = settings.get('committee_eval', {})
         backend_comm_settings = comm_settings.get(backend_name, comm_settings)
         device_str = backend_comm_settings.get('device', 'cpu')
@@ -1139,13 +1152,13 @@ if __name__ == '__main__':
 
                     if (prepend_path / 'autoencoder_model.pth').exists():
                         model_path = prepend_path / 'autoencoder_model.pth'
-                        model = torch.load(model_path)
+                        model = atl_ae.load_autoencoder_model(model_path)
                         atl_cut.custom_print(
                             f"Model loaded from:'{model_path}'", logger=logger
                         )
                     else:
                         model_path = prepend_path / aut_t_params.get('model_path')
-                        model = torch.load(model_path)
+                        model = atl_ae.load_autoencoder_model(model_path)
                         atl_cut.custom_print(
                             f"Model loaded from:'{model_path}'", logger=logger
                         )
@@ -1236,9 +1249,8 @@ if __name__ == '__main__':
         )
 
         # Renaming result keys
-        model_ext = backend.model_file_extension
         main_calc = backend.create_calculator(
-            model_path=prepend_path / f'curr_model{model_ext}',
+            model_path=find_inference_model(prepend_path, 'curr_model', backend),
             device=device_str,
             dtype=dtype_str,
         )
