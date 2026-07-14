@@ -38,7 +38,52 @@ from atlas.core.code_utils import (
     LevelNameFilter,
     get_atl_version_info,
 )
-from atlas.workflows.aiida_utils import get_or_create_portable_code
+from atlas.workflows.aiida_utils import (
+    get_or_create_containerized_code,
+    get_or_create_portable_code,
+    validate_kspacing,
+)
+
+
+def _build_compile_model_builder(
+    workchain, model_node, code_settings, current_settings, device, backend_name
+):
+    """Build a ``CompileModelCalculation`` builder for one inference target.
+
+    Shared by the child workchain (eval/seed-MD/committee) and the base
+    workchain (safeguard). The compile runs on ``code_settings``' computer so
+    the artifact matches the node where inference will happen.
+    """
+    builder = CalculationFactory('atl-compile-model').get_builder()
+    builder.model = model_node
+    builder.compile_settings = orm.Dict(
+        dict={
+            'backend': backend_name,
+            'device': device,
+            'mode': 'aotinductor',
+            'target': 'ase',
+        }
+    )
+    builder.metadata.computer = orm.load_computer(code_settings['metadata']['computer'])
+
+    resources = code_settings['metadata']['options'].get('resources', {})
+    num_threads = resources.get('num_cores_per_mpiproc', 2)
+
+    code, prepend_text = atl_al_ut.return_code_from_settings(
+        current_settings=current_settings,
+        code_settings=code_settings,
+        workchain=workchain,
+        num_threads=num_threads,
+        executable_name='atl_compile_model.py',
+        code_path=Path(f'{ATL_ROOT_DIR}/active_learning/scripts'),
+        portable_code_label='atl-compile-model',
+        builder=builder,
+    )
+    builder.code = code
+    builder.metadata.options = code_settings['metadata']['options']
+    builder.metadata.options.parser_name = 'atl-compile-model-parser'
+    builder.metadata.options.prepend_text = prepend_text
+    return builder
 
 
 class SimpleActiveLearningWorkChain(WorkChain):
@@ -249,6 +294,10 @@ class SimpleActiveLearningWorkChain(WorkChain):
             cls.step_setup,
             cls.train_mlip_model,
             cls.get_mlip_train_output,
+            # Optionally pre-compile the model(s) once per inference target
+            # (no-op for backends that need no compilation, e.g. MACE).
+            cls.compile_models_for_inference,
+            cls.gather_compiled_models,
             # If enabled, run evaluation of test database using M0 model.
             if_(cls.is_test_db_evaluation_enabled)(
                 cls.perform_test_db_evaluation,
@@ -650,35 +699,20 @@ class SimpleActiveLearningWorkChain(WorkChain):
                 if containerized:
                     image_name = container_dict.get('image_name', '')
                     engine_command = container_dict.get('engine_command', '')
-                    num_threads = sched_options.get('resources', {}).get(
-                        'num_cores_per_mpiproc', os.cpu_count()
-                    )
-                    prepend_text = (
-                        train_settings_dict.get('metadata', {}).get(
-                            'prepend_text', ''
-                        )
-                        + '\n'
-                        + container_dict.get('prepend_text', '')
-                        + f'\nexport OMP_NUM_THREADS={num_threads}'
-                    )
                     computer = orm.load_computer(
                         train_settings_dict.get('computer', None)
                     )
-                    code = orm.ContainerizedCode(
+                    code = get_or_create_containerized_code(
+                        label='atl-train-mlip',
                         computer=computer,
                         image_name=image_name,
-                        filepath_executable='atl_train_mlip',
-                        prepend_text=prepend_text,
                         engine_command=engine_command,
+                        filepath_executable='atl_train_mlip',
                     )
+                    container_prepend = container_dict.get('prepend_text', '')
                 else:
                     computer = orm.load_computer(
                         train_settings_dict.get('computer', None)
-                    )
-                    prepend_text = (
-                        train_settings_dict.get('metadata', {})
-                        .get('options', {})
-                        .get('prepend_text', '')
                     )
                     code = get_or_create_portable_code(
                         label='atl-train-mlip',
@@ -686,13 +720,28 @@ class SimpleActiveLearningWorkChain(WorkChain):
                             f'{ATL_ROOT_DIR}/active_learning/scripts'
                         ),
                         filepath_executable='atl_train_mlip.py',
-                        prepend_text=prepend_text,
                     )
+                    container_prepend = ''
+
+                num_threads = sched_options.get('resources', {}).get(
+                    'num_cores_per_mpiproc', os.cpu_count()
+                )
 
                 builder.code = code
                 builder.metadata.computer = computer
                 builder.metadata.options = sched_options
                 builder.metadata.options.parser_name = 'atl-train-mlip-parser'
+
+                # Pass environment setup dynamically so TOML changes take
+                # effect without recreating the code node.
+                builder.metadata.options.prepend_text = (
+                    train_settings_dict.get('metadata', {})
+                    .get('options', {})
+                    .get('prepend_text', '')
+                    + '\n'
+                    + container_prepend
+                    + f'\nexport OMP_NUM_THREADS={num_threads}'
+                )
             else:
                 # Legacy path: backend-specific CalcJob + registered Code
                 mace_train_settings = atl_al_ut.update_mace_train_settings_dict(
@@ -900,6 +949,128 @@ class SimpleActiveLearningWorkChain(WorkChain):
                 ),
             )
 
+    def compile_models_for_inference(self):
+        """Optionally pre-compile trained model(s) for each inference target.
+
+        No-op unless the MLIP backend implements ``MLIPModelCompiler`` (e.g.
+        Allegro). Otherwise, for each distinct ``(computer, device, model)`` an
+        enabled inference consumer will use, submit one compile CalcJob on that
+        computer so the artifact matches the node's device/toolchain. Results
+        are collected in :meth:`gather_compiled_models`. Purely an optimization:
+        consumers fall back to on-demand compilation if an artifact is missing.
+        """
+        from atlas.active_learning.backends._base import MLIPModelCompiler
+
+        self.ctx.compiled_models = {}
+        self.ctx.compile_target_map = {}
+
+        backend = self.ctx.mlip_backend
+        if not isinstance(backend, MLIPModelCompiler):
+            self.report(
+                f"Backend '{self.ctx.mlip_backend_name}' needs no model "
+                'compilation; skipping precompile step.'
+            )
+            return
+
+        current_settings = atl_al_ut.read_toml_settings(
+            settings_file=self.inputs.toml_file.value
+        )
+        if not current_settings.get('mlip', {}).get('precompile_for_inference', True):
+            self.report('precompile_for_inference disabled; skipping.')
+            return
+
+        targets = self._enumerate_inference_targets(current_settings)
+
+        submitted_keys = set()
+        for model_node, code_settings, device in targets:
+            computer_label = code_settings['metadata']['computer']
+            key = (computer_label, device, model_node.uuid)
+            if key in submitted_keys:
+                continue
+            submitted_keys.add(key)
+            future = self._submit_compile_calc(
+                model_node=model_node,
+                code_settings=code_settings,
+                current_settings=current_settings,
+                device=device,
+            )
+            self.ctx.compile_target_map[future.uuid] = key
+            self.to_context(compile_calcs=append_(future))
+            self.report(
+                f'Submitted model-compile calc ({future.pk}) for '
+                f'{computer_label} / device={device}.'
+            )
+
+    def gather_compiled_models(self):
+        """Collect compiled artifacts from the compile calcs into the cache."""
+        for calc in getattr(self.ctx, 'compile_calcs', []):
+            key = self.ctx.compile_target_map.get(calc.uuid)
+            if key is None:
+                continue
+            if calc.is_finished_ok and 'compiled_model' in calc.outputs:
+                self.ctx.compiled_models[key] = calc.outputs.compiled_model
+                self.report(
+                    f'Compiled model ready for {key[0]} / device={key[1]} '
+                    f'(calc {calc.pk}).'
+                )
+            else:
+                self.report(
+                    f'WARNING: model compile for {key[0]} / device={key[1]} did '
+                    f'not succeed (calc {calc.pk}); inference will compile '
+                    'on demand as a fallback.'
+                )
+
+    def _enumerate_inference_targets(self, current_settings):
+        """Return ``(model_node, code_settings, device)`` tuples to precompile.
+
+        One entry per (enabled consumer, model) pair; deduplicated by
+        ``(computer, device, model_uuid)`` in the caller.
+        """
+        targets = []
+
+        # Test-DB eval — uses the best model (M0) on the [test_db] computer.
+        if self.is_test_db_evaluation_enabled():
+            if current_settings.get('test_db'):
+                test_db_settings = current_settings['test_db']
+            else:
+                test_db_settings = self.inputs.eval_test_db_settings.get_dict()
+            device = test_db_settings.get('model_settings', {}).get('device', 'cpu')
+            targets.append((self.ctx.best_model_file, test_db_settings, device))
+
+        # Seed MD — the md node runs MD with M0 and the committee E/F check with
+        # every committee model, so all committee members are used there.
+        md_settings = current_settings.get('md', {})
+        if md_settings.get('metadata', {}).get('computer'):
+            md_device = md_settings.get('parameters', {}).get('device', 'cpu')
+            md_models = [self.ctx.best_model_file]
+            for _name, uuid_str in getattr(
+                self.ctx, 'commitee_models_tupl_name_uuid', []
+            ):
+                md_models.append(orm.load_node(uuid_str))
+            for model_node in md_models:
+                targets.append((model_node, md_settings, md_device))
+
+        return targets
+
+    def _submit_compile_calc(
+        self, model_node, code_settings, current_settings, device
+    ):
+        """Build and submit a CompileModelCalculation on the target computer."""
+        builder = _build_compile_model_builder(
+            workchain=self,
+            model_node=model_node,
+            code_settings=code_settings,
+            current_settings=current_settings,
+            device=device,
+            backend_name=self.ctx.mlip_backend_name,
+        )
+        return self.submit(builder)
+
+    def _inference_model_for(self, model_node, computer_label, device):
+        """Return the compiled artifact for a target if cached, else the raw model."""
+        key = (computer_label, device, model_node.uuid)
+        return getattr(self.ctx, 'compiled_models', {}).get(key, model_node)
+
     def perform_test_db_evaluation(self):
         self.report('Preparing test database evaluation...')
 
@@ -910,7 +1081,6 @@ class SimpleActiveLearningWorkChain(WorkChain):
         # Passing inputs and metadata
         eval_calc_builder.test_database = self.inputs.test_db_file
         eval_calc_builder.settings_file_path = self.inputs.toml_file
-        eval_calc_builder.sampler_model = self.ctx.best_model_file
         eval_calc_builder.test_db_eval_results = self.inputs.test_db_eval_results
         eval_calc_builder.current_iteration = orm.Int(self.inputs.al_loop_iteration)
 
@@ -931,6 +1101,17 @@ class SimpleActiveLearningWorkChain(WorkChain):
         else:
             eval_test_db_settings = self.inputs.eval_test_db_settings.get_dict()
 
+        # Ship a pre-compiled artifact for this target if the compile step
+        # produced one, else the raw best model (unchanged for MACE).
+        eval_device = eval_test_db_settings.get('model_settings', {}).get(
+            'device', 'cpu'
+        )
+        eval_calc_builder.sampler_model = self._inference_model_for(
+            self.ctx.best_model_file,
+            eval_test_db_settings['metadata']['computer'],
+            eval_device,
+        )
+
         # Loading metadata settings
         computer = orm.load_computer(eval_test_db_settings['metadata']['computer'])
         eval_calc_builder.metadata.computer = computer
@@ -941,7 +1122,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
         # Prepare and return correct code
         test_db_eval_code_path = Path(f'{ATL_ROOT_DIR}/active_learning/eval_test_db')
-        code = atl_al_ut.return_code_from_settings(
+        code, prepend_text = atl_al_ut.return_code_from_settings(
             current_settings=current_settings,
             code_settings=eval_test_db_settings,
             workchain=self,
@@ -959,6 +1140,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
         # Load scheduler and resources options
         eval_calc_builder.metadata.options = mlip_eval_settings_dict
         eval_calc_builder.metadata.options.parser_name = 'atl-eval-test-parser'
+        eval_calc_builder.metadata.options.prepend_text = prepend_text
 
         # Submit evaluation calculation
         future = self.submit(eval_calc_builder)
@@ -1119,7 +1301,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
         num_threads = resources_dict.get('num_cores_per_mpiproc', 2)
 
         # Prepare and return correct code
-        code = atl_al_ut.return_code_from_settings(
+        code, prepend_text = atl_al_ut.return_code_from_settings(
             current_settings=current_settings,
             code_settings=descriptor_settings,
             workchain=self,
@@ -1137,6 +1319,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
         # Load scheduler and resources options
         desc_builder.metadata.options = mlip_eval_settings_dict
         desc_builder.metadata.options.parser_name = 'atl-descriptors-combined-parser'
+        desc_builder.metadata.options.prepend_text = prepend_text
 
         # Get the calculation limit, from the computer metadata set to 0
         # if not present.
@@ -1153,8 +1336,15 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
         future = self.submit(desc_builder)
         if check_extrapolation_type in ['advanced', 'alpha-shape']:
+            boundary_method = (
+                current_settings.get('extrapolation', {})
+                .get('concave_hull', {})
+                .get('boundary_method', 'concave_hull')
+            )
+            boundary_label = boundary_method.replace('_', ' ')
             self.report(
-                f'Submitted calculation ({future.pk}) for descriptors + concave hull.'
+                f'Submitted calculation ({future.pk}) for descriptors + '
+                f'{boundary_label} boundary.'
             )
         else:
             self.report(f'Submitted calculation ({future.pk}) for descriptors.')
@@ -1194,6 +1384,20 @@ class SimpleActiveLearningWorkChain(WorkChain):
         if curr_calc.exit_status != 0:
             return self.exit_codes.ERROR_DESCRIPTOR_CALCULATION.format(
                 node_id=curr_calc.pk,
+            )
+
+        # Surface the extrapolation outcome in the run log (fills the gap
+        # between the descriptor submission and the next MD step).
+        if hasattr(curr_calc.outputs, 'extrapolation_metrics'):
+            metrics = curr_calc.outputs.extrapolation_metrics.get_dict()
+            boundary_method = metrics.get('boundary_method', 'unknown')
+            boundary_label = boundary_method.replace('_', ' ')
+            self.report(
+                f'Extrapolation check ({boundary_label}): '
+                f'{metrics["frac_outside"] * 100:.2f}% of '
+                f'{metrics["n_structures"]} structures outside boundary '
+                f'({metrics["n_boundaries"]} region(s), '
+                f'area {metrics["total_boundary_area"]:.3e}).'
             )
 
         # Loading descriptor min and max into context as numpy arrays
@@ -1357,6 +1561,23 @@ class SimpleActiveLearningWorkChain(WorkChain):
             best_model_name_clean = self.ctx.best_model_name.replace('-', '_')
             commitee_dict[best_model_name_clean] = self.ctx.best_model_file
 
+            # Swap in pre-compiled artifacts for the md computer/device when the
+            # compile-once step produced them (no-op for MACE / when absent).
+            md_meta = current_settings.get('md', {}).get('metadata', {})
+            md_computer_label = md_meta.get('computer')
+            if md_computer_label:
+                md_device = (
+                    current_settings.get('md', {})
+                    .get('parameters', {})
+                    .get('device', 'cpu')
+                )
+                commitee_dict = {
+                    name: self._inference_model_for(
+                        model, md_computer_label, md_device
+                    )
+                    for name, model in commitee_dict.items()
+                }
+
             proc_seed_builder.commitee_models = commitee_dict
 
             # Loading computer and removing it from the input dictionary
@@ -1405,31 +1626,19 @@ class SimpleActiveLearningWorkChain(WorkChain):
                 if containerized:
                     image_name = container_dict.get('image_name', '')
                     engine_command = container_dict.get('engine_command', '')
-                    prepend_text = (
-                        prepend_text_conf
-                        + '\n'
-                        + container_dict.get('prepend_text', '')
-                        + f'\nexport OMP_NUM_THREADS={num_threads}'
-                    )
-                    self.ctx._md_seed_code = orm.ContainerizedCode(
+                    self.ctx._md_seed_code = get_or_create_containerized_code(
+                        label='atl_process_md_seed_struct',
                         computer=computer,
                         image_name=image_name,
-                        filepath_executable='atl_process_structure.py',
-                        prepend_text=prepend_text,
                         engine_command=engine_command,
+                        filepath_executable='atl_process_structure.py',
                     )
                 else:
                     code_path = Path(f'{ATL_ROOT_DIR}/active_learning/md')
-                    prepend_text = (
-                        prepend_text_conf
-                        + '\nexport PATH=$PATH:.'
-                        + f'\nexport OMP_NUM_THREADS={num_threads}'
-                    )
                     self.ctx._md_seed_code = get_or_create_portable_code(
                         label='atl_process_md_seed_struct',
                         filepath_files=code_path,
                         filepath_executable='atl_process_structure.py',
-                        prepend_text=prepend_text,
                     )
             proc_seed_builder.code = self.ctx._md_seed_code
 
@@ -1439,6 +1648,19 @@ class SimpleActiveLearningWorkChain(WorkChain):
             proc_seed_builder.metadata.options = options_dict
             proc_seed_builder.metadata.options.parser_name = (
                 'atl-process-md-seed-struct-parser'
+            )
+
+            # Pass environment setup dynamically so TOML changes take effect
+            # without recreating the code node.
+            container_prepend = (
+                container_dict.get('prepend_text', '') if containerized else ''
+            )
+            proc_seed_builder.metadata.options.prepend_text = (
+                prepend_text_conf
+                + '\n'
+                + container_prepend
+                + '\nexport PATH=$PATH:.'
+                + f'\nexport OMP_NUM_THREADS={num_threads}'
             )
 
             # Get the calculation limit, from the computer metadata set to 0
@@ -1591,6 +1813,15 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
             # Setting error to stop the active learning loop
             self.ctx.stop_al_loop_error = orm.Bool(True)
+
+        # Validate kspacing coverage before submitting any DFT calculations.
+        if self.inputs.dft_method == 'vasp' and len(calcs_to_submit) > 0:
+            dft_settings = self.inputs.dft_settings.get_dict()
+            kspacing_dict = dft_settings.get('kspacing', {})
+            phases = sorted(
+                set(s.info.get('phase', 'unknown') for s in calcs_to_submit)
+            )
+            validate_kspacing(kspacing_dict, phases)
 
         # Submitting calcs
         calc_count = 0
@@ -2042,6 +2273,10 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
                     cls.get_al_loop_break_conditions,
                 ),
                 if_(cls.should_run_safeguard)(
+                    # Optionally pre-compile the sampler model on the safeguard
+                    # computer (no-op for backends without compilation).
+                    cls.compile_safeguard_model,
+                    cls.gather_safeguard_compiled,
                     # Run safeguard check
                     cls.run_safeguard_check,
                     cls.parse_safeguard_check_results,
@@ -3091,7 +3326,7 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
                     and self.ctx.loop_continue_condition
                 )
                 self.report(
-                    f'Safeguard check decision on whether to continue'
+                    f'Safeguard check decision on whether to continue '
                     f'the loop: {should_run}.'
                 )
 
@@ -3100,6 +3335,72 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
             self.ctx.safeguard_check_done = True
 
         return should_run
+
+    def compile_safeguard_model(self):
+        """Optionally pre-compile the sampler model for the safeguard node.
+
+        No-op unless the backend implements ``MLIPModelCompiler``. Result is
+        collected in :meth:`gather_safeguard_compiled` and used by the safeguard
+        MD calc; inference falls back to on-demand compilation otherwise.
+        """
+        from atlas.active_learning.backends import get_backend
+        from atlas.active_learning.backends._base import MLIPModelCompiler
+
+        self.ctx.safeguard_compiled_model = None
+
+        if getattr(self.ctx, 'stop_al_loop_error', False) is True:
+            return
+
+        current_settings = atl_al_ut.read_toml_settings(
+            settings_file=self.ctx.inputs.toml_file.value
+        )
+        backend_name = current_settings.get('mlip', {}).get('training_backend', 'mace')
+        try:
+            backend = get_backend(backend_name)
+        except ValueError:
+            return
+        if not isinstance(backend, MLIPModelCompiler):
+            return
+        if not current_settings.get('mlip', {}).get('precompile_for_inference', True):
+            return
+
+        safeguard_settings = current_settings.get('safeguard', {})
+        if not safeguard_settings.get('metadata', {}).get('computer'):
+            return
+
+        sampler_model = self.ctx.last_workchain_completed.outputs['m0_model_file']
+        device = (
+            safeguard_settings.get('md', {})
+            .get('parameters', {})
+            .get('device', 'cpu')
+        )
+        builder = _build_compile_model_builder(
+            workchain=self,
+            model_node=sampler_model,
+            code_settings=safeguard_settings,
+            current_settings=current_settings,
+            device=device,
+            backend_name=backend_name,
+        )
+        future = self.submit(builder)
+        self.to_context(safeguard_compile_calc=future)
+        self.report(f'Submitted safeguard model-compile calc ({future.pk}).')
+
+    def gather_safeguard_compiled(self):
+        """Store the compiled safeguard model if its compile calc succeeded."""
+        calc = getattr(self.ctx, 'safeguard_compile_calc', None)
+        if (
+            calc is not None
+            and calc.is_finished_ok
+            and 'compiled_model' in calc.outputs
+        ):
+            self.ctx.safeguard_compiled_model = calc.outputs.compiled_model
+            self.report(f'Safeguard model compiled (calc {calc.pk}).')
+        elif calc is not None:
+            self.report(
+                f'WARNING: safeguard model compile did not succeed '
+                f'(calc {calc.pk}); safeguard will compile on demand.'
+            )
 
     def run_safeguard_check(self):
         self.report('Running safeguard checks...')
@@ -3123,9 +3424,11 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
     def safeguard_check_md(self):
         self.report('Running MD for safeguard check...')
 
-        # Load sampler model
+        # Load sampler model (prefer a pre-compiled artifact for this node).
         last_wk = self.ctx.last_workchain_completed
         sampler_model: orm.SinglefileData = last_wk.outputs['m0_model_file']
+        if getattr(self.ctx, 'safeguard_compiled_model', None) is not None:
+            sampler_model = self.ctx.safeguard_compiled_model
 
         # Get types of all called calculations
         called_types = [nod.process_label for nod in last_wk.called]
@@ -3220,18 +3523,12 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
         if containerized:
             image_name = container_dict.get('image_name', '')
             engine_command = container_dict.get('engine_command', '')
-            prepend_text = (
-                prepend_text_conf
-                + '\n'
-                + container_dict.get('prepend_text', '')
-                + f'\nexport OMP_NUM_THREADS={num_threads}'
-            )
-            code = orm.ContainerizedCode(
+            code = get_or_create_containerized_code(
+                label='atl_run_safeguard_md',
                 computer=computer,
                 image_name=image_name,
-                filepath_executable='atl_run_safeguard_md.py',
-                prepend_text=prepend_text,
                 engine_command=engine_command,
+                filepath_executable='atl_run_safeguard_md.py',
             )
         else:
             # Get portable code
@@ -3239,16 +3536,10 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
                 f'{ATL_ROOT_DIR}/active_learning/safeguard/safeguard_scripts'
             )
 
-            prepend_text = (
-                prepend_text_conf
-                + '\nexport PATH=$PATH:.'
-                + f'\nexport OMP_NUM_THREADS={num_threads}'
-            )
             code = get_or_create_portable_code(
                 label='atl_run_safeguard_md',
                 filepath_files=code_path,
                 filepath_executable='atl_run_safeguard_md.py',
-                prepend_text=prepend_text,
             )
 
         # Select and generate structures for safeguard
@@ -3328,6 +3619,19 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
 
             sg_builder.metadata.options = options_dict
             sg_builder.metadata.options.parser_name = 'atl-safeguard-md-parser'
+
+            # Pass environment setup dynamically so TOML changes take effect
+            # without recreating the code node.
+            container_prepend = (
+                container_dict.get('prepend_text', '') if containerized else ''
+            )
+            sg_builder.metadata.options.prepend_text = (
+                prepend_text_conf
+                + '\n'
+                + container_prepend
+                + '\nexport PATH=$PATH:.'
+                + f'\nexport OMP_NUM_THREADS={num_threads}'
+            )
 
             sg_builder.settings_file_pth = self.ctx.inputs.toml_file
 
