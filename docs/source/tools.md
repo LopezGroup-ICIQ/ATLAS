@@ -62,8 +62,6 @@ Generates a report for a ATLAS initial database. This can include plots of energ
 - `--per_atom`
   - **Description**: If specified, displays energy and force values normalized per atom.
   - **Default**: Values are not normalized per atom.
-- `-h, --help`
-  - **Description**: Show this help message and exit.
 
 ##### Report type: `al_loop`
 
@@ -110,20 +108,14 @@ Generates a comprehensive report for a single active learning loop, identified b
 - `--db_path <PATH>, --d <PATH>`
   - **Description**: Path to the database file (alternative or additional way to specify a database, context might depend on other flags).
   - **Type**: `Path`
-- `-h, --help`
-  - **Description**: Show this help message and exit.
 
 ##### Report type: `al_loop_batch`
 
 Generates a comparative report for a series of active learning loops. This allows for assessing and contrasting the outcomes or behaviors of multiple loops, typically identified by their AiiDA PKs/UUIDs or log file paths.
 
 **Usage:** `atl_active_learning report al_loop_batch [OPTIONS...]`
-*(Note: The specific command-line options for `al_loop_batch` were not detailed in the provided help snippets. You may need to run `atl_active_learning report al_loop_batch --help` directly or consult the tool's source for a complete list of options. It is expected to take identifiers for multiple loops, possibly similar to `--loop_ids` in `al_loop_performance`.)*
 
-- **Description (from general help)**: "Generate a report for a series of active learning loops, as a way of comparing them by providing an AiiDA PK/UUID or a log file path."
-- **Description (from existing markdown)**: "Generate a report for a series of active learning loops, as a way of comparing them by providing an AiiDA PK."
-- `-h, --help`
-  - **Description**: Show this help message and exit.
+- **Description**: "Generate a report for a series of active learning loops, as a way of comparing them by providing an AiiDA PK/UUID or a log file path."
 
 ##### Report type: `al_loop_performance`
 
@@ -137,8 +129,6 @@ Generates a performance report for an active learning loop, focusing on computat
 - `--output_filename <PATH>, -o <PATH>`
   - **Description**: Filename for the report plot to be generated.
   - **Type**: `Path`
-- `-h, --help`
-  - **Description**: Show this help message and exit.
 
 #### `resume` - Resume Stopped AL Loops
 
@@ -205,7 +195,7 @@ Generates default configuration files for ATLAS in the TOML format. The generate
 
 **Usage:** `atl_gen_configuration_file [-h] -t TYPE [-p PATH] [-o]`
 
-- `-t, --config_type` (`TYPE`)
+- `-t, --config_type` (**Type**)
   - **Description**: Type of the configuration file to be generated. Available types:
     - `active_learning`: Configuration file for an active learning loop.
     - `initial_db`: Configuration file for initial database generation.
@@ -243,14 +233,14 @@ Runs VASP DFT calculations for a database of structures using AiiDA-VASP. A .tom
   - **Required**: Yes
 
 - `--config FILE, -c FILE`
-  - `Description`: Path to the TOML file with HPC and VASP input configuration.
-  - `Type`: `Path`
-  - `Required`: Yes
+  - **Description**: Path to the TOML file with HPC and VASP input configuration.
+  - **Type**: `Path`
+  - **Required**: Yes
 
 ## Autoencoder for Dimensionality Reduction - `atl_train_autoencoder`
 
 Train an autoencoder model for dimensionality reduction using the generated descriptors.
-The model is trained on descriptors (either `SOAP` or `MACE`) which are provided through a numpy array in the `.npy` format that holds vstacked arrays of atomic descriptors.
+The model is trained on descriptors (either `SOAP` or a backend-specific descriptor type) which are provided through a numpy array in the `.npy` format that holds vstacked arrays of atomic descriptors.
 
 **Usage:** `atl_train_autoencoder [-h] [--device DEVICE] [--dtype DTYPE] [--model_path MODEL_PATH] [--load_model LOAD_MODEL] [--rng_seed RNG_SEED] [--dataset DATASET] [--l1_hidden_dim L1_HIDDEN_DIM] [--l2_hidden_dim L2_HIDDEN_DIM] [--bottleneck_dim BOTTLENECK_DIM] [--num_epochs NUM_EPOCHS] [--batch_size BATCH_SIZE] [--patience PATIENCE] [--lr LR] [--weight_decay WEIGHT_DECAY] [--bias_flag] [--loss LOSS] [--train_frac TRAIN_FRAC] [--valid_frac VALID_FRAC] [--test_frac TEST_FRAC] [--wandb] [--wandb_name WANDB_NAME] [--wandb_project WANDB_PROJECT]`
 
@@ -312,7 +302,7 @@ The model is trained on descriptors (either `SOAP` or `MACE`) which are provided
   - **Type**: `float`
   - **Default**: `1e-5`
 - `--bias_flag`
-  - **Description**: Add this argument to unclude bias terms in the layers.
+  - **Description**: Add this argument to include bias terms in the layers.
   - **Action**: `store_true`
 - `--loss`
   - **Description**: Loss function type. Options: `mse`, `weighted_mse`.

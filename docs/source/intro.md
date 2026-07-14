@@ -10,7 +10,7 @@ ATLAS (Automated Training with Latent-space Aware Sampling) is a unified Python 
 Key capabilities include:
 
 - **Structure generation** for bulk, surface, cluster, and isolated atom configurations across single-, binary-, and ternary-phase diagrams, with perturbations, vacancies, deformations, and adsorbates.
-- **Active learning** that iteratively trains MACE models, runs molecular dynamics simulations, detects extrapolating structures via descriptor-based or latent-space methods, and submits them for DFT labelling.
+- **Active learning** with a modular backend architecture for training MLIPs. It currently supports MACE, Allegro, and NequIP, and any model can be added through the backend plugin interface. The workflow runs molecular dynamics simulations, detects extrapolating structures via descriptor-based or latent-space methods, and submits them for DFT labelling.
 - **Data reduction mode** for iteratively selecting structures from large pre-existing databases.
 - **Safeguard checks** to prevent premature convergence of active learning loops.
 - **Diversity metrics** including Vendi Score and Circles Metric.

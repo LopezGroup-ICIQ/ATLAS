@@ -66,9 +66,11 @@ git clone https://github.com/pol-sb/atlas.git
 
 There are several installation mechanisms, and several optional dependencies depending on what packages you want to use. Check the list and details of optional dependencies in the [pyproject.toml](../../pyproject.toml). Currently, the following are available:
 
-- `mace`
-- `dev`
-- `gui`
+- `mace` — MACE model training and evaluation
+- `allegro` — Allegro model support (via nequip-allegro)
+- `nequip` — NequIP model support
+- `dev` — Development dependencies (pytest, pre-commit, commitizen)
+- `gui` — Desktop GUI (PySide6)
 
 Optional dependencies are installed using the following syntax:
 
@@ -77,6 +79,9 @@ python3 -m pip install ./ATLAS['OPTIONAL_DEPENDENCY_NAME']
 ```
 
 Some installation examples follow:
+
+> [!WARNING]
+> **MACE and Allegro/NequIP cannot be installed in the same environment.** Both `mace-torch` and `nequip` depend on `e3nn` but pin incompatible versions. You must choose one backend per environment, or use separate virtual environments if you need to switch between them.
 
 #### Using `pip`
 
