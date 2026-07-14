@@ -51,8 +51,10 @@ COLORS = [
 ]
 LINE_COLOR = '#28282855'
 
-# Define the process labels for the different calculation types
-TRAINING_LABEL = 'TrainMACEModelCalculation'
+# Define the process labels for the different calculation types.
+# Training labels are per-backend (process_label == CalcJob class name), so
+# list every backend's training CalcJob to keep reports backend-agnostic.
+TRAINING_LABELS = ('TrainMACEModelCalculation', 'TrainAllegroModelCalculation')
 DESCRIPTORS_LABEL = 'GetDescriptorsCombinedCalculation'
 MD_LABEL = 'ProcessMDSeedStructCalculation'
 DFT_LABELS = ['EvaluateMACEConfigsCalculation', 'VaspCalculation']
@@ -398,14 +400,14 @@ def gen_al_loop_report(
                     train_calc = [
                         calc
                         for calc in last_iter.called
-                        if calc.process_label == TRAINING_LABEL and calc.is_finished_ok
+                        if calc.process_label in TRAINING_LABELS and calc.is_finished_ok
                     ][0]
                 except IndexError:
                     last_iter = al_loop_node.called[-2]
                     train_calc = [
                         calc
                         for calc in last_iter.called
-                        if calc.process_label == TRAINING_LABEL and calc.is_finished_ok
+                        if calc.process_label in TRAINING_LABELS and calc.is_finished_ok
                     ][0]
 
                 # Get last iteration database
@@ -2620,7 +2622,7 @@ def get_al_step_performance(al_step: orm.WorkChainNode) -> dict:
         # Get the number of cores used
         n_cores = get_ncores_from_calcjob(job)
 
-        if label == TRAINING_LABEL:
+        if label in TRAINING_LABELS:
             stage_stats['training']['ctimes'].append(job_ctime)
             stage_stats['training']['mtimes'].append(job_mtime)
             stage_stats['training']['durations'].append(job_duration)
