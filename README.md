@@ -1,7 +1,7 @@
 # ATLAS
 
 > [!WARNING]
-> **Under Development:** This library is still under active development and may contain bugs or undergo breaking changes. Use with caution in production or critical research workflows. Please report any bugs or issues using the [Issues tab](https://github.com/pol-sb/ATLAS/issues).
+> **Under Development:** This library is still under active development and may contain bugs or undergo breaking changes. Use with caution in production or critical research workflows. Please report any bugs or issues using the [Issues tab](https://github.com/LopezGroup-ICIQ/ATLAS/issues).
 
 <p align="center">
   <picture>
@@ -13,7 +13,7 @@
 
 [![DOI](https://img.shields.io/badge/DOI-10.26434%2Fchemrxiv.15003942%2Fv1-blue)](https://doi.org/10.26434/chemrxiv.15003942/v1) 
 
-![GitHub Tag](https://img.shields.io/github/v/tag/pol-sb/ATLAS?label=current%20version)  ![GitHub last commit](https://img.shields.io/github/last-commit/LopezGroup-ICIQ/ATLAS) [![documentation](https://github.com/pol-sb/ATLAS/actions/workflows/documentation.yml/badge.svg)](https://lopezgroup-iciq.github.io/ATLAS/master/index.html)
+![GitHub Tag](https://img.shields.io/github/v/tag/LopezGroup-ICIQ/ATLAS?label=current%20version)  ![GitHub last commit](https://img.shields.io/github/last-commit/LopezGroup-ICIQ/ATLAS) [![documentation](https://github.com/LopezGroup-ICIQ/ATLAS/actions/workflows/documentation.yml/badge.svg)](https://lopezgroup-iciq.github.io/ATLAS/master/index.html)
 
 ![Python Version](https://img.shields.io/badge/python-3.11-blue.svg)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)

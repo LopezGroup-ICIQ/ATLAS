@@ -109,7 +109,7 @@ class TestRegistry:
 
 
 # ---------------------------------------------------------------------------
-# Protocol conformance — MACE
+# Protocol conformance - MACE
 # ---------------------------------------------------------------------------
 
 
@@ -154,7 +154,7 @@ class TestMACEBackendProperties:
 
 
 # ---------------------------------------------------------------------------
-# Protocol conformance — Allegro
+# Protocol conformance - Allegro
 # ---------------------------------------------------------------------------
 
 
@@ -201,7 +201,7 @@ class TestAllegroBackendProperties:
 
 
 # ---------------------------------------------------------------------------
-# Protocol definitions — structural subtyping
+# Protocol definitions - structural subtyping
 # ---------------------------------------------------------------------------
 
 
@@ -248,8 +248,9 @@ class TestProtocolStructuralSubtyping:
             def supports_committee_training(self) -> bool:
                 return False
 
-            def evaluate_committee(self, structures, model_files, device='cpu',
-                                   dtype='float32', **kw):
+            def evaluate_committee(
+                self, structures, model_files, device='cpu', dtype='float32', **kw
+            ):
                 return {}
 
         assert isinstance(Minimal(), MLIPCommitteeEvaluator)
@@ -272,7 +273,7 @@ class TestDescriptorDispatch:
     def test_allegro_descriptor_raises(self):
         from atlas.active_learning.active_learning_utils import generate_descriptors
 
-        with pytest.raises(ValueError, match="does not support descriptor generation"):
+        with pytest.raises(ValueError, match='does not support descriptor generation'):
             generate_descriptors(
                 database=[],
                 descriptor_type='allegro',
@@ -282,7 +283,7 @@ class TestDescriptorDispatch:
     def test_unknown_descriptor_type_raises(self):
         from atlas.active_learning.active_learning_utils import generate_descriptors
 
-        with pytest.raises(ValueError, match="Unknown descriptor type"):
+        with pytest.raises(ValueError, match='Unknown descriptor type'):
             generate_descriptors(
                 database=[],
                 descriptor_type='nonexistent',

@@ -716,9 +716,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
                     )
                     code = get_or_create_portable_code(
                         label='atl-train-mlip',
-                        filepath_files=Path(
-                            f'{ATL_ROOT_DIR}/active_learning/scripts'
-                        ),
+                        filepath_files=Path(f'{ATL_ROOT_DIR}/active_learning/scripts'),
                         filepath_executable='atl_train_mlip.py',
                     )
                     container_prepend = ''
@@ -1052,9 +1050,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
         return targets
 
-    def _submit_compile_calc(
-        self, model_node, code_settings, current_settings, device
-    ):
+    def _submit_compile_calc(self, model_node, code_settings, current_settings, device):
         """Build and submit a CompileModelCalculation on the target computer."""
         builder = _build_compile_model_builder(
             workchain=self,
@@ -1572,9 +1568,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
                     .get('device', 'cpu')
                 )
                 commitee_dict = {
-                    name: self._inference_model_for(
-                        model, md_computer_label, md_device
-                    )
+                    name: self._inference_model_for(model, md_computer_label, md_device)
                     for name, model in commitee_dict.items()
                 }
 
@@ -3370,9 +3364,7 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
 
         sampler_model = self.ctx.last_workchain_completed.outputs['m0_model_file']
         device = (
-            safeguard_settings.get('md', {})
-            .get('parameters', {})
-            .get('device', 'cpu')
+            safeguard_settings.get('md', {}).get('parameters', {}).get('device', 'cpu')
         )
         builder = _build_compile_model_builder(
             workchain=self,
@@ -4181,13 +4173,12 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
         """
         Finalize the results at the end of the workchain.
 
-        This method is responsible for preparing and returning the final training
-        database at the conclusion of the workchain. It serializes the structures
-        within the training database to a format compatible with AiiDA storage and
-        subsequent processing. The serialized structures are then used to prepare
-        the final training database, which is outputted from the workchain. This
-        signifies the completion of the workchain and the availability of the
-        processed training data for further use.
+        This method prepares and returns the final training database at the
+        conclusion of the workchain. It serializes the structures within the training
+        database to a format compatible with AiiDA storage and subsequent processing.
+        The serialized structures are then used to prepare the final training database,
+        which is outputted from the workchain. This signifies the completion of the
+        workchain and the availability of the processed training data for further use.
         """
         self.report('Returning final results...')
 

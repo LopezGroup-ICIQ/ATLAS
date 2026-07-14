@@ -498,7 +498,7 @@ def select_structures_fps(
 
     descriptor_type = descriptor_settings.get('descriptor_type', 'soap')
 
-    # (Add your MACE path checks here if needed)
+    # (Add MACE path checks here if needed)
 
     # Generate descriptors for the combined pool
     descr_dict, _, _ = generate_descriptors(
@@ -1355,7 +1355,7 @@ def standardize_atoms_info(atoms_list: list[Atoms]) -> list[Atoms]:
                 del info[old_key]
                 migrated_count += 1
             elif old_key in info and new_key in info:
-                # Both present — remove the legacy duplicate.
+                # Both present, so remove the legacy duplicate.
                 del info[old_key]
 
         # --- UUID standardization (same logic as

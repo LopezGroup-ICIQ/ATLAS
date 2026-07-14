@@ -171,7 +171,7 @@ def create_active_learning_builder(
     # MD filters
     builder.active_learning.md_filters = Dict(value=toml_dict['md'].get('filters'))
 
-    ## MLIP training settings — use backend-specific section or fall back to mace_train
+    ## MLIP training settings: use backend-specific section or fall back to mace_train
     mlip_backend = toml_dict.get('mlip', {}).get('training_backend', 'mace')
     train_section_key = f'{mlip_backend}_train'
     if train_section_key in toml_dict:

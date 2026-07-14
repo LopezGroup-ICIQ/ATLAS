@@ -100,7 +100,7 @@ def create_allegro_calculator(
         # here. Recover by recompiling on *this* node from a co-located raw
         # checkpoint when one is available; otherwise surface a clear error.
         if not was_precompiled:
-            # We just compiled this on this node — a load failure is a real bug.
+            # We just compiled this on this node.
             raise
         raw_checkpoint = _find_sibling_checkpoint(model_path)
         if raw_checkpoint is None:

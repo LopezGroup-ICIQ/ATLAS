@@ -59,7 +59,7 @@ DESCRIPTORS_LABEL = 'GetDescriptorsCombinedCalculation'
 MD_LABEL = 'ProcessMDSeedStructCalculation'
 DFT_LABELS = ['EvaluateMACEConfigsCalculation', 'VaspCalculation']
 AL_STEP_WORKCHAIN_LABEL = (
-    'SimpleActiveLearningWorkChain'  # Ensure this matches your WorkChain label
+    'SimpleActiveLearningWorkChain'  # Ensure this matches the AL WorkChain label
 )
 
 # Define stage keys for iteration

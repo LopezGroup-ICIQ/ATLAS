@@ -639,7 +639,7 @@ if __name__ == '__main__':
                 # Precompute the maximum allowed Z-thickness
                 base_structure = md_traj[0]
                 initial_z_thickness = np.ptp(base_structure.positions[:, 2])
-                expansion_buffer = 10.0  # Set your 5-10 Å buffer here
+                expansion_buffer = 10.0  # Set 5-10 Å buffer here
                 max_allowed_thickness = initial_z_thickness + expansion_buffer
 
                 # Applying filter for every frame

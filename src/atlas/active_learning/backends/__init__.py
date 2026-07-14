@@ -148,7 +148,7 @@ def list_inference_models(directory, backend) -> list:
 # Import backends so they register themselves. Each backend is optional: their
 # ML stacks can be mutually exclusive in a single environment (e.g. mace-torch
 # pins e3nn==0.4.4 while new nequip needs e3nn>=0.6), so a deployment may install
-# only the backend it runs. Import defensively — a backend whose dependencies
+# only the backend it runs. Import defensively a backend whose dependencies
 # are missing simply isn't registered, without breaking the others. Only
 # ImportError is swallowed so genuine bugs in a backend module still surface.
 import contextlib as _contextlib  # noqa: E402

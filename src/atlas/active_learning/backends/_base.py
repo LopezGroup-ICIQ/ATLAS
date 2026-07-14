@@ -286,9 +286,9 @@ class MLIPModelCompiler(Protocol):
     """Protocol for backends whose models must be compiled before inference.
 
     Some backends (e.g. Allegro/NequIP) cannot run inference from the raw
-    trained checkpoint — it must first be compiled (``nequip-compile``) into a
+    trained checkpoint. It must first be compiled (``nequip-compile``) into a
     device-specific artifact. Compilation is expensive and toolchain-sensitive,
-    so it is best done **once, on the computer where inference will run**, and
+    so it is best done once, on the computer where inference will run, and
     the compiled artifact reused there.
 
     Backends that need no compilation (e.g. MACE) simply omit this protocol;

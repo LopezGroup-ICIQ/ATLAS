@@ -46,11 +46,11 @@ except Exception as e:
 
 
 def _hash_source_directory(filepath_files: pl.Path) -> str:
-    """Return a combined SHA-256 hash of all ``*.py`` files in a directory.
+    """Return a combined SHA-256 hash of all `*.py` files in a directory.
 
     Files are visited in sorted order with their relative paths included in
     the hash, so additions, deletions, renames, and content edits are all
-    detected. ``__pycache__`` and non-Python files are ignored.
+    detected. `__pycache__` and non-Python files are ignored.
     """
     import hashlib
 
@@ -71,23 +71,23 @@ def get_or_create_portable_code(
 ) -> orm.PortableCode:
     """Return a PortableCode for *label*, recreating it if source has changed.
 
-    Queries for the most recent ``PortableCode`` with the given label. If one
-    is found, its bundled ``*.py`` files are compared (via a SHA-256 hash
-    stored as the ``source_hash_v2`` extra) against the current source
-    directory. When the hash differs -- i.e. the source files were edited
-    since the code was created -- a **new** PortableCode is created instead of
+    Queries for the most recent `PortableCode` with the given label. If one
+    is found, its bundled `*.py` files are compared (via a SHA-256 hash
+    stored as the `source_hash_v2` extra) against the current source
+    directory. When the hash differs, i.e. the source files were edited
+    since the code was created, a new PortableCode is created instead of
     reusing the stale one. This prevents situations where an edited
-    PortableCode script (e.g. ``atl_process_structure.py``) silently keeps
+    PortableCode script (e.g. `atl_process_structure.py`) silently keeps
     running the old version.
 
-    Environment setup (module loads, venv activation, ``OMP_NUM_THREADS``)
-    is **not** baked into the PortableCode. Callers should pass it dynamically
-    via ``builder.metadata.options.prepend_text`` instead, which AiiDA
+    Environment setup (module loads, venv activation, `OMP_NUM_THREADS`)
+    is not baked into the PortableCode. Callers should pass it dynamically
+    via `builder.metadata.options.prepend_text` instead, which AiiDA
     appends after the code's (empty) prepend_text in the final submission
     script. This way changing the TOML settings takes effect immediately
     without recreating the code node.
 
-    The ``prepend_text`` parameter is accepted for backward compatibility but
+    The `prepend_text` parameter is accepted for backward compatibility but
     is ignored; callers should set it on the builder.
 
     The old node remains in the database for provenance of past calculations
@@ -132,10 +132,10 @@ def get_or_create_containerized_code(
 ) -> orm.ContainerizedCode:
     """Return a cached ContainerizedCode, or create one if none exists.
 
-    Matches on ``(label, computer, image_name, engine_command,
-    filepath_executable)``. ``prepend_text`` is never baked into the code;
+    Matches on `(label, computer, image_name, engine_command,
+    filepath_executable)`. `prepend_text` is never baked into the code;
     callers should pass it dynamically via
-    ``builder.metadata.options.prepend_text``.
+    `builder.metadata.options.prepend_text`.
 
     Unlike :func:`get_or_create_portable_code`, no source hash is needed:
     a ContainerizedCode stores only the image path, not the image contents,
@@ -491,16 +491,16 @@ def validate_kspacing(kspacing_dict: dict, phases: list[str]) -> None:
     """Validate that kspacing values exist for all phases.
 
     Checks each phase against the kspacing dict. Missing phases fall back to
-    ``ATL_DEFAULT`` (or the legacy ``MDB_DEFAULT``). If neither default exists
-    and some phases are missing, raises ``ValueError`` listing the missing
+    `ATL_DEFAULT` (or the legacy `MDB_DEFAULT`). If neither default exists
+    and some phases are missing, raises `ValueError` listing the missing
     phases and suggesting how to fix the TOML.
 
     Parameters
     ----------
     kspacing_dict : dict
-        The kspacing dictionary from the TOML ``[dft.vasp.kspacing]`` section.
-        Modified in-place: if ``MDB_DEFAULT`` is present but ``ATL_DEFAULT`` is
-        not, ``MDB_DEFAULT`` is copied to ``ATL_DEFAULT``.
+        The kspacing dictionary from the TOML `[dft.vasp.kspacing]` section.
+        Modified in-place: if `MDB_DEFAULT` is present but `ATL_DEFAULT` is
+        not, `MDB_DEFAULT` is copied to `ATL_DEFAULT`.
     phases : list of str
         Phase names present in the structures to be submitted for DFT.
     """
@@ -517,7 +517,7 @@ def validate_kspacing(kspacing_dict: dict, phases: list[str]) -> None:
         atl_cut.custom_print(
             "WARNING: 'MDB_DEFAULT' is a deprecated kspacing key. "
             "Please rename it to 'ATL_DEFAULT' in your TOML "
-            "[dft.vasp.kspacing] section. "
+            '[dft.vasp.kspacing] section. '
             "'MDB_DEFAULT' may be removed in a future version.",
             'warn',
         )
@@ -527,7 +527,7 @@ def validate_kspacing(kspacing_dict: dict, phases: list[str]) -> None:
     if default_kspacing is not None:
         atl_cut.custom_print(
             f'No specific kspacing found for phase(s): {missing}. '
-            f"Using ATL_DEFAULT = {default_kspacing} for these phases.",
+            f'Using ATL_DEFAULT = {default_kspacing} for these phases.',
             'warn',
         )
         return
@@ -580,7 +580,7 @@ def submit_aiida_vasp_calculation(
         atl_cut.custom_print(
             "WARNING: 'MDB_DEFAULT' is a deprecated kspacing key. "
             "Please rename it to 'ATL_DEFAULT' in your TOML "
-            "[dft.vasp.kspacing] section. "
+            '[dft.vasp.kspacing] section. '
             "'MDB_DEFAULT' may be removed in a future version.",
             'warn',
         )
@@ -1435,8 +1435,8 @@ def run_dataframe_vasp_aiida_queue(
                 if struct_type != 'bulk':
                     atl_cut.custom_print(
                         (
-                            f"No incar.{struct_type} section in config for "
-                            f"structure {current_row_index}. "
+                            f'No incar.{struct_type} section in config for '
+                            f'structure {current_row_index}. '
                             "Using 'bulk' INCAR settings as fallback."
                         ),
                         'warning',
@@ -1815,7 +1815,7 @@ def generate_potential_mapping(assign_dict=None) -> dict:
     dict:
         Dictionary containing the potential assignation for each atom of
         the periodic table, with the shape:
-        ``{'H': 'H', 'He': 'He', ...}``.
+        `{'H': 'H', 'He': 'He', ...}`.
     """
     # Attempting to read the file containing the user-defined
     # potential mappings. Defaults to none if no potential is given

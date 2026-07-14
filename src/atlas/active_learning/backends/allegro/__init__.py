@@ -6,7 +6,7 @@ infrastructure (``nequip-train``) and ASE calculator
 (``NequIPCalculator``).
 
 Allegro implements ``MLIPTrainer``, ``MLIPCalculatorFactory``, and
-``MLIPCommitteeEvaluator`` but **not** ``MLIPDescriptorProvider`` —
+``MLIPCommitteeEvaluator`` but not ``MLIPDescriptorProvider``.
 Allegro does not expose MACE-style invariant descriptors.
 When Allegro is used, the workflow falls back to SOAP descriptors
 for extrapolation detection.
@@ -423,8 +423,6 @@ class AllegroBackend:
                 comm_results[model_name]['REF_energy'].append(
                     frame.get_potential_energy() * 1000 / len(frame)
                 )
-                comm_results[model_name]['REF_forces'].append(
-                    frame.get_forces() * 1000
-                )
+                comm_results[model_name]['REF_forces'].append(frame.get_forces() * 1000)
 
         return comm_results

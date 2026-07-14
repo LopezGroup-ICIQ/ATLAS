@@ -564,7 +564,7 @@ class EvaluateMACEConfigsCalculationParser(Parser):
 class RunMDCalculationGPULAMMPS(LammpsRawCalculation):
     """aiida-lammps raw calculation modified to run on GPU using Kokkos.
 
-    This CalcJob is backend-agnostic — the LAMMPS pair_style (mace,
+    This CalcJob is backend-agnostic. The LAMMPS pair_style (mace,
     allegro, etc.) is determined by the input script, not this class.
     """
 
