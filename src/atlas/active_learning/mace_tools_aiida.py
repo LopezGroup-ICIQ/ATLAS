@@ -326,21 +326,27 @@ class ProcessMDSeedStructCalculation(CalcJob):
             f.close()
             Path(f.name).unlink(missing_ok=True)
 
-        # Copying configuration to temporary folder
+        # Copying configuration to temporary folder.
+        # Preserve each model file's real extension (e.g. '.model' for MACE,
+        # '.ckpt' for Allegro) so the remote script, which locates models via
+        # ``backend.model_file_extension``, finds them regardless of backend.
+        from atlas.active_learning.backends import model_file_ext
+
         best_model_name = self.inputs.best_model_name.value.replace('-', '_')
         for model_str, model_singlefile in self.inputs.commitee_models.items():
+            model_ext = model_file_ext(model_singlefile.filename)
             # If the best model is in the name, use it as the current model
             if model_str in best_model_name:
                 with model_singlefile.as_path() as model_path:
                     folder.insert_path(
                         src=model_path,
-                        dest_name='curr_model.model',
+                        dest_name=f'curr_model{model_ext}',
                     )
             else:
                 with model_singlefile.as_path() as model_path:
                     folder.insert_path(
                         src=model_path,
-                        dest_name=f'{model_str}.model',
+                        dest_name=f'{model_str}{model_ext}',
                     )
 
         codeinfo = CodeInfo()
@@ -445,6 +451,7 @@ class GetDescriptorsCombinedParser(Parser):
         extrapolation_plot = None
         autoencoder_model = None
         concave_hull_data = None
+        extrapolation_metrics = None
 
         # Gathering results from the temporary folder
         # for child_file in retrieved_temporary_folder.iterdir():
@@ -478,6 +485,9 @@ class GetDescriptorsCombinedParser(Parser):
                     )
                 case 'autoencoder_model.pth':
                     autoencoder_model = orm.SinglefileData(file=child_file.absolute())
+                case 'descriptor_metrics.json':
+                    with open(child_file.absolute()) as f:
+                        extrapolation_metrics = orm.Dict(dict=json.load(f))
 
         # Return failed code if the mandatory outputs are missing
         if not all((descriptor_max, descriptor_min)):
@@ -497,6 +507,8 @@ class GetDescriptorsCombinedParser(Parser):
             self.out('extrapolation_plot', extrapolation_plot)
         if autoencoder_model:
             self.out('autoencoder_model', autoencoder_model)
+        if extrapolation_metrics:
+            self.out('extrapolation_metrics', extrapolation_metrics)
 
 
 # atl-eval-test-parser
@@ -706,15 +718,24 @@ class EvalTestDatabaseCalculation(CalcJob):
         :param folder: an `Folder` to temporarily write files on disk
         :return: `CalcInfo` instance
         """
+        # Name the shipped model by its *actual* suffix (via ``model_file_ext``,
+        # which honours compound nequip extensions). This preserves a
+        # pre-compiled inference artifact ('.nequip.pt2') so the eval script's
+        # ``find_inference_model`` picks it up, and keeps a raw model's own
+        # extension otherwise (e.g. '.model' for MACE, '.nequip.zip' for Allegro).
+        toml_settings = self.inputs.settings_file_path.value
+        from atlas.active_learning.backends import model_file_ext
+
+        model_ext = model_file_ext(self.inputs.sampler_model.filename)
+
         # Copying configuration to temporary folder
         with self.inputs.sampler_model.as_path() as model_path:
             folder.insert_path(
                 src=model_path,
-                dest_name='curr_iter_best.model',
+                dest_name=f'curr_iter_best{model_ext}',
             )
 
         # Copying settings file
-        toml_settings = self.inputs.settings_file_path.value
         folder.insert_path(
             src=toml_settings,
             dest_name='settings.toml',
@@ -909,6 +930,13 @@ class GetDescriptorsCombinedCalculation(CalcJob):
             'autoencoder_model',
             valid_type=orm.SinglefileData,
             help='File containing the autoencoder model.',
+            required=False,
+        )
+        spec.output(
+            'extrapolation_metrics',
+            valid_type=orm.Dict,
+            help='Extrapolation summary metrics (boundary method, fraction of '
+            'structures outside the boundary, boundary count and area).',
             required=False,
         )
 

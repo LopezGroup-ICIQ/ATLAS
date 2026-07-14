@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Script to handle descriptor gathering for an AL Loop iteration."""
 
+import json
 import logging
 import pathlib as pl
 import pickle
@@ -14,6 +15,7 @@ from ase.io import read as ase_read
 from shapely.geometry import Point, Polygon
 
 from atlas.active_learning.active_learning_utils import generate_descriptors
+from atlas.active_learning.extrapolation import morphological_closing as atl_morph
 from atlas.active_learning.extrapolation import quadtree as atl_qt
 from atlas.active_learning.extrapolation import train_autoencoder as atl_train_ae
 from atlas.active_learning.extrapolation.concave_hull import (
@@ -73,6 +75,116 @@ def check_atom_in_domain(
     return point_inside, point_outside, all_points_in_out
 
 
+def _write_boundary_outputs(res_folder, alpha_shapes, all_points, boundary_method):
+    """Persist boundary results and return the fraction of points outside them.
+
+    Writes the two files the runtime extrapolation checks consume, independently
+    of how the boundaries were generated (alpha shape or morphological closing):
+
+    - ``concave_hulls_data.pkl``: the list of shape dicts (with shapely Polygons).
+    - ``concave_hulls.pkl``: a list of per-shape lists of ``(x, y)`` tuples.
+    - ``descriptor_metrics.json``: extrapolation summary metrics surfaced to the
+      workchain report log (``boundary_method``, ``frac_outside``,
+      ``n_boundaries``, ``n_structures``, ``total_boundary_area``).
+
+    Because both boundary methods produce the same shape-dict structure, the
+    downstream ``check_traj_in_domain`` functions remain boundary-method agnostic.
+    """
+    concave_hull_data_path = res_folder / 'concave_hulls_data.pkl'
+    with open(concave_hull_data_path, 'wb') as f:
+        pickle.dump(alpha_shapes, f)
+
+    shape_coordinates = []
+    for shape in alpha_shapes:
+        curr_shape_coord = shape['alpha_shape'].exterior.coords.xy
+        curr_shape_coord = [
+            coord
+            for coord in zip(curr_shape_coord[0], curr_shape_coord[1], strict=True)
+        ]
+        shape_coordinates.append(curr_shape_coord)
+
+    concave_hull_path = res_folder / 'concave_hulls.pkl'
+    with open(concave_hull_path, 'wb') as f:
+        pickle.dump(shape_coordinates, f)
+
+    atl_cut.custom_print(
+        f"Boundaries computed, saved to '{concave_hull_path}'.", 'info'
+    )
+    print()
+
+    points_inside, points_outside, frac_outside = atl_qt.check_if_points_in_polygons(
+        alpha_shapes, all_points
+    )
+    atl_cut.custom_print(
+        f'Points inside boundaries: {len(points_inside)}'
+        f', outside: {len(points_outside)}',
+        'info',
+    )
+    atl_cut.custom_print(
+        f'Percentage of total datapoints outside boundaries: {frac_outside * 100:.2f}%',
+        'info',
+    )
+
+    # Persist a compact metrics summary so the workchain can report the
+    # extrapolation outcome (area / fraction outside) in its run log.
+    total_boundary_area = sum(shape['alpha_shape'].area for shape in alpha_shapes)
+    metrics = {
+        'boundary_method': boundary_method,
+        'frac_outside': frac_outside,
+        'n_boundaries': len(alpha_shapes),
+        'n_structures': len(all_points),
+        'total_boundary_area': total_boundary_area,
+    }
+    metrics_path = res_folder / 'descriptor_metrics.json'
+    with open(metrics_path, 'w') as f:
+        json.dump(metrics, f)
+
+    return frac_outside
+
+
+def _plot_morph_boundaries(
+    latent_space_all, alpha_shapes, disk_size, frac_outside, filename
+):
+    """Save a boundary overlay plot for morphological closing results.
+
+    Mirrors the quadtree visualisation used by the concave-hull path, but without
+    the quadtree/cluster boxes (morphological closing has no such structure).
+    """
+    import matplotlib.pyplot as plt
+
+    fig, ax = plt.subplots(figsize=(10, 8))
+    ax.scatter(
+        latent_space_all[:, 0],
+        latent_space_all[:, 1],
+        s=4,
+        c='steelblue',
+        alpha=0.6,
+        edgecolors='none',
+        rasterized=True,
+        zorder=1,
+    )
+    for shape in alpha_shapes:
+        x, y = shape['alpha_shape'].exterior.coords.xy
+        ax.plot(x, y, '-', color='#cc241d', lw=2, zorder=2)
+
+    ax.text(
+        0.03,
+        0.97,
+        f'Disk size: {disk_size}\nBoundaries: {len(alpha_shapes)}\n'
+        f'Outside: {frac_outside * 100:.2f}%\n'
+        f'Structures: {len(latent_space_all):,}',
+        transform=ax.transAxes,
+        fontsize=9,
+        verticalalignment='top',
+        bbox=dict(boxstyle='round', facecolor='white', alpha=0.85),
+        zorder=4,
+    )
+    ax.set_xlabel('Embedded dimension 1')
+    ax.set_ylabel('Embedded dimension 2')
+    fig.savefig(filename, bbox_inches='tight', dpi=150)
+    plt.close(fig)
+
+
 if __name__ == '__main__':
     # The /atl_data directory should only exist in the containerized version
     # of the code. This conditional statement will get the correct path for
@@ -126,6 +238,12 @@ if __name__ == '__main__':
     qt_offset_frac = concave_hull_settings.get('qt_offset_frac', 0.1)
     qt_data_frac_capacity = concave_hull_settings.get('qt_data_frac_capacity', 0.015)
     qt_subdivision_factor = concave_hull_settings.get('qt_subdivision_factor', 8)
+
+    # Boundary determination algorithm and morphological closing settings
+    boundary_method = concave_hull_settings.get('boundary_method', 'concave_hull')
+    morph_disk_size = concave_hull_settings.get('morph_disk_size', 10)
+    morph_threshold = concave_hull_settings.get('morph_threshold', 250)
+    morph_dpi = concave_hull_settings.get('morph_dpi', 100)
 
     # Ensure target alpha range is a tuple
     target_alpha_range = (target_alpha_range_min, target_alpha_range_max)
@@ -279,207 +397,260 @@ if __name__ == '__main__':
         # Get concave hull
         match descriptor_settings.get('dimensionality_reduction_method'):
             case 'autoencoder':
-                atl_cut.custom_print(
-                    f'Read concave hull settings. '
-                    f'Target alpha range: {target_alpha_range}, '
-                    f'default alpha if issues: {default_alpha_if_issues}, '
-                    f'NN distance scale factor: {nn_dist_scale_factor}, '
-                    f'Fraction of points allowed outside: {frac_points_allowed_out}, '
-                    f'QuadTree offset fraction: {qt_offset_frac}, '
-                    f'QuadTree leaf capacity fraction: {qt_data_frac_capacity}, '
-                    f'QuadTree leaf subdivision factor: {qt_subdivision_factor}, ',
-                    'info',
-                )
+                match boundary_method:
+                    case 'concave_hull':
+                        atl_cut.custom_print(
+                            f'Read concave hull settings. '
+                            f'Target alpha range: {target_alpha_range}, '
+                            f'default alpha if issues: {default_alpha_if_issues}, '
+                            f'NN distance scale factor: {nn_dist_scale_factor}, '
+                            f'Fraction of points allowed outside: '
+                            f'{frac_points_allowed_out}, '
+                            f'QuadTree offset fraction: {qt_offset_frac}, '
+                            f'QuadTree leaf capacity fraction: '
+                            f'{qt_data_frac_capacity}, '
+                            f'QuadTree leaf subdivision factor: '
+                            f'{qt_subdivision_factor}, ',
+                            'info',
+                        )
 
-                # Preparing quadtree
-                atl_cut.custom_print('Preparing QuadTree...', 'info')
-                all_points = [Point(p) for p in latent_space_all]
+                        # Preparing quadtree
+                        atl_cut.custom_print('Preparing QuadTree...', 'info')
+                        all_points = [Point(p) for p in latent_space_all]
 
-                # Setup QuadTree
-                qt = atl_qt.setup_quadtree(
-                    all_points=all_points,
-                    offset_frac=qt_offset_frac,
-                    data_frac_capacity=qt_data_frac_capacity,
-                )
-                atl_cut.custom_print('QuadTree prepared.', 'done')
+                        # Setup QuadTree
+                        qt = atl_qt.setup_quadtree(
+                            all_points=all_points,
+                            offset_frac=qt_offset_frac,
+                            data_frac_capacity=qt_data_frac_capacity,
+                        )
+                        atl_cut.custom_print('QuadTree prepared.', 'done')
 
-                # Preparing clusters
-                atl_cut.custom_print('Preparing clusters...', 'info')
-                dense_boxes = qt.find_dense_leaves(
-                    max_width_threshold=qt.data_range_x / qt_subdivision_factor
-                )
-                clusters = atl_qt.separate_clusters(dense_boxes)
-                atl_cut.custom_print('Clusters obtained!', 'done')
+                        # Preparing clusters
+                        atl_cut.custom_print('Preparing clusters...', 'info')
+                        dense_boxes = qt.find_dense_leaves(
+                            max_width_threshold=qt.data_range_x / qt_subdivision_factor
+                        )
+                        clusters = atl_qt.separate_clusters(dense_boxes)
+                        atl_cut.custom_print('Clusters obtained!', 'done')
 
-                atl_cut.custom_print(
-                    f'Number of distinct clusters found: {len(clusters)}'
-                )
-                print()
+                        atl_cut.custom_print(
+                            f'Number of distinct clusters found: {len(clusters)}'
+                        )
+                        print()
 
-                alpha_shapes = []
-                alpha_val = None
-                if len(clusters) > 1:
-                    for i, cluster_dense_boxes in enumerate(clusters):
-                        try:
-                            atl_cut.custom_print(
-                                f'Cluster {i + 1} has {len(cluster_dense_boxes)} '
-                                'dense boxes.',
-                                'debug',
-                            )
-                            atl_cut.custom_print(
-                                f'Computing concave hull for Cluster {i + 1}...', 'info'
-                            )
+                        alpha_shapes = []
+                        alpha_val = None
+                        if len(clusters) > 1:
+                            for i, cluster_dense_boxes in enumerate(clusters):
+                                try:
+                                    atl_cut.custom_print(
+                                        f'Cluster {i + 1} has '
+                                        f'{len(cluster_dense_boxes)} dense boxes.',
+                                        'debug',
+                                    )
+                                    atl_cut.custom_print(
+                                        f'Computing concave hull for '
+                                        f'Cluster {i + 1}...',
+                                        'info',
+                                    )
 
-                            # Box-aware point filtering
-                            latent_space_pts = []
-                            for box in cluster_dense_boxes:
-                                latent_space_pts.extend(
-                                    [p for p in all_points if box.contains(p)]
+                                    # Box-aware point filtering
+                                    latent_space_pts = []
+                                    for box in cluster_dense_boxes:
+                                        latent_space_pts.extend(
+                                            [p for p in all_points if box.contains(p)]
+                                        )
+                                    coords = np.array(
+                                        [(p.x, p.y) for p in latent_space_pts]
+                                    )
+
+                                    if len(coords) < 3:
+                                        raise ValueError(
+                                            'Not enough points after QuadTree filtering'
+                                        )
+
+                                    alpha_shape_arr, alpha_val = (
+                                        get_optimized_concave_hull(
+                                            latent_space=coords,
+                                            target_alpha_range=(1, 500.0),
+                                            frac_points_allowed_out=0.05,
+                                        )
+                                    )
+
+                                    # Create polygon from shell
+                                    alpha_shape_polygon = Polygon(alpha_shape_arr)
+
+                                    points_inside_hull = [
+                                        p
+                                        for p in latent_space_pts
+                                        if alpha_shape_polygon.intersects(p)
+                                    ]
+                                    frac_inside_hull = (
+                                        len(points_inside_hull) / len(latent_space_pts)
+                                        if latent_space_pts
+                                        else 0.0
+                                    )
+
+                                    # Store alpha shapes into alpha_shapes list
+                                    alpha_shapes.append(
+                                        {
+                                            'cluster_id': i + 1,
+                                            'dense_boxes': cluster_dense_boxes,
+                                            'alpha_shape': alpha_shape_polygon,
+                                            'used_alpha': alpha_val,
+                                            'frac_inside_hull': frac_inside_hull,
+                                        }
+                                    )
+
+                                except Exception as e:
+                                    atl_cut.custom_print(
+                                        f'Could not compute concave hull due to '
+                                        f'error: {e}. '
+                                        'Skipping concave hull computation.',
+                                        'error',
+                                    )
+                                    concave_hull = None
+                        else:
+                            try:
+                                atl_cut.custom_print(
+                                    'Only one cluster found. '
+                                    'Computing concave hull for the entire dataset...',
+                                    'info',
                                 )
-                            coords = np.array([(p.x, p.y) for p in latent_space_pts])
 
-                            if len(coords) < 3:
-                                raise ValueError(
-                                    'Not enough points after QuadTree filtering'
+                                coords = np.array([(p.x, p.y) for p in all_points])
+
+                                alpha_shape_arr, alpha_val = get_optimized_concave_hull(
+                                    latent_space=coords,
+                                    target_alpha_range=target_alpha_range,
+                                    frac_points_allowed_out=frac_points_allowed_out,
                                 )
 
-                            alpha_shape_arr, alpha_val = get_optimized_concave_hull(
-                                latent_space=coords,
-                                target_alpha_range=(1, 500.0),
-                                frac_points_allowed_out=0.05,
-                            )
+                                # Create polygon from shell
+                                alpha_shape_polygon = Polygon(alpha_shape_arr)
 
-                            # Create polygon from shell
-                            alpha_shape_polygon = Polygon(alpha_shape_arr)
+                                points_inside_hull = [
+                                    p
+                                    for p in all_points
+                                    if alpha_shape_polygon.intersects(p)
+                                ]
+                                frac_inside_hull = len(points_inside_hull) / len(
+                                    all_points
+                                )
 
+                                # Store alpha shapes into alpha_shapes list
+                                alpha_shapes.append(
+                                    {
+                                        'cluster_id': 1,
+                                        'dense_boxes': None,
+                                        'alpha_shape': alpha_shape_polygon,
+                                        'used_alpha': alpha_val,
+                                        'frac_inside_hull': frac_inside_hull,
+                                    }
+                                )
+
+                            except Exception as e:
+                                atl_cut.custom_print(
+                                    f'Could not compute concave hull due to '
+                                    f'error: {e}. '
+                                    'Skipping concave hull computation.',
+                                    'error',
+                                )
+                                concave_hull = None
+
+                        frac_outside = _write_boundary_outputs(
+                            res_folder, alpha_shapes, all_points, boundary_method
+                        )
+
+                        plot_img_path = res_folder / 'concave_hull.png'
+                        atl_qt.visualize_quadtree(
+                            qt=qt,
+                            points=all_points,
+                            clusters=clusters,
+                            alpha_shapes=alpha_shapes,
+                            filename=plot_img_path,
+                            frac_outside=frac_outside,
+                        )
+                        atl_cut.custom_print(
+                            f"Concave hull plotted, saved to '{plot_img_path}'.",
+                            'info',
+                        )
+
+                    case 'morphological_closing':
+                        atl_cut.custom_print(
+                            f'Read morphological closing settings. '
+                            f'Disk size: {morph_disk_size}, '
+                            f'threshold: {morph_threshold}, dpi: {morph_dpi}.',
+                            'info',
+                        )
+
+                        all_points = [Point(p) for p in latent_space_all]
+
+                        atl_cut.custom_print(
+                            'Computing morphological closing boundary...', 'info'
+                        )
+                        morph_results = atl_morph.process_morphological_closing(
+                            latent_space_all[:, 0],
+                            latent_space_all[:, 1],
+                            disk_size=morph_disk_size,
+                            threshold=morph_threshold,
+                            dpi=morph_dpi,
+                        )
+
+                        # Build the same shape-dict structure the concave-hull
+                        # path produces, so the downstream outputs and runtime
+                        # extrapolation checks are boundary-method agnostic.
+                        alpha_shapes = []
+                        for i, boundary in enumerate(morph_results['data_boundaries']):
+                            boundary = np.atleast_2d(boundary)
+                            if len(boundary) < 3:
+                                continue
+                            boundary_polygon = Polygon(boundary)
                             points_inside_hull = [
-                                p
-                                for p in latent_space_pts
-                                if alpha_shape_polygon.intersects(p)
+                                p for p in all_points if boundary_polygon.intersects(p)
                             ]
                             frac_inside_hull = (
-                                len(points_inside_hull) / len(latent_space_pts)
-                                if latent_space_pts
+                                len(points_inside_hull) / len(all_points)
+                                if all_points
                                 else 0.0
                             )
-
-                            # Store alpha shapes into alpha_shapes list
                             alpha_shapes.append(
                                 {
                                     'cluster_id': i + 1,
-                                    'dense_boxes': cluster_dense_boxes,
-                                    'alpha_shape': alpha_shape_polygon,
-                                    'used_alpha': alpha_val,
+                                    'dense_boxes': None,
+                                    'alpha_shape': boundary_polygon,
+                                    'used_alpha': None,
                                     'frac_inside_hull': frac_inside_hull,
                                 }
                             )
 
-                        except Exception as e:
-                            atl_cut.custom_print(
-                                f'Could not compute concave hull due to error: {e}. '
-                                'Skipping concave hull computation.',
-                                'error',
-                            )
-                            concave_hull = None
-                else:
-                    try:
                         atl_cut.custom_print(
-                            'Only one cluster found. '
-                            'Computing concave hull for the entire dataset...',
-                            'info',
+                            f'Number of boundaries found: {len(alpha_shapes)}'
+                        )
+                        print()
+
+                        frac_outside = _write_boundary_outputs(
+                            res_folder, alpha_shapes, all_points, boundary_method
                         )
 
-                        coords = np.array([(p.x, p.y) for p in all_points])
-
-                        alpha_shape_arr, alpha_val = get_optimized_concave_hull(
-                            latent_space=coords,
-                            target_alpha_range=target_alpha_range,
-                            frac_points_allowed_out=frac_points_allowed_out,
+                        plot_img_path = res_folder / 'concave_hull.png'
+                        _plot_morph_boundaries(
+                            latent_space_all,
+                            alpha_shapes,
+                            morph_disk_size,
+                            frac_outside,
+                            plot_img_path,
                         )
-
-                        # Create polygon from shell
-                        alpha_shape_polygon = Polygon(alpha_shape_arr)
-
-                        points_inside_hull = [
-                            p for p in all_points if alpha_shape_polygon.intersects(p)
-                        ]
-                        frac_inside_hull = len(points_inside_hull) / len(all_points)
-
-                        # Store alpha shapes into alpha_shapes list
-                        alpha_shapes.append(
-                            {
-                                'cluster_id': 1,
-                                'dense_boxes': None,
-                                'alpha_shape': alpha_shape_polygon,
-                                'used_alpha': alpha_val,
-                                'frac_inside_hull': frac_inside_hull,
-                            }
-                        )
-
-                    except Exception as e:
                         atl_cut.custom_print(
-                            f'Could not compute concave hull due to error: {e}. '
-                            'Skipping concave hull computation.',
-                            'error',
+                            f"Boundary plotted, saved to '{plot_img_path}'.", 'info'
                         )
-                        concave_hull = None
 
-                concave_hull_data_path = res_folder / 'concave_hulls_data.pkl'
-                with open(concave_hull_data_path, 'wb') as f:
-                    pickle.dump(alpha_shapes, f)
-
-                shape_coordinates = []
-                for shape in alpha_shapes:
-                    curr_shape_coord = shape['alpha_shape'].exterior.coords.xy
-                    curr_shape_coord = [
-                        coord
-                        for coord in zip(
-                            curr_shape_coord[0], curr_shape_coord[1], strict=True
+                    case _:
+                        raise ValueError(
+                            f"Unknown boundary_method '{boundary_method}'. Expected "
+                            "'concave_hull' or 'morphological_closing'."
                         )
-                    ]
-                    shape_coordinates.append(curr_shape_coord)
-
-                concave_hull_path = res_folder / 'concave_hulls.pkl'
-                with open(concave_hull_path, 'wb') as f:
-                    pickle.dump(shape_coordinates, f)
-
-                atl_cut.custom_print(
-                    f"Concave hull(s) computed, saved to '{concave_hull_path}'.",
-                    'info',
-                )
-                print()
-
-                points_inside, points_outside, frac_outside = (
-                    atl_qt.check_if_points_in_polygons(alpha_shapes, all_points)
-                )
-
-                atl_cut.custom_print(
-                    f'Points inside alpha shapes: {len(points_inside)} '
-                    f', outside: {len(points_outside)}',
-                    'info',
-                )
-                atl_cut.custom_print(
-                    f'Percentage of total datapoints points outside '
-                    f'alpha shapes: {frac_outside * 100:.2f}%',
-                    'info',
-                )
-
-                plot_hull = True
-
-                if plot_hull:
-                    plot_img_path = res_folder / 'concave_hull.png'
-                    atl_qt.visualize_quadtree(
-                        qt=qt,
-                        points=all_points,
-                        clusters=clusters,
-                        alpha_shapes=alpha_shapes,
-                        filename=plot_img_path,
-                        frac_outside=frac_outside,
-                    )
-
-                    atl_cut.custom_print(
-                        f"Concave hull plotted, saved to '{plot_img_path}'.", 'info'
-                    )
 
             case 'pca':
                 raise NotImplementedError('PCA not implemented yet')

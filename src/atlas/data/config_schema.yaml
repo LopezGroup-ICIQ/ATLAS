@@ -1377,7 +1377,7 @@ active_learning:
         name_pretty: "Extrapolation Check Settings"
         description: "Settings for extrapolation checks."
         check_extrapolation_type:
-            description: "Method for extrapolation check. With `min-max` or `basic`, check for extrapolation using the range of the MACE descriptors. With `alpha-shape` or `advanced`, check for extrapolation using the concave hull of the MACE descriptors. With `disabled` or `none`, disable the extrapolation check, only leaving committee disagreement for EF for the domain."
+            description: "Method for extrapolation check. With `min-max` or `basic`, check for extrapolation using the range of the model descriptors. With `alpha-shape` or `advanced`, check for extrapolation using the concave hull of the model descriptors. With `disabled` or `none`, disable the extrapolation check, only leaving committee disagreement for EF for the domain."
             type: str
             mandatory: false
             default: "none"
@@ -1438,6 +1438,27 @@ active_learning:
                 default: 0.0
                 mandatory: false
                 description: "Scaling factor for the concave hull to be used when checking for extrapolation. For example, 0.1 results in a 10% size increase of the hull. A value of 0.0 means no scaling."
+            boundary_method:
+                type: str
+                default: "concave_hull"
+                mandatory: false
+                choices: ["concave_hull", "morphological_closing"]
+                description: "Algorithm for boundary determination during the extrapolation check. With `concave_hull`, the boundary is the alpha shape of the latent space (per quadtree cluster). With `morphological_closing`, the boundary is obtained by rasterising the latent space and applying a morphological closing operation."
+            morph_disk_size:
+                type: int
+                default: 10
+                mandatory: false
+                description: "Disk size for the morphological closing structuring element. Larger values bridge wider gaps between points. Only used when `boundary_method` is `morphological_closing`."
+            morph_threshold:
+                type: int
+                default: 250
+                mandatory: false
+                description: "Grayscale intensity threshold (0-255) for point detection in morphological closing. Only used when `boundary_method` is `morphological_closing`."
+            morph_dpi:
+                type: int
+                default: 100
+                mandatory: false
+                description: "DPI of the internal rasterisation used by morphological closing. Higher values give finer boundaries. Only used when `boundary_method` is `morphological_closing`."
     safeguard:
         name: "safeguard"
         name_pretty: "Active Learning Safeguard Settings"
@@ -1780,7 +1801,7 @@ active_learning:
     mlip:
         name: "mlip"
         name_pretty: "MLIP Backend Settings"
-        description: "Configuration for the MLIP backend used in the active learning workflow. If this section is absent, the workflow defaults to MACE for all stages."
+        description: "Configuration for the MLIP backend used in the active learning workflow. Supports a modular backend system with a plugin interface for adding new models. If this section is absent, the workflow defaults to MACE for all stages."
         training_backend:
             description: "Which MLIP backend to use for model training, committee evaluation, and calculator creation. Available backends are registered in the atlas.active_learning.backends registry."
             type: str
@@ -1871,6 +1892,16 @@ active_learning:
             description: "AiiDA metadata and scheduler options for Allegro training."
             type: dict
             mandatory: false
+        num_workers:
+            description: "Number of DataLoader workers for Allegro training."
+            type: int
+            mandatory: false
+            default: 4
+        batch_size:
+            description: "Batch size for Allegro training."
+            type: int
+            mandatory: false
+            default: 1
         train_settings:
             description: "Allegro/NequIP training parameters and hyperparameters."
             type: dict
@@ -1967,7 +1998,7 @@ active_learning:
             default: "mace"
             choices: ["mace", "soap"]
         dimensionality_reduction_method:
-            description: "Dimensionality reduction method for MACE descriptors."
+            description: "Dimensionality reduction method for model descriptors."
             type: str
             mandatory: false
             default: "none"
@@ -2764,7 +2795,7 @@ latent_space_analysis:
         name_pretty: "Extrapolation Check Settings"
         description: "Settings for extrapolation checks."
         check_extrapolation_type:
-            description: "Method for extrapolation check. With `min-max` or `basic`, check for extrapolation using the range of the MACE descriptors. With `alpha-shape` or `advanced`, check for extrapolation using the concave hull of the MACE descriptors. With `disabled` or `none`, disable the extrapolation check, only leaving committee disagreement for EF for the domain."
+            description: "Method for extrapolation check. With `min-max` or `basic`, check for extrapolation using the range of the model descriptors. With `alpha-shape` or `advanced`, check for extrapolation using the concave hull of the model descriptors. With `disabled` or `none`, disable the extrapolation check, only leaving committee disagreement for EF for the domain."
             type: str
             mandatory: false
             default: "none"
@@ -2825,6 +2856,27 @@ latent_space_analysis:
                 default: 0.0
                 mandatory: false
                 description: "Scaling factor for the concave hull to be used when checking for extrapolation. For example, 0.1 results in a 10% size increase of the hull. A value of 0.0 means no scaling."
+            boundary_method:
+                type: str
+                default: "concave_hull"
+                mandatory: false
+                choices: ["concave_hull", "morphological_closing"]
+                description: "Algorithm for boundary determination during the extrapolation check. With `concave_hull`, the boundary is the alpha shape of the latent space (per quadtree cluster). With `morphological_closing`, the boundary is obtained by rasterising the latent space and applying a morphological closing operation."
+            morph_disk_size:
+                type: int
+                default: 10
+                mandatory: false
+                description: "Disk size for the morphological closing structuring element. Larger values bridge wider gaps between points. Only used when `boundary_method` is `morphological_closing`."
+            morph_threshold:
+                type: int
+                default: 250
+                mandatory: false
+                description: "Grayscale intensity threshold (0-255) for point detection in morphological closing. Only used when `boundary_method` is `morphological_closing`."
+            morph_dpi:
+                type: int
+                default: 100
+                mandatory: false
+                description: "DPI of the internal rasterisation used by morphological closing. Higher values give finer boundaries. Only used when `boundary_method` is `morphological_closing`."
 
     descriptors:
         name: "descriptors"
@@ -2837,7 +2889,7 @@ latent_space_analysis:
             default: "mace"
             choices: ["mace", "soap"]
         dimensionality_reduction_method:
-            description: "Dimensionality reduction method for MACE descriptors."
+            description: "Dimensionality reduction method for model descriptors."
             type: str
             mandatory: false
             default: "none"
