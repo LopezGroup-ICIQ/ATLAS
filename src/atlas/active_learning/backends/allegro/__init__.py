@@ -299,6 +299,20 @@ class AllegroBackend:
 
         model_file = best_ckpt or last_ckpt
 
+        # Package the checkpoint into a self-contained ``*.nequip.zip`` here,
+        # while the training dataset is still available in the working dir.
+        # Downstream consumers (eval/MD/safeguard) can then compile/load the
+        # package without the training data. If packaging fails we fall back to
+        # the raw checkpoint (which still works when its dataset is present).
+        if model_file is not None:
+            from atlas.active_learning.backends.allegro.training import (
+                package_allegro_model,
+            )
+
+            package = package_allegro_model(model_file)
+            if package is not None:
+                model_file = str(package)
+
         result = {
             'model_file': model_file,
             'rmse_e': rmse_e,
@@ -312,7 +326,11 @@ class AllegroBackend:
 
     @property
     def model_file_extension(self) -> str:
-        return '.pth'
+        # ``parse_training_results`` packages the checkpoint into a
+        # self-contained ``*.nequip.zip`` (see ``package_allegro_model``); that
+        # package is the artifact that flows through the pipeline and is
+        # compiled on demand for inference. See ``create_calculator``.
+        return '.nequip.zip'
 
     @property
     def lammps_pair_style(self) -> str:
@@ -334,6 +352,37 @@ class AllegroBackend:
             device=device,
             dtype=dtype,
             **kwargs,
+        )
+
+    # -- MLIPModelCompiler --------------------------------------------------
+
+    @property
+    def compiled_model_extension(self) -> str:
+        # aotinductor emits '.nequip.pt2'; torchscript '.nequip.pth'. The
+        # default compile mode is aotinductor (see ``deploy_allegro_model``).
+        return '.nequip.pt2'
+
+    def compile_model(
+        self,
+        model_path: str | Path,
+        device: str = 'cpu',
+        mode: str = 'aotinductor',
+        target: str = 'ase',
+    ) -> Path | None:
+        """Compile a trained Allegro checkpoint for inference on this node.
+
+        Wraps ``deploy_allegro_model`` (``nequip-compile``), which is
+        device-specific and reuses an existing compiled artifact if present.
+        """
+        from atlas.active_learning.backends.allegro.training import (
+            deploy_allegro_model,
+        )
+
+        return deploy_allegro_model(
+            checkpoint_path=model_path,
+            device=device,
+            mode=mode,
+            target=target,
         )
 
     # -- MLIPCommitteeEvaluator ---------------------------------------------

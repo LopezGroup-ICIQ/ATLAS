@@ -193,7 +193,7 @@ class TestAllegroBackendProperties:
 
     def test_model_file_extension(self):
         backend = get_backend('allegro')
-        assert backend.model_file_extension == '.pth'
+        assert backend.model_file_extension == '.nequip.zip'
 
     def test_supports_committee_training(self):
         backend = get_backend('allegro')
@@ -322,14 +322,15 @@ class TestAllegroTrainingConfig:
             db_size=500,
         )
 
-        assert config['dataset_file_name'] == 'train.xyz'
-        assert config['dataset'] == 'ase'
-        assert config['run_name'] == 'model_0_iter3'
-        assert config['r_max'] == 6.0
-        assert config['learning_rate'] == 0.005
-        assert config['batch_size'] == 5
-        assert config['max_epochs'] == 100
-        assert config['num_layers'] == 2
+        assert config['data']['split_dataset']['file_path'] == 'train.xyz'
+        assert config['data']['ase_args']['format'] == 'extxyz'
+        assert config['cutoff_radius'] == 6.0
+        assert config['training_module']['optimizer']['lr'] == 0.005
+        assert config['data']['train_dataloader']['batch_size'] == 5
+        assert config['trainer']['max_epochs'] == 100
+        assert config['training_module']['model']['num_layers'] == 2
+        assert config['training_module']['model']['l_max'] == 2
+        assert config['training_module']['model']['seed'] is not None
 
     def test_build_config_default_dtype(self):
         from atlas.active_learning.backends.allegro.training import (
@@ -343,7 +344,7 @@ class TestAllegroTrainingConfig:
             iteration=0,
             db_size=10,
         )
-        assert config['default_dtype'] == 'float32'
+        assert config['training_module']['model']['model_dtype'] == 'float32'
 
     def test_build_config_has_allegro_model_builder(self):
         from atlas.active_learning.backends.allegro.training import (
@@ -357,7 +358,10 @@ class TestAllegroTrainingConfig:
             iteration=0,
             db_size=10,
         )
-        assert 'allegro.model.Allegro' in config['model_builders']
+        assert (
+            config['training_module']['model']['_target_']
+            == 'allegro.model.AllegroModel'
+        )
 
     def test_build_config_extra_keys_passed_through(self):
         from atlas.active_learning.backends.allegro.training import (

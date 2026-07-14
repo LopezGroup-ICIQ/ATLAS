@@ -56,10 +56,10 @@ mace = [
     "cuequivariance-ops-torch-cu12",
 ]
 nequip = [
-    "nequip>=0.6.0",
+    "nequip>=0.18.0",
 ]
 allegro = [
-    "nequip-allegro",
+    "nequip-allegro>=0.8.3",
 ]
 
 [project.urls]
@@ -80,6 +80,8 @@ Homepage = "https://github.com/LopezGroup-ICIQ/ATLAS"
 "mace-committee-eval" = "atlas.active_learning.mace_tools_aiida:CheckMACECommitteeResultsCalculation"
 "allegro-train" = "atlas.active_learning.backends.allegro.calcjobs:TrainAllegroModelCalculation"
 "atl-train-mlip" = "atlas.active_learning.calcjobs.train_mlip:TrainMLIPCalculation"
+
+"atl-compile-model" = "atlas.active_learning.calcjobs.compile_model:CompileModelCalculation"
 
 "atl-process-md-seed-struct" = "atlas.active_learning.mace_tools_aiida:ProcessMDSeedStructCalculation"
 
@@ -103,6 +105,7 @@ Homepage = "https://github.com/LopezGroup-ICIQ/ATLAS"
 "mace-lammps-raw-parser" = "atlas.active_learning.mace_tools_aiida:LAMMPSMACERawParser"
 "allegro-training-parser" = "atlas.active_learning.backends.allegro.calcjobs:TrainAllegroModelCalculationParser"
 "atl-train-mlip-parser" = "atlas.active_learning.calcjobs.train_mlip:TrainMLIPCalculationParser"
+"atl-compile-model-parser" = "atlas.active_learning.calcjobs.compile_model:CompileModelCalculationParser"
 "atl-process-md-seed-struct-parser" = "atlas.active_learning.mace_tools_aiida:ProcessMDSeedStructCalculationParser"
 "atl-descriptors-combined-parser" = "atlas.active_learning.mace_tools_aiida:GetDescriptorsCombinedParser"
 "atl-safeguard-md-parser" = "atlas.active_learning.safeguard.safeguard_utils:RunMDSafeguardCalculationParser"

@@ -279,3 +279,55 @@ class MLIPCommitteeEvaluator(Protocol):
             (meV/atom) and 'REF_forces' (meV/A) lists.
         """
         ...
+
+
+@runtime_checkable
+class MLIPModelCompiler(Protocol):
+    """Protocol for backends whose models must be compiled before inference.
+
+    Some backends (e.g. Allegro/NequIP) cannot run inference from the raw
+    trained checkpoint — it must first be compiled (``nequip-compile``) into a
+    device-specific artifact. Compilation is expensive and toolchain-sensitive,
+    so it is best done **once, on the computer where inference will run**, and
+    the compiled artifact reused there.
+
+    Backends that need no compilation (e.g. MACE) simply omit this protocol;
+    callers gate on ``isinstance(backend, MLIPModelCompiler)`` and, when absent,
+    ship the raw model unchanged.
+    """
+
+    def compile_model(
+        self,
+        model_path: str | Path,
+        device: str = 'cpu',
+        mode: str = 'aotinductor',
+        target: str = 'ase',
+    ) -> Path | None:
+        """Compile a trained model into an inference-ready artifact.
+
+        Runs on the compute node where the artifact will be used, so the
+        compiled result matches that node's device/toolchain.
+
+        Parameters
+        ----------
+        model_path : str | Path
+            Path to the trained model/checkpoint.
+        device : str
+            Target device for the compiled model ('cpu' or 'cuda'). The
+            artifact is device-specific.
+        mode : str
+            Compilation backend (e.g. 'aotinductor').
+        target : str
+            Inference target the artifact is compiled for (e.g. 'ase').
+
+        Returns
+        -------
+        Path | None
+            Path to the compiled artifact, or None on failure.
+        """
+        ...
+
+    @property
+    def compiled_model_extension(self) -> str:
+        """File extension of the compiled artifact (e.g. '.nequip.pt2')."""
+        ...
