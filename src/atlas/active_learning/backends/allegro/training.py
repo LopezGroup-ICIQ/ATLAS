@@ -48,13 +48,22 @@ def build_allegro_train_config(
         A dictionary representing the ``nequip-train`` YAML config.
     """
     train_settings = dict(
-        settings_dict.get('train_settings', None) or settings_dict
+        settings_dict.get('train_settings') or settings_dict
     )
 
     train_file_name = Path(train_data_path).name
 
     # -- pull ATLAS hyperparameters (with sensible defaults) ---------------
-    seed = train_settings.pop('seed', 0)
+    # When the user does not pin a seed, draw a random one. This function is
+    # called once per committee member, so each gets a distinct seed and the
+    # committee members are actually different models (required for meaningful
+    # uncertainty estimation). The chosen seed is stored in the config dict,
+    # so provenance still records the exact value used.
+    seed = train_settings.pop('seed', None)
+    if seed is None:
+        import secrets
+
+        seed = secrets.randbelow(2**31)
     r_max = train_settings.pop('r_max', 5.0)
     num_layers = train_settings.pop('num_layers', 2)
     l_max = train_settings.pop('l_max', 1)
@@ -63,6 +72,10 @@ def build_allegro_train_config(
     num_scalar_features = train_settings.pop('num_scalar_features', 64)
     lr = train_settings.pop('lr', 0.001)
     batch_size = train_settings.pop('batch_size', 5)
+    # DataLoader worker processes. 0 (the previous hardcoded value) loads data
+    # on the main process and stalls the GPU between steps; a few workers build
+    # neighbour lists in parallel. Tunable from the TOML; default to a modest 4.
+    num_workers = int(train_settings.pop('num_workers', 4))
     max_epochs = train_settings.pop('max_num_epochs', 100)
     model_dtype = train_settings.pop('default_dtype', 'float32')
     compile_mode = train_settings.pop('compile_mode', 'eager')
@@ -116,12 +129,14 @@ def build_allegro_train_config(
                 '_target_': 'torch.utils.data.DataLoader',
                 'batch_size': batch_size,
                 'shuffle': True,
-                'num_workers': 0,
+                'num_workers': num_workers,
+                'persistent_workers': num_workers > 0,
             },
             'val_dataloader': {
                 '_target_': 'torch.utils.data.DataLoader',
                 'batch_size': batch_size,
-                'num_workers': 0,
+                'num_workers': num_workers,
+                'persistent_workers': num_workers > 0,
             },
             'stats_manager': {
                 '_target_': 'nequip.data.CommonDataStatisticsManager',
@@ -237,9 +252,88 @@ def _detect_chemical_symbols(train_data_path: str) -> list[str]:
     return sorted({s for atoms in images for s in atoms.get_chemical_symbols()})
 
 
+def _resolve_nequip_cmd(tool: str, python_executable: str) -> list[str]:
+    """Return a command prefix that runs a nequip console tool robustly.
+
+    ``tool`` is a nequip console script such as ``nequip-compile`` or
+    ``nequip-package``. These stubs are fragile inside containers (broken
+    shebang / missing exec bit / PATH resolving to a non-executable), which
+    raises ``PermissionError`` when exec'd directly. We instead run them through
+    ``python_executable`` — ``python <script>`` ignores both the exec bit and
+    the shebang, and the script stub imports the right (version-specific)
+    module itself.
+
+    Resolution order:
+    1. The registered console-script entry point, called as
+       ``python -c 'from <module> import <attr>; <attr>()'`` (version-agnostic;
+       only works when the interpreter can enumerate the package metadata).
+    2. The tool *file* — found via ``shutil.which``, next to the interpreter, or
+       by scanning ``PATH`` directly — run through the interpreter **regardless
+       of its executable bit**. This is the branch that survives the container's
+       non-executable stub.
+    3. The bare command as a last resort.
+    """
+    import os
+    import shutil
+    from pathlib import Path as _Path
+
+    # 1. Resolve the real entry-point target for this nequip version.
+    try:
+        from importlib.metadata import entry_points
+
+        for ep in entry_points(group='console_scripts'):
+            if ep.name == tool:
+                module, _, attr = ep.value.partition(':')
+                if module and attr:
+                    return [
+                        python_executable,
+                        '-c',
+                        f'import sys; from {module} import {attr}; '
+                        f'sys.exit({attr}())',
+                    ]
+    except Exception:  # noqa: BLE001 - fall through to path-based lookup
+        pass
+
+    # 2. Locate the tool *file* and run it via the interpreter. We do NOT
+    #    require it to be executable (``shutil.which`` only returns files with
+    #    the exec bit, so we also scan PATH and the interpreter's bin dir for
+    #    the plain file). Running ``python <file>`` bypasses the missing exec
+    #    bit / broken shebang that raises PermissionError in the container.
+    candidate_paths: list[str] = []
+    on_path = shutil.which(tool)
+    if on_path is not None:
+        candidate_paths.append(on_path)
+    candidate_paths.append(str(_Path(python_executable).with_name(tool)))
+    candidate_paths.extend(
+        str(_Path(directory) / tool)
+        for directory in os.environ.get('PATH', '').split(os.pathsep)
+        if directory
+    )
+    for candidate in candidate_paths:
+        cand_path = _Path(candidate)
+        if candidate and cand_path.is_file():
+            # Run the script with the python from its *own* bin dir (the venv it
+            # was installed into, which has the matching nequip + torch), not
+            # necessarily ``python_executable``. This reproduces what the
+            # shebang intends without depending on the exec bit or on the shell
+            # picking the right interpreter.
+            interpreter = python_executable
+            for py_name in ('python', 'python3'):
+                sibling_py = cand_path.parent / py_name
+                if sibling_py.is_file():
+                    interpreter = str(sibling_py)
+                    break
+            return [interpreter, str(cand_path)]
+
+    # 3. Last resort.
+    return [tool]
+
+
 def deploy_allegro_model(
     checkpoint_path: str | Path,
     device: str = 'cpu',
+    mode: str = 'aotinductor',
+    target: str = 'ase',
 ) -> Path | None:
     """Compile a trained Allegro checkpoint for inference.
 
@@ -253,36 +347,166 @@ def deploy_allegro_model(
         Path to the trained ``.ckpt`` checkpoint file.
     device : str
         Target device for the compiled model (``'cpu'`` or ``'cuda'``).
+    mode : str
+        Compilation backend: ``'torchscript'`` (in-process JIT, no external
+        C++ compiler needed) or ``'aotinductor'`` (faster, but requires a
+        working C++ compiler on the node).
+    target : str
+        nequip-compile inference target (``'ase'`` for the ASE calculator,
+        ``'pair_allegro'``/``'pair_nequip'`` for LAMMPS).
 
     Returns
     -------
     Path | None
-        Path to the compiled ``.nequip.pt2`` file, or None on failure.
+        Path to the compiled model (``*.nequip.pth`` for torchscript,
+        ``*.nequip.pt2`` for aotinductor), or None on failure.
     """
+    import os
+    import shutil
     import subprocess
+    import sys
 
-    checkpoint_path = Path(checkpoint_path)
-    compiled_path = checkpoint_path.with_suffix('.nequip.pt2')
+    # ``nequip-compile`` loads the checkpoint with torch.load; make the
+    # subprocess inherit TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD when e3nn/torch
+    # need it (see AllegroBackend._patch_torch_load_if_needed).
+    from atlas.active_learning.backends.allegro import (
+        _patch_torch_load_if_needed,
+    )
 
+    _patch_torch_load_if_needed()
+
+    # Resolve to absolute paths: the compile runs with ``cwd`` set to the
+    # checkpoint's directory (see below), so relative paths would otherwise
+    # break.
+    from atlas.active_learning.backends import model_file_stem
+
+    checkpoint_path = Path(checkpoint_path).resolve()
+    # nequip picks the loader from the extension, so it must match the mode.
+    # Strip the input's (possibly compound, e.g. '.nequip.zip') extension before
+    # appending the compiled suffix, so we get 'foo.nequip.pt2' not
+    # 'foo.nequip.nequip.pt2'.
+    compiled_suffix = '.nequip.pt2' if mode == 'aotinductor' else '.nequip.pth'
+    compiled_path = checkpoint_path.parent / (
+        model_file_stem(checkpoint_path.name) + compiled_suffix
+    )
+
+    # Reuse an existing compiled artifact instead of recompiling. Compilation is
+    # device-specific and slow (aotinductor shells out to a C++ compiler), and a
+    # single MD CalcJob may create the calculator repeatedly (e.g. once per MD
+    # stage) for the same checkpoint in the same working dir.
+    if compiled_path.exists():
+        return compiled_path
+
+    # Invoke nequip-compile through the *current* Python interpreter rather
+    # than relying on the console-script entry point. Inside containers the
+    # ``nequip-compile`` stub can fail to exec (broken shebang / missing exec
+    # bit / PATH resolving to a non-executable), raising PermissionError.
+    # Running it via ``sys.executable`` sidesteps all of that and guarantees
+    # the same env that imported nequip.
+    base_cmd = _resolve_nequip_cmd('nequip-compile', sys.executable)
+
+    # aotinductor shells out to a C++ compiler. torch's inductor picks the
+    # first it finds, which on some images is a broken/non-executable ``icpc``.
+    # If the user hasn't pinned CXX, point it at an *executable* g++/clang++ so
+    # torch uses a working compiler instead of icpc.
+    compile_env = os.environ.copy()
+    if mode == 'aotinductor' and not compile_env.get('CXX'):
+        for _cxx in ('g++', 'clang++', 'c++'):
+            _found = shutil.which(_cxx)
+            if _found is not None:
+                compile_env['CXX'] = _found
+                compile_env.setdefault('CC', shutil.which('gcc') or _found)
+                break
+
+    # ``nequip-compile`` takes the checkpoint and output paths as
+    # positional arguments (not --input-path/--output-path flags).
+    #
+    # Run with ``cwd`` set to the checkpoint's directory: a nequip checkpoint
+    # stores the training dataset by a *relative* filename and resolves it
+    # against the process CWD when it rebuilds the datamodule to trace the
+    # model. Under ``singularity --contain`` the CWD is otherwise $HOME or /,
+    # not the bind-mounted working dir, so that data file (which sits next to
+    # the checkpoint) would not be found.
     result = subprocess.run(
         [
-            'nequip-compile',
-            '--input-path',
+            *base_cmd,
             str(checkpoint_path),
-            '--output-path',
             str(compiled_path),
             '--device',
             device,
             '--mode',
-            'aotinductor',
+            mode,
             '--target',
-            'ase',
+            target,
         ],
+        capture_output=True,
+        text=True,
+        cwd=str(checkpoint_path.parent),
+        env=compile_env,
+    )
+
+    if result.returncode != 0 or not compiled_path.exists():
+        # Surface the failure so it appears in the calculation's
+        # scheduler output rather than failing silently downstream.
+        sys.stderr.write(
+            f'nequip-compile failed (returncode={result.returncode}) for '
+            f'checkpoint {checkpoint_path}:\n{result.stdout}\n{result.stderr}\n'
+        )
+        return None
+
+    return compiled_path
+
+
+def package_allegro_model(checkpoint_path: str | Path) -> Path | None:
+    """Package a trained Allegro checkpoint into a self-contained archive.
+
+    ``nequip-package build`` bundles the model code, weights and the metadata
+    needed to trace/compile it into a portable ``*.nequip.zip``. Unlike a raw
+    ``.ckpt``, the package can be compiled/loaded downstream **without** the
+    original training dataset — which is why we run it here, at training time,
+    where that dataset is still available.
+
+    Must run in the training working directory: a checkpoint references its
+    training dataset by a *relative* filename, which nequip-package resolves
+    against the CWD when it loads the checkpoint. ``parse_training_results``
+    (this function's only caller) runs there, so the inherited CWD is correct.
+
+    Parameters
+    ----------
+    checkpoint_path : str | Path
+        Path to the trained ``.ckpt`` checkpoint file.
+
+    Returns
+    -------
+    Path | None
+        Path to the ``*.nequip.zip`` package, or None on failure.
+    """
+    import subprocess
+    import sys
+
+    from atlas.active_learning.backends.allegro import (
+        _patch_torch_load_if_needed,
+    )
+
+    _patch_torch_load_if_needed()
+
+    checkpoint_path = Path(checkpoint_path)
+    package_path = checkpoint_path.with_name(checkpoint_path.stem + '.nequip.zip')
+
+    base_cmd = _resolve_nequip_cmd('nequip-package', sys.executable)
+
+    # ``nequip-package build <checkpoint> <output>``.
+    result = subprocess.run(
+        [*base_cmd, 'build', str(checkpoint_path), str(package_path)],
         capture_output=True,
         text=True,
     )
 
-    if result.returncode != 0 or not compiled_path.exists():
+    if result.returncode != 0 or not package_path.exists():
+        sys.stderr.write(
+            f'nequip-package failed (returncode={result.returncode}) for '
+            f'checkpoint {checkpoint_path}:\n{result.stdout}\n{result.stderr}\n'
+        )
         return None
 
-    return compiled_path
+    return package_path
