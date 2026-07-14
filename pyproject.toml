@@ -226,6 +226,7 @@ choices = [
     { value = "core", name = "core: ⚙️ Changes to general or core functionality." },
     { value = "md", name = "md: ⚛️ Changes to MD calculators and scripts." },
     { value = "dft", name = "dft: ⚛️ Changes related to DFT calculators." },
+    { value = "mlip", name = "mlip: ⚛️ Changes related to MLIP." },
     { value = "safeguard", name = "safeguard: ⚙️ Changes to the safeguard." },
     { value = "init_db", name = "init_db: 💾 Changes to the initial database, structures and phase diagrams." },
     { value = "domain_validity", name = "domain_validity: 📉 Changes to interpolation, extrapolation, dim. reduction..." },
