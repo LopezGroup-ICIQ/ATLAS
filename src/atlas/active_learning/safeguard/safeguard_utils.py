@@ -286,11 +286,17 @@ class RunMDSafeguardCalculation(CalcJob):
         #         )
         # else:
 
-        # Copying models to temporarty folder
+        # Copying models to temporarty folder. Preserve the model file's real
+        # extension (e.g. '.model' for MACE, '.ckpt' for Allegro) so the remote
+        # safeguard script, which loads it via ``backend.model_file_extension``,
+        # finds it regardless of backend.
+        from atlas.active_learning.backends import model_file_ext
+
+        model_ext = model_file_ext(self.inputs.sampler_model.filename)
         with self.inputs.sampler_model.as_path() as model_path:
             folder.insert_path(
                 src=model_path,
-                dest_name='sampler_model.model',
+                dest_name=f'sampler_model{model_ext}',
             )
 
         codeinfo = CodeInfo()
