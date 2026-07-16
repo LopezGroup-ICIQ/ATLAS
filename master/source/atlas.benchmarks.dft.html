@@ -1,0 +1,284 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>atlas.benchmarks.dft package &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="atlas.benchmarks.mlip package" href="atlas.benchmarks.mlip.html" />
+    <link rel="prev" title="atlas.benchmarks package" href="atlas.benchmarks.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">Input specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package Information</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="atlas.html">atlas package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="atlas.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html">atlas.active_learning package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="atlas.benchmarks.html">atlas.benchmarks package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html">atlas.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.training.html">atlas.training package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html">atlas.workflows package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.html#module-atlas">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">atlas</a></li>
+          <li class="breadcrumb-item"><a href="atlas.html">atlas package</a></li>
+          <li class="breadcrumb-item"><a href="atlas.benchmarks.html">atlas.benchmarks package</a></li>
+      <li class="breadcrumb-item active">atlas.benchmarks.dft package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/atlas.benchmarks.dft.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="atlas-benchmarks-dft-package">
+<h1>atlas.benchmarks.dft package<a class="headerlink" href="#atlas-benchmarks-dft-package" title="Link to this heading"></a></h1>
+<p>DFT benchmark utilities for selecting best calculation settings.</p>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.benchmarks.dft.dft_benchmark_core">
+<span id="atlas-benchmarks-dft-dft-benchmark-core-module"></span><h2>atlas.benchmarks.dft.dft_benchmark_core module<a class="headerlink" href="#module-atlas.benchmarks.dft.dft_benchmark_core" title="Link to this heading"></a></h2>
+<p>Core logic for DFT parameter benchmarking.</p>
+<p>Selects representative structures, submits VASP calculations varying one
+parameter at a time, collects results, and analyses convergence to find
+the cheapest settings within an energy threshold.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.dft.dft_benchmark_core.analyze_convergence">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.dft.dft_benchmark_core.</span></span><span class="sig-name descname"><span class="pre">analyze_convergence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">submitted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.benchmarks.dft.dft_benchmark_core.analyze_convergence" title="Link to this definition"></a></dt>
+<dd><p>Analyse convergence for each benchmark parameter and phase.</p>
+<p>Returns a nested dict:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s1">&#39;kspacing&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;reference_value&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
+            <span class="s1">&#39;reference_energy&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">5.123</span><span class="p">,</span>
+            <span class="s1">&#39;converged_value&#39;</span><span class="p">:</span> <span class="mf">0.125</span><span class="p">,</span>
+            <span class="s1">&#39;values&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.075</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+            <span class="s1">&#39;energies&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">5.123</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.123</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+            <span class="s1">&#39;diffs_meV&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+        <span class="p">},</span>
+        <span class="o">...</span>
+    <span class="p">},</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.dft.dft_benchmark_core.build_benchmark_calculations">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.dft.dft_benchmark_core.</span></span><span class="sig-name descname"><span class="pre">build_benchmark_calculations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">representative_structures</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_incar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_kspacing_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.benchmarks.dft.dft_benchmark_core.build_benchmark_calculations" title="Link to this definition"></a></dt>
+<dd><p>Build calculation descriptors for every benchmark sweep.</p>
+<p>Each descriptor contains everything needed to submit one VASP
+calculation via <code class="docutils literal notranslate"><span class="pre">submit_aiida_vasp_calculation</span></code>.</p>
+<p>Returns a list of dicts with keys: <code class="docutils literal notranslate"><span class="pre">phase</span></code>, <code class="docutils literal notranslate"><span class="pre">param_name</span></code>,
+<code class="docutils literal notranslate"><span class="pre">param_value</span></code>, <code class="docutils literal notranslate"><span class="pre">structure</span></code>, <code class="docutils literal notranslate"><span class="pre">incar</span></code>, <code class="docutils literal notranslate"><span class="pre">kspacing_dict</span></code>,
+<code class="docutils literal notranslate"><span class="pre">is_reference</span></code>, <code class="docutils literal notranslate"><span class="pre">calc_label</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.dft.dft_benchmark_core.determine_reference_value">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.dft.dft_benchmark_core.</span></span><span class="sig-name descname"><span class="pre">determine_reference_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">explicit_reference</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></span><a class="headerlink" href="#atlas.benchmarks.dft.dft_benchmark_core.determine_reference_value" title="Link to this definition"></a></dt>
+<dd><p>Return the tightest (most expensive) value from a sweep list.</p>
+<p>Heuristics by parameter name:
+- <code class="docutils literal notranslate"><span class="pre">kspacing</span></code>, <code class="docutils literal notranslate"><span class="pre">ediff</span></code>, <code class="docutils literal notranslate"><span class="pre">sigma</span></code>: smallest is tightest
+- <code class="docutils literal notranslate"><span class="pre">encut</span></code>, <code class="docutils literal notranslate"><span class="pre">ispin</span></code>: largest is tightest
+- Otherwise uses <em>direction</em> (<code class="docutils literal notranslate"><span class="pre">&quot;min&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;max&quot;</span></code>), defaulting to <code class="docutils literal notranslate"><span class="pre">&quot;max&quot;</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.dft.dft_benchmark_core.generate_toml_snippet">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.dft.dft_benchmark_core.</span></span><span class="sig-name descname"><span class="pre">generate_toml_snippet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">convergence_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#atlas.benchmarks.dft.dft_benchmark_core.generate_toml_snippet" title="Link to this definition"></a></dt>
+<dd><p>Generate a TOML snippet with recommended settings.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.dft.dft_benchmark_core.monitor_and_collect">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.dft.dft_benchmark_core.</span></span><span class="sig-name descname"><span class="pre">monitor_and_collect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">submitted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_interval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">240</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.benchmarks.dft.dft_benchmark_core.monitor_and_collect" title="Link to this definition"></a></dt>
+<dd><p>Wait for all benchmark calculations to finish and collect energies.</p>
+<p>Returns the submitted list with added <code class="docutils literal notranslate"><span class="pre">energy_per_atom</span></code> and
+<code class="docutils literal notranslate"><span class="pre">n_atoms</span></code> keys.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.dft.dft_benchmark_core.select_representative_structures">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.dft.dft_benchmark_core.</span></span><span class="sig-name descname"><span class="pre">select_representative_structures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.benchmarks.dft.dft_benchmark_core.select_representative_structures" title="Link to this definition"></a></dt>
+<dd><p>Pick one representative bulk structure per phase.</p>
+<p>Prefers the <code class="docutils literal notranslate"><span class="pre">base=True</span></code> structure for each phase.  Falls back to
+the smallest bulk structure when no base is tagged.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.dft.dft_benchmark_core.submit_benchmark_calculations">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.dft.dft_benchmark_core.</span></span><span class="sig-name descname"><span class="pre">submit_benchmark_calculations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">calc_descriptors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dry_run</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.benchmarks.dft.dft_benchmark_core.submit_benchmark_calculations" title="Link to this definition"></a></dt>
+<dd><p>Submit all benchmark calculations via AiiDA.</p>
+<p>Each descriptor gets submitted using the existing
+<code class="docutils literal notranslate"><span class="pre">submit_aiida_vasp_calculation</span></code> function.  Benchmark metadata is
+stored in AiiDA node extras for later retrieval.</p>
+<p>Returns the descriptors list with an added <code class="docutils literal notranslate"><span class="pre">node</span></code> key (the AiiDA
+node, or <code class="docutils literal notranslate"><span class="pre">None</span></code> for dry runs).</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.benchmarks.dft.dft_benchmark_report">
+<span id="atlas-benchmarks-dft-dft-benchmark-report-module"></span><h2>atlas.benchmarks.dft.dft_benchmark_report module<a class="headerlink" href="#module-atlas.benchmarks.dft.dft_benchmark_report" title="Link to this heading"></a></h2>
+<p>Reporting and plotting for DFT benchmark results.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.dft.dft_benchmark_report.generate_full_report">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.dft.dft_benchmark_report.</span></span><span class="sig-name descname"><span class="pre">generate_full_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">convergence_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold_meV</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toml_snippet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#atlas.benchmarks.dft.dft_benchmark_report.generate_full_report" title="Link to this definition"></a></dt>
+<dd><p>Orchestrate all reporting: plots, tables, and TOML snippet.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.dft.dft_benchmark_report.plot_convergence">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.dft.dft_benchmark_report.</span></span><span class="sig-name descname"><span class="pre">plot_convergence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">convergence_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold_meV</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.benchmarks.dft.dft_benchmark_report.plot_convergence" title="Link to this definition"></a></dt>
+<dd><p>Generate one convergence plot per benchmark parameter.</p>
+<p>Each plot shows energy difference vs parameter value with one line
+per phase, a threshold line, and a marker on the selected value.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.dft.dft_benchmark_report.print_summary_table">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.dft.dft_benchmark_report.</span></span><span class="sig-name descname"><span class="pre">print_summary_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">convergence_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold_meV</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.benchmarks.dft.dft_benchmark_report.print_summary_table" title="Link to this definition"></a></dt>
+<dd><p>Print a summary table to the console.</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.benchmarks.dft.run_dft_benchmark">
+<span id="atlas-benchmarks-dft-run-dft-benchmark-module"></span><h2>atlas.benchmarks.dft.run_dft_benchmark module<a class="headerlink" href="#module-atlas.benchmarks.dft.run_dft_benchmark" title="Link to this heading"></a></h2>
+<p>CLI entry point for DFT parameter benchmarking.</p>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">atl_dft_benchmark</span> <span class="o">-</span><span class="n">c</span> <span class="n">benchmark_config</span><span class="o">.</span><span class="n">toml</span>
+</pre></div>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.dft.run_dft_benchmark.load_config">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.dft.run_dft_benchmark.</span></span><span class="sig-name descname"><span class="pre">load_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#atlas.benchmarks.dft.run_dft_benchmark.load_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.dft.run_dft_benchmark.main">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.dft.run_dft_benchmark.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#atlas.benchmarks.dft.run_dft_benchmark.main" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.dft.run_dft_benchmark.parse_arguments">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.dft.run_dft_benchmark.</span></span><span class="sig-name descname"><span class="pre">parse_arguments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Namespace</span></span></span><a class="headerlink" href="#atlas.benchmarks.dft.run_dft_benchmark.parse_arguments" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-atlas.benchmarks.dft">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-atlas.benchmarks.dft" title="Link to this heading"></a></h2>
+<p>DFT parameter benchmarking for optimal VASP settings per phase.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="atlas.benchmarks.html" class="btn btn-neutral float-left" title="atlas.benchmarks package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="atlas.benchmarks.mlip.html" class="btn btn-neutral float-right" title="atlas.benchmarks.mlip package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='atlas.benchmarks.dft.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,290 @@
+[build-system]
+requires = ["setuptools", "wheel", "setuptools-git-versioning", 'pip']
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "atlas-learn"
+dynamic = ["version"]
+description = "An automatic workflow for streamlining training and data generation for MLIPs via active learning."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    { name = "Pol Sanz", email = "psanz@iciq.es" },
+    { name = "Lulu Li", email = "lli@iciq.es" },
+    { name = "Zan Lian", email = "zanlian@stanford.edu" },
+]
+
+dependencies = [
+    "ase>=3.26.0",
+    "dscribe==2.1.0",
+    "gunicorn==23.0.0",
+    "matplotlib==3.8.0",
+    "mp_api>=0.46.2",
+    "pandas",
+    "plotly>=6.1.1",
+    "pymatgen>=2025.4.10",
+    "python-slugify[unidecode]",
+    "PyYAML",
+    'numpy>=1.26.4,<2.0.0',
+    "rich>=14.0.0",
+    "scipy==1.16.2",
+    "seaborn==0.13.2",
+    "aiida-core==2.7.3",
+    "aiida-lammps==1.0.1",
+    "aiida-vasp==4.1.0",
+    "wonderwords==2.2.0",
+    "shapely",
+    "flask",
+    "wandb",
+    "tomli >= 1.1.0 ; python_version < '3.11'",
+    'qrcode',
+    "datashader==0.18.2",
+    "scikit-image",
+    "dash==4.1.0",
+    "tomlkit",
+    "torch>=2.8.0,<2.13",
+    "torchvision>=0.24.1",
+]
+
+[project.optional-dependencies]
+dev = ["pre-commit", "pytest", "pytest-cov", "commitizen==4.1.1", "ipdb"]
+gui = ["PySide6>=6.6","PySide6-addons", "tomli", "tomli_w"]
+mace = [
+    "mace-torch==0.3.14",
+    "cuequivariance",
+    "cuequivariance-torch",
+    "cuequivariance-ops-torch-cu12",
+]
+nequip = [
+    "nequip>=0.18.0",
+]
+allegro = [
+    "nequip-allegro>=0.8.3",
+]
+
+[project.urls]
+Homepage = "https://github.com/LopezGroup-ICIQ/ATLAS"
+
+[project.entry-points."aiida.calculations"]
+"atl-autoencoder-train" = "atlas.active_learning.extrapolation.autoencoder_tools_aiida:TrainAutoencoderCalculation"
+"atl-get-latent-space" = "atlas.active_learning.extrapolation.autoencoder_tools_aiida:GetLatentSpaceAutoencoderCalculation"
+"atl-get-concave-hull" = "atlas.active_learning.extrapolation.autoencoder_tools_aiida:GetConcaveHullCalculation"
+"atl-descriptors-combined" = "atlas.active_learning.mace_tools_aiida:GetDescriptorsCombinedCalculation"
+"atl-safeguard-md" = "atlas.active_learning.safeguard.safeguard_utils:RunMDSafeguardCalculation"
+"mace-train" = "atlas.active_learning.mace_tools_aiida:TrainMACEModelCalculation"
+"atl-eval-test" = "atlas.active_learning.mace_tools_aiida:EvalTestDatabaseCalculation"
+"mace-get-descriptors" = "atlas.active_learning.mace_tools_aiida:GetMACEDescriptorsCalculation"
+"mace-eval" = "atlas.active_learning.mace_tools_aiida:EvaluateMACEConfigsCalculation"
+"mace-lammps-gpu-md" = "atlas.active_learning.mace_tools_aiida:RunMDCalculationGPULAMMPSMACE"
+"atl-lammps-gpu-md" = "atlas.active_learning.backends.mace.calcjobs:RunMDCalculationGPULAMMPS"
+"mace-committee-eval" = "atlas.active_learning.mace_tools_aiida:CheckMACECommitteeResultsCalculation"
+"allegro-train" = "atlas.active_learning.backends.allegro.calcjobs:TrainAllegroModelCalculation"
+"atl-train-mlip" = "atlas.active_learning.calcjobs.train_mlip:TrainMLIPCalculation"
+
+"atl-compile-model" = "atlas.active_learning.calcjobs.compile_model:CompileModelCalculation"
+
+"atl-process-md-seed-struct" = "atlas.active_learning.mace_tools_aiida:ProcessMDSeedStructCalculation"
+
+[project.entry-points."aiida.calculations.monitors"]
+"monitor.davwarning" = "atlas.workflows.monitors:output_monitor"
+
+[project.entry-points."aiida.workflows"]
+"atl-simple-active-learning" = "atlas.workflows.simple_active_learning:SimpleActiveLearningWorkChain"
+"atl-simple-active-learning-base" = "atlas.workflows.simple_active_learning:SimpleActiveLearningBaseWorkChain"
+
+
+[project.entry-points."aiida.parsers"]
+"atl-autoencoder-train-parser" = "atlas.active_learning.extrapolation.autoencoder_tools_aiida:TrainAutoencoderCalculationParser"
+"atl-get-latent-space-parser" = "atlas.active_learning.extrapolation.autoencoder_tools_aiida:GetLatentSpaceAutoencoderCalculationParser"
+"atl-get-concave-hull-parser" = "atlas.active_learning.extrapolation.autoencoder_tools_aiida:GetConcaveHullCalculationParser"
+"mace-training-parser" = "atlas.active_learning.mace_tools_aiida:TrainMACEModelCalculationParser"
+"mace-descriptors-parser" = "atlas.active_learning.mace_tools_aiida:GetMACEDescriptorsCalculationParser"
+"mace-eval-parser" = "atlas.active_learning.mace_tools_aiida:EvaluateMACEConfigsCalculationParser"
+"atl-eval-test-parser" = "atlas.active_learning.mace_tools_aiida:EvalTestDatabaseCalculationParser"
+"mace-committee-eval-parser" = "atlas.active_learning.mace_tools_aiida:CheckMACECommiteeResultsCalculationParser"
+"mace-lammps-raw-parser" = "atlas.active_learning.mace_tools_aiida:LAMMPSMACERawParser"
+"allegro-training-parser" = "atlas.active_learning.backends.allegro.calcjobs:TrainAllegroModelCalculationParser"
+"atl-train-mlip-parser" = "atlas.active_learning.calcjobs.train_mlip:TrainMLIPCalculationParser"
+"atl-compile-model-parser" = "atlas.active_learning.calcjobs.compile_model:CompileModelCalculationParser"
+"atl-process-md-seed-struct-parser" = "atlas.active_learning.mace_tools_aiida:ProcessMDSeedStructCalculationParser"
+"atl-descriptors-combined-parser" = "atlas.active_learning.mace_tools_aiida:GetDescriptorsCombinedParser"
+"atl-safeguard-md-parser" = "atlas.active_learning.safeguard.safeguard_utils:RunMDSafeguardCalculationParser"
+
+[project.entry-points."aiida.data"]
+"atl.img-png" = "atlas.workflows.datatypes.image_types:ImagePNGData"
+"atl.mlip-model" = "atlas.workflows.datatypes.mlip:MLIPModelFileData"
+
+# CLI entries
+[project.entry-points."aiida.cmdline.data"]
+"atl.img-png" = "atlas.workflows.datatypes.aiida_cli:cli"
+
+[project.scripts]
+"atl_active_learning" = "atlas.core.command_line.cli_active_learning:run_active_learning"
+"atl_gen_configuration_file" = "atlas.core.command_line.cli_generate_configuration_file:gen_default_config"
+"atl_gen_docs" = "atlas.core.command_line.cli_generate_docs:generate_docs"
+"atl_monitor_al_loop" = "atlas.core.command_line.cli_dashboard:monitor_al_loop"
+"atl_gen_init_db" = "atlas.core.command_line.cli_generate_init_db:run_gen_initial_database"
+"atl_init_setup" = "atlas.core.command_line.cli_run_initial_config:run_initial_config"
+"atl_train_autoencoder" = "atlas.core.command_line.cli_train_autoencoder:run_train_autoencoder"
+"atl_run_dft_database" = "atlas.workflows.dft.vasp.aiida_run_vasp_dft_database:main"
+"atl_benchmark_mlip" = "atlas.benchmarks.mlip.evaluate_mlip_performance:main"
+"atl_dft_benchmark" = "atlas.benchmarks.dft.run_dft_benchmark:main"
+"atl_latent_space_analysis" = "atlas.core.command_line.cli_latent_space_analysis:run_latent_space_analysis"
+"atl_database_analysis" = "atlas.core.command_line.cli_db_analysis:run_database_analysis"
+"atl_gui" = "atlas.core.gui.app:main"
+"atl_train_mlip" = "atlas.active_learning.scripts.atl_train_mlip:main"
+
+# package managers are becoming dangerous
+[tool.uv]
+exclude-newer = "7 days"
+
+[tool.setuptools]
+include-package-data = true
+package-dir = { "" = "src" }
+
+[tool.setuptools.package-data]
+"atlas.core.gui" = ["assets/**/*"]
+"atlas" = ["data/**/*"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools-git-versioning]
+enabled = true
+version_file = "VERSION"
+count_commits_from_version_file = true
+dev_template = "{tag}.post{ccount}"
+dirty_template = "{tag}.post{ccount}+git-{branch}-{sha}"
+
+
+[tool.commitizen]
+name = "cz_customize"
+version = "0.55.2"
+changelog_incremental = true
+update_changelog_on_bump = true
+version_files = [
+    "./src/atlas/__init__.py",
+    "./docs/conf.py:release",
+    "pyproject.toml:version",
+    "VERSION",
+    "CITATION.cff:^version",
+]
+template = "./docs/commit_template.txt"
+
+[tool.commitizen.customize]
+#message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
+#example = "feature: this feature enable customize through config file"
+#schema = "<type>: <body>"
+# schema_pattern = "(feat|fix|chore|docs):(\\s.*)"
+message_template = "{{change_type}}{% if scope %}({{scope}}){% endif %}:{% if show_message %} {{message}}{% endif %}"
+example = "feat(al_loop): this feature enables MD simulations using ASE."
+schema = "<type>(<scope>): <body>"
+schema_pattern = "(feat|fix|chore|docs|refactor|perf|style|test)(\\([^)]+\\))?:(\\s.*)"
+bump_pattern = "^(break|new|fix|hotfix|feat|chore|docs)"
+bump_map = { "break" = "MAJOR", "new" = "MINOR", 'feat' = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH", 'chore' = "PATCH", 'docs' = "PATCH", 'test' = "PATCH", 'refactor' = "PATCH", 'perf' = "PATCH", 'style' = "PATCH" }
+change_type_order = [
+    "BREAKING CHANGE",
+    "feat",
+    "fix",
+    "refactor",
+    "perf",
+    'docs',
+    'style',
+    'test',
+    'chore',
+]
+
+
+commit_parser = "^(?P<change_type>feat|fix|chore|docs|refactor|perf|style|test)(?:\\((?P<scope>[^)]+)\\))?:\\s(?P<message>.+)$"
+changelog_pattern = "^(feat|fix|docs|chore|refactor|perf|style|test)?(!)?"
+change_type_map = { "feat" = "Feature", "fix" = "Fix", "chore" = "Misc", "docs" = "Docs", "refactor" = "Refactor", "perf" = "Performance", "style" = "Style", "test" = "Test" }
+
+[[tool.commitizen.customize.questions]]
+type = "list"
+name = "change_type"
+choices = [
+    # The 'value' should match what your patterns expect, e.g., 'feat', 'fix'
+    { value = "feat", name = "feat: ✨ A new feature." },
+    { value = "fix", name = "fix: 🐛 A bug fix." },
+    { value = "docs", name = "docs: 📚 Documentation changes." },
+    { value = "style", name = "style: 💄 Code style changes (formatting, etc.)." },
+    { value = "refactor", name = "refactor: ♻️ Code changes that neither fix a bug nor add a feature." },
+    { value = "perf", name = "perf: 🚀 A code change that improves performance." },
+    { value = "test", name = "test: ✅ Adding missing tests or correcting existing tests." },
+    { value = "chore", name = "chore: 🧹 Other changes that don't modify src or test files (build, CI, etc.)." },
+]
+message = "Select the type of change you are committing"
+
+[[tool.commitizen.customize.questions]]
+type = "list"
+name = "scope"
+choices = [
+    { value = "", name = "none: ❌ No specific scope." },
+    { value = "al_loop", name = "al_loop: 🔁 Changes to the active learning loop." },
+    { value = "schema", name = "schema: ⚙️ Changes to the input/documentation schema." },
+    { value = "report", name = "report: 📊 Changes to the report part." },
+    { value = "core", name = "core: ⚙️ Changes to general or core functionality." },
+    { value = "md", name = "md: ⚛️ Changes to MD calculators and scripts." },
+    { value = "dft", name = "dft: ⚛️ Changes related to DFT calculators." },
+    { value = "mlip", name = "mlip: ⚛️ Changes related to MLIP models and backends." },
+    { value = "safeguard", name = "safeguard: ⚙️ Changes to the safeguard." },
+    { value = "init_db", name = "init_db: 💾 Changes to the initial database, structures and phase diagrams." },
+    { value = "domain_validity", name = "domain_validity: 📉 Changes to interpolation, extrapolation, dim. reduction..." },
+    { value = "benchmarks", name = "benchmarks: 📊 Changes to MLIP benchmarks and model testing..." },
+    { value = "gui", name = "gui: Additions and changes to the GUI." },
+]
+message = "What is the scope of this change? (component)"
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "message"
+message = "Write a short and imperative summary of the changes (e.g., add new DFT calculator)"
+
+[[tool.commitizen.customize.questions]]
+type = "confirm"
+name = "show_message"
+message = "Do you want to add this summary as the commit body?"
+default = true
+
+
+[tool.ruff]
+# same as black
+line-length = 88
+indent-width = 4
+
+# Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
+# Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
+# McCabe complexity (`C901`) by default.
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+    "D",
+]
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+# Some settings to ignore:          # REMOVE # REMOVE # REMOVE
+ignore = ["D417", "D401", "D205", "D102", "D103", "D105", "UP038"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+
+[tool.ruff.format]
+docstring-code-format = true
+docstring-code-line-length = 60
+indent-style = "space"
+quote-style = "single"

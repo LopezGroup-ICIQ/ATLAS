@@ -1,0 +1,929 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CLI Arguments &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Input specification" href="input.html" />
+    <link rel="prev" title="Installation" href="install.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CLI Arguments</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#run-active-learning-atl-active-learning">Run Active Learning - <code class="docutils literal notranslate"><span class="pre">atl_active_learning</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#general-arguments">General Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#subcommands">Subcommands</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#report-generate-reports"><code class="docutils literal notranslate"><span class="pre">report</span></code> - Generate reports</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#resume-resume-stopped-al-loops"><code class="docutils literal notranslate"><span class="pre">resume</span></code> - Resume Stopped AL Loops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gui-launch-dashboard"><code class="docutils literal notranslate"><span class="pre">gui</span></code> - Launch dashboard</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#active-learning-dashboard-monitor-al-loop">Active Learning Dashboard - <code class="docutils literal notranslate"><span class="pre">monitor_al_loop</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generate-configuration-file-atl-gen-configuration-file">Generate Configuration File - <code class="docutils literal notranslate"><span class="pre">atl_gen_configuration_file</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generate-initial-database-atl-gen-init-db">Generate Initial Database - <code class="docutils literal notranslate"><span class="pre">atl_gen_init_db</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-dft-database-atl-run-dft-database">Run DFT Database - <code class="docutils literal notranslate"><span class="pre">atl_run_dft_database</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#autoencoder-for-dimensionality-reduction-atl-train-autoencoder">Autoencoder for Dimensionality Reduction - <code class="docutils literal notranslate"><span class="pre">atl_train_autoencoder</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#arguments">Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#mlip-benchmark-atl-benchmark-mlip">MLIP Benchmark - <code class="docutils literal notranslate"><span class="pre">atl_benchmark_mlip</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#main-arguments">Main Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#slab-generation-arguments">Slab Generation Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#md-parameters">MD Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#benchmark-selection">Benchmark Selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ui-options">UI Options</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dft-benchmark-atl-dft-benchmark">DFT Benchmark - <code class="docutils literal notranslate"><span class="pre">atl_dft_benchmark</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#database-analysis-atl-database-analysis">Database Analysis - <code class="docutils literal notranslate"><span class="pre">atl_database_analysis</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gui-atl-gui">GUI - <code class="docutils literal notranslate"><span class="pre">atl_gui</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">Input specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Package Information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">CLI Arguments</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/tools.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="cli-arguments">
+<h1>CLI Arguments<a class="headerlink" href="#cli-arguments" title="Link to this heading"></a></h1>
+<p>This section describes the command line arguments for various scripts provided by the ATLAS library. These arguments allow users to control the behavior and configuration of active learning loops, database generation, and other features. Each argument is explained along with its usage and default value (if applicable).</p>
+<section id="run-active-learning-atl-active-learning">
+<h2>Run Active Learning - <code class="docutils literal notranslate"><span class="pre">atl_active_learning</span></code><a class="headerlink" href="#run-active-learning-atl-active-learning" title="Link to this heading"></a></h2>
+<p>Handles ATLAS active learning loop runs. Running the <code class="docutils literal notranslate"><span class="pre">atl_active_learning</span></code> command without any subcommand or the gui subcommand will start a new run.
+In order to do this, users must provide a TOML settings file which can be configured as seen in the <a class="reference internal" href="input_active_learning.html"><span class="std std-doc">inputs section</span></a>.</p>
+<p>Other available subcommands allow to generate reports or resume loops using files generated from previous runs.</p>
+<p><strong>Usage:</strong> <code class="docutils literal notranslate"><span class="pre">atl_active_learning</span> <span class="pre">&lt;SUBCOMMAND&gt;</span> <span class="pre">&lt;OPTIONS&gt;</span></code></p>
+<section id="general-arguments">
+<h3>General Arguments<a class="headerlink" href="#general-arguments" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-c,</span> <span class="pre">--config_file</span></code> (PATH)</p>
+<ul>
+<li><p><strong>Description</strong>: Path pointing to a TOML settings file. By default, <code class="docutils literal notranslate"><span class="pre">active_learning_settings.toml</span></code> will be searched in the current working directory (CWD).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">Path</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">./active_learning_settings.toml</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="subcommands">
+<h3>Subcommands<a class="headerlink" href="#subcommands" title="Link to this heading"></a></h3>
+<p>Subcommands define the operating mode of the <code class="docutils literal notranslate"><span class="pre">atl_active_learning</span></code> tool.</p>
+<section id="report-generate-reports">
+<h4><code class="docutils literal notranslate"><span class="pre">report</span></code> - Generate reports<a class="headerlink" href="#report-generate-reports" title="Link to this heading"></a></h4>
+<p>Generates different types of reports for a ATLAS active learning loop or a ATLAS initial database.</p>
+<p><strong>Usage:</strong> <code class="docutils literal notranslate"><span class="pre">atl_active_learning</span> <span class="pre">report</span> <span class="pre">&lt;REPORT_TYPE&gt;</span> <span class="pre">[OPTIONS...]</span></code></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">report</span></code> command requires specifying a <code class="docutils literal notranslate"><span class="pre">REPORT_TYPE</span></code> as a positional argument, followed by options specific to that report type.</p>
+<p><strong>Available <code class="docutils literal notranslate"><span class="pre">REPORT_TYPE</span></code>s:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">init_db</span></code>: Generate a report for a ATLAS initial database.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">al_loop</span></code>: Generate a report for an active learning loop by providing an AiiDA PK/UUID or a log file path.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">al_loop_batch</span></code>: Generate a report for a series of active learning loops, as a way of comparing them.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">al_loop_performance</span></code>: Generate a performance report for an active learning loop.</p></li>
+</ul>
+<section id="report-type-init-db">
+<h5>Report type: <code class="docutils literal notranslate"><span class="pre">init_db</span></code><a class="headerlink" href="#report-type-init-db" title="Link to this heading"></a></h5>
+<p>Generates a report for a ATLAS initial database. This can include plots of energy and force distributions, with options to handle outliers and customize data presentation.</p>
+<p><strong>Usage:</strong> <code class="docutils literal notranslate"><span class="pre">atl_active_learning</span> <span class="pre">report</span> <span class="pre">init_db</span> <span class="pre">[-h]</span> <span class="pre">--db_path</span> <span class="pre">&lt;PATH&gt;</span> <span class="pre">[OPTIONS...]</span></code></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--db_path</span> <span class="pre">&lt;PATH&gt;,</span> <span class="pre">-d</span> <span class="pre">&lt;PATH&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Path to the database file.</p></li>
+<li><p><strong>Required</strong>: Yes (as per usage string).</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--threshold_E</span> <span class="pre">&lt;FLOAT&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Threshold for Energy (E) to consider a structure as an outlier, in eV. If <code class="docutils literal notranslate"><span class="pre">--per_atom</span></code> is enabled, this threshold is in eV/atom.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">float</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--threshold_F</span> <span class="pre">&lt;FLOAT&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Threshold for Force (F) to consider a structure as an outlier, in eV/Å (or eV/Å per atom if <code class="docutils literal notranslate"><span class="pre">--per_atom</span></code> is enabled).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">float</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--remove_outliers</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: If specified, removes outliers (defined by <code class="docutils literal notranslate"><span class="pre">--threshold_E</span></code> and <code class="docutils literal notranslate"><span class="pre">--threshold_F</span></code>) from the plot.</p></li>
+<li><p><strong>Default</strong>: Outliers are included.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--color_type</span> <span class="pre">{phase,struct_type}</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Specifies the criterion to use for coloring the plot.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">Choice</span></code></p></li>
+<li><p><strong>Choices</strong>: <code class="docutils literal notranslate"><span class="pre">phase</span></code>, <code class="docutils literal notranslate"><span class="pre">struct_type</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--per_atom</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: If specified, displays energy and force values normalized per atom.</p></li>
+<li><p><strong>Default</strong>: Values are not normalized per atom.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="report-type-al-loop">
+<h5>Report type: <code class="docutils literal notranslate"><span class="pre">al_loop</span></code><a class="headerlink" href="#report-type-al-loop" title="Link to this heading"></a></h5>
+<p>Generates a comprehensive report for a single active learning loop, identified by an AiiDA PK/UUID or a ATLAS log file path. This report can include plots on database sizes (training and seed), NNP performance metrics, the number of structures added or removed, error analysis plots comparing DFT and NN predictions, and visualization of database evolution in latent space.</p>
+<p><strong>Usage:</strong> <code class="docutils literal notranslate"><span class="pre">atl_active_learning</span> <span class="pre">report</span> <span class="pre">al_loop</span> <span class="pre">[-h]</span> <span class="pre">(--loop_id</span> <span class="pre">&lt;ID&gt;</span> <span class="pre">|</span> <span class="pre">--log_path</span> <span class="pre">&lt;PATH&gt;)</span> <span class="pre">[OPTIONS...]</span></code></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--loop_id</span> <span class="pre">&lt;ID&gt;,</span> <span class="pre">-i</span> <span class="pre">&lt;ID&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: AiiDA PK/UUID of the active learning loop. (This or <code class="docutils literal notranslate"><span class="pre">--log_path</span></code> is required).</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--log_path</span> <span class="pre">&lt;PATH&gt;,</span> <span class="pre">-log</span> <span class="pre">&lt;PATH&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Path to the ATLAS log of the active learning loop. (This or <code class="docutils literal notranslate"><span class="pre">--loop_id</span></code> is required).</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--device</span> <span class="pre">&lt;DEVICE&gt;,</span> <span class="pre">-d</span> <span class="pre">&lt;DEVICE&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: String representing a device to run inference on (e.g., ‘cpu’, ‘cuda:0’).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">str</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--get_error_plot</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: If specified, generates an error plot comparing DFT and NN predictions.</p></li>
+<li><p><strong>Default</strong>: Not set.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--remove_outliers</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: If specified (and relevant, e.g., for an error plot), removes outliers from the plot. Thresholds for outlier removal might be specified by other options (e.g., <code class="docutils literal notranslate"><span class="pre">--threshold_E_meV</span></code>, <code class="docutils literal notranslate"><span class="pre">--threshold_F_meV</span></code>, <code class="docutils literal notranslate"><span class="pre">--threshold_meV</span></code>).</p></li>
+<li><p><strong>Default</strong>: Outliers are included.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--model</span> <span class="pre">&lt;PATH&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Path to the model file (e.g., for generating error plots).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">Path</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--database</span> <span class="pre">&lt;PATH&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Path to the database file (e.g., for error plots or latent space analysis).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">Path</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--threshold_E_meV</span> <span class="pre">&lt;FLOAT&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Threshold for the difference between <span class="math notranslate nohighlight">\(E_{DFT}\)</span> and <span class="math notranslate nohighlight">\(E_{NN}\)</span> (in meV) to mark a structure as an outlier in error plots.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">float</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">150</span></code> (meV)</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--threshold_F_meV</span> <span class="pre">&lt;FLOAT&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Threshold for the difference between <span class="math notranslate nohighlight">\(F_{DFT}\)</span> and <span class="math notranslate nohighlight">\(F_{NN}\)</span> (in meV/Å, assuming typical units for forces converted to meV scale for comparison) to mark a structure as an outlier in error plots.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">float</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">25000</span></code> (meV)</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--title</span> <span class="pre">&lt;TITLE&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Custom run name to be used as the title for plots. If not provided, a name will be gathered from the calculation files.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">str</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--db_latent_space_evolution</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: If specified, plots the database evolution over time in latent space. Requires <code class="docutils literal notranslate"><span class="pre">--autoencoder_folder</span></code>.</p></li>
+<li><p><strong>Default</strong>: Not set.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--autoencoder_folder</span> <span class="pre">&lt;PATH&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Path to the autoencoder folder. This folder should contain an autoencoder model and the database files for every step, required for <code class="docutils literal notranslate"><span class="pre">--db_latent_space_evolution</span></code>.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">Path</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--db_path</span> <span class="pre">&lt;PATH&gt;,</span> <span class="pre">--d</span> <span class="pre">&lt;PATH&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Path to the database file (alternative or additional way to specify a database, context might depend on other flags).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">Path</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="report-type-al-loop-batch">
+<h5>Report type: <code class="docutils literal notranslate"><span class="pre">al_loop_batch</span></code><a class="headerlink" href="#report-type-al-loop-batch" title="Link to this heading"></a></h5>
+<p>Generates a comparative report for a series of active learning loops. This allows for assessing and contrasting the outcomes or behaviors of multiple loops, typically identified by their AiiDA PKs/UUIDs or log file paths.</p>
+<p><strong>Usage:</strong> <code class="docutils literal notranslate"><span class="pre">atl_active_learning</span> <span class="pre">report</span> <span class="pre">al_loop_batch</span> <span class="pre">[OPTIONS...]</span></code></p>
+<ul class="simple">
+<li><p><strong>Description</strong>: “Generate a report for a series of active learning loops, as a way of comparing them by providing an AiiDA PK/UUID or a log file path.”</p></li>
+</ul>
+</section>
+<section id="report-type-al-loop-performance">
+<h5>Report type: <code class="docutils literal notranslate"><span class="pre">al_loop_performance</span></code><a class="headerlink" href="#report-type-al-loop-performance" title="Link to this heading"></a></h5>
+<p>Generates a performance report for an active learning loop, focusing on computational aspects. The plots typically display step durations and computational resource usage, which can be useful for identifying bottlenecks or understanding the efficiency of the loop. Multiple AiiDA PKs/UUIDs can be provided for multi-stage loops (e.g., when a loop was resumed).</p>
+<p><strong>Usage:</strong> <code class="docutils literal notranslate"><span class="pre">atl_active_learning</span> <span class="pre">report</span> <span class="pre">al_loop_performance</span> <span class="pre">[-h]</span> <span class="pre">(--loop_id</span> <span class="pre">&lt;ID&gt;</span> <span class="pre">|</span> <span class="pre">--log_path</span> <span class="pre">&lt;PATH&gt;)</span> <span class="pre">[OPTIONS...]</span></code></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--loop_ids</span> <span class="pre">&lt;ID&gt;</span> <span class="pre">[&lt;ID&gt;</span> <span class="pre">...],</span> <span class="pre">-i</span> <span class="pre">&lt;ID&gt;</span> <span class="pre">[&lt;ID&gt;</span> <span class="pre">...]</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: AiiDA PK/UUIDs of the active learning loop(s). Several IDs can be provided for multi-stage loops (e.g., when using <code class="docutils literal notranslate"><span class="pre">resume</span></code>) or to analyze multiple distinct loops in a performance context. Get IDs from your log or terminal output.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">List[str|int]</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--output_filename</span> <span class="pre">&lt;PATH&gt;,</span> <span class="pre">-o</span> <span class="pre">&lt;PATH&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Filename for the report plot to be generated.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">Path</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="resume-resume-stopped-al-loops">
+<h4><code class="docutils literal notranslate"><span class="pre">resume</span></code> - Resume Stopped AL Loops<a class="headerlink" href="#resume-resume-stopped-al-loops" title="Link to this heading"></a></h4>
+<p>Resumes an active learning loop using a results folder. A resumed run will use the settings from the <code class="docutils literal notranslate"><span class="pre">.toml</span></code> file contained in the results folder.</p>
+<p><strong>Usage</strong>: <code class="docutils literal notranslate"><span class="pre">atl_active_learning</span> <span class="pre">resume</span> <span class="pre">[-h]</span> <span class="pre">--dir_resume</span> <span class="pre">&lt;PATH&gt;</span> <span class="pre">[--config_file</span> <span class="pre">&lt;PATH&gt;]</span></code></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--dir_resume,</span> <span class="pre">-d</span></code> (<code class="docutils literal notranslate"><span class="pre">&lt;PATH&gt;</span></code>)</p>
+<ul>
+<li><p><strong>Description</strong>: Path to the results directory of a previous active learning loop run.</p></li>
+<li><p><strong>Required</strong>: Yes</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--config_file,</span> <span class="pre">-c</span></code> (<code class="docutils literal notranslate"><span class="pre">&lt;PATH&gt;</span></code>)</p>
+<ul>
+<li><p><strong>Description</strong>: Path pointing to a TOML settings file. Optional, as all calculation folders should contain a TOML file.</p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="gui-launch-dashboard">
+<h4><code class="docutils literal notranslate"><span class="pre">gui</span></code> - Launch dashboard<a class="headerlink" href="#gui-launch-dashboard" title="Link to this heading"></a></h4>
+<p>Launches a dashboard to track the active learning loop.</p>
+<p><strong>Usage:</strong> <code class="docutils literal notranslate"><span class="pre">run_active_learning</span> <span class="pre">gui</span> <span class="pre">[-h]</span> <span class="pre">[--update_interval</span> <span class="pre">n_sec]</span> <span class="pre">[--port</span> <span class="pre">port]</span> <span class="pre">[--debug]</span> <span class="pre">[--online]</span></code></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--update_interval</span></code> (<code class="docutils literal notranslate"><span class="pre">n_sec</span></code>)</p>
+<ul>
+<li><p><strong>Description</strong>: Refresh time interval in seconds.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">int</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">60</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--port</span></code> (<code class="docutils literal notranslate"><span class="pre">port</span></code>)</p>
+<ul>
+<li><p><strong>Description</strong>: Port to use for the webapp.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">int</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">8000</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--debug</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Enable Flask debug mode.</p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--online</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Enable online mode.</p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="active-learning-dashboard-monitor-al-loop">
+<h2>Active Learning Dashboard - <code class="docutils literal notranslate"><span class="pre">monitor_al_loop</span></code><a class="headerlink" href="#active-learning-dashboard-monitor-al-loop" title="Link to this heading"></a></h2>
+<p>Monitor a ATLAS active learning loop using a dashboard.</p>
+<p><strong>Usage:</strong> <code class="docutils literal notranslate"><span class="pre">monitor_al_loop</span> <span class="pre">[-h]</span> <span class="pre">[--process_id</span> <span class="pre">UUID/PK]</span> <span class="pre">[--update_interval</span> <span class="pre">n_sec]</span> <span class="pre">[--port</span> <span class="pre">port]</span> <span class="pre">[--debug]</span> <span class="pre">[--online]</span></code></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--process_id</span></code> (<code class="docutils literal notranslate"><span class="pre">UUID/PK</span></code>)</p>
+<ul>
+<li><p><strong>Description</strong>: Process id (pk/uuid) of the WorkChain to monitor.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">str</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--update_interval</span></code> (<code class="docutils literal notranslate"><span class="pre">n_sec</span></code>)</p>
+<ul>
+<li><p><strong>Description</strong>: Refresh time interval in seconds.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">int</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">60</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--port</span></code> (<code class="docutils literal notranslate"><span class="pre">port</span></code>)</p>
+<ul>
+<li><p><strong>Description</strong>: Port to use for the webapp.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">int</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">8000</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--debug</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Enable Flask debug mode.</p></li>
+<li><p><strong>Action</strong>: <code class="docutils literal notranslate"><span class="pre">store_const</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--online</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Enable online mode.</p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="generate-configuration-file-atl-gen-configuration-file">
+<h2>Generate Configuration File - <code class="docutils literal notranslate"><span class="pre">atl_gen_configuration_file</span></code><a class="headerlink" href="#generate-configuration-file-atl-gen-configuration-file" title="Link to this heading"></a></h2>
+<p>Generates default configuration files for ATLAS in the TOML format. The generated <code class="docutils literal notranslate"><span class="pre">.toml</span></code> files can be used as a template for active learning runs and initial database generation.</p>
+<p><strong>Usage:</strong> <code class="docutils literal notranslate"><span class="pre">atl_gen_configuration_file</span> <span class="pre">[-h]</span> <span class="pre">-t</span> <span class="pre">TYPE</span> <span class="pre">[-p</span> <span class="pre">PATH]</span> <span class="pre">[-o]</span></code></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-t,</span> <span class="pre">--config_type</span></code> (<strong>Type</strong>)</p>
+<ul>
+<li><p><strong>Description</strong>: Type of the configuration file to be generated. Available types:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">active_learning</span></code>: Configuration file for an active learning loop.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">initial_db</span></code>: Configuration file for initial database generation.</p></li>
+</ul>
+</li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">str</span></code></p></li>
+<li><p><strong>Choices</strong>: <code class="docutils literal notranslate"><span class="pre">[&quot;active_learning&quot;,</span> <span class="pre">&quot;initial_db&quot;]</span></code></p></li>
+<li><p><strong>Required</strong>: Yes</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-p,</span> <span class="pre">--path</span></code> (<code class="docutils literal notranslate"><span class="pre">PATH</span></code>)</p>
+<ul>
+<li><p><strong>Description</strong>: Path to store the configuration file. Defaults to the CWD.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">Path</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">.</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-o,</span> <span class="pre">--overwrite</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Whether to overwrite the destination file if it already exists.</p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="generate-initial-database-atl-gen-init-db">
+<h2>Generate Initial Database - <code class="docutils literal notranslate"><span class="pre">atl_gen_init_db</span></code><a class="headerlink" href="#generate-initial-database-atl-gen-init-db" title="Link to this heading"></a></h2>
+<p>Generates an initial database for atlas. A <code class="docutils literal notranslate"><span class="pre">.toml</span></code> configuration is required, which is described in the <a class="reference internal" href="input_database_generation.html"><span class="std std-doc">corresponding inputs section</span></a></p>
+<p><strong>Usage:</strong> <code class="docutils literal notranslate"><span class="pre">atl_gen_init_db</span> <span class="pre">[-h]</span> <span class="pre">[-c</span> <span class="pre">PATH]</span></code></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-c,</span> <span class="pre">--config_file</span></code> (<code class="docutils literal notranslate"><span class="pre">PATH</span></code>)</p>
+<ul>
+<li><p><strong>Description</strong>: Path to a TOML settings file. By default, <code class="docutils literal notranslate"><span class="pre">database_generation_settings.toml</span></code> will be searched in the CWD.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">Path</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">./database_generation_settings.toml</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="run-dft-database-atl-run-dft-database">
+<h2>Run DFT Database - <code class="docutils literal notranslate"><span class="pre">atl_run_dft_database</span></code><a class="headerlink" href="#run-dft-database-atl-run-dft-database" title="Link to this heading"></a></h2>
+<p>Runs VASP DFT calculations for a database of structures using AiiDA-VASP. A .toml configuration file is required to specify the input settings for HPC and VASP. Refer to the <a class="reference internal" href="input_dft.html"><span class="std std-doc">corresponding inputs section</span></a> for more details about the available configuration options.</p>
+<p><strong>Usage</strong>: <code class="docutils literal notranslate"><span class="pre">atl_run_dft_database</span> <span class="pre">[-h]</span> <span class="pre">--db_file</span> <span class="pre">FILE</span> <span class="pre">--config</span> <span class="pre">FILE</span></code></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--db_file</span> <span class="pre">FILE,</span> <span class="pre">-i</span> <span class="pre">FILE</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Path to the extxyz file containing the database of structures.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">Path</span></code></p></li>
+<li><p><strong>Required</strong>: Yes</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--config</span> <span class="pre">FILE,</span> <span class="pre">-c</span> <span class="pre">FILE</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Path to the TOML file with HPC and VASP input configuration.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">Path</span></code></p></li>
+<li><p><strong>Required</strong>: Yes</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="autoencoder-for-dimensionality-reduction-atl-train-autoencoder">
+<h2>Autoencoder for Dimensionality Reduction - <code class="docutils literal notranslate"><span class="pre">atl_train_autoencoder</span></code><a class="headerlink" href="#autoencoder-for-dimensionality-reduction-atl-train-autoencoder" title="Link to this heading"></a></h2>
+<p>Train an autoencoder model for dimensionality reduction using the generated descriptors.
+The model is trained on descriptors (either <code class="docutils literal notranslate"><span class="pre">SOAP</span></code> or a backend-specific descriptor type) which are provided through a numpy array in the <code class="docutils literal notranslate"><span class="pre">.npy</span></code> format that holds vstacked arrays of atomic descriptors.</p>
+<p><strong>Usage:</strong> <code class="docutils literal notranslate"><span class="pre">atl_train_autoencoder</span> <span class="pre">[-h]</span> <span class="pre">[--device</span> <span class="pre">DEVICE]</span> <span class="pre">[--dtype</span> <span class="pre">DTYPE]</span> <span class="pre">[--model_path</span> <span class="pre">MODEL_PATH]</span> <span class="pre">[--load_model</span> <span class="pre">LOAD_MODEL]</span> <span class="pre">[--rng_seed</span> <span class="pre">RNG_SEED]</span> <span class="pre">[--dataset</span> <span class="pre">DATASET]</span> <span class="pre">[--l1_hidden_dim</span> <span class="pre">L1_HIDDEN_DIM]</span> <span class="pre">[--l2_hidden_dim</span> <span class="pre">L2_HIDDEN_DIM]</span> <span class="pre">[--bottleneck_dim</span> <span class="pre">BOTTLENECK_DIM]</span> <span class="pre">[--num_epochs</span> <span class="pre">NUM_EPOCHS]</span> <span class="pre">[--batch_size</span> <span class="pre">BATCH_SIZE]</span> <span class="pre">[--patience</span> <span class="pre">PATIENCE]</span> <span class="pre">[--lr</span> <span class="pre">LR]</span> <span class="pre">[--weight_decay</span> <span class="pre">WEIGHT_DECAY]</span> <span class="pre">[--bias_flag]</span> <span class="pre">[--loss</span> <span class="pre">LOSS]</span> <span class="pre">[--train_frac</span> <span class="pre">TRAIN_FRAC]</span> <span class="pre">[--valid_frac</span> <span class="pre">VALID_FRAC]</span> <span class="pre">[--test_frac</span> <span class="pre">TEST_FRAC]</span> <span class="pre">[--wandb]</span> <span class="pre">[--wandb_name</span> <span class="pre">WANDB_NAME]</span> <span class="pre">[--wandb_project</span> <span class="pre">WANDB_PROJECT]</span></code></p>
+<section id="arguments">
+<h3>Arguments<a class="headerlink" href="#arguments" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--device</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Device to run the model on. Options: <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">cuda</span></code>, or <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">str</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">cpu</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--dtype</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Data type for the model.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">str</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">float32</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--model_path</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Path to save the model.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">str</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">autoencoder_model.pth</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--load_model</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Load the model from the model path.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">bool</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--rng_seed</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Seed for the random number generator.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">int</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--dataset</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Path to the training dataset.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">str</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">all_descriptors.npz</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--l1_hidden_dim</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Number of units in the first hidden layer.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">int</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">256</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--l2_hidden_dim</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Number of units in the second hidden layer.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">int</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">32</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--bottleneck_dim</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Dimensionality of the bottleneck (latent space).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">int</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">2</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--num_epochs</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Number of epochs to train the model.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">int</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">50</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--batch_size</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Batch size for training.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">int</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">4096</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--patience</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Patience for early stopping.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">int</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">5</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--lr</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Learning rate for the optimizer.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">float</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.001</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--weight_decay</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: L2 regularization.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">float</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1e-5</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--bias_flag</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Add this argument to include bias terms in the layers.</p></li>
+<li><p><strong>Action</strong>: <code class="docutils literal notranslate"><span class="pre">store_true</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--loss</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Loss function type. Options: <code class="docutils literal notranslate"><span class="pre">mse</span></code>, <code class="docutils literal notranslate"><span class="pre">weighted_mse</span></code>.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">str</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">mse</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--train_frac</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Fraction of data used for training.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">float</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.8</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--valid_frac</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Fraction of data used for validation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">float</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.1</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--test_frac</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Fraction of data used for testing.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">float</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.1</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--wandb</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Add this argument to log metrics to Weights &amp; Biases.</p></li>
+<li><p><strong>Action</strong>: <code class="docutils literal notranslate"><span class="pre">store_true</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--wandb_name</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Name of the Weights &amp; Biases run.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">str</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--wandb_project</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Name of the Weights &amp; Biases project.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">str</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="mlip-benchmark-atl-benchmark-mlip">
+<h2>MLIP Benchmark - <code class="docutils literal notranslate"><span class="pre">atl_benchmark_mlip</span></code><a class="headerlink" href="#mlip-benchmark-atl-benchmark-mlip" title="Link to this heading"></a></h2>
+<p>Evaluates and compares the performance of Machine Learning Interatomic Potentials (MLIPs) using a suite of benchmarks. This tool can load models from <code class="docutils literal notranslate"><span class="pre">.model</span></code> files or from ATLAS workchains using the AiiDA pk/uuid and run various evaluations, such as molecular dynamics simulations, defect calculations, and surface energy analysis, returning figures and output with results.</p>
+<p><strong>Usage:</strong> <code class="docutils literal notranslate"><span class="pre">atl_benchmark_mlip</span> <span class="pre">[OPTIONS]</span></code></p>
+<section id="main-arguments">
+<h3>Main Arguments<a class="headerlink" href="#main-arguments" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--model_files</span> <span class="pre">&lt;PATH&gt;...</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Paths to one or more <code class="docutils literal notranslate"><span class="pre">.model</span></code> files to be evaluated.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">List[Path]</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--aiida_pks</span> <span class="pre">&lt;PK&gt;...</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: AiiDA workchain PKs/UUIDs to load models from.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">List[int]</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--output_dir</span> <span class="pre">&lt;PATH&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Directory to save all benchmark results and plots.</p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">./mlip_evaluation</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="slab-generation-arguments">
+<h3>Slab Generation Arguments<a class="headerlink" href="#slab-generation-arguments" title="Link to this heading"></a></h3>
+<p>These arguments configure the atomic structure (slab) used in many benchmarks.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--metal</span> <span class="pre">&lt;SYMBOL&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Metal symbol for the benchmark systems (e.g., ‘Cu’, ‘Al’).</p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">Cu</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--surface_indices</span> <span class="pre">&lt;INT</span> <span class="pre">INT</span> <span class="pre">INT&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Miller indices for the surface of the slab.</p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">1</span> <span class="pre">1</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--supercell_size</span> <span class="pre">&lt;INT</span> <span class="pre">INT</span> <span class="pre">INT&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Size of the supercell for the slab.</p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">3</span> <span class="pre">3</span> <span class="pre">4</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--vacuum</span> <span class="pre">&lt;FLOAT&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Vacuum layer thickness in Angstrom.</p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">10.0</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="md-parameters">
+<h3>MD Parameters<a class="headerlink" href="#md-parameters" title="Link to this heading"></a></h3>
+<p>These arguments control the molecular dynamics simulations.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--temp</span> <span class="pre">&lt;FLOAT&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: MD temperature in Kelvin.</p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">300.0</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--n_steps</span> <span class="pre">&lt;INT&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Number of MD steps to run.</p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">10000</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--timestep</span> <span class="pre">&lt;FLOAT&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: MD timestep in femtoseconds.</p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">2.0</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--friction</span> <span class="pre">&lt;FLOAT&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Friction coefficient for the Langevin thermostat.</p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">5e-3</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--device</span> <span class="pre">{cuda,cpu}</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Device to run the calculations on.</p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">cuda</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--dtype</span> <span class="pre">{float32,float64}</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Data type for the calculations.</p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">float64</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="benchmark-selection">
+<h3>Benchmark Selection<a class="headerlink" href="#benchmark-selection" title="Link to this heading"></a></h3>
+<p>Use these flags to select which benchmarks to run. Multiple benchmarks can be run in a single command.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--run_energy_md</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Run the energy MD benchmark.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--run_accuracy_test_set</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Run energy and force error benchmark on a test set. Requires <code class="docutils literal notranslate"><span class="pre">--test_set_path</span></code>.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--test_set_path</span> <span class="pre">&lt;PATH&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Path to the held-out test set for accuracy benchmarks.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--run_elastic_properties</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Run elastic properties benchmark.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--run_defect_formation_energy</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Run defect formation energy benchmark.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--run_surface_energies</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Run surface energies benchmark.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--run_phonon_dispersion</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Run phonon dispersion benchmark.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--run_high_temp_md</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Run high-temperature MD benchmark.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--run_melting_point</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Run melting point calculation benchmark.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--run_gsfe</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Run Generalized Stacking Fault Energy (GSFE) benchmark.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--run_learning_curves</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Plot learning curves from AL runs (requires <code class="docutils literal notranslate"><span class="pre">--aiida_pks</span></code>).</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--run_final_db_size</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Compare final database sizes from AL runs (requires <code class="docutils literal notranslate"><span class="pre">--aiida_pks</span></code>).</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--run_evaluate_database</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Evaluate models against a user-provided structure database. Requires <code class="docutils literal notranslate"><span class="pre">--database_path</span></code>.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--database_path</span> <span class="pre">&lt;PATH&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Path to the structure database file for evaluation.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="ui-options">
+<h3>UI Options<a class="headerlink" href="#ui-options" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--no_rich_ui</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Disable the Rich UI and use plain text output.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="dft-benchmark-atl-dft-benchmark">
+<h2>DFT Benchmark - <code class="docutils literal notranslate"><span class="pre">atl_dft_benchmark</span></code><a class="headerlink" href="#dft-benchmark-atl-dft-benchmark" title="Link to this heading"></a></h2>
+<p>Runs DFT calculations to benchmark and select optimal VASP settings for a given material system.</p>
+<p><strong>Usage:</strong> <code class="docutils literal notranslate"><span class="pre">atl_dft_benchmark</span> <span class="pre">[OPTIONS]</span></code></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--config</span> <span class="pre">&lt;PATH&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Path to the TOML configuration file with benchmark settings.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--db_file</span> <span class="pre">&lt;PATH&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Path to the structure database file.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="database-analysis-atl-database-analysis">
+<h2>Database Analysis - <code class="docutils literal notranslate"><span class="pre">atl_database_analysis</span></code><a class="headerlink" href="#database-analysis-atl-database-analysis" title="Link to this heading"></a></h2>
+<p>Analyzes database composition, diversity, and completeness metrics.</p>
+<p><strong>Usage:</strong> <code class="docutils literal notranslate"><span class="pre">atl_database_analysis</span> <span class="pre">[OPTIONS]</span></code></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--db_path</span> <span class="pre">&lt;PATH&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Path to the database file (xz-compressed InitialDatabase or extxyz).</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--metric</span> <span class="pre">&lt;METRIC&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Diversity metric to compute. Options: <code class="docutils literal notranslate"><span class="pre">vendi_score</span></code>, <code class="docutils literal notranslate"><span class="pre">circles_metric</span></code>.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--descriptor_type</span> <span class="pre">&lt;TYPE&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Descriptor type for diversity calculations. Options: <code class="docutils literal notranslate"><span class="pre">soap</span></code>, <code class="docutils literal notranslate"><span class="pre">mace</span></code>.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--output_dir</span> <span class="pre">&lt;PATH&gt;</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Directory to save analysis results and plots.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="gui-atl-gui">
+<h2>GUI - <code class="docutils literal notranslate"><span class="pre">atl_gui</span></code><a class="headerlink" href="#gui-atl-gui" title="Link to this heading"></a></h2>
+<p>Launches the ATLAS Hub, a PySide6 desktop application for configuring and running ATLAS workflows.</p>
+<p><strong>Usage:</strong> <code class="docutils literal notranslate"><span class="pre">atl_gui</span> <span class="pre">[OPTIONS]</span></code></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--help</span></code></p>
+<ul>
+<li><p><strong>Description</strong>: Show help message and exit.</p></li>
+</ul>
+</li>
+</ul>
+<p>The ATLAS Hub provides a graphical interface for:</p>
+<ul class="simple">
+<li><p>Project management with a dedicated workspace for each material system</p></li>
+<li><p>Database generation configuration and execution</p></li>
+<li><p>DFT calculation submission and monitoring</p></li>
+<li><p>Active learning loop setup, launch, and live tracking</p></li>
+<li><p>Report generation and visualization</p></li>
+<li><p>Settings management (AiiDA profiles, computers, codes, Materials Project API key)</p></li>
+</ul>
+<p>To use the GUI, install the optional <code class="docutils literal notranslate"><span class="pre">gui</span></code> dependency:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;.[gui]&#39;</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="input.html" class="btn btn-neutral float-right" title="Input specification" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='tools.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

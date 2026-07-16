@@ -1,0 +1,764 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>atlas.core.command_line package &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="atlas.core.command_line.setup package" href="atlas.core.command_line.setup.html" />
+    <link rel="prev" title="atlas.core package" href="atlas.core.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">Input specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package Information</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="atlas.html">atlas package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="atlas.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html">atlas.active_learning package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.html">atlas.benchmarks package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="atlas.core.html">atlas.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.training.html">atlas.training package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html">atlas.workflows package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.html#module-atlas">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">atlas</a></li>
+          <li class="breadcrumb-item"><a href="atlas.html">atlas package</a></li>
+          <li class="breadcrumb-item"><a href="atlas.core.html">atlas.core package</a></li>
+      <li class="breadcrumb-item active">atlas.core.command_line package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/atlas.core.command_line.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="atlas-core-command-line-package">
+<h1>atlas.core.command_line package<a class="headerlink" href="#atlas-core-command-line-package" title="Link to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="atlas.core.command_line.setup.html">atlas.core.command_line.setup package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.command_line.setup.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.command_line.setup.html#module-atlas.core.command_line.setup._common">atlas.core.command_line.setup._common module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.command_line.setup.html#atlas.core.command_line.setup._common.check_aiida"><code class="docutils literal notranslate"><span class="pre">check_aiida()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.command_line.setup.html#atlas.core.command_line.setup._common.heading"><code class="docutils literal notranslate"><span class="pre">heading()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.command_line.setup.html#atlas.core.command_line.setup._common.list_codes"><code class="docutils literal notranslate"><span class="pre">list_codes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.command_line.setup.html#atlas.core.command_line.setup._common.list_computers"><code class="docutils literal notranslate"><span class="pre">list_computers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.command_line.setup.html#atlas.core.command_line.setup._common.list_profiles"><code class="docutils literal notranslate"><span class="pre">list_profiles()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.command_line.setup.html#atlas.core.command_line.setup._common.require_profile"><code class="docutils literal notranslate"><span class="pre">require_profile()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.command_line.setup.html#module-atlas.core.command_line.setup._code">atlas.core.command_line.setup._code module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.command_line.setup.html#atlas.core.command_line.setup._code.setup_code"><code class="docutils literal notranslate"><span class="pre">setup_code()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.command_line.setup.html#module-atlas.core.command_line.setup._computer">atlas.core.command_line.setup._computer module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.command_line.setup.html#atlas.core.command_line.setup._computer.setup_computer"><code class="docutils literal notranslate"><span class="pre">setup_computer()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.command_line.setup.html#module-atlas.core.command_line.setup._mpkey">atlas.core.command_line.setup._mpkey module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.command_line.setup.html#atlas.core.command_line.setup._mpkey.setup_mp_key"><code class="docutils literal notranslate"><span class="pre">setup_mp_key()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.command_line.setup.html#module-atlas.core.command_line.setup._potcar">atlas.core.command_line.setup._potcar module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.command_line.setup.html#atlas.core.command_line.setup._potcar.setup_potcar"><code class="docutils literal notranslate"><span class="pre">setup_potcar()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.command_line.setup.html#module-atlas.core.command_line.setup._profile">atlas.core.command_line.setup._profile module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.command_line.setup.html#atlas.core.command_line.setup._profile.setup_profile"><code class="docutils literal notranslate"><span class="pre">setup_profile()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.command_line.setup.html#module-atlas.core.command_line.setup._status">atlas.core.command_line.setup._status module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.command_line.setup.html#atlas.core.command_line.setup._status.show_status"><code class="docutils literal notranslate"><span class="pre">show_status()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.command_line.setup.html#module-atlas.core.command_line.setup">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.command_line.setup.html#atlas.core.command_line.setup.setup_code"><code class="docutils literal notranslate"><span class="pre">setup_code()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.command_line.setup.html#atlas.core.command_line.setup.setup_computer"><code class="docutils literal notranslate"><span class="pre">setup_computer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.command_line.setup.html#atlas.core.command_line.setup.setup_mp_key"><code class="docutils literal notranslate"><span class="pre">setup_mp_key()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.command_line.setup.html#atlas.core.command_line.setup.setup_potcar"><code class="docutils literal notranslate"><span class="pre">setup_potcar()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.command_line.setup.html#atlas.core.command_line.setup.setup_profile"><code class="docutils literal notranslate"><span class="pre">setup_profile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.command_line.setup.html#atlas.core.command_line.setup.show_status"><code class="docutils literal notranslate"><span class="pre">show_status()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.core.command_line.cli_active_learning">
+<span id="atlas-core-command-line-cli-active-learning-module"></span><h2>atlas.core.command_line.cli_active_learning module<a class="headerlink" href="#module-atlas.core.command_line.cli_active_learning" title="Link to this heading"></a></h2>
+<p>Run active learning loop from a TOML configuration file.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_active_learning.active_learning_run_print_details">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_active_learning.</span></span><span class="sig-name descname"><span class="pre">active_learning_run_print_details</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process_pk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_uuid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ntifysh_topic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_active_learning.active_learning_run_print_details" title="Link to this definition"></a></dt>
+<dd><p>Prints pretty output for active learning using the rich library.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_active_learning.create_active_learning_builder">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_active_learning.</span></span><span class="sig-name descname"><span class="pre">create_active_learning_builder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">toml_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toml_dict_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">al_start_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'normal'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_active_learning.create_active_learning_builder" title="Link to this definition"></a></dt>
+<dd><p>Create builder object for the SimpleActiveLearningWorkChain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>toml_dict</strong> (<em>dict</em>) – Dictionary coming from parsing an ATL TOML settings file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A process builder that helps setting up the inputs for
+a SimpleActiveLearningWorkChain.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ProcessBuilder</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_active_learning.read_toml_config">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_active_learning.</span></span><span class="sig-name descname"><span class="pre">read_toml_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_active_learning.read_toml_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_active_learning.resume_al_loop_builder">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_active_learning.</span></span><span class="sig-name descname"><span class="pre">resume_al_loop_builder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prev_run_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toml_dict_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warnings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_active_learning.resume_al_loop_builder" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_active_learning.run_active_learning">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_active_learning.</span></span><span class="sig-name descname"><span class="pre">run_active_learning</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_active_learning.run_active_learning" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-atlas.core.command_line.cli_dashboard">
+<span id="atlas-core-command-line-cli-dashboard-module"></span><h2>atlas.core.command_line.cli_dashboard module<a class="headerlink" href="#module-atlas.core.command_line.cli_dashboard" title="Link to this heading"></a></h2>
+<p>Launch a dashboard to monitor the active learning loop.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_dashboard.console_output">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_dashboard.</span></span><span class="sig-name descname"><span class="pre">console_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dash_pid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_pk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_dashboard.console_output" title="Link to this definition"></a></dt>
+<dd><p>Prints a console output with the dashboard information using the rich library.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_dashboard.monitor_al_loop">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_dashboard.</span></span><span class="sig-name descname"><span class="pre">monitor_al_loop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_dashboard.monitor_al_loop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_dashboard.run_dashboard_app">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_dashboard.</span></span><span class="sig-name descname"><span class="pre">run_dashboard_app</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_interval</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">online</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_dashboard.run_dashboard_app" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-atlas.core.command_line.cli_db_analysis">
+<span id="atlas-core-command-line-cli-db-analysis-module"></span><h2>atlas.core.command_line.cli_db_analysis module<a class="headerlink" href="#module-atlas.core.command_line.cli_db_analysis" title="Link to this heading"></a></h2>
+<p>Compute diversity/coverage metrics from atlas database extxyz files.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_db_analysis.associate_steps_to_uuids">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_db_analysis.</span></span><span class="sig-name descname"><span class="pre">associate_steps_to_uuids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latent_space_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_db_analysis.associate_steps_to_uuids" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_db_analysis.compute_area_difference">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_db_analysis.</span></span><span class="sig-name descname"><span class="pre">compute_area_difference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundary_information</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_results</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_db_analysis.compute_area_difference" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_db_analysis.compute_area_growth_ratio">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_db_analysis.</span></span><span class="sig-name descname"><span class="pre">compute_area_growth_ratio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">area_differences</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_results</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_db_analysis.compute_area_growth_ratio" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_db_analysis.compute_vendi_score">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_db_analysis.</span></span><span class="sig-name descname"><span class="pre">compute_vendi_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">latent_space_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_to_uuid_mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_db_analysis.compute_vendi_score" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_db_analysis.parse_args">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_db_analysis.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_db_analysis.parse_args" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_db_analysis.process_data_boundaries">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_db_analysis.</span></span><span class="sig-name descname"><span class="pre">process_data_boundaries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid_mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latent_space_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_steps</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_db_analysis.process_data_boundaries" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_db_analysis.run_database_analysis">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_db_analysis.</span></span><span class="sig-name descname"><span class="pre">run_database_analysis</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_db_analysis.run_database_analysis" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-atlas.core.command_line.cli_generate_configuration_file">
+<span id="atlas-core-command-line-cli-generate-configuration-file-module"></span><h2>atlas.core.command_line.cli_generate_configuration_file module<a class="headerlink" href="#module-atlas.core.command_line.cli_generate_configuration_file" title="Link to this heading"></a></h2>
+<p>Generate default configuration files for ATL from a YAML schema.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_generate_configuration_file.ValidationError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_generate_configuration_file.</span></span><span class="sig-name descname"><span class="pre">ValidationError</span></span><a class="headerlink" href="#atlas.core.command_line.cli_generate_configuration_file.ValidationError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Custom exception for configuration validation errors.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_generate_configuration_file.format_value">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_generate_configuration_file.</span></span><span class="sig-name descname"><span class="pre">format_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_generate_configuration_file.format_value" title="Link to this definition"></a></dt>
+<dd><p>Formats a Python value into a TOML-compatible string.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_generate_configuration_file.gen_default_config">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_generate_configuration_file.</span></span><span class="sig-name descname"><span class="pre">gen_default_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_generate_configuration_file.gen_default_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_generate_configuration_file.generate_command">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_generate_configuration_file.</span></span><span class="sig-name descname"><span class="pre">generate_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_generate_configuration_file.generate_command" title="Link to this definition"></a></dt>
+<dd><p>Handle the generate subcommand.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_generate_configuration_file.generate_template">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_generate_configuration_file.</span></span><span class="sig-name descname"><span class="pre">generate_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_generate_configuration_file.generate_template" title="Link to this definition"></a></dt>
+<dd><p>Generates a complete TOML template file as a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>schema</strong> (<em>dict</em>) – The entire configuration schema.</p></li>
+<li><p><strong>config_type</strong> (<em>str</em>) – The top-level key from the schema for which to generate
+the template.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>str</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The generated TOML template as a string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_generate_configuration_file.generate_toml_recursive">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_generate_configuration_file.</span></span><span class="sig-name descname"><span class="pre">generate_toml_recursive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_parts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lines</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">section_mandatory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_generate_configuration_file.generate_toml_recursive" title="Link to this definition"></a></dt>
+<dd><p>Recursively traverses the schema dictionary to generate TOML content.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>schema_dict</strong> (<em>dict</em>) – The current section of the schema to process.</p></li>
+<li><p><strong>path_parts</strong> (<em>list</em>) – The list of keys representing the current path in the TOML
+structure.</p></li>
+<li><p><strong>lines</strong> (<em>list</em>) – The list of lines to which the generated TOML content will
+be appended.</p></li>
+<li><p><strong>prefix</strong> (<em>str</em>) – A prefix for keys when flattening a section.</p></li>
+<li><p><strong>section_mandatory</strong> (<em>bool</em>) – Whether the current section is mandatory.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_generate_configuration_file.validate_command">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_generate_configuration_file.</span></span><span class="sig-name descname"><span class="pre">validate_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_generate_configuration_file.validate_command" title="Link to this definition"></a></dt>
+<dd><p>Handle the validate subcommand.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_generate_configuration_file.wrap_text_with_rich">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_generate_configuration_file.</span></span><span class="sig-name descname"><span class="pre">wrap_text_with_rich</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">80</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#atlas.core.command_line.cli_generate_configuration_file.wrap_text_with_rich" title="Link to this definition"></a></dt>
+<dd><p>Wraps text using Rich’s formatting engine and optionally prepends
+comment characters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – The long text string to be wrapped.</p></li>
+<li><p><strong>width</strong> (<em>int</em><em>, </em><em>optional</em>) – The target width for the wrapped text. Default is 50.</p></li>
+<li><p><strong>comment</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, prepends ‘# ‘ to each line of the wrapped output.
+Default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The wrapped text.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.command_line.cli_generate_docs">
+<span id="atlas-core-command-line-cli-generate-docs-module"></span><h2>atlas.core.command_line.cli_generate_docs module<a class="headerlink" href="#module-atlas.core.command_line.cli_generate_docs" title="Link to this heading"></a></h2>
+<p>Generate documentation for ATL configuration files from the YAML schema.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_generate_docs.format_parameter_line">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_generate_docs.</span></span><span class="sig-name descname"><span class="pre">format_parameter_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_generate_docs.format_parameter_line" title="Link to this definition"></a></dt>
+<dd><p>Format a parameter line according to the documentation style.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>str</em>) – Parameter name</p></li>
+<li><p><strong>details</strong> (<em>dict</em>) – Parameter details from schema</p></li>
+<li><p><strong>level</strong> (<em>int</em>) – Nesting level for indentation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>str</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Formatted parameter line</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_generate_docs.generate_docs">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_generate_docs.</span></span><span class="sig-name descname"><span class="pre">generate_docs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_generate_docs.generate_docs" title="Link to this definition"></a></dt>
+<dd><p>Main function to generate documentation.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_generate_docs.generate_full_documentation">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_generate_docs.</span></span><span class="sig-name descname"><span class="pre">generate_full_documentation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_generate_docs.generate_full_documentation" title="Link to this definition"></a></dt>
+<dd><p>Generate the complete documentation file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>schema</strong> (<em>dict</em>) – Complete schema from YAML file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>str</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Complete documentation as string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_generate_docs.generate_section_docs">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_generate_docs.</span></span><span class="sig-name descname"><span class="pre">generate_section_docs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_parts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lines</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_schema</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_generate_docs.generate_section_docs" title="Link to this definition"></a></dt>
+<dd><p>Recursively generate documentation for a schema section.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>schema_dict</strong> (<em>dict</em>) – Current section of the schema</p></li>
+<li><p><strong>path_parts</strong> (<em>list</em>) – Current path in the schema (for section headers)</p></li>
+<li><p><strong>lines</strong> (<em>list</em>) – List to append generated lines to</p></li>
+<li><p><strong>level</strong> (<em>int</em>) – Header level for markdown (3 = ###)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_generate_docs.generate_tool_section">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_generate_docs.</span></span><span class="sig-name descname"><span class="pre">generate_tool_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool_config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_generate_docs.generate_tool_section" title="Link to this definition"></a></dt>
+<dd><p>Generate documentation for a specific tool.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>schema</strong> (<em>dict</em>) – Full schema</p></li>
+<li><p><strong>tool_name</strong> (<em>str</em>) – Name of the tool (database_generation, dft, active_learning)</p></li>
+<li><p><strong>tool_config</strong> (<em>dict</em>) – Tool configuration from schema</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>list</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Lines of generated documentation</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.command_line.cli_generate_init_db">
+<span id="atlas-core-command-line-cli-generate-init-db-module"></span><h2>atlas.core.command_line.cli_generate_init_db module<a class="headerlink" href="#module-atlas.core.command_line.cli_generate_init_db" title="Link to this heading"></a></h2>
+<p>Generate an initial database from TOML config.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_generate_init_db.gen_initial_database">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_generate_init_db.</span></span><span class="sig-name descname"><span class="pre">gen_initial_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_generate_init_db.gen_initial_database" title="Link to this definition"></a></dt>
+<dd><p>Generate a initial database from TOML config.</p>
+<p>A ATL database can be generated from settings
+specified in a TOML file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>toml_path</strong> (<em>str</em>) – Path for the TOML configuration file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_generate_init_db.run_gen_initial_database">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_generate_init_db.</span></span><span class="sig-name descname"><span class="pre">run_gen_initial_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_generate_init_db.run_gen_initial_database" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-atlas.core.command_line.cli_latent_space_analysis">
+<span id="atlas-core-command-line-cli-latent-space-analysis-module"></span><h2>atlas.core.command_line.cli_latent_space_analysis module<a class="headerlink" href="#module-atlas.core.command_line.cli_latent_space_analysis" title="Link to this heading"></a></h2>
+<p>Launch latent space analysis from a TOML configuration file.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_latent_space_analysis.run_latent_space_analysis">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_latent_space_analysis.</span></span><span class="sig-name descname"><span class="pre">run_latent_space_analysis</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_latent_space_analysis.run_latent_space_analysis" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-atlas.core.command_line.cli_run_initial_config">
+<span id="atlas-core-command-line-cli-run-initial-config-module"></span><h2>atlas.core.command_line.cli_run_initial_config module<a class="headerlink" href="#module-atlas.core.command_line.cli_run_initial_config" title="Link to this heading"></a></h2>
+<p>Run initial configuration to set up the ATLAS environment.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_run_initial_config.run_initial_config">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_run_initial_config.</span></span><span class="sig-name descname"><span class="pre">run_initial_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.command_line.cli_run_initial_config.run_initial_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-atlas.core.command_line.cli_train_autoencoder">
+<span id="atlas-core-command-line-cli-train-autoencoder-module"></span><h2>atlas.core.command_line.cli_train_autoencoder module<a class="headerlink" href="#module-atlas.core.command_line.cli_train_autoencoder" title="Link to this heading"></a></h2>
+<p>Train an autoencoder for dimensionality reduction.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.cli_train_autoencoder.run_train_autoencoder">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.cli_train_autoencoder.</span></span><span class="sig-name descname"><span class="pre">run_train_autoencoder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.cli_train_autoencoder.run_train_autoencoder" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-atlas.core.command_line.command_line_utils">
+<span id="atlas-core-command-line-command-line-utils-module"></span><h2>atlas.core.command_line.command_line_utils module<a class="headerlink" href="#module-atlas.core.command_line.command_line_utils" title="Link to this heading"></a></h2>
+<p>Run an active-learning procedure based on ML-MD using aiida.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.command_line_utils.apply_defaults">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.command_line_utils.</span></span><span class="sig-name descname"><span class="pre">apply_defaults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warning_msg_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.command_line_utils.apply_defaults" title="Link to this definition"></a></dt>
+<dd><p>Apply default values to missing parameters in the configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_data</strong> (<em>dict</em>) – The configuration data to check</p></li>
+<li><p><strong>warning_msg</strong> (<em>str</em>) – Warning message to display when applying defaults</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>dict</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Configuration data with defaults applied</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.command_line_utils.check_deprecated_keys">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.command_line_utils.</span></span><span class="sig-name descname"><span class="pre">check_deprecated_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warnings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.command_line_utils.check_deprecated_keys" title="Link to this definition"></a></dt>
+<dd><p>Check for deprecated keys in configuration and provide migration suggestions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_data</strong> (<em>dict</em>) – The configuration data to check</p></li>
+<li><p><strong>schema_dict</strong> (<em>dict</em>) – The schema definition</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Current path in the configuration</p></li>
+<li><p><strong>warnings</strong> (<em>list</em>) – List to accumulate deprecation warnings</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>dict</strong> (<em>Migrated configuration data with deprecated keys mapped to new ones</em>)</p></li>
+<li><p><strong>list</strong> (<em>List of deprecation warnings</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.command_line_utils.check_deprecated_parameters">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.command_line_utils.</span></span><span class="sig-name descname"><span class="pre">check_deprecated_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.command_line_utils.check_deprecated_parameters" title="Link to this definition"></a></dt>
+<dd><p>Check for deprecated parameter names within a section.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_data</strong> (<em>dict</em>) – The configuration data to check</p></li>
+<li><p><strong>schema_dict</strong> (<em>dict</em>) – The schema definition for this section</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Current path in the configuration</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>dict</strong> (<em>Migrated configuration data</em>)</p></li>
+<li><p><strong>list</strong> (<em>List of deprecation warnings</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.command_line_utils.evaluate_dependency">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.command_line_utils.</span></span><span class="sig-name descname"><span class="pre">evaluate_dependency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depends_on</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_config_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.command_line_utils.evaluate_dependency" title="Link to this definition"></a></dt>
+<dd><p>Evaluate whether a dependency condition is met.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>depends_on</strong> (<em>dict</em>) – The dependency specification from schema</p></li>
+<li><p><strong>root_config_data</strong> (<em>dict</em>) – Complete configuration data for resolving paths</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>bool</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if dependency condition is met, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.command_line_utils.get_schema">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.command_line_utils.</span></span><span class="sig-name descname"><span class="pre">get_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.command_line_utils.get_schema" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.command_line_utils.key_path_in_schema">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.command_line_utils.</span></span><span class="sig-name descname"><span class="pre">key_path_in_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.command_line_utils.key_path_in_schema" title="Link to this definition"></a></dt>
+<dd><p>Ensure that a given key is not present in the schema dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>full_path</strong> (<em>str</em>) – The path to check for absence in the schema.</p></li>
+<li><p><strong>schema_dict</strong> (<em>dict</em>) – The schema dictionary to check against.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>bool</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>False if the key is not present in the schema, True otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.command_line_utils.parse_input_toml">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.command_line_utils.</span></span><span class="sig-name descname"><span class="pre">parse_input_toml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">toml_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.command_line_utils.parse_input_toml" title="Link to this definition"></a></dt>
+<dd><p>Parses and validates the input TOML dictionary based on the specified type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>toml_dict</strong> (<em>dict</em>) – The input dictionary parsed from a TOML file.</p></li>
+<li><p><strong>type</strong> (<em>str</em>) – The type of configuration to validate. Currently supports “active_learning”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="atlas.core.html#atlas.core.exceptions.MissingMandatoryParameterError" title="atlas.core.exceptions.MissingMandatoryParameterError"><strong>MissingMandatoryParameterError</strong></a> – If any mandatory keys are missing from the input TOML dictionary.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.command_line_utils.should_validate_mandatory">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.command_line_utils.</span></span><span class="sig-name descname"><span class="pre">should_validate_mandatory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema_item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_config_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.command_line_utils.should_validate_mandatory" title="Link to this definition"></a></dt>
+<dd><p>Determine if a schema item should be validated as mandatory based on dependencies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>schema_item</strong> (<em>dict</em>) – Schema definition for parameter or section</p></li>
+<li><p><strong>root_config_data</strong> (<em>dict</em>) – Complete configuration data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>bool</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if item should be validated as mandatory</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.command_line_utils.validate_config_file">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.command_line_utils.</span></span><span class="sig-name descname"><span class="pre">validate_config_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_deprecated</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'workflow'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.command_line_utils.validate_config_file" title="Link to this definition"></a></dt>
+<dd><p>Validate a TOML configuration file against the schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_path</strong> (<em>str</em>) – Path to the TOML configuration file</p></li>
+<li><p><strong>config_dict</strong> (<em>dict</em>) – The loaded configuration dictionary</p></li>
+<li><p><strong>config_type</strong> (<em>str</em>) – Type of configuration.
+One of: database_generation, dft, active_learning)</p></li>
+<li><p><strong>schema</strong> (<em>dict</em>) – The complete configuration schema</p></li>
+<li><p><strong>allow_deprecated</strong> (<em>bool</em>) – If True, deprecated keys will only generate warnings</p></li>
+<li><p><strong>run_mode</strong> (<em>str</em>) – Either ‘workflow’ or ‘script’. Workflow is for function runs at
+the start of a mdb workflow, before proceeding. ‘script’ is for standalone
+verification script execution.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>tuple</strong> – where any_errors_found is bool, errors is list of strings
+and warnings is list of dicts</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(any_errors_found, errors, warnings)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.command_line_utils.validate_parameter">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.command_line_utils.</span></span><span class="sig-name descname"><span class="pre">validate_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_schema</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_config_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.command_line_utils.validate_parameter" title="Link to this definition"></a></dt>
+<dd><p>Validate a single parameter against its schema definition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> – The value to validate</p></li>
+<li><p><strong>param_key</strong> (<em>str</em>) – The parameter key name</p></li>
+<li><p><strong>param_schema</strong> (<em>dict</em>) – The parameter schema definition</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – The current path in the configuration for error reporting</p></li>
+<li><p><strong>root_config_data</strong> (<em>dict</em>) – Complete configuration data for dependency resolution</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>list</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of validation error messages (empty if valid)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.command_line.command_line_utils.validate_section_recursive">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.command_line.command_line_utils.</span></span><span class="sig-name descname"><span class="pre">validate_section_recursive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">errors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warnings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">section_mandatory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_config_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_schema_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.command_line.command_line_utils.validate_section_recursive" title="Link to this definition"></a></dt>
+<dd><p>Recursively validate a configuration section against its schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_data</strong> (<em>dict</em>) – The configuration data to validate</p></li>
+<li><p><strong>schema_dict</strong> (<em>dict</em>) – The schema definition for this section</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Current path in the configuration</p></li>
+<li><p><strong>errors</strong> (<em>list</em>) – List to accumulate validation errors</p></li>
+<li><p><strong>section_mandatory</strong> (<em>bool</em>) – Whether the current section is mandatory</p></li>
+<li><p><strong>root_config_data</strong> (<em>dict</em>) – Complete configuration data for dependency resolution</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>list</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of validation error messages</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.command_line">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-atlas.core.command_line" title="Link to this heading"></a></h2>
+<p>Module that contains the command line interface for atlas.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="atlas.core.html" class="btn btn-neutral float-left" title="atlas.core package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="atlas.core.command_line.setup.html" class="btn btn-neutral float-right" title="atlas.core.command_line.setup package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='atlas.core.command_line.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

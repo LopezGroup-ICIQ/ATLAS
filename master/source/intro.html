@@ -1,0 +1,145 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Installation" href="install.html" />
+    <link rel="prev" title="Intro to ATLAS" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">Input specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Package Information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Introduction</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/intro.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h1>
+<p align="center">
+  <picture>
+    <img alt="ATLAS: A workflow for materials NNP generation" src="../_static/logo_light.png" width="600">
+  </picture>
+<p>ATLAS (Automated Training with Latent-space Aware Sampling) is a unified Python framework for building robust machine learning interatomic potentials (MLIPs). It combines a diversity-aware database generator with a manifold-aware active learning workflow to produce compact, high-quality training datasets.</p>
+<p>Key capabilities include:</p>
+<ul class="simple">
+<li><p><strong>Structure generation</strong> for bulk, surface, cluster, and isolated atom configurations across single-, binary-, and ternary-phase diagrams, with perturbations, vacancies, deformations, and adsorbates.</p></li>
+<li><p><strong>Active learning</strong> with a modular backend architecture for training MLIPs. It currently supports MACE, Allegro, and NequIP, and any model can be added through the backend plugin interface. The workflow runs molecular dynamics simulations, detects extrapolating structures via descriptor-based or latent-space methods, and submits them for DFT labelling.</p></li>
+<li><p><strong>Data reduction mode</strong> for iteratively selecting structures from large pre-existing databases.</p></li>
+<li><p><strong>Safeguard checks</strong> to prevent premature convergence of active learning loops.</p></li>
+<li><p><strong>Diversity metrics</strong> including Vendi Score and Circles Metric.</p></li>
+<li><p><strong>Benchmarking</strong> tools for both MLIP and DFT evaluation.</p></li>
+<li><p><strong>Interactive monitoring</strong> via a Flask dashboard and a PySide6 desktop GUI (ATLAS Hub).</p></li>
+<li><p><strong>Comprehensive reporting</strong> of model performance and resource usage.</p></li>
+</ul>
+<p>The entire workflow is orchestrated through AiiDA for reproducible and provenance-tracked execution.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Intro to ATLAS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="install.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='intro.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

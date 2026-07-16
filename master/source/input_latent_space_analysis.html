@@ -1,0 +1,491 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Latent Space Analysis &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Customizing your ATLAS installation" href="customization.html" />
+    <link rel="prev" title="DFT Parameter Benchmark" href="input_dft_benchmark.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="input.html">Input specification</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="input.html#input-formats">Input Formats</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="input_database_generation.html">Database Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input_dft.html">DFT Calculations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input_active_learning.html">Active Learning Loop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input_mlip_benchmarks.html">MLIP Benchmarks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input_dft_benchmark.html">DFT Parameter Benchmark</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Latent Space Analysis</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#interpolation-check-settings-interpolation">Interpolation Check Settings - <code class="docutils literal notranslate"><span class="pre">[interpolation]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#extrapolation-check-settings-extrapolation">Extrapolation Check Settings - <code class="docutils literal notranslate"><span class="pre">[extrapolation]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#descriptor-computation-settings-descriptors">Descriptor Computation Settings - <code class="docutils literal notranslate"><span class="pre">[descriptors]</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Package Information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="input.html">Input specification</a></li>
+      <li class="breadcrumb-item active">Latent Space Analysis</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/input_latent_space_analysis.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="latent-space-analysis">
+<h1>Latent Space Analysis<a class="headerlink" href="#latent-space-analysis" title="Link to this heading"></a></h1>
+<p>Generate a latent space analysis template file using <code class="docutils literal notranslate"><span class="pre">atl_gen_configuration_file</span> <span class="pre">-t</span> <span class="pre">latent_space_analysis</span></code>.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>All keys are mandatory unless stated otherwise.</p>
+</div>
+<section id="interpolation-check-settings-interpolation">
+<h2>Interpolation Check Settings - <code class="docutils literal notranslate"><span class="pre">[interpolation]</span></code><a class="headerlink" href="#interpolation-check-settings-interpolation" title="Link to this heading"></a></h2>
+<p>Settings for the interpolation check. The interpolation check determines whether a structure is within the model’s knowledge domain by checking the committee models disagreement, considering the model accuracy threshold.</p>
+<ul class="simple">
+<li><p><span class="code-alt">disagreement_check_type</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Approach for energy and force (E&amp;F) committee disagreement check. With <code class="docutils literal notranslate"><span class="pre">training</span></code>, compare E&amp;F with a threshold obtained from the training RMSE values multiplied by a threshold. With <code class="docutils literal notranslate"><span class="pre">md_threshold</span></code>, compare E&amp;F with a threshold obtained from the standard deviaiton of the MD frames.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'training'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">training</span></code>, <code class="docutils literal notranslate"><span class="pre">md_threshold</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="extrapolation-check-settings-extrapolation">
+<h2>Extrapolation Check Settings - <code class="docutils literal notranslate"><span class="pre">[extrapolation]</span></code><a class="headerlink" href="#extrapolation-check-settings-extrapolation" title="Link to this heading"></a></h2>
+<p>Settings for extrapolation checks.</p>
+<ul class="simple">
+<li><p><span class="code-alt">check_extrapolation_type</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Method for extrapolation check. With <code class="docutils literal notranslate"><span class="pre">min-max</span></code> or <code class="docutils literal notranslate"><span class="pre">basic</span></code>, check for extrapolation using the range of the model descriptors. With <code class="docutils literal notranslate"><span class="pre">alpha-shape</span></code> or <code class="docutils literal notranslate"><span class="pre">advanced</span></code>, check for extrapolation using the concave hull of the model descriptors. With <code class="docutils literal notranslate"><span class="pre">disabled</span></code> or <code class="docutils literal notranslate"><span class="pre">none</span></code>, disable the extrapolation check, only leaving committee disagreement for EF for the domain.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'none'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">disabled</span></code>, <code class="docutils literal notranslate"><span class="pre">none</span></code>, <code class="docutils literal notranslate"><span class="pre">basic</span></code>, <code class="docutils literal notranslate"><span class="pre">min-max</span></code>, <code class="docutils literal notranslate"><span class="pre">alpha-shape</span></code>, <code class="docutils literal notranslate"><span class="pre">advanced</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="concave-hull-extrapolation-check-settings-extrapolation-concave-hull">
+<h3>Concave Hull Extrapolation Check Settings - <code class="docutils literal notranslate"><span class="pre">[extrapolation.concave_hull]</span></code><a class="headerlink" href="#concave-hull-extrapolation-check-settings-extrapolation-concave-hull" title="Link to this heading"></a></h3>
+<p>Settings for the concave hull / alpha shape extrapolation check.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">target_alpha_range_min</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Minimum alpha value for the concave hull.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">target_alpha_range_max</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum alpha value for the concave hull.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">50.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">default_alpha_if_issues</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Default alpha value if there are issues with the concave hull generation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">5.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">nn_dist_scale_factor</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Scaling factor for the alpha candidate calculation, where <code class="docutils literal notranslate"><span class="pre">alpha_candidate</span> <span class="pre">=</span> <span class="pre">nn_dist_scale_factor</span> <span class="pre">/</span> <span class="pre">mean_nn_dist</span></code></p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1.5</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">frac_points_allowed_out</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum fraction of points allowed to be outside the concave hull. If the fraction of points outside the hull exceeds this value, alpha will be decreased iteratively until the condition is met or alpha reaches zero. Value is expressed as a fraction, thus 0.002 means 0.2%.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.002</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">qt_offset_frac</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Offset fraction for the boundary of the root quadtree as a fraction of the data range. This will leave an extra margin around the data to avoid edge effects.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">qt_data_frac_capacity</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Fraction of the total number of data points to be used as the capacity of each quadtree node. Any quadtree node that goes above the capacity will be split further.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.015</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">qt_subdivision_factor</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Subdivision factor for searching dense leaves of the quadtree. Higher values lead to more subdivisions and finer search.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">4</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">concave_hull_scale_factor</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Scaling factor for the concave hull to be used when checking for extrapolation. For example, 0.1 results in a 10% size increase of the hull. A value of 0.0 means no scaling.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">boundary_method</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Algorithm for boundary determination during the extrapolation check. With <code class="docutils literal notranslate"><span class="pre">concave_hull</span></code>, the boundary is the alpha shape of the latent space (per quadtree cluster). With <code class="docutils literal notranslate"><span class="pre">morphological_closing</span></code>, the boundary is obtained by rasterising the latent space and applying a morphological closing operation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'concave_hull'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">concave_hull</span></code>, <code class="docutils literal notranslate"><span class="pre">morphological_closing</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">morph_disk_size</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Disk size for the morphological closing structuring element. Larger values bridge wider gaps between points. Only used when <code class="docutils literal notranslate"><span class="pre">boundary_method</span></code> is <code class="docutils literal notranslate"><span class="pre">morphological_closing</span></code>.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">10</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">morph_threshold</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Grayscale intensity threshold (0-255) for point detection in morphological closing. Only used when <code class="docutils literal notranslate"><span class="pre">boundary_method</span></code> is <code class="docutils literal notranslate"><span class="pre">morphological_closing</span></code>.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">250</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">morph_dpi</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: DPI of the internal rasterisation used by morphological closing. Higher values give finer boundaries. Only used when <code class="docutils literal notranslate"><span class="pre">boundary_method</span></code> is <code class="docutils literal notranslate"><span class="pre">morphological_closing</span></code>.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="descriptor-computation-settings-descriptors">
+<h2>Descriptor Computation Settings - <code class="docutils literal notranslate"><span class="pre">[descriptors]</span></code><a class="headerlink" href="#descriptor-computation-settings-descriptors" title="Link to this heading"></a></h2>
+<p>Settings for descriptor computation and dimensionality reduction.</p>
+<ul class="simple">
+<li><p><span class="code-alt">descriptor_type</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Type of descriptor to compute.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'mace'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">mace</span></code>, <code class="docutils literal notranslate"><span class="pre">soap</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">dimensionality_reduction_method</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Dimensionality reduction method for model descriptors.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'none'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">autoencoder</span></code>, <code class="docutils literal notranslate"><span class="pre">pca</span></code>, <code class="docutils literal notranslate"><span class="pre">none</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">ignore_container</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to ignore container settings for descriptor computation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">metadata</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: AiiDA metadata and scheduler options for descriptor computation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">dtype</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Data type of descriptor to compute.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'float32'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">float32</span></code>, <code class="docutils literal notranslate"><span class="pre">float64</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">device</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Device for descriptor computation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'cpu'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">cuda</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="autoencoder-dimensionality-reduction-settings-descriptors-autoencoder">
+<h3>Autoencoder Dimensionality Reduction Settings - <code class="docutils literal notranslate"><span class="pre">[descriptors.autoencoder]</span></code><a class="headerlink" href="#autoencoder-dimensionality-reduction-settings-descriptors-autoencoder" title="Link to this heading"></a></h3>
+<p>Settings for autoencoder-based dimensionality reduction.</p>
+<section id="train-settings-descriptors-autoencoder-train-settings">
+<h4>Train_Settings - <code class="docutils literal notranslate"><span class="pre">[descriptors.autoencoder.train_settings]</span></code><a class="headerlink" href="#train-settings-descriptors-autoencoder-train-settings" title="Link to this heading"></a></h4>
+<p>Training settings for the autoencoder.</p>
+<ul class="simple">
+<li><p><span class="code-alt">device</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Device for autoencoder training.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'cuda'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">cuda</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">dtype</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Data type for autoencoder training.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'float32'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">float32</span></code>, <code class="docutils literal notranslate"><span class="pre">float64</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">model_path</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path to save the autoencoder model.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'autoencoder_model.pth'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">load_model</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to load the model from the model path.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">dataset</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path to the training dataset.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'all_descriptors.npz'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">l1_hidden_dim</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of units in the first hidden layer.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">256</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">l2_hidden_dim</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of units in the second hidden layer.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">32</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">bottleneck_dim</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Dimensionality of the bottleneck (latent space).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">bias_flag</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Flag to include bias terms in the layers.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_epochs</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of epochs to train the model.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">50</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">batch_size</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Batch size for training.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">2048</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">patience</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Early stopping patience (epochs without val loss improvement). Also controls LR reduction schedule.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">lr</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Learning rate for the optimizer.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.001</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">weight_decay</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: L2 regularization parameter.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'1e-5'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">loss</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Loss function type.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'mse'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">mse</span></code>, <code class="docutils literal notranslate"><span class="pre">mae</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">train_frac</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Fraction of the data to use for training.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.8</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">valid_frac</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Fraction of the data to use for validation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">test_frac</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Fraction of the data to use for testing.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">wandb</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to log metrics to wandb.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">wandb_name</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Name of the wandb run.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">''</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">wandb_project</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Name of the wandb project.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">''</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="input_dft_benchmark.html" class="btn btn-neutral float-left" title="DFT Parameter Benchmark" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="customization.html" class="btn btn-neutral float-right" title="Customizing your ATLAS installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='input_latent_space_analysis.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

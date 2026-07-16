@@ -1,0 +1,610 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>atlas.active_learning.backends.mace package &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="atlas.active_learning.dashboard package" href="atlas.active_learning.dashboard.html" />
+    <link rel="prev" title="atlas.active_learning.backends package" href="atlas.active_learning.backends.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">Input specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package Information</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="atlas.html">atlas package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="atlas.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="atlas.active_learning.html">atlas.active_learning package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.html">atlas.benchmarks package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html">atlas.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.training.html">atlas.training package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html">atlas.workflows package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.html#module-atlas">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">atlas</a></li>
+          <li class="breadcrumb-item"><a href="atlas.html">atlas package</a></li>
+          <li class="breadcrumb-item"><a href="atlas.active_learning.html">atlas.active_learning package</a></li>
+          <li class="breadcrumb-item"><a href="atlas.active_learning.backends.html">atlas.active_learning.backends package</a></li>
+      <li class="breadcrumb-item active">atlas.active_learning.backends.mace package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/atlas.active_learning.backends.mace.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="atlas-active-learning-backends-mace-package">
+<h1>atlas.active_learning.backends.mace package<a class="headerlink" href="#atlas-active-learning-backends-mace-package" title="Link to this heading"></a></h1>
+<p>Concrete MACE implementation of the MLIP backend protocols.</p>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.active_learning.backends.mace.calcjobs">
+<span id="atlas-active-learning-backends-mace-calcjobs-module"></span><h2>atlas.active_learning.backends.mace.calcjobs module<a class="headerlink" href="#module-atlas.active_learning.backends.mace.calcjobs" title="Link to this heading"></a></h2>
+<p>MACE-specific AiiDA CalcJob and Parser classes.</p>
+<p>These classes were extracted from <code class="docutils literal notranslate"><span class="pre">mace_tools_aiida.py</span></code> as part of the
+MLIP-agnostic refactoring. The original module re-exports them for backward
+compatibility and to preserve AiiDA entry points.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.CheckMACECommiteeResultsCalculationParser">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.mace.calcjobs.</span></span><span class="sig-name descname"><span class="pre">CheckMACECommiteeResultsCalculationParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.CheckMACECommiteeResultsCalculationParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Parser</span></code></p>
+<p>Parser for processing the retrieved files from a MACE committee results job.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.CheckMACECommiteeResultsCalculationParser.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.CheckMACECommiteeResultsCalculationParser.parse" title="Link to this definition"></a></dt>
+<dd><p>Parse the retrieved files of the calculation job.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.CheckMACECommitteeResultsCalculation">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.mace.calcjobs.</span></span><span class="sig-name descname"><span class="pre">CheckMACECommitteeResultsCalculation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.CheckMACECommitteeResultsCalculation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">CalcJob</span></code></p>
+<p>CalcJob to check the E and F of structures using a committee of MACE models.</p>
+<section id="inputs">
+<h3>Inputs<a class="headerlink" href="#inputs" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>commitee_models<span class="classifier">PortNamespace</span></dt><dd><p>A namespace to hold an arbitrary number of committee MACE potentials.</p>
+</dd>
+<dt>mace_settings_dict<span class="classifier">aiida.orm.Dict</span></dt><dd><p>Dictionary containing MACE settings.</p>
+</dd>
+<dt>configurations_to_evaluate<span class="classifier">aiida.orm.orm.SinglefileData</span></dt><dd><p>Path to the configurations to evaluate in extxyz format.</p>
+</dd>
+</dl>
+</section>
+<section id="outputs">
+<h3>Outputs<a class="headerlink" href="#outputs" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>energy_result_dict<span class="classifier">aiida.orm.Dict</span></dt><dd><p>Dictionary of values for the energy prediction.</p>
+</dd>
+<dt>forces_result_dict<span class="classifier">aiida.orm.Dict</span></dt><dd><p>Dictionary of arrays of values for the force prediction.</p>
+</dd>
+<dt>num_threads<span class="classifier">aiida.orm.Int</span></dt><dd><p>Number of OpenMP threads to use for the evaluation.</p>
+</dd>
+</dl>
+</section>
+<section id="exit-codes">
+<h3>Exit Codes<a class="headerlink" href="#exit-codes" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>420<span class="classifier">ERROR_OUT_OF_VRAM</span></dt><dd><p>CUDA out of GPU memory.</p>
+</dd>
+<dt>421<span class="classifier">ERROR_OUTPUT_NOT_FOUND</span></dt><dd><p>Missing output file.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.CheckMACECommitteeResultsCalculation.define">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">define</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.CheckMACECommitteeResultsCalculation.define" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.CheckMACECommitteeResultsCalculation.prepare_for_submission">
+<span class="sig-name descname"><span class="pre">prepare_for_submission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.CheckMACECommitteeResultsCalculation.prepare_for_submission" title="Link to this definition"></a></dt>
+<dd><p>Write the input files that are required for the code to run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>folder</strong> – an <cite>Folder</cite> to temporarily write files on disk</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><cite>CalcInfo</cite> instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.EvaluateMACEConfigsCalculation">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.mace.calcjobs.</span></span><span class="sig-name descname"><span class="pre">EvaluateMACEConfigsCalculation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.EvaluateMACEConfigsCalculation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">CalcJob</span></code></p>
+<p>CalcJob to evaluate E and F of structures using a MACE model.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.EvaluateMACEConfigsCalculation.define">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">define</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.EvaluateMACEConfigsCalculation.define" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.EvaluateMACEConfigsCalculation.prepare_for_submission">
+<span class="sig-name descname"><span class="pre">prepare_for_submission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.EvaluateMACEConfigsCalculation.prepare_for_submission" title="Link to this definition"></a></dt>
+<dd><p>Write the input files that are required for the code to run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>folder</strong> – an <cite>Folder</cite> to temporarily write files on disk</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><cite>CalcInfo</cite> instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.EvaluateMACEConfigsCalculationParser">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.mace.calcjobs.</span></span><span class="sig-name descname"><span class="pre">EvaluateMACEConfigsCalculationParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.EvaluateMACEConfigsCalculationParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Parser</span></code></p>
+<p>Parser for MACE E and F evaluation calculation jobs.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.EvaluateMACEConfigsCalculationParser.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.EvaluateMACEConfigsCalculationParser.parse" title="Link to this definition"></a></dt>
+<dd><p>Parse the retrieved files of the calculation job.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.GetMACEDescriptorsCalculation">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.mace.calcjobs.</span></span><span class="sig-name descname"><span class="pre">GetMACEDescriptorsCalculation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.GetMACEDescriptorsCalculation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">CalcJob</span></code></p>
+<p>Calculation to obtain descriptors for a structure database from MACE.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.GetMACEDescriptorsCalculation.define">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">define</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.GetMACEDescriptorsCalculation.define" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.GetMACEDescriptorsCalculation.prepare_for_submission">
+<span class="sig-name descname"><span class="pre">prepare_for_submission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.GetMACEDescriptorsCalculation.prepare_for_submission" title="Link to this definition"></a></dt>
+<dd><p>Write the input files that are required for the code to run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>folder</strong> – a <cite>Folder</cite> to temporarily write files on disk</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><cite>CalcInfo</cite> instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.GetMACEDescriptorsCalculationParser">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.mace.calcjobs.</span></span><span class="sig-name descname"><span class="pre">GetMACEDescriptorsCalculationParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.GetMACEDescriptorsCalculationParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Parser</span></code></p>
+<p>Parser for the retrieved files from a MACE descriptors job.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.GetMACEDescriptorsCalculationParser.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.GetMACEDescriptorsCalculationParser.parse" title="Link to this definition"></a></dt>
+<dd><p>Parse the retrieved files of the calculation job.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.LAMMPSMACERawParser">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.mace.calcjobs.</span></span><span class="sig-name descname"><span class="pre">LAMMPSMACERawParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.LAMMPSMACERawParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Parser</span></code></p>
+<p>Base parser for LAMMPS output.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.LAMMPSMACERawParser.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.LAMMPSMACERawParser.parse" title="Link to this definition"></a></dt>
+<dd><p>Parse the output files stored in the <cite>retrieved</cite> output node.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.RunMDCalculationGPULAMMPS">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.mace.calcjobs.</span></span><span class="sig-name descname"><span class="pre">RunMDCalculationGPULAMMPS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.RunMDCalculationGPULAMMPS" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">LammpsRawCalculation</span></code></p>
+<p>aiida-lammps raw calculation modified to run on GPU using Kokkos.</p>
+<p>This CalcJob is backend-agnostic. The LAMMPS pair_style (mace,
+allegro, etc.) is determined by the input script, not this class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.RunMDCalculationGPULAMMPS.prepare_for_submission">
+<span class="sig-name descname"><span class="pre">prepare_for_submission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">aiida.common.folders.Folder</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">aiida.common.datastructures.CalcInfo</span></span></span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.RunMDCalculationGPULAMMPS.prepare_for_submission" title="Link to this definition"></a></dt>
+<dd><p>Prepare the calculation for submission.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>folder</strong> – A temporary folder on the local file system.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A <code class="xref py py-class docutils literal notranslate"><span class="pre">aiida.common.datastructures.CalcInfo</span></code> instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.RunMDCalculationGPULAMMPSMACE">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.mace.calcjobs.</span></span><span class="sig-name descname"><span class="pre">RunMDCalculationGPULAMMPSMACE</span></span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.RunMDCalculationGPULAMMPSMACE" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#atlas.active_learning.backends.mace.calcjobs.RunMDCalculationGPULAMMPS" title="atlas.active_learning.backends.mace.calcjobs.RunMDCalculationGPULAMMPS"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunMDCalculationGPULAMMPS</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.TrainMACEModelCalculation">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.mace.calcjobs.</span></span><span class="sig-name descname"><span class="pre">TrainMACEModelCalculation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.TrainMACEModelCalculation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">CalcJob</span></code></p>
+<p>Implementation of a CalcJob to perform a MACE training using a settings dir.</p>
+<section id="id1">
+<h3>Inputs<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>mace_settings_dict<span class="classifier">orm.Dict</span></dt><dd><p>Dictionary containing MACE settings.</p>
+</dd>
+<dt>mace_train_file_path<span class="classifier">orm.Str</span></dt><dd><p>Local machine path to the structures to evaluate in extxyz format.</p>
+</dd>
+<dt>test_file<span class="classifier">orm.SinglefileData</span></dt><dd><p>Local machine path to the structures for testing in extxyz format.</p>
+</dd>
+<dt>mace_train_file_path<span class="classifier">orm.Str</span></dt><dd><p>Path to the configurations to evaluate in extxyz format.</p>
+</dd>
+<dt>model_name<span class="classifier">orm.Str</span></dt><dd><p>Name given to the model.</p>
+</dd>
+<dt>use_container<span class="classifier">orm.Bool</span></dt><dd><p>Use code in container. Default is False. Will be set automatically by the
+code if the containerized mode is enabled.</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h3>Outputs<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>model_file<span class="classifier">orm.SinglefileData</span></dt><dd><p>Trained MACE model.</p>
+</dd>
+<dt>train_file<span class="classifier">orm.SinglefileData</span></dt><dd><p>Log file containing training information.</p>
+</dd>
+<dt>m_rmse_e<span class="classifier">orm.Float</span></dt><dd><p>Validation RMSE for the energy, in meV / atom.</p>
+</dd>
+<dt>m_rmse_f<span class="classifier">orm.Float</span></dt><dd><p>Validation RMSE for the forces, in meV / A.</p>
+</dd>
+</dl>
+</section>
+<section id="id3">
+<h3>Exit Codes<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>420<span class="classifier">ERROR_INVALID_OUTPUT</span></dt><dd><p>Training calculation could not run.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.TrainMACEModelCalculation.define">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">define</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.TrainMACEModelCalculation.define" title="Link to this definition"></a></dt>
+<dd><p>Define the input and output specifications for the CalcJob.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.TrainMACEModelCalculation.prepare_for_submission">
+<span class="sig-name descname"><span class="pre">prepare_for_submission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.TrainMACEModelCalculation.prepare_for_submission" title="Link to this definition"></a></dt>
+<dd><p>Write the input files that are required for the code to run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>folder</strong> – an <cite>Folder</cite> to temporarily write files on disk</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><cite>CalcInfo</cite> instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.TrainMACEModelCalculationParser">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.mace.calcjobs.</span></span><span class="sig-name descname"><span class="pre">TrainMACEModelCalculationParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.TrainMACEModelCalculationParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Parser</span></code></p>
+<p>Parser for the retrieved files from a MACE training calculation job.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.TrainMACEModelCalculationParser.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.TrainMACEModelCalculationParser.parse" title="Link to this definition"></a></dt>
+<dd><p>Parse the retrieved files of the calculation job.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calcjobs.prepare_cli_args_mace">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.mace.calcjobs.</span></span><span class="sig-name descname"><span class="pre">prepare_cli_args_mace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.calcjobs.prepare_cli_args_mace" title="Link to this definition"></a></dt>
+<dd><p>Prepare the command line arguments for the MACE calculation.</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.active_learning.backends.mace.calculator">
+<span id="atlas-active-learning-backends-mace-calculator-module"></span><h2>atlas.active_learning.backends.mace.calculator module<a class="headerlink" href="#module-atlas.active_learning.backends.mace.calculator" title="Link to this heading"></a></h2>
+<p>MACE ASE calculator creation.</p>
+<p>Extracted from <code class="docutils literal notranslate"><span class="pre">atlas.active_learning.active_learning_utils</span></code> as part of
+the MLIP-agnostic refactoring.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.calculator.create_mace_calculator">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.mace.calculator.</span></span><span class="sig-name descname"><span class="pre">create_mace_calculator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'float32'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Calculator</span></span></span><a class="headerlink" href="#atlas.active_learning.backends.mace.calculator.create_mace_calculator" title="Link to this definition"></a></dt>
+<dd><p>Create an ASE Calculator from a trained MACE model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_path</strong> (<em>str</em><em> | </em><em>Path</em>) – Path to the MACE <code class="docutils literal notranslate"><span class="pre">.model</span></code> file, or a foundation model
+identifier (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;mace:mp-small&quot;</span></code>).</p></li>
+<li><p><strong>device</strong> (<em>str</em>) – Device for inference (<code class="docutils literal notranslate"><span class="pre">'cpu'</span></code> or <code class="docutils literal notranslate"><span class="pre">'cuda'</span></code>).</p></li>
+<li><p><strong>dtype</strong> (<em>str</em>) – Data type for inference.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments passed to <code class="docutils literal notranslate"><span class="pre">MACECalculator</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An ASE-compatible MACE calculator.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Calculator</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-atlas.active_learning.backends.mace.descriptors">
+<span id="atlas-active-learning-backends-mace-descriptors-module"></span><h2>atlas.active_learning.backends.mace.descriptors module<a class="headerlink" href="#module-atlas.active_learning.backends.mace.descriptors" title="Link to this heading"></a></h2>
+<p>MACE descriptor generation.</p>
+<p>Extracted from <code class="docutils literal notranslate"><span class="pre">atlas.active_learning.active_learning_utils</span></code> as part of
+the MLIP-agnostic refactoring.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.descriptors.generate_descriptors_mace">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.mace.descriptors.</span></span><span class="sig-name descname"><span class="pre">generate_descriptors_mace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outer_average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.active_learning.backends.mace.descriptors.generate_descriptors_mace" title="Link to this definition"></a></dt>
+<dd><p>Generate per-structure MACE descriptors for a database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_path</strong> (<em>str</em>) – Path to a trained MACE model file, or a foundation model
+identifier (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;mace:mp-small&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;mace:off-medium&quot;</span></code>).</p></li>
+<li><p><strong>database</strong> (<em>list</em><em>[</em><em>Atoms</em><em>]</em>) – List of ASE Atoms objects.</p></li>
+<li><p><strong>descriptor_settings</strong> (<em>dict</em>) – Settings dict containing <code class="docutils literal notranslate"><span class="pre">device</span></code> and <code class="docutils literal notranslate"><span class="pre">dtype</span></code> keys.</p></li>
+<li><p><strong>outer_average</strong> (<em>bool</em>) – If True, average atom-level descriptors into a single
+structure-level vector (analogous to SOAP outer averaging).</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – If True, show a progress bar.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>descriptor_dict</strong> (<em>dict</em>) – Mapping <code class="docutils literal notranslate"><span class="pre">{atl_id:</span> <span class="pre">{'descriptors':</span> <span class="pre">[...],</span> <span class="pre">'latent_space':</span> <span class="pre">[]}}</span></code></p></li>
+<li><p><strong>descriptor_arr</strong> (<em>np.ndarray</em>) – Vertically stacked descriptor array.</p></li>
+<li><p><strong>uuid_list</strong> (<em>list[str]</em>) – UUIDs assigned to structures that lacked an <code class="docutils literal notranslate"><span class="pre">atl_id</span></code>.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-atlas.active_learning.backends.mace.training">
+<span id="atlas-active-learning-backends-mace-training-module"></span><h2>atlas.active_learning.backends.mace.training module<a class="headerlink" href="#module-atlas.active_learning.backends.mace.training" title="Link to this heading"></a></h2>
+<p>MACE training utilities.</p>
+<p>Extracted from <code class="docutils literal notranslate"><span class="pre">atlas.active_learning.active_learning_utils</span></code> as part of
+the MLIP-agnostic refactoring.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.training.create_mace_lammps_model_impl">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.mace.training.</span></span><span class="sig-name descname"><span class="pre">create_mace_lammps_model_impl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SinglefileData</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.training.create_mace_lammps_model_impl" title="Link to this definition"></a></dt>
+<dd><p>Create a LAMMPS potential from a MACE model (inner logic, no &#64;calcfunction).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">&#64;calcfunction</span></code>-decorated version lives in
+<code class="docutils literal notranslate"><span class="pre">active_learning_utils.create_mace_lammps_model</span></code> for AiiDA provenance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model_file</strong> (<em>orm.SinglefileData</em>) – A MACE model file to convert to a LAMMPS potential.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A LAMMPS potential file generated from the MACE model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>orm.SinglefileData</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.training.update_mace_train_settings_dict">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.mace.training.</span></span><span class="sig-name descname"><span class="pre">update_mace_train_settings_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settings_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_data_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curr_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curr_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">containerized</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.training.update_mace_train_settings_dict" title="Link to this definition"></a></dt>
+<dd><p>Update the MACE training settings dictionary with the new database path.</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.active_learning.backends.mace">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-atlas.active_learning.backends.mace" title="Link to this heading"></a></h2>
+<p>MACE backend for ATLAS active learning.</p>
+<p>This module provides the concrete MACE implementation of the MLIP backend
+protocols. It wraps existing MACE-specific functions from the codebase,
+delegating to them without duplicating logic.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.MACEBackend">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.mace.</span></span><span class="sig-name descname"><span class="pre">MACEBackend</span></span><a class="headerlink" href="#atlas.active_learning.backends.mace.MACEBackend" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>MACE backend implementing all four MLIP protocols.</p>
+<p>This backend delegates to the existing MACE-specific functions in
+<code class="docutils literal notranslate"><span class="pre">active_learning_utils</span></code>, <code class="docutils literal notranslate"><span class="pre">conversion</span></code>, and <code class="docutils literal notranslate"><span class="pre">mace_tools_aiida</span></code>.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.MACEBackend.calcjob_entry_point">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calcjob_entry_point</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.active_learning.backends.mace.MACEBackend.calcjob_entry_point" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.MACEBackend.create_calculator">
+<span class="sig-name descname"><span class="pre">create_calculator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'float32'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Calculator</span></span></span><a class="headerlink" href="#atlas.active_learning.backends.mace.MACEBackend.create_calculator" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.MACEBackend.create_lammps_potential">
+<span class="sig-name descname"><span class="pre">create_lammps_potential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_file</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.active_learning.backends.mace.MACEBackend.create_lammps_potential" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.MACEBackend.evaluate_committee">
+<span class="sig-name descname"><span class="pre">evaluate_committee</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structures</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'float32'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.active_learning.backends.mace.MACEBackend.evaluate_committee" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.MACEBackend.generate_descriptors">
+<span class="sig-name descname"><span class="pre">generate_descriptors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">np.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.active_learning.backends.mace.MACEBackend.generate_descriptors" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.MACEBackend.lammps_pair_style">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lammps_pair_style</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.active_learning.backends.mace.MACEBackend.lammps_pair_style" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.MACEBackend.model_file_extension">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">model_file_extension</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.active_learning.backends.mace.MACEBackend.model_file_extension" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.MACEBackend.parse_training_results">
+<span class="sig-name descname"><span class="pre">parse_training_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#atlas.active_learning.backends.mace.MACEBackend.parse_training_results" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.MACEBackend.parser_entry_point">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parser_entry_point</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.active_learning.backends.mace.MACEBackend.parser_entry_point" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.MACEBackend.prepare_builder">
+<span class="sig-name descname"><span class="pre">prepare_builder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">builder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_data_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iteration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">containerized</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.mace.MACEBackend.prepare_builder" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.MACEBackend.prepare_training_data">
+<span class="sig-name descname"><span class="pre">prepare_training_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">structure_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#atlas.active_learning.backends.mace.MACEBackend.prepare_training_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.MACEBackend.run_training">
+<span class="sig-name descname"><span class="pre">run_training</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.active_learning.backends.mace.MACEBackend.run_training" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.MACEBackend.select_best_model">
+<span class="sig-name descname"><span class="pre">select_best_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">training_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">object</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.active_learning.backends.mace.MACEBackend.select_best_model" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.mace.MACEBackend.supports_committee_training">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">supports_committee_training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#atlas.active_learning.backends.mace.MACEBackend.supports_committee_training" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="atlas.active_learning.backends.html" class="btn btn-neutral float-left" title="atlas.active_learning.backends package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="atlas.active_learning.dashboard.html" class="btn btn-neutral float-right" title="atlas.active_learning.dashboard package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='atlas.active_learning.backends.mace.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

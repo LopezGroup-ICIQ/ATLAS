@@ -1,0 +1,223 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>atlas.active_learning.safeguard package &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="atlas.benchmarks package" href="atlas.benchmarks.html" />
+    <link rel="prev" title="atlas.active_learning.extrapolation package" href="atlas.active_learning.extrapolation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">Input specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package Information</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="atlas.html">atlas package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="atlas.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="atlas.active_learning.html">atlas.active_learning package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.html">atlas.benchmarks package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html">atlas.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.training.html">atlas.training package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html">atlas.workflows package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.html#module-atlas">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">atlas</a></li>
+          <li class="breadcrumb-item"><a href="atlas.html">atlas package</a></li>
+          <li class="breadcrumb-item"><a href="atlas.active_learning.html">atlas.active_learning package</a></li>
+      <li class="breadcrumb-item active">atlas.active_learning.safeguard package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/atlas.active_learning.safeguard.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="atlas-active-learning-safeguard-package">
+<h1>atlas.active_learning.safeguard package<a class="headerlink" href="#atlas-active-learning-safeguard-package" title="Link to this heading"></a></h1>
+<p>Stability checking before early stopping in active learning loops.</p>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.active_learning.safeguard.safeguard_utils">
+<span id="atlas-active-learning-safeguard-safeguard-utils-module"></span><h2>atlas.active_learning.safeguard.safeguard_utils module<a class="headerlink" href="#module-atlas.active_learning.safeguard.safeguard_utils" title="Link to this heading"></a></h2>
+<p>AiiDA plugin for MACE calculations.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.safeguard.safeguard_utils.RunMDSafeguardCalculation">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.safeguard.safeguard_utils.</span></span><span class="sig-name descname"><span class="pre">RunMDSafeguardCalculation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.safeguard.safeguard_utils.RunMDSafeguardCalculation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">CalcJob</span></code></p>
+<p>CalcJob to run MD simulations for safeguard checking during active learning loops.</p>
+<p>This CalcJob will run MD simulations to test the stability of the models trained
+using active learning before deciding to stop the active learning loop. The MD
+simulations will be analyzed to identify any extrapolating structures using any
+of the available extrapolation methods.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>md_structure</strong> (<em>orm.SinglefileData</em>) – File containing the structure to be used for the MD, in the extxyz format.</p></li>
+<li><p><strong>sampler_model</strong> (<em>orm.SinglefileData</em>) – File containing the MLIP model to test for stability.</p></li>
+<li><p><strong>autoencoder_model</strong> (<em>orm.SinglefileData</em><em>, </em><em>optional</em>) – File containing the autoencoder model.</p></li>
+<li><p><strong>m_rmse_e</strong> (<em>orm.Float</em>) – Validation RMSE of the best model for the energy, in meV / atom.</p></li>
+<li><p><strong>m_rmse_f</strong> (<em>orm.Float</em>) – Validation RMSE of the best model for the forces, in meV / Å.</p></li>
+<li><p><strong>concave_hull</strong> (<em>orm.ArrayData</em><em>, </em><em>optional</em>) – Array containing the concave hull to be used for the extrapolation check.</p></li>
+<li><p><strong>desc_max_arr</strong> (<em>orm.ArrayData</em>) – Array containing the maximum values for the descriptors.</p></li>
+<li><p><strong>desc_min_arr</strong> (<em>orm.ArrayData</em>) – Array containing the minimum values for the descriptors.</p></li>
+<li><p><strong>settings_file_pth</strong> (<em>orm.Str</em>) – Path to the ATL settings file in the .toml format.</p></li>
+<li><p><strong>Outputs</strong></p></li>
+<li><p><strong>-------</strong></p></li>
+<li><p><strong>extrapolating_structures</strong> (<em>orm.SinglefileData</em>) – File containing all structures that were found to be extrapolating.
+Uses the extxyz format.</p></li>
+<li><p><strong>Codes</strong> (<em>Exit</em>)</p></li>
+<li><p><strong>----------</strong></p></li>
+<li><p><strong>420</strong> (<em>ERROR_INVALID_OUTPUT</em>) – Structure could not be processed.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.safeguard.safeguard_utils.RunMDSafeguardCalculation.define">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">define</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.safeguard.safeguard_utils.RunMDSafeguardCalculation.define" title="Link to this definition"></a></dt>
+<dd><p>Define the input and output specifications for the CalcJob.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.safeguard.safeguard_utils.RunMDSafeguardCalculation.prepare_for_submission">
+<span class="sig-name descname"><span class="pre">prepare_for_submission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.safeguard.safeguard_utils.RunMDSafeguardCalculation.prepare_for_submission" title="Link to this definition"></a></dt>
+<dd><p>Write the input files that are required for the code to run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>folder</strong> – an <cite>Folder</cite> to temporarily write files on disk</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><cite>CalcInfo</cite> instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.safeguard.safeguard_utils.RunMDSafeguardCalculationParser">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.safeguard.safeguard_utils.</span></span><span class="sig-name descname"><span class="pre">RunMDSafeguardCalculationParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CalcJobNode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.safeguard.safeguard_utils.RunMDSafeguardCalculationParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Parser</span></code></p>
+<p>Parser for the retrieved files from a safeguard calculation job.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.safeguard.safeguard_utils.RunMDSafeguardCalculationParser.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.safeguard.safeguard_utils.RunMDSafeguardCalculationParser.parse" title="Link to this definition"></a></dt>
+<dd><p>Parse the retrieved files of the calculation job.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-atlas.active_learning.safeguard">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-atlas.active_learning.safeguard" title="Link to this heading"></a></h2>
+<p>Stability checking before active learning early stopping.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="atlas.active_learning.extrapolation.html" class="btn btn-neutral float-left" title="atlas.active_learning.extrapolation package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="atlas.benchmarks.html" class="btn btn-neutral float-right" title="atlas.benchmarks package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='atlas.active_learning.safeguard.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

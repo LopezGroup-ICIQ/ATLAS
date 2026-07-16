@@ -1,0 +1,1078 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>atlas.core.gui.widgets package &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="atlas.core.gui.process package" href="atlas.core.gui.process.html" />
+    <link rel="prev" title="atlas.core.gui.pages package" href="atlas.core.gui.pages.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">Input specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package Information</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="atlas.html">atlas package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="atlas.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html">atlas.active_learning package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.html">atlas.benchmarks package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="atlas.core.html">atlas.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.training.html">atlas.training package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html">atlas.workflows package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.html#module-atlas">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">atlas</a></li>
+          <li class="breadcrumb-item"><a href="atlas.html">atlas package</a></li>
+          <li class="breadcrumb-item"><a href="atlas.core.html">atlas.core package</a></li>
+          <li class="breadcrumb-item"><a href="atlas.core.gui.html">atlas.core.gui package</a></li>
+      <li class="breadcrumb-item active">atlas.core.gui.widgets package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/atlas.core.gui.widgets.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="atlas-core-gui-widgets-package">
+<h1>atlas.core.gui.widgets package<a class="headerlink" href="#atlas-core-gui-widgets-package" title="Link to this heading"></a></h1>
+<p>Reusable Qt widgets for the ATLAS GUI.</p>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.core.gui.widgets.aiida_suggestions">
+<span id="atlas-core-gui-widgets-aiida-suggestions-module"></span><h2>atlas.core.gui.widgets.aiida_suggestions module<a class="headerlink" href="#module-atlas.core.gui.widgets.aiida_suggestions" title="Link to this heading"></a></h2>
+<p>Fetch AiiDA entity lists for schema-form dropdown suggestions.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.aiida_suggestions.fetch_aiida_suggestions">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.aiida_suggestions.</span></span><span class="sig-name descname"><span class="pre">fetch_aiida_suggestions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.aiida_suggestions.fetch_aiida_suggestions" title="Link to this definition"></a></dt>
+<dd><p>Return cached suggestions, or fetch synchronously if cache is stale.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.aiida_suggestions.fetch_aiida_suggestions_async">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.aiida_suggestions.</span></span><span class="sig-name descname"><span class="pre">fetch_aiida_suggestions_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.aiida_suggestions.fetch_aiida_suggestions_async" title="Link to this definition"></a></dt>
+<dd><p>Populate suggestions via <em>callback</em>, without blocking the UI.</p>
+<p>If the cache is warm the callback fires immediately (synchronously).
+Otherwise a background thread is started; the callback fires on the
+main thread when the query completes.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.aiida_suggestions.invalidate_aiida_suggestions_cache">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.aiida_suggestions.</span></span><span class="sig-name descname"><span class="pre">invalidate_aiida_suggestions_cache</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.aiida_suggestions.invalidate_aiida_suggestions_cache" title="Link to this definition"></a></dt>
+<dd><p>Reset the cache so the next call re-queries AiiDA.</p>
+</dd></dl>
+
+</section>
+<section id="atlas-core-gui-widgets-al-monitor-panel-module">
+<h2>atlas.core.gui.widgets.al_monitor_panel module<a class="headerlink" href="#atlas-core-gui-widgets-al-monitor-panel-module" title="Link to this heading"></a></h2>
+</section>
+<section id="atlas-core-gui-widgets-al-outputs-panel-module">
+<h2>atlas.core.gui.widgets.al_outputs_panel module<a class="headerlink" href="#atlas-core-gui-widgets-al-outputs-panel-module" title="Link to this heading"></a></h2>
+</section>
+<section id="atlas-core-gui-widgets-boundary-panel-module">
+<h2>atlas.core.gui.widgets.boundary_panel module<a class="headerlink" href="#atlas-core-gui-widgets-boundary-panel-module" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.core.gui.widgets.collapsible_log_panel">
+<span id="atlas-core-gui-widgets-collapsible-log-panel-module"></span><h2>atlas.core.gui.widgets.collapsible_log_panel module<a class="headerlink" href="#module-atlas.core.gui.widgets.collapsible_log_panel" title="Link to this heading"></a></h2>
+<p>Foldable log panel with a toggle bar, unread badge, and smooth animation.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.collapsible_log_panel.</span></span><span class="sig-name descname"><span class="pre">CollapsibleLogPanel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>Log panel that collapses to a toggle bar with an unread-line badge.</p>
+<section id="signals">
+<h3>Signals<a class="headerlink" href="#signals" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>toggled<span class="classifier">Signal(bool)</span></dt><dd><p>Emitted on expand/collapse with the new <code class="docutils literal notranslate"><span class="pre">expanded</span></code> state.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.append">
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.append" title="Link to this definition"></a></dt>
+<dd><p>Append <em>text</em> to the log viewer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.clear" title="Link to this definition"></a></dt>
+<dd><p>Clear the log viewer and reset the unread count.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.eventFilter">
+<span class="sig-name descname"><span class="pre">eventFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.eventFilter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.set_theme">
+<span class="sig-name descname"><span class="pre">set_theme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fg_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.set_theme" title="Link to this definition"></a></dt>
+<dd><p>Refresh the chevron icon for the current theme foreground colour.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.toggle">
+<span class="sig-name descname"><span class="pre">toggle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.toggle" title="Link to this definition"></a></dt>
+<dd><p>Toggle the expanded/collapsed state with animation.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.toggled">
+<span class="sig-name descname"><span class="pre">toggled</span></span><a class="headerlink" href="#atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.toggled" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.unread_count_changed">
+<span class="sig-name descname"><span class="pre">unread_count_changed</span></span><a class="headerlink" href="#atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.unread_count_changed" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.viewer">
+<span class="sig-name descname"><span class="pre">viewer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">PySide6.QtWidgets.QTextEdit</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.viewer" title="Link to this definition"></a></dt>
+<dd><p>Return the internal <code class="docutils literal notranslate"><span class="pre">QTextEdit</span></code>.</p>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.widgets.config_panel">
+<span id="atlas-core-gui-widgets-config-panel-module"></span><h2>atlas.core.gui.widgets.config_panel module<a class="headerlink" href="#module-atlas.core.gui.widgets.config_panel" title="Link to this heading"></a></h2>
+<p>Reusable TOML configuration editor for one schema section.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ConfigPanel</span></code> wraps one or more <cite>SchemaForm</cite> instances, a description
+viewer, a live <cite>TomlEditor</cite>, and the standard Load / Save / Validate
+buttons.  It is locked to a single top-level schema section (e.g.
+<code class="docutils literal notranslate"><span class="pre">database_generation</span></code>) and is the building block of every workflow
+page’s “Config” tab.</p>
+<p>When <em>sub_section_tabs</em> is provided, the single long form is split into
+multiple inner tabs, each rendering only the specified sub-keys of the
+schema section.  Data collection and population transparently span all
+tabs so the resulting TOML is identical to the single-form case.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.config_panel.</span></span><span class="sig-name descname"><span class="pre">ConfigPanel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>Editor for one section of the ATLAS configuration schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>schema_data</strong> – The full parsed <code class="docutils literal notranslate"><span class="pre">config_schema.yaml</span></code> dictionary.</p></li>
+<li><p><strong>section_key</strong> – Which top-level schema section this panel edits.</p></li>
+<li><p><strong>sub_section_tabs</strong> – Optional list of <code class="docutils literal notranslate"><span class="pre">(tab_label,</span> <span class="pre">[sub_key,</span> <span class="pre">…])</span></code> tuples.  When
+given, the single form is replaced by an inner <code class="docutils literal notranslate"><span class="pre">QTabWidget</span></code>
+where each tab renders only the listed sub-keys.</p></li>
+<li><p><strong>application_font</strong> – Font passed to the embedded schema form.</p></li>
+<li><p><strong>configurations.</strong> (<em>Supports drag-and-drop</em><em> of </em><em>.toml files to import</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel.add_action_button">
+<span class="sig-name descname"><span class="pre">add_action_button</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">button</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PySide6.QtWidgets.QPushButton</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel.add_action_button" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel.collect_data">
+<span class="sig-name descname"><span class="pre">collect_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel.collect_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel.current_toml">
+<span class="sig-name descname"><span class="pre">current_toml</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel.current_toml" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel.dragEnterEvent">
+<span class="sig-name descname"><span class="pre">dragEnterEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel.dragEnterEvent" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel.dropEvent">
+<span class="sig-name descname"><span class="pre">dropEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel.dropEvent" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel.focus_field">
+<span class="sig-name descname"><span class="pre">focus_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel.focus_field" title="Link to this definition"></a></dt>
+<dd><p>Switch to the tab containing <em>field_key</em> and scroll/focus it.</p>
+<p><em>field_key</em> is a dotted schema path component (e.g. <code class="docutils literal notranslate"><span class="pre">code_string</span></code>
+or <code class="docutils literal notranslate"><span class="pre">queue.code_string</span></code>).  Returns True if the field was found.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel.load_data">
+<span class="sig-name descname"><span class="pre">load_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel.load_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel.load_toml_from_dialog">
+<span class="sig-name descname"><span class="pre">load_toml_from_dialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel.load_toml_from_dialog" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel.parsed_config">
+<span class="sig-name descname"><span class="pre">parsed_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel.parsed_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel.populate_suggestions">
+<span class="sig-name descname"><span class="pre">populate_suggestions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">suggestions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel.populate_suggestions" title="Link to this definition"></a></dt>
+<dd><p>Forward AiiDA suggestions to every sub-form’s editable combos.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel.refresh_toml_preview">
+<span class="sig-name descname"><span class="pre">refresh_toml_preview</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel.refresh_toml_preview" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel.save_to_file">
+<span class="sig-name descname"><span class="pre">save_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel.save_to_file" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel.save_to_project">
+<span class="sig-name descname"><span class="pre">save_to_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel.save_to_project" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel.section_key">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">section_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel.section_key" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel.set_app_theme">
+<span class="sig-name descname"><span class="pre">set_app_theme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel.set_app_theme" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel.set_suggestions_loading">
+<span class="sig-name descname"><span class="pre">set_suggestions_loading</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel.set_suggestions_loading" title="Link to this definition"></a></dt>
+<dd><p>Show a loading placeholder on every sub-form’s suggestion combos.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel.set_theme">
+<span class="sig-name descname"><span class="pre">set_theme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel.set_theme" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel.set_workflow_steps">
+<span class="sig-name descname"><span class="pre">set_workflow_steps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#atlas.core.gui.widgets.workflow_view.WorkflowStep" title="atlas.core.gui.widgets.workflow_view.WorkflowStep"><span class="pre">WorkflowStep</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_phases</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_estimate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel.set_workflow_steps" title="Link to this definition"></a></dt>
+<dd><p>Populate the workflow diagram and make it the default view.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel.validate_current">
+<span class="sig-name descname"><span class="pre">validate_current</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel.validate_current" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel.validated">
+<span class="sig-name descname"><span class="pre">validated</span></span><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel.validated" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.config_panel.ConfigPanel.workflow_step_clicked">
+<span class="sig-name descname"><span class="pre">workflow_step_clicked</span></span><a class="headerlink" href="#atlas.core.gui.widgets.config_panel.ConfigPanel.workflow_step_clicked" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.widgets.db_manage_panel">
+<span id="atlas-core-gui-widgets-db-manage-panel-module"></span><h2>atlas.core.gui.widgets.db_manage_panel module<a class="headerlink" href="#module-atlas.core.gui.widgets.db_manage_panel" title="Link to this heading"></a></h2>
+<p>Database management panel, delete and export the initial database.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.db_manage_panel.DbManagePanel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.db_manage_panel.</span></span><span class="sig-name descname"><span class="pre">DbManagePanel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.db_manage_panel.DbManagePanel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>Delete or export the project’s initial database.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.db_manage_panel.DbManagePanel.refresh">
+<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.db_manage_panel.DbManagePanel.refresh" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="atlas-core-gui-widgets-dft-outputs-panel-module">
+<h2>atlas.core.gui.widgets.dft_outputs_panel module<a class="headerlink" href="#atlas-core-gui-widgets-dft-outputs-panel-module" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.core.gui.widgets.dict_widgets">
+<span id="atlas-core-gui-widgets-dict-widgets-module"></span><h2>atlas.core.gui.widgets.dict_widgets module<a class="headerlink" href="#module-atlas.core.gui.widgets.dict_widgets" title="Link to this heading"></a></h2>
+<p>Custom widgets for dict-type schema fields (kspacing, INCAR).</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.dict_widgets.IncarWidget">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.dict_widgets.</span></span><span class="sig-name descname"><span class="pre">IncarWidget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.dict_widgets.IncarWidget" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>Editor for INCAR dict fields with key-value table and INCAR import.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.dict_widgets.IncarWidget.get_value">
+<span class="sig-name descname"><span class="pre">get_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.dict_widgets.IncarWidget.get_value" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.dict_widgets.IncarWidget.set_value">
+<span class="sig-name descname"><span class="pre">set_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.dict_widgets.IncarWidget.set_value" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.dict_widgets.KspacingWidget">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.dict_widgets.</span></span><span class="sig-name descname"><span class="pre">KspacingWidget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.dict_widgets.KspacingWidget" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>Editor for kspacing dict: ATL_DEFAULT float + per-phase overrides.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.dict_widgets.KspacingWidget.get_value">
+<span class="sig-name descname"><span class="pre">get_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.dict_widgets.KspacingWidget.get_value" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.dict_widgets.KspacingWidget.set_value">
+<span class="sig-name descname"><span class="pre">set_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.dict_widgets.KspacingWidget.set_value" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="atlas-core-gui-widgets-error-analysis-panel-module">
+<h2>atlas.core.gui.widgets.error_analysis_panel module<a class="headerlink" href="#atlas-core-gui-widgets-error-analysis-panel-module" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.core.gui.widgets.latent_space_gallery">
+<span id="atlas-core-gui-widgets-latent-space-gallery-module"></span><h2>atlas.core.gui.widgets.latent_space_gallery module<a class="headerlink" href="#module-atlas.core.gui.widgets.latent_space_gallery" title="Link to this heading"></a></h2>
+<p>Latent space gallery, browse saved plots from AL iterations.</p>
+<p>Scans the project directory for latent space plot images generated
+during active learning and displays them in a navigable gallery.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.latent_space_gallery.LatentSpaceGallery">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.latent_space_gallery.</span></span><span class="sig-name descname"><span class="pre">LatentSpaceGallery</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.latent_space_gallery.LatentSpaceGallery" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>Browse latent space images from AL iterations.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.latent_space_gallery.LatentSpaceGallery.refresh">
+<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.latent_space_gallery.LatentSpaceGallery.refresh" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.widgets.periodic_table_widget">
+<span id="atlas-core-gui-widgets-periodic-table-widget-module"></span><h2>atlas.core.gui.widgets.periodic_table_widget module<a class="headerlink" href="#module-atlas.core.gui.widgets.periodic_table_widget" title="Link to this heading"></a></h2>
+<p>Periodic table element picker with pill display.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.periodic_table_widget.ElementPickerField">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.periodic_table_widget.</span></span><span class="sig-name descname"><span class="pre">ElementPickerField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.periodic_table_widget.ElementPickerField" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>Combines an element pill bar with a periodic table picker button.</p>
+<p>Drop-in replacement for a QLineEdit that edits a comma-separated
+element list.  Emits <code class="docutils literal notranslate"><span class="pre">elements_changed</span></code> whenever the selection
+changes.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.periodic_table_widget.ElementPickerField.elements">
+<span class="sig-name descname"><span class="pre">elements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.periodic_table_widget.ElementPickerField.elements" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.periodic_table_widget.ElementPickerField.elements_changed">
+<span class="sig-name descname"><span class="pre">elements_changed</span></span><a class="headerlink" href="#atlas.core.gui.widgets.periodic_table_widget.ElementPickerField.elements_changed" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.periodic_table_widget.ElementPickerField.setText">
+<span class="sig-name descname"><span class="pre">setText</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.periodic_table_widget.ElementPickerField.setText" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.periodic_table_widget.ElementPickerField.set_elements">
+<span class="sig-name descname"><span class="pre">set_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.periodic_table_widget.ElementPickerField.set_elements" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.periodic_table_widget.ElementPickerField.text">
+<span class="sig-name descname"><span class="pre">text</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.periodic_table_widget.ElementPickerField.text" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.periodic_table_widget.PeriodicTableDialog">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.periodic_table_widget.</span></span><span class="sig-name descname"><span class="pre">PeriodicTableDialog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.periodic_table_widget.PeriodicTableDialog" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<p>Dialog showing a periodic table for multi-element selection.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.periodic_table_widget.PeriodicTableDialog.selected_elements">
+<span class="sig-name descname"><span class="pre">selected_elements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.periodic_table_widget.PeriodicTableDialog.selected_elements" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.widgets.phase_card_panel">
+<span id="atlas-core-gui-widgets-phase-card-panel-module"></span><h2>atlas.core.gui.widgets.phase_card_panel module<a class="headerlink" href="#module-atlas.core.gui.widgets.phase_card_panel" title="Link to this heading"></a></h2>
+<p>Card-based phase editor for the Phase Diagram config section.</p>
+<p>Instead of rendering each phase as a nested inline form, phases are
+displayed as compact summary cards in a flow grid.  Adding or editing a
+phase opens a dialog with all the fields.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.phase_card_panel.PhaseCardPanel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.phase_card_panel.</span></span><span class="sig-name descname"><span class="pre">PhaseCardPanel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.phase_card_panel.PhaseCardPanel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>Grid of phase summary cards with add / edit / remove actions.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.phase_card_panel.PhaseCardPanel.collect_data">
+<span class="sig-name descname"><span class="pre">collect_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.phase_card_panel.PhaseCardPanel.collect_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.phase_card_panel.PhaseCardPanel.phase_count">
+<span class="sig-name descname"><span class="pre">phase_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.phase_card_panel.PhaseCardPanel.phase_count" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.phase_card_panel.PhaseCardPanel.populate">
+<span class="sig-name descname"><span class="pre">populate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.phase_card_panel.PhaseCardPanel.populate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.phase_card_panel.PhaseEditDialog">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.phase_card_panel.</span></span><span class="sig-name descname"><span class="pre">PhaseEditDialog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.phase_card_panel.PhaseEditDialog" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<p>Modal dialog with all fields for one phase.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.phase_card_panel.PhaseEditDialog.collected_data">
+<span class="sig-name descname"><span class="pre">collected_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.phase_card_panel.PhaseEditDialog.collected_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.widgets.preflight_panel">
+<span id="atlas-core-gui-widgets-preflight-panel-module"></span><h2>atlas.core.gui.widgets.preflight_panel module<a class="headerlink" href="#module-atlas.core.gui.widgets.preflight_panel" title="Link to this heading"></a></h2>
+<p>Pre-flight check panel for workflow pages.</p>
+<p>Shows a compact list of readiness checks (AiiDA profile, required config
+fields, etc.) that update live as the user edits the configuration.
+Each check is a single row with a pass/fail/skipped icon and a description.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.preflight_panel.Check">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.preflight_panel.</span></span><span class="sig-name descname"><span class="pre">Check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requires_aiida</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.preflight_panel.Check" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A single pre-flight check.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.preflight_panel.Check.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.widgets.preflight_panel.Check.description" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.preflight_panel.Check.field_key">
+<span class="sig-name descname"><span class="pre">field_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#atlas.core.gui.widgets.preflight_panel.Check.field_key" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.preflight_panel.Check.label">
+<span class="sig-name descname"><span class="pre">label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.widgets.preflight_panel.Check.label" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.preflight_panel.Check.requires_aiida">
+<span class="sig-name descname"><span class="pre">requires_aiida</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#atlas.core.gui.widgets.preflight_panel.Check.requires_aiida" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.preflight_panel.Check.run">
+<span class="sig-name descname"><span class="pre">run</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#atlas.core.gui.widgets.preflight_panel.Check.run" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.preflight_panel.PreflightPanel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.preflight_panel.</span></span><span class="sig-name descname"><span class="pre">PreflightPanel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.preflight_panel.PreflightPanel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QFrame</span></code></p>
+<p>Collapsible pre-flight checklist.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>title</strong> – Header text (e.g. “Pre-flight checks”).</p></li>
+<li><p><strong>checks</strong> – List of <code class="docutils literal notranslate"><span class="pre">Check</span></code> objects.  Each <code class="docutils literal notranslate"><span class="pre">run</span></code> callable returns <code class="docutils literal notranslate"><span class="pre">None</span></code>
+on success or an error string on failure.  Checks with
+<code class="docutils literal notranslate"><span class="pre">requires_aiida=True</span></code> are skipped (shown greyed) when the first
+check (AiiDA profile) fails.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.preflight_panel.PreflightPanel.failing_summary">
+<span class="sig-name descname"><span class="pre">failing_summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.preflight_panel.PreflightPanel.failing_summary" title="Link to this definition"></a></dt>
+<dd><p>Return a human-readable summary of failing checks, or None.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.preflight_panel.PreflightPanel.has_errors">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_errors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#atlas.core.gui.widgets.preflight_panel.PreflightPanel.has_errors" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.preflight_panel.PreflightPanel.run_checks">
+<span class="sig-name descname"><span class="pre">run_checks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.preflight_panel.PreflightPanel.run_checks" title="Link to this definition"></a></dt>
+<dd><p>Execute all checks and update the UI.  Returns error strings.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.widgets.prereq_banner">
+<span id="atlas-core-gui-widgets-prereq-banner-module"></span><h2>atlas.core.gui.widgets.prereq_banner module<a class="headerlink" href="#module-atlas.core.gui.widgets.prereq_banner" title="Link to this heading"></a></h2>
+<p>Just-in-time prerequisite / success banners.</p>
+<p><code class="docutils literal notranslate"><span class="pre">PrereqBanner</span></code> (amber) is shown when an upstream pipeline stage hasn’t
+produced what the current page needs.</p>
+<p><code class="docutils literal notranslate"><span class="pre">SuccessBanner</span></code> (green) is shown after a stage completes, it offers
+navigation buttons to the outputs tab or the next workflow stage, and a
+dismiss button (x) to reclaim screen space.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.prereq_banner.PrereqBanner">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.prereq_banner.</span></span><span class="sig-name descname"><span class="pre">PrereqBanner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.prereq_banner.PrereqBanner" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QFrame</span></code></p>
+<p>Amber notice + action button shown above a workflow tab area.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.prereq_banner.PrereqBanner.restyle">
+<span class="sig-name descname"><span class="pre">restyle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.prereq_banner.PrereqBanner.restyle" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.prereq_banner.PrereqBanner.set_message">
+<span class="sig-name descname"><span class="pre">set_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.prereq_banner.PrereqBanner.set_message" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.prereq_banner.SuccessBanner">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.prereq_banner.</span></span><span class="sig-name descname"><span class="pre">SuccessBanner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.prereq_banner.SuccessBanner" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QFrame</span></code></p>
+<p>Green banner shown after a successful run, with dismiss button.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.prereq_banner.SuccessBanner.restyle">
+<span class="sig-name descname"><span class="pre">restyle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.prereq_banner.SuccessBanner.restyle" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.prereq_banner.SuccessBanner.set_message">
+<span class="sig-name descname"><span class="pre">set_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.prereq_banner.SuccessBanner.set_message" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.widgets.schema_form">
+<span id="atlas-core-gui-widgets-schema-form-module"></span><h2>atlas.core.gui.widgets.schema_form module<a class="headerlink" href="#module-atlas.core.gui.widgets.schema_form" title="Link to this heading"></a></h2>
+<p>Schema-driven Qt form widget for the ATLAS GUI.</p>
+<p><cite>SchemaForm</cite> reads ATLAS’ <cite>config_schema.yaml</cite> and builds a hierarchy of
+<cite>QFormLayout</cite>-based widgets for one selected top-level section
+(<cite>database_generation</cite>, <cite>active_learning</cite>, …). It owns the section
+selector, the scrollable form area, and the per-field schema metadata used
+by the coordinator to populate the description and TOML highlight panels.</p>
+<section id="id1">
+<h3>Signals<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<dl>
+<dt>schema_loaded(sections)</dt><dd><p>Emitted after <cite>load_schema</cite> parses a YAML file successfully.</p>
+</dd>
+<dt>section_changed(section_key)</dt><dd><p>Emitted when the user (or code) switches the active top-level section.</p>
+</dd>
+<dt>data_changed()</dt><dd><p>Emitted whenever any field’s value changes, including dynamic add/remove.</p>
+</dd>
+<dt>field_focused(description, value_type, schema_path, schema_key,</dt><dd><blockquote>
+<div><p>mandatory, default_value)</p>
+</div></blockquote>
+<p>Emitted when a form widget gains focus; consumers can update a description
+panel or highlight the corresponding TOML line.</p>
+</dd>
+</dl>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.schema_form.SchemaForm">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.schema_form.</span></span><span class="sig-name descname"><span class="pre">SchemaForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.schema_form.SchemaForm" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>Schema-driven form builder for one TOML configuration section.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.schema_form.SchemaForm.add_dynamic_item">
+<span class="sig-name descname"><span class="pre">add_dynamic_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.schema_form.SchemaForm.add_dynamic_item" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.schema_form.SchemaForm.available_sections">
+<span class="sig-name descname"><span class="pre">available_sections</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.schema_form.SchemaForm.available_sections" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.schema_form.SchemaForm.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.schema_form.SchemaForm.clear" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.schema_form.SchemaForm.collect_data">
+<span class="sig-name descname"><span class="pre">collect_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.schema_form.SchemaForm.collect_data" title="Link to this definition"></a></dt>
+<dd><p>Walk the form and return a nested dict of current values.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.schema_form.SchemaForm.current_section">
+<span class="sig-name descname"><span class="pre">current_section</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.schema_form.SchemaForm.current_section" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.schema_form.SchemaForm.eventFilter">
+<span class="sig-name descname"><span class="pre">eventFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.schema_form.SchemaForm.eventFilter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.schema_form.SchemaForm.field_focused">
+<span class="sig-name descname"><span class="pre">field_focused</span></span><a class="headerlink" href="#atlas.core.gui.widgets.schema_form.SchemaForm.field_focused" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.schema_form.SchemaForm.iter_leaf_widgets">
+<span class="sig-name descname"><span class="pre">iter_leaf_widgets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">PySide6.QtWidgets.QWidget</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.schema_form.SchemaForm.iter_leaf_widgets" title="Link to this definition"></a></dt>
+<dd><p>Yield every leaf input widget in the active section, in form order.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.schema_form.SchemaForm.load_schema">
+<span class="sig-name descname"><span class="pre">load_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.schema_form.SchemaForm.load_schema" title="Link to this definition"></a></dt>
+<dd><p>Parse the YAML schema at <code class="docutils literal notranslate"><span class="pre">filepath</span></code>. Returns True on success.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.schema_form.SchemaForm.populate_from_data">
+<span class="sig-name descname"><span class="pre">populate_from_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.schema_form.SchemaForm.populate_from_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.schema_form.SchemaForm.populate_suggestions">
+<span class="sig-name descname"><span class="pre">populate_suggestions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">suggestions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.schema_form.SchemaForm.populate_suggestions" title="Link to this definition"></a></dt>
+<dd><p>Fill editable combo boxes tagged with a <code class="docutils literal notranslate"><span class="pre">suggestions</span></code> key.</p>
+<p><em>suggestions</em> maps suggestion-key names (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;aiida_codes&quot;</span></code>)
+to a list of strings.  Every <code class="docutils literal notranslate"><span class="pre">QComboBox</span></code> whose
+<code class="docutils literal notranslate"><span class="pre">suggestions_key</span></code> property matches a key gets its items
+replaced while preserving the current user text.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.schema_form.SchemaForm.schema_loaded">
+<span class="sig-name descname"><span class="pre">schema_loaded</span></span><a class="headerlink" href="#atlas.core.gui.widgets.schema_form.SchemaForm.schema_loaded" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.schema_form.SchemaForm.section_changed">
+<span class="sig-name descname"><span class="pre">section_changed</span></span><a class="headerlink" href="#atlas.core.gui.widgets.schema_form.SchemaForm.section_changed" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.schema_form.SchemaForm.set_current_section">
+<span class="sig-name descname"><span class="pre">set_current_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.schema_form.SchemaForm.set_current_section" title="Link to this definition"></a></dt>
+<dd><p>Build the form for <code class="docutils literal notranslate"><span class="pre">key</span></code>.</p>
+<p>If <em>sub_keys</em> is given, only those top-level children of the
+section are rendered, useful for splitting a large section
+across multiple tabs.</p>
+<p>Emits <code class="docutils literal notranslate"><span class="pre">section_changed</span></code> and <code class="docutils literal notranslate"><span class="pre">data_changed</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.schema_form.SchemaForm.set_schema">
+<span class="sig-name descname"><span class="pre">set_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.schema_form.SchemaForm.set_schema" title="Link to this definition"></a></dt>
+<dd><p>Set the schema dict directly (e.g. when sharing across pages).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.schema_form.SchemaForm.set_suggestions_loading">
+<span class="sig-name descname"><span class="pre">set_suggestions_loading</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.schema_form.SchemaForm.set_suggestions_loading" title="Link to this definition"></a></dt>
+<dd><p>Show a ‘Loading…’ placeholder on suggestion combo boxes.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.widgets.setup_wizard">
+<span id="atlas-core-gui-widgets-setup-wizard-module"></span><h2>atlas.core.gui.widgets.setup_wizard module<a class="headerlink" href="#module-atlas.core.gui.widgets.setup_wizard" title="Link to this heading"></a></h2>
+<p>GUI setup wizard, mirrors atl_init_setup in a QWizard.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.setup_wizard.SetupStatusPanel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.setup_wizard.</span></span><span class="sig-name descname"><span class="pre">SetupStatusPanel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.setup_wizard.SetupStatusPanel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QGroupBox</span></code></p>
+<p>Compact panel showing current ATLAS setup status with a re-run button.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.setup_wizard.SetupStatusPanel.refresh">
+<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.setup_wizard.SetupStatusPanel.refresh" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.setup_wizard.SetupWizard">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.setup_wizard.</span></span><span class="sig-name descname"><span class="pre">SetupWizard</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.setup_wizard.SetupWizard" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWizard</span></code></p>
+<p>ATLAS setup wizard, GUI equivalent of <code class="docutils literal notranslate"><span class="pre">atl_init_setup</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.setup_wizard.check_setup_problems">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.setup_wizard.</span></span><span class="sig-name descname"><span class="pre">check_setup_problems</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.setup_wizard.check_setup_problems" title="Link to this definition"></a></dt>
+<dd><p>Return a list of human-readable setup issues (empty = all OK).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.setup_wizard.needs_first_run_wizard">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.setup_wizard.</span></span><span class="sig-name descname"><span class="pre">needs_first_run_wizard</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.setup_wizard.needs_first_run_wizard" title="Link to this definition"></a></dt>
+<dd><p>Return True if ATLAS has never been set up (no secrets.json).</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.widgets.side_panel">
+<span id="atlas-core-gui-widgets-side-panel-module"></span><h2>atlas.core.gui.widgets.side_panel module<a class="headerlink" href="#module-atlas.core.gui.widgets.side_panel" title="Link to this heading"></a></h2>
+<p>Blender-style switchable panel with a vertical icon strip.</p>
+<p><code class="docutils literal notranslate"><span class="pre">SidePanel</span></code> presents a narrow column of icon buttons on the left edge
+and a <code class="docutils literal notranslate"><span class="pre">QStackedWidget</span></code> on the right.  Clicking a button switches the
+visible content pane.  Each pane is registered via <code class="xref py py-meth docutils literal notranslate"><span class="pre">add_view()</span></code>.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.side_panel.SidePanel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.side_panel.</span></span><span class="sig-name descname"><span class="pre">SidePanel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.side_panel.SidePanel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>Switchable panel with vertical icon-button strip.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.side_panel.SidePanel.add_view">
+<span class="sig-name descname"><span class="pre">add_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">icon_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tooltip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">widget</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PySide6.QtWidgets.QWidget</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">visible</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.side_panel.SidePanel.add_view" title="Link to this definition"></a></dt>
+<dd><p>Register a content pane and return its index.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.side_panel.SidePanel.current_view">
+<span class="sig-name descname"><span class="pre">current_view</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.side_panel.SidePanel.current_view" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.side_panel.SidePanel.hide_view">
+<span class="sig-name descname"><span class="pre">hide_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.side_panel.SidePanel.hide_view" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.side_panel.SidePanel.set_current_view">
+<span class="sig-name descname"><span class="pre">set_current_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.side_panel.SidePanel.set_current_view" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.side_panel.SidePanel.set_theme">
+<span class="sig-name descname"><span class="pre">set_theme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.side_panel.SidePanel.set_theme" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.side_panel.SidePanel.showEvent">
+<span class="sig-name descname"><span class="pre">showEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.side_panel.SidePanel.showEvent" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.side_panel.SidePanel.show_view">
+<span class="sig-name descname"><span class="pre">show_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.side_panel.SidePanel.show_view" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.side_panel.SidePanel.view_changed">
+<span class="sig-name descname"><span class="pre">view_changed</span></span><a class="headerlink" href="#atlas.core.gui.widgets.side_panel.SidePanel.view_changed" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="atlas-core-gui-widgets-structure-viewer-module">
+<h2>atlas.core.gui.widgets.structure_viewer module<a class="headerlink" href="#atlas-core-gui-widgets-structure-viewer-module" title="Link to this heading"></a></h2>
+</section>
+<section id="atlas-core-gui-widgets-structures-panel-module">
+<h2>atlas.core.gui.widgets.structures_panel module<a class="headerlink" href="#atlas-core-gui-widgets-structures-panel-module" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.core.gui.widgets.toml_editor">
+<span id="atlas-core-gui-widgets-toml-editor-module"></span><h2>atlas.core.gui.widgets.toml_editor module<a class="headerlink" href="#module-atlas.core.gui.widgets.toml_editor" title="Link to this heading"></a></h2>
+<p>TOML preview editor and syntax highlighter for the ATLAS GUI.</p>
+<p><cite>TomlHighlighter</cite> colours TOML text using one of several palettes.
+<cite>TomlEditor</cite> wraps a <cite>QTextEdit</cite> with the highlighter, theme switching, and a
+schema-path-aware line highlight helper.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.toml_editor.TomlEditor">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.toml_editor.</span></span><span class="sig-name descname"><span class="pre">TomlEditor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.toml_editor.TomlEditor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>Editable TOML preview with syntax highlighting and path-based line highlight.</p>
+<section id="id2">
+<h3>Signals<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>user_edited</dt><dd><p>Emitted when the user (not programmatic code) modifies the text.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.toml_editor.TomlEditor.clear_highlight">
+<span class="sig-name descname"><span class="pre">clear_highlight</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.toml_editor.TomlEditor.clear_highlight" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.toml_editor.TomlEditor.highlight_path">
+<span class="sig-name descname"><span class="pre">highlight_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.toml_editor.TomlEditor.highlight_path" title="Link to this definition"></a></dt>
+<dd><p>Highlight the line whose dotted key matches <code class="docutils literal notranslate"><span class="pre">path</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">path</span></code> is a sequence of section/key segments (as stored in the YAML
+schema).  Missing entries are silently ignored.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.toml_editor.TomlEditor.plain_text">
+<span class="sig-name descname"><span class="pre">plain_text</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.toml_editor.TomlEditor.plain_text" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.toml_editor.TomlEditor.set_text">
+<span class="sig-name descname"><span class="pre">set_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.toml_editor.TomlEditor.set_text" title="Link to this definition"></a></dt>
+<dd><p>Set the editor contents without emitting <cite>user_edited</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.toml_editor.TomlEditor.set_theme">
+<span class="sig-name descname"><span class="pre">set_theme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.toml_editor.TomlEditor.set_theme" title="Link to this definition"></a></dt>
+<dd><p>Switch the syntax highlighting theme.</p>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.toml_editor.TomlHighlighter">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.toml_editor.</span></span><span class="sig-name descname"><span class="pre">TomlHighlighter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.toml_editor.TomlHighlighter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QSyntaxHighlighter</span></code></p>
+<p>Syntax highlighter for TOML with multiple colour themes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.toml_editor.TomlHighlighter.THEMES">
+<span class="sig-name descname"><span class="pre">THEMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'Catppuccin</span> <span class="pre">Latte':</span> <span class="pre">{'background':</span> <span class="pre">None,</span> <span class="pre">'comment':</span> <span class="pre">'#9ca0b0',</span> <span class="pre">'keyword':</span> <span class="pre">'#8839ef',</span> <span class="pre">'number':</span> <span class="pre">'#e64553',</span> <span class="pre">'section':</span> <span class="pre">'#40a02b',</span> <span class="pre">'string':</span> <span class="pre">'#d20f39'},</span> <span class="pre">'Default':</span> <span class="pre">{'background':</span> <span class="pre">None,</span> <span class="pre">'comment':</span> <span class="pre">'#808080',</span> <span class="pre">'keyword':</span> <span class="pre">'#0033cc',</span> <span class="pre">'number':</span> <span class="pre">'#c500c5',</span> <span class="pre">'section':</span> <span class="pre">'#107c10',</span> <span class="pre">'string':</span> <span class="pre">'#A31515'},</span> <span class="pre">'Gruvbox</span> <span class="pre">Light':</span> <span class="pre">{'background':</span> <span class="pre">None,</span> <span class="pre">'comment':</span> <span class="pre">'#928374',</span> <span class="pre">'keyword':</span> <span class="pre">'#427b58',</span> <span class="pre">'number':</span> <span class="pre">'#8f3f71',</span> <span class="pre">'section':</span> <span class="pre">'#79740e',</span> <span class="pre">'string':</span> <span class="pre">'#9d0006'},</span> <span class="pre">'Solarized</span> <span class="pre">Light':</span> <span class="pre">{'background':</span> <span class="pre">'#fdf6e3',</span> <span class="pre">'comment':</span> <span class="pre">'#93a1a1',</span> <span class="pre">'keyword':</span> <span class="pre">'#d33682',</span> <span class="pre">'number':</span> <span class="pre">'#cb4b16',</span> <span class="pre">'section':</span> <span class="pre">'#859900',</span> <span class="pre">'string':</span> <span class="pre">'#dc322f'}}</span></em><a class="headerlink" href="#atlas.core.gui.widgets.toml_editor.TomlHighlighter.THEMES" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.toml_editor.TomlHighlighter.highlightBlock">
+<span class="sig-name descname"><span class="pre">highlightBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.toml_editor.TomlHighlighter.highlightBlock" title="Link to this definition"></a></dt>
+<dd><p>Apply syntax highlighting to the given block of text.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="atlas-core-gui-widgets-training-report-panel-module">
+<h2>atlas.core.gui.widgets.training_report_panel module<a class="headerlink" href="#atlas-core-gui-widgets-training-report-panel-module" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.core.gui.widgets.validation_dialog">
+<span id="atlas-core-gui-widgets-validation-dialog-module"></span><h2>atlas.core.gui.widgets.validation_dialog module<a class="headerlink" href="#module-atlas.core.gui.widgets.validation_dialog" title="Link to this heading"></a></h2>
+<p>Validation error dialog with clickable field links.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.validation_dialog.ValidationDialog">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.validation_dialog.</span></span><span class="sig-name descname"><span class="pre">ValidationDialog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.validation_dialog.ValidationDialog" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<p>Dialog to display validation errors with clickable links to fields.</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.widgets.workflow_view">
+<span id="atlas-core-gui-widgets-workflow-view-module"></span><h2>atlas.core.gui.widgets.workflow_view module<a class="headerlink" href="#module-atlas.core.gui.widgets.workflow_view" title="Link to this heading"></a></h2>
+<p>Interactive workflow diagram for ATLAS pipeline visualisation.</p>
+<p><code class="docutils literal notranslate"><span class="pre">WorkflowView</span></code> renders a top-down flowchart of pipeline steps.  Each
+step box shows its name, an optional structure-count estimate, and is
+coloured by category.  Clicking a step emits the <code class="docutils literal notranslate"><span class="pre">step_clicked</span></code> signal so
+the host can navigate to the relevant configuration fields.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.workflow_view.WorkflowStep">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.workflow_view.</span></span><span class="sig-name descname"><span class="pre">WorkflowStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimated_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_active</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'generation'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_filter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.workflow_view.WorkflowStep" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>One step in the pipeline diagram.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.workflow_view.WorkflowStep.category">
+<span class="sig-name descname"><span class="pre">category</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'generation'</span></em><a class="headerlink" href="#atlas.core.gui.widgets.workflow_view.WorkflowStep.category" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.workflow_view.WorkflowStep.config_key">
+<span class="sig-name descname"><span class="pre">config_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#atlas.core.gui.widgets.workflow_view.WorkflowStep.config_key" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.workflow_view.WorkflowStep.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#atlas.core.gui.widgets.workflow_view.WorkflowStep.description" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.workflow_view.WorkflowStep.estimated_count">
+<span class="sig-name descname"><span class="pre">estimated_count</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#atlas.core.gui.widgets.workflow_view.WorkflowStep.estimated_count" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.workflow_view.WorkflowStep.group">
+<span class="sig-name descname"><span class="pre">group</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#atlas.core.gui.widgets.workflow_view.WorkflowStep.group" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.workflow_view.WorkflowStep.is_active">
+<span class="sig-name descname"><span class="pre">is_active</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#atlas.core.gui.widgets.workflow_view.WorkflowStep.is_active" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.workflow_view.WorkflowStep.is_filter">
+<span class="sig-name descname"><span class="pre">is_filter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#atlas.core.gui.widgets.workflow_view.WorkflowStep.is_filter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.workflow_view.WorkflowStep.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.widgets.workflow_view.WorkflowStep.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.workflow_view.WorkflowView">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.widgets.workflow_view.</span></span><span class="sig-name descname"><span class="pre">WorkflowView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.widgets.workflow_view.WorkflowView" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>Scrollable workflow diagram.</p>
+<p>Wraps <code class="xref py py-class docutils literal notranslate"><span class="pre">_WorkflowCanvas</span></code> inside a <code class="docutils literal notranslate"><span class="pre">QScrollArea</span></code> and exposes
+a convenience API for setting step data and receiving click signals.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.workflow_view.WorkflowView.set_steps">
+<span class="sig-name descname"><span class="pre">set_steps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#atlas.core.gui.widgets.workflow_view.WorkflowStep" title="atlas.core.gui.widgets.workflow_view.WorkflowStep"><span class="pre">WorkflowStep</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_phases</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_estimate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.workflow_view.WorkflowView.set_steps" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.workflow_view.WorkflowView.set_theme">
+<span class="sig-name descname"><span class="pre">set_theme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.widgets.workflow_view.WorkflowView.set_theme" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.widgets.workflow_view.WorkflowView.step_clicked">
+<span class="sig-name descname"><span class="pre">step_clicked</span></span><a class="headerlink" href="#atlas.core.gui.widgets.workflow_view.WorkflowView.step_clicked" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.widgets">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-atlas.core.gui.widgets" title="Link to this heading"></a></h2>
+<p>Reusable Qt widgets for the ATLAS GUI.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="atlas.core.gui.pages.html" class="btn btn-neutral float-left" title="atlas.core.gui.pages package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="atlas.core.gui.process.html" class="btn btn-neutral float-right" title="atlas.core.gui.process package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='atlas.core.gui.widgets.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

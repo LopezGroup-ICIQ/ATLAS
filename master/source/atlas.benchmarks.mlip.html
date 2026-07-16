@@ -1,0 +1,648 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>atlas.benchmarks.mlip package &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="atlas.core package" href="atlas.core.html" />
+    <link rel="prev" title="atlas.benchmarks.dft package" href="atlas.benchmarks.dft.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">Input specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package Information</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="atlas.html">atlas package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="atlas.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html">atlas.active_learning package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="atlas.benchmarks.html">atlas.benchmarks package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html">atlas.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.training.html">atlas.training package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html">atlas.workflows package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.html#module-atlas">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">atlas</a></li>
+          <li class="breadcrumb-item"><a href="atlas.html">atlas package</a></li>
+          <li class="breadcrumb-item"><a href="atlas.benchmarks.html">atlas.benchmarks package</a></li>
+      <li class="breadcrumb-item active">atlas.benchmarks.mlip package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/atlas.benchmarks.mlip.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="atlas-benchmarks-mlip-package">
+<h1>atlas.benchmarks.mlip package<a class="headerlink" href="#atlas-benchmarks-mlip-package" title="Link to this heading"></a></h1>
+<p>MLIP benchmark utilities for evaluating model performance.</p>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.benchmarks.mlip.mlip_benchmark_utils">
+<span id="atlas-benchmarks-mlip-mlip-benchmark-utils-module"></span><h2>atlas.benchmarks.mlip.mlip_benchmark_utils module<a class="headerlink" href="#module-atlas.benchmarks.mlip.mlip_benchmark_utils" title="Link to this heading"></a></h2>
+<p>General utilities for the MLIP benchmark suite in ATLForge.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.FoundationModelPath">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">FoundationModelPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">foundation_model_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.FoundationModelPath" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to represent foundation models in a way compatible with file-based models.</p>
+<p>This allows foundation models to be used alongside file-based models
+in the benchmark system.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.RichUIManager">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">RichUIManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmarks_to_run</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.RichUIManager" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manages the Rich CLI interface for the benchmark suite.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.RichUIManager.complete_benchmark">
+<span class="sig-name descname"><span class="pre">complete_benchmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.RichUIManager.complete_benchmark" title="Link to this definition"></a></dt>
+<dd><p>Mark a benchmark as completed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.RichUIManager.create_layout">
+<span class="sig-name descname"><span class="pre">create_layout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.RichUIManager.create_layout" title="Link to this definition"></a></dt>
+<dd><p>Create the main layout structure.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.RichUIManager.create_log_panel">
+<span class="sig-name descname"><span class="pre">create_log_panel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.RichUIManager.create_log_panel" title="Link to this definition"></a></dt>
+<dd><p>Create the log display panel.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.RichUIManager.create_progress_panel">
+<span class="sig-name descname"><span class="pre">create_progress_panel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.RichUIManager.create_progress_panel" title="Link to this definition"></a></dt>
+<dd><p>Create the progress bar panel.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.RichUIManager.create_sidebar_panel">
+<span class="sig-name descname"><span class="pre">create_sidebar_panel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.RichUIManager.create_sidebar_panel" title="Link to this definition"></a></dt>
+<dd><p>Create the sidebar showing benchmark status.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.RichUIManager.log">
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.RichUIManager.log" title="Link to this definition"></a></dt>
+<dd><p>Add a log message.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.RichUIManager.start_benchmark">
+<span class="sig-name descname"><span class="pre">start_benchmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.RichUIManager.start_benchmark" title="Link to this definition"></a></dt>
+<dd><p>Mark a benchmark as started.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.RichUIManager.update_display">
+<span class="sig-name descname"><span class="pre">update_display</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.RichUIManager.update_display" title="Link to this definition"></a></dt>
+<dd><p>Update the entire display.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.adjust_color_brightness">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">adjust_color_brightness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brightness_factor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.adjust_color_brightness" title="Link to this definition"></a></dt>
+<dd><p>Adjust the brightness of a hex color.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hex_color</strong> (<em>str</em>) – Hex color string (e.g., ‘#fe8019’)</p></li>
+<li><p><strong>brightness_factor</strong> (<em>float</em>) – Factor to adjust brightness
+&gt; 1.0 = brighter
+&lt; 1.0 = darker
+1.0 = no change</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Adjusted hex color string</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.clear_model_data">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">clear_model_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.clear_model_data" title="Link to this definition"></a></dt>
+<dd><p>Clear the global model data dictionary.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.clear_plot_data">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">clear_plot_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.clear_plot_data" title="Link to this definition"></a></dt>
+<dd><p>Clear the global plot data dictionary.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.create_args_from_toml">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">create_args_from_toml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">toml_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Namespace</span></span></span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.create_args_from_toml" title="Link to this definition"></a></dt>
+<dd><p>Create an argparse.Namespace object from TOML configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>toml_dict</strong> (<em>dict</em>) – Dictionary loaded from TOML file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Arguments namespace populated with values from TOML</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Namespace</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.create_calculator_for_model">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">create_calculator_for_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'float64'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.create_calculator_for_model" title="Link to this definition"></a></dt>
+<dd><p>Create a calculator for either a file-based model or foundation model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_path</strong> (<em>Path</em><em> or </em><a class="reference internal" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.FoundationModelPath" title="atlas.benchmarks.mlip.mlip_benchmark_utils.FoundationModelPath"><em>FoundationModelPath</em></a>) – Path to model file or foundation model specification</p></li>
+<li><p><strong>device</strong> (<em>str</em><em>, </em><em>optional</em>) – Device to run calculations on (default: ‘cuda’)</p></li>
+<li><p><strong>dtype</strong> (<em>str</em><em>, </em><em>optional</em>) – Data type for calculations (default: ‘float64’)</p></li>
+<li><p><strong>**kwargs</strong> – Additional arguments to pass to the calculator</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Calculator instance for the model</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>calculator</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.create_final_multi_panel_plot">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">create_final_multi_panel_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.create_final_multi_panel_plot" title="Link to this definition"></a></dt>
+<dd><p>Creates a single multi-panel figure with all benchmark plots.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.create_foundation_model_calculator">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">create_foundation_model_calculator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">foundation_model_spec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'float64'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.create_foundation_model_calculator" title="Link to this definition"></a></dt>
+<dd><p>Create a calculator for a foundation model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>foundation_model_spec</strong> (<em>str</em>) – Foundation model specification (e.g., “mace:small”)</p></li>
+<li><p><strong>device</strong> (<em>str</em><em>, </em><em>optional</em>) – Device to run calculations on (default: ‘cuda’)</p></li>
+<li><p><strong>dtype</strong> (<em>str</em><em>, </em><em>optional</em>) – Data type for calculations (default: ‘float64’)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Calculator instance for the foundation model</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>calculator</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If foundation model specification is invalid</p></li>
+<li><p><strong>NotImplementedError</strong> – If the specified MLIP library is not supported</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.create_foundation_model_paths">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">create_foundation_model_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">foundation_model_specs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.create_foundation_model_paths" title="Link to this definition"></a></dt>
+<dd><p>Create FoundationModelPath objects from foundation model specifications.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>foundation_model_specs</strong> (<em>list</em><em> of </em><em>str</em>) – List of foundation model specifications</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Foundation model path objects</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of <a class="reference internal" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.FoundationModelPath" title="atlas.benchmarks.mlip.mlip_benchmark_utils.FoundationModelPath">FoundationModelPath</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If any foundation model specification is invalid</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.custom_print">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">custom_print</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'info'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.custom_print" title="Link to this definition"></a></dt>
+<dd><p>Custom print function that integrates with Rich UI and logs to file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.get_model_color">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">get_model_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.get_model_color" title="Link to this definition"></a></dt>
+<dd><p>Get the assigned color for a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model_path</strong> (<em>Path</em><em> or </em><a class="reference internal" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.FoundationModelPath" title="atlas.benchmarks.mlip.mlip_benchmark_utils.FoundationModelPath"><em>FoundationModelPath</em></a>) – Model path or model object</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Hex color string assigned to this model</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.get_model_colors_by_names">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">get_model_colors_by_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.get_model_colors_by_names" title="Link to this definition"></a></dt>
+<dd><p>Get colors for a list of model names in the order they appear.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model_names</strong> (<em>list</em>) – List of model display names</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of hex color strings corresponding to the model names</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.get_model_data">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">get_model_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.get_model_data" title="Link to this definition"></a></dt>
+<dd><p>Get the global model data dictionary.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.get_model_display_name">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">get_model_display_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.get_model_display_name" title="Link to this definition"></a></dt>
+<dd><p>Get the display name for a model.</p>
+<p>Returns run name if available, otherwise filename stem.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.get_model_display_names">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">get_model_display_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.get_model_display_names" title="Link to this definition"></a></dt>
+<dd><p>Get the global model display names dictionary.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.get_plot_data">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">get_plot_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.get_plot_data" title="Link to this definition"></a></dt>
+<dd><p>Get the global plot data dictionary.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.get_ui_manager">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">get_ui_manager</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.get_ui_manager" title="Link to this definition"></a></dt>
+<dd><p>Get the global UI manager instance.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.initialize_model_data">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">initialize_model_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_paths</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.initialize_model_data" title="Link to this definition"></a></dt>
+<dd><p>Initialize the global model data dictionary with consistent color assignments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model_paths</strong> (<em>list</em>) – List of model paths (can include FoundationModelPath objects)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.load_model_from_aiida">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">load_model_from_aiida</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.load_model_from_aiida" title="Link to this definition"></a></dt>
+<dd><p>Load a model from an ATL AL Workchain.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.load_toml_config">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">load_toml_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">toml_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.load_toml_config" title="Link to this definition"></a></dt>
+<dd><p>Load TOML configuration file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>toml_path</strong> (<em>Path</em>) – Path to the TOML configuration file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Parsed TOML configuration</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.parse_arguments">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">parse_arguments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.parse_arguments" title="Link to this definition"></a></dt>
+<dd><p>Parse command-line arguments.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.save_plot_dual_format">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">save_plot_dual_format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bbox_inches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tight'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.save_plot_dual_format" title="Link to this definition"></a></dt>
+<dd><p>Save a matplotlib plot in both PNG and SVG formats.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_path</strong> (<em>str</em><em> or </em><em>Path</em>) – Path without extension (e.g., ‘plot’)</p></li>
+<li><p><strong>dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – DPI for PNG output (default: 300)</p></li>
+<li><p><strong>bbox_inches</strong> (<em>str</em><em>, </em><em>optional</em>) – Bounding box setting for tight layout (default: ‘tight’)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(png_path, svg_path) - Paths to the saved files</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.set_model_display_name">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">set_model_display_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.set_model_display_name" title="Link to this definition"></a></dt>
+<dd><p>Set a model display name.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.set_plot_data">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">set_plot_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.set_plot_data" title="Link to this definition"></a></dt>
+<dd><p>Set a value in the global plot data dictionary.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmark_utils.set_ui_manager">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmark_utils.</span></span><span class="sig-name descname"><span class="pre">set_ui_manager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ui_manager</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmark_utils.set_ui_manager" title="Link to this definition"></a></dt>
+<dd><p>Set the global UI manager instance.</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.benchmarks.mlip.mlip_benchmarks">
+<span id="atlas-benchmarks-mlip-mlip-benchmarks-module"></span><h2>atlas.benchmarks.mlip.mlip_benchmarks module<a class="headerlink" href="#module-atlas.benchmarks.mlip.mlip_benchmarks" title="Link to this heading"></a></h2>
+<p>Collection of ATL-trained benchmarks for MLIPs.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmarks.coexistence_structure_melting_point">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmarks.</span></span><span class="sig-name descname"><span class="pre">coexistence_structure_melting_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmarks.coexistence_structure_melting_point" title="Link to this definition"></a></dt>
+<dd><p>Prepare a solid-liquid coexistence structure using proper equilibration.</p>
+<p>This function implements the multi-step preparation process:
+1. Equilibrate solid phase at T &lt; T_melt using NPT
+2. Take the equilibrated cell, and heat at T &gt; T_melt with NPAT to get liquid
+3. Combine solid and liquid phases into coexistence structure, run short NPAT
+4. Relax interfaces using NVE</p>
+<p>Returns path to the final coexistence structure.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmarks.gen_magic_number_list_chini">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmarks.</span></span><span class="sig-name descname"><span class="pre">gen_magic_number_list_chini</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">25</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmarks.gen_magic_number_list_chini" title="Link to this definition"></a></dt>
+<dd><p>Return a list of magic numbers using the Chini series.</p>
+<p>Ref: 10.1134/S0022476617070149</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmarks.prepare_coexistence_structure_lammps">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmarks.</span></span><span class="sig-name descname"><span class="pre">prepare_coexistence_structure_lammps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supercell_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mace_model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solid_temp_K</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">liquid_temp_K</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmarks.prepare_coexistence_structure_lammps" title="Link to this definition"></a></dt>
+<dd><p>Prepare a solid-liquid coexistence structure using LAMMPS for dynamics.</p>
+<p>This function implements the multi-step preparation process:
+1. Equilibrate solid phase at T &lt; T_melt using NPT.
+2. Melt a copy of the solid at T &gt; T_melt.
+3. Cool the liquid down to the solid temperature.
+4. Combine solid and liquid phases into a coexistence structure.
+5. Relax the interface using NVE dynamics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path to the final coexistence structure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmarks.run_defect_formation_energy_benchmark">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmarks.</span></span><span class="sig-name descname"><span class="pre">run_defect_formation_energy_benchmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmarks.run_defect_formation_energy_benchmark" title="Link to this definition"></a></dt>
+<dd><p>Calculates and plots the monovacancy formation energy.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmarks.run_elastic_properties_benchmark">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmarks.</span></span><span class="sig-name descname"><span class="pre">run_elastic_properties_benchmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmarks.run_elastic_properties_benchmark" title="Link to this definition"></a></dt>
+<dd><p>Calculates and plots elastic constants and bulk modulus.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmarks.run_energy_md_benchmark">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmarks.</span></span><span class="sig-name descname"><span class="pre">run_energy_md_benchmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmarks.run_energy_md_benchmark" title="Link to this definition"></a></dt>
+<dd><p>Run the energy MD benchmark.</p>
+<p>Generates a surface slab, runs MD for each model, and plots the results.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmarks.run_evaluate_database">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmarks.</span></span><span class="sig-name descname"><span class="pre">run_evaluate_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmarks.run_evaluate_database" title="Link to this definition"></a></dt>
+<dd><p>Evaluate MLIP models against a user-provided structure database.</p>
+<p>This benchmark loads structures from a database file and compares
+MLIP predictions with reference values stored in the structures.
+Reference energies should be in atoms.info[‘REF_energy’] and
+reference forces in atoms.arrays[‘REF_forces’].</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmarks.run_final_db_size_benchmark">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmarks.</span></span><span class="sig-name descname"><span class="pre">run_final_db_size_benchmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmarks.run_final_db_size_benchmark" title="Link to this definition"></a></dt>
+<dd><p>Compares the final training database size for each AL run.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmarks.run_gsfe_benchmark">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmarks.</span></span><span class="sig-name descname"><span class="pre">run_gsfe_benchmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmarks.run_gsfe_benchmark" title="Link to this definition"></a></dt>
+<dd><p>Calculates and plots the Generalized Stacking Fault Energy (GSFE) curve.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmarks.run_high_temp_md_benchmark">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmarks.</span></span><span class="sig-name descname"><span class="pre">run_high_temp_md_benchmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmarks.run_high_temp_md_benchmark" title="Link to this definition"></a></dt>
+<dd><p>Runs a high-temperature MD simulation to test stability.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmarks.run_learning_curves_benchmark">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmarks.</span></span><span class="sig-name descname"><span class="pre">run_learning_curves_benchmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmarks.run_learning_curves_benchmark" title="Link to this definition"></a></dt>
+<dd><p>Plots learning curves (e.g., test RMSE vs. number of DFT calls).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmarks.run_magic_cluster_benchmark">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmarks.</span></span><span class="sig-name descname"><span class="pre">run_magic_cluster_benchmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmarks.run_magic_cluster_benchmark" title="Link to this definition"></a></dt>
+<dd><p>Calculates and plots energies for magic number cluster structures.</p>
+<p>Magic number clusters are particularly stable cluster sizes that often
+correspond to closed-shell electronic configurations or geometric
+completeness (e.g., icosahedral or cuboctahedral structures).</p>
+<p>This benchmark validates whether MLIPs can reproduce the correct
+ordering and stability of these special cluster sizes.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmarks.run_md_count_benchmark">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmarks.</span></span><span class="sig-name descname"><span class="pre">run_md_count_benchmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmarks.run_md_count_benchmark" title="Link to this definition"></a></dt>
+<dd><p>Count total MD calculations performed during Active Learning loops.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmarks.run_melting_point_benchmark">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmarks.</span></span><span class="sig-name descname"><span class="pre">run_melting_point_benchmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmarks.run_melting_point_benchmark" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmarks.run_phonon_dispersion_benchmark">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmarks.</span></span><span class="sig-name descname"><span class="pre">run_phonon_dispersion_benchmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmarks.run_phonon_dispersion_benchmark" title="Link to this definition"></a></dt>
+<dd><p>Calculates and plots the phonon dispersion curves.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.mlip_benchmarks.run_surface_energies_benchmark">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.mlip_benchmarks.</span></span><span class="sig-name descname"><span class="pre">run_surface_energies_benchmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.mlip_benchmarks.run_surface_energies_benchmark" title="Link to this definition"></a></dt>
+<dd><p>Calculates and plots energies for low-index surfaces.</p>
+<p>The surface energy represents the excess energy per unit
+area due to the creation of a surface. Lower values indicate
+more stable surfaces.</p>
+<p>This benchmark validates whether the explored MLIPs reproduce the correct
+energetic ordering and magnitudes of surface energies compared to
+DFT or experimental values.</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.benchmarks.mlip.evaluate_mlip_performance">
+<span id="atlas-benchmarks-mlip-evaluate-mlip-performance-module"></span><h2>atlas.benchmarks.mlip.evaluate_mlip_performance module<a class="headerlink" href="#module-atlas.benchmarks.mlip.evaluate_mlip_performance" title="Link to this heading"></a></h2>
+<p>Script to evaluate and compare the performance of MLIPs using MD simulations.</p>
+<p>This script can take one or more MLIP models, trained via active learning or
+otherwise, and evaluates their performance on a configurable benchmark system.
+The benchmark system is a metal surface slab generated using ASE.</p>
+<p>The script can load models from:
+- AiiDA SimpleActiveLearningBaseWorkChain output (given a workchain pk/uuid).
+- A user-specified path to a .model file.</p>
+<p>The evaluation consists of running an MD simulation for each model and plotting
+the energy evolution for comparison.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.benchmarks.mlip.evaluate_mlip_performance.main">
+<span class="sig-prename descclassname"><span class="pre">atlas.benchmarks.mlip.evaluate_mlip_performance.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.benchmarks.mlip.evaluate_mlip_performance.main" title="Link to this definition"></a></dt>
+<dd><p>Main function to run the evaluation.</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.benchmarks.mlip">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-atlas.benchmarks.mlip" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="atlas.benchmarks.dft.html" class="btn btn-neutral float-left" title="atlas.benchmarks.dft package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="atlas.core.html" class="btn btn-neutral float-right" title="atlas.core package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='atlas.benchmarks.mlip.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,439 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DFT Calculations &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Active Learning Loop" href="input_active_learning.html" />
+    <link rel="prev" title="Database Generation" href="input_database_generation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="input.html">Input specification</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="input.html#input-formats">Input Formats</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="input_database_generation.html">Database Generation</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">DFT Calculations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#general-general">General - <code class="docutils literal notranslate"><span class="pre">[general]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#calculation-calculation">Calculation - <code class="docutils literal notranslate"><span class="pre">[calculation]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kpoints-kpoints">Kpoints - <code class="docutils literal notranslate"><span class="pre">[kpoints]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#queue-queue">Queue - <code class="docutils literal notranslate"><span class="pre">[queue]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#aiida-vasp-aiida-vasp">Aiida_Vasp - <code class="docutils literal notranslate"><span class="pre">[aiida_vasp]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#incar-incar">Incar - <code class="docutils literal notranslate"><span class="pre">[incar]</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="input_active_learning.html">Active Learning Loop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input_mlip_benchmarks.html">MLIP Benchmarks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input_dft_benchmark.html">DFT Parameter Benchmark</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input_latent_space_analysis.html">Latent Space Analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Package Information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="input.html">Input specification</a></li>
+      <li class="breadcrumb-item active">DFT Calculations</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/input_dft.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="dft-calculations">
+<h1>DFT Calculations<a class="headerlink" href="#dft-calculations" title="Link to this heading"></a></h1>
+<p>Generate a dft template file using <code class="docutils literal notranslate"><span class="pre">atl_gen_configuration_file</span> <span class="pre">-t</span> <span class="pre">dft</span></code>.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>All keys are mandatory unless stated otherwise.</p>
+</div>
+<section id="general-general">
+<h2>General - <code class="docutils literal notranslate"><span class="pre">[general]</span></code><a class="headerlink" href="#general-general" title="Link to this heading"></a></h2>
+<p>General settings for the DFT script.</p>
+<ul class="simple">
+<li><p><span class="code-alt">log_path</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path where the logs will be stored.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str,</span> <span class="pre">PosixPath)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'/tmp/'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">result_file_path</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path for the results file (extxyz format).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str,</span> <span class="pre">PosixPath)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'dft_calculation_results'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">source_db</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path to the source database file (.extxyz or mdb .xz format).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str,</span> <span class="pre">PosixPath)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">aiida_group_name</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Name of the AiiDA group for the calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'my_dft_run'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_batch</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum number of structures to process in one batch.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">queue_check_interval_seconds</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Interval in seconds to check the queue for submitting new calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">240</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">start_on_struct_idx</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of structures to skip before starting the calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">dry_run</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: If True, a dry-run is performed and no calculations are submitted.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">selected_structure_type</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Structure types to process. If empty, all types are included.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">list[str])</span></code></p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">bulk</span></code>, <code class="docutils literal notranslate"><span class="pre">surface</span></code>, <code class="docutils literal notranslate"><span class="pre">cluster</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="calculation-calculation">
+<h2>Calculation - <code class="docutils literal notranslate"><span class="pre">[calculation]</span></code><a class="headerlink" href="#calculation-calculation" title="Link to this heading"></a></h2>
+<p>DFT calculation settings.</p>
+<ul class="simple">
+<li><p><span class="code-alt">calc_type</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Type of calculation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'static'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">static</span></code>, <code class="docutils literal notranslate"><span class="pre">relaxation</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">aiida_potential_family</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: AiiDA potential family name.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'vasp-5.4-PBE-2023'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">potential_mapping</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Mapping of elements to specific potential labels.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+<li><p><strong>Example</strong>:</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;Si&#39;</span><span class="p">:</span> <span class="s1">&#39;Si_GW&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="kpoints-kpoints">
+<h2>Kpoints - <code class="docutils literal notranslate"><span class="pre">[kpoints]</span></code><a class="headerlink" href="#kpoints-kpoints" title="Link to this heading"></a></h2>
+<p>K-point settings.</p>
+<ul class="simple">
+<li><p><span class="code-alt">kspacing</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: K-spacing in Å⁻¹ for different phases or a single value for all structures. The k-spacing values will be applied on a per-phase basis, according to the keys added to the dictionary which must match phases in the database. The <code class="docutils literal notranslate"><span class="pre">ATL_DEFAULT</span></code> key can be used to set a default k-spacing value for all phases not explicitly listed.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(dict)</span></code></p></li>
+<li><p><strong>Example</strong>:</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;ATL_DEFAULT&#39;</span><span class="p">:</span> <span class="mf">0.15</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.125</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="queue-queue">
+<h2>Queue - <code class="docutils literal notranslate"><span class="pre">[queue]</span></code><a class="headerlink" href="#queue-queue" title="Link to this heading"></a></h2>
+<p>Queue settings for HPC schedulers (e.g., SLURM).</p>
+<ul class="simple">
+<li><p><span class="code-alt">code_string</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Name of the code as defined in AiiDA.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'vasp&#64;my_cluster'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">account</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Account to be used for the calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">qos</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Quality of service parameter.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">node_cpus</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of CPUs per node.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_wallclock_seconds</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum wallclock time in seconds.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">16200</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_memory_kb</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum memory per node in KB.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">multiple</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to use multiple nodes.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">custom_scheduler_commands</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Custom scheduler commands.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+</ul>
+</li>
+</ul>
+<section id="options-resources-queue-options-resources">
+<h3>Options_Resources - <code class="docutils literal notranslate"><span class="pre">[queue.options_resources]</span></code><a class="headerlink" href="#options-resources-queue-options-resources" title="Link to this heading"></a></h3>
+<p>Scheduler resource options.</p>
+<ul class="simple">
+<li><p><span class="code-alt">tot_num_mpiprocs</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Total number of MPI processes.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">24</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">parallel_env</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Parallel environment to be used.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'</span> <span class="pre">'</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="aiida-vasp-aiida-vasp">
+<h2>Aiida_Vasp - <code class="docutils literal notranslate"><span class="pre">[aiida_vasp]</span></code><a class="headerlink" href="#aiida-vasp-aiida-vasp" title="Link to this heading"></a></h2>
+<p>Settings for the AiiDA-VASP plugin.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">critical_notifications</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Errors and warnings to be treated as critical (general).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+</ul>
+</li>
+</ul>
+<section id="parser-settings-aiida-vasp-parser-settings">
+<h3>Parser_Settings - <code class="docutils literal notranslate"><span class="pre">[aiida_vasp.parser_settings]</span></code><a class="headerlink" href="#parser-settings-aiida-vasp-parser-settings" title="Link to this heading"></a></h3>
+<p>Parser settings for aiida-vasp.</p>
+<ul class="simple">
+<li><p><span class="code-alt">add_kpoints</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to add k-points information to the parsed results.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="critical-notifications-aiida-vasp-parser-settings-critical-notifications">
+<h4>Critical_Notifications - <code class="docutils literal notranslate"><span class="pre">[aiida_vasp.parser_settings.critical_notifications]</span></code><a class="headerlink" href="#critical-notifications-aiida-vasp-parser-settings-critical-notifications" title="Link to this heading"></a></h4>
+<p>Critical error and warning notifications to be treated as important.</p>
+<ul class="simple">
+<li><p><span class="code-alt">add_edddav_zhegv</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Add EDDDAV ZHEGV error notification.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">add_eddrmm_zhegv</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Add EDDRMM ZHEGV error notification.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">add_not_hermitian</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Add not hermitian error notification.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">add_brmix</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Add BRMIX error notification.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">add_bandocc</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Add band occupation error notification.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="incar-incar">
+<h2>Incar - <code class="docutils literal notranslate"><span class="pre">[incar]</span></code><a class="headerlink" href="#incar-incar" title="Link to this heading"></a></h2>
+<p>INCAR settings for different structure types.</p>
+<ul class="simple">
+<li><p><span class="code-alt">bulk</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: INCAR settings for bulk structures.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">surface</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: INCAR settings for surface structures.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">cluster</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: INCAR settings for cluster structures.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="input_database_generation.html" class="btn btn-neutral float-left" title="Database Generation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="input_active_learning.html" class="btn btn-neutral float-right" title="Active Learning Loop" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='input_dft.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

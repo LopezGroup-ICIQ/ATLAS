@@ -1,0 +1,176 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intro to ATLAS &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="_static/favicon.svg"/>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=370fbe24"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Introduction" href="source/intro.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#">
+            
+              <img src="_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="source/intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/tools.html">CLI Arguments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/input.html">Input specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="source/results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="source/modules.html">Package Information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Intro to ATLAS</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/index.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="intro-to-atlas">
+<h1>Intro to ATLAS<a class="headerlink" href="#intro-to-atlas" title="Link to this heading"></a></h1>
+<a class="reference internal image-reference" href="_images/logo_dark.png"><img alt="ATLAS: A workflow for materials MLIP generation&quot;" class="align-center" src="_images/logo_dark.png" style="width: 400px;" />
+</a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>ATLAS (Automated Training with Latent-space Aware Sampling) is a unified Python framework for building robust machine learning interatomic potentials (MLIPs). It combines a diversity-aware database generator with a manifold-aware active learning workflow to produce compact, high-quality training datasets. ATLAS supports structure generation for bulk, surface, cluster, and isolated atom configurations across single-, binary-, and ternary-phase diagrams, with perturbations, vacancies, deformations, and adsorbates. The active learning engine iteratively trains MACE models, runs molecular dynamics simulations, detects extrapolating structures via descriptor-based or latent-space methods (autoencoder + concave hull), and submits them for DFT labelling, all orchestrated through AiiDA. Additional capabilities include data reduction mode, safeguard checks to prevent premature convergence, test database evaluation, diversity metrics (Vendi Score, Circles Metric), an interactive monitoring dashboard, a desktop GUI (ATLAS Hub), MLIP benchmarking, and comprehensive reporting of model performance and resource usage. Validated on metals, alloys, and metal oxides, ATLAS produces datasets that exceed foundation model training chemical spaces by orders of magnitude while using up to x300 fewer structures.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="source/intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="source/install.html#installation-procedure">Installation procedure</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="source/tools.html">CLI Arguments</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="source/tools.html#run-active-learning-atl-active-learning">Run Active Learning - <code class="docutils literal notranslate"><span class="pre">atl_active_learning</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/tools.html#active-learning-dashboard-monitor-al-loop">Active Learning Dashboard - <code class="docutils literal notranslate"><span class="pre">monitor_al_loop</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/tools.html#generate-configuration-file-atl-gen-configuration-file">Generate Configuration File - <code class="docutils literal notranslate"><span class="pre">atl_gen_configuration_file</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/tools.html#generate-initial-database-atl-gen-init-db">Generate Initial Database - <code class="docutils literal notranslate"><span class="pre">atl_gen_init_db</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/tools.html#run-dft-database-atl-run-dft-database">Run DFT Database - <code class="docutils literal notranslate"><span class="pre">atl_run_dft_database</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/tools.html#autoencoder-for-dimensionality-reduction-atl-train-autoencoder">Autoencoder for Dimensionality Reduction - <code class="docutils literal notranslate"><span class="pre">atl_train_autoencoder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/tools.html#mlip-benchmark-atl-benchmark-mlip">MLIP Benchmark - <code class="docutils literal notranslate"><span class="pre">atl_benchmark_mlip</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/tools.html#dft-benchmark-atl-dft-benchmark">DFT Benchmark - <code class="docutils literal notranslate"><span class="pre">atl_dft_benchmark</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/tools.html#database-analysis-atl-database-analysis">Database Analysis - <code class="docutils literal notranslate"><span class="pre">atl_database_analysis</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/tools.html#gui-atl-gui">GUI - <code class="docutils literal notranslate"><span class="pre">atl_gui</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="source/input.html">Input specification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="source/input.html#input-formats">Input Formats</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="source/customization.html">Customizing your ATLAS installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="source/customization.html#limiting-the-number-of-simultaneously-submitted-calculations">Limiting the number of simultaneously submitted calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/customization.html#changing-the-default-image-viewer-during-ssh-usage">Changing the default image viewer during SSH usage</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="source/results_db_gen.html">Database Generation</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="source/modules.html">Package Information</a></li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="source/intro.html" class="btn btn-neutral float-right" title="Introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='index.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

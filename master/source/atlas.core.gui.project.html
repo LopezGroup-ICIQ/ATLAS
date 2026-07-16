@@ -1,0 +1,793 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>atlas.core.gui.project package &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="atlas.training package" href="atlas.training.html" />
+    <link rel="prev" title="atlas.core.gui.process package" href="atlas.core.gui.process.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">Input specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package Information</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="atlas.html">atlas package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="atlas.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html">atlas.active_learning package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.html">atlas.benchmarks package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="atlas.core.html">atlas.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.training.html">atlas.training package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html">atlas.workflows package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.html#module-atlas">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">atlas</a></li>
+          <li class="breadcrumb-item"><a href="atlas.html">atlas package</a></li>
+          <li class="breadcrumb-item"><a href="atlas.core.html">atlas.core package</a></li>
+          <li class="breadcrumb-item"><a href="atlas.core.gui.html">atlas.core.gui package</a></li>
+      <li class="breadcrumb-item active">atlas.core.gui.project package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/atlas.core.gui.project.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="atlas-core-gui-project-package">
+<h1>atlas.core.gui.project package<a class="headerlink" href="#atlas-core-gui-project-package" title="Link to this heading"></a></h1>
+<p>Project management for the ATLAS GUI.</p>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.core.gui.project.aiida_sync">
+<span id="atlas-core-gui-project-aiida-sync-module"></span><h2>atlas.core.gui.project.aiida_sync module<a class="headerlink" href="#module-atlas.core.gui.project.aiida_sync" title="Link to this heading"></a></h2>
+<p>Query AiiDA for process states and sync them into the project DB.</p>
+<p>All AiiDA imports are deferred so the module can be imported without
+AiiDA installed, the functions raise <code class="docutils literal notranslate"><span class="pre">RuntimeError</span></code> at call time if
+AiiDA is unavailable.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.project.aiida_sync.SyncResult">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.project.aiida_sync.</span></span><span class="sig-name descname"><span class="pre">SyncResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">al_checked:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">al_updated:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dft_checked:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dft_updated:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">errors:</span> <span class="pre">list[str]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.project.aiida_sync.SyncResult" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Summary of what changed during an AiiDA sync.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.project.aiida_sync.SyncResult.al_checked">
+<span class="sig-name descname"><span class="pre">al_checked</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#atlas.core.gui.project.aiida_sync.SyncResult.al_checked" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.project.aiida_sync.SyncResult.al_updated">
+<span class="sig-name descname"><span class="pre">al_updated</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#atlas.core.gui.project.aiida_sync.SyncResult.al_updated" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.project.aiida_sync.SyncResult.dft_checked">
+<span class="sig-name descname"><span class="pre">dft_checked</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#atlas.core.gui.project.aiida_sync.SyncResult.dft_checked" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.project.aiida_sync.SyncResult.dft_updated">
+<span class="sig-name descname"><span class="pre">dft_updated</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#atlas.core.gui.project.aiida_sync.SyncResult.dft_updated" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.project.aiida_sync.SyncResult.errors">
+<span class="sig-name descname"><span class="pre">errors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#atlas.core.gui.project.aiida_sync.SyncResult.errors" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.core.gui.project.aiida_sync.SyncResult.summary">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">summary</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.project.aiida_sync.SyncResult.summary" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.project.aiida_sync.sync_al_runs">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.project.aiida_sync.</span></span><span class="sig-name descname"><span class="pre">sync_al_runs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#atlas.core.gui.project.aiida_sync.SyncResult" title="atlas.core.gui.project.aiida_sync.SyncResult"><span class="pre">SyncResult</span></a></span></span><a class="headerlink" href="#atlas.core.gui.project.aiida_sync.sync_al_runs" title="Link to this definition"></a></dt>
+<dd><p>Refresh AL run statuses from AiiDA.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.project.aiida_sync.sync_all">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.project.aiida_sync.</span></span><span class="sig-name descname"><span class="pre">sync_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#atlas.core.gui.project.aiida_sync.SyncResult" title="atlas.core.gui.project.aiida_sync.SyncResult"><span class="pre">SyncResult</span></a></span></span><a class="headerlink" href="#atlas.core.gui.project.aiida_sync.sync_all" title="Link to this definition"></a></dt>
+<dd><p>Sync both AL and DFT runs from AiiDA. Returns combined result.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.project.aiida_sync.sync_dft_runs">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.project.aiida_sync.</span></span><span class="sig-name descname"><span class="pre">sync_dft_runs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#atlas.core.gui.project.aiida_sync.SyncResult" title="atlas.core.gui.project.aiida_sync.SyncResult"><span class="pre">SyncResult</span></a></span></span><a class="headerlink" href="#atlas.core.gui.project.aiida_sync.sync_dft_runs" title="Link to this definition"></a></dt>
+<dd><p>Refresh DFT run statuses from AiiDA.</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.project.migrations">
+<span id="atlas-core-gui-project-migrations-module"></span><h2>atlas.core.gui.project.migrations module<a class="headerlink" href="#module-atlas.core.gui.project.migrations" title="Link to this heading"></a></h2>
+<p>Project schema migrations.</p>
+<p>Each migration is a function <cite>migrate_v{N}_to_v{N+1}(conn)</cite>. <cite>apply_migrations</cite>
+walks them in order from the project’s current <cite>schema_version</cite> up to
+<code class="docutils literal notranslate"><span class="pre">schema.SCHEMA_VERSION</span></code>.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.project.migrations.apply_migrations">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.project.migrations.</span></span><span class="sig-name descname"><span class="pre">apply_migrations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#atlas.core.gui.project.migrations.apply_migrations" title="Link to this definition"></a></dt>
+<dd><p>Bring the database up to <code class="docutils literal notranslate"><span class="pre">schema.SCHEMA_VERSION</span></code>. Returns the final version.</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.project.project">
+<span id="atlas-core-gui-project-project-module"></span><h2>atlas.core.gui.project.project module<a class="headerlink" href="#module-atlas.core.gui.project.project" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Project</span></code> class, runtime API for an ATLAS GUI project bundle.</p>
+<section id="layout">
+<h3>Layout<a class="headerlink" href="#layout" title="Link to this heading"></a></h3>
+<p>The project bundle consists of an SQLite file and a canonical artifact directory:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;parent&gt;/&lt;name&gt;.atlasproj</span></code> - SQLite file with index, settings history, summaries</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;parent&gt;/&lt;name&gt;.atlas/</span></code> - artifact directory containing:
+- <code class="docutils literal notranslate"><span class="pre">database_generation_settings.toml</span></code>
+- <code class="docutils literal notranslate"><span class="pre">active_learning_settings.toml</span></code>
+- <code class="docutils literal notranslate"><span class="pre">dft_settings.toml</span></code>
+- <code class="docutils literal notranslate"><span class="pre">databases/&lt;database_name&gt;.xz</span></code>
+- <code class="docutils literal notranslate"><span class="pre">models/&lt;al_run_id&gt;/...</span></code>
+- <code class="docutils literal notranslate"><span class="pre">reports/&lt;al_run_id&gt;/...</span></code>
+- <code class="docutils literal notranslate"><span class="pre">logs/&lt;command&gt;.&lt;ts&gt;.log</span></code></p></li>
+</ul>
+<p>Configs live at the top of the <code class="docutils literal notranslate"><span class="pre">.atlas/</span></code> directory so that CLI tools
+invoked with that directory as CWD find them via their existing default
+filename lookups (e.g. <code class="docutils literal notranslate"><span class="pre">cli_active_learning.py</span></code> looks for
+<code class="docutils literal notranslate"><span class="pre">active_learning_settings.toml</span></code>).</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.project.project.</span></span><span class="sig-name descname"><span class="pre">Project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Connection</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.project.project.Project" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>In-memory handle for an open ATLAS project.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.active_config">
+<span class="sig-name descname"><span class="pre">active_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.active_config" title="Link to this definition"></a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">(snapshot_id,</span> <span class="pre">toml)</span></code> for the active snapshot of <code class="docutils literal notranslate"><span class="pre">section</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.al_run_counts">
+<span class="sig-name descname"><span class="pre">al_run_counts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.al_run_counts" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.clear_structures_index">
+<span class="sig-name descname"><span class="pre">clear_structures_index</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.clear_structures_index" title="Link to this definition"></a></dt>
+<dd><p>Remove all rows from the structures table.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.close" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.config_path">
+<span class="sig-name descname"><span class="pre">config_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.config_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.create">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#atlas.core.gui.project.project.Project" title="atlas.core.gui.project.project.Project"><span class="pre">Project</span></a></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.create" title="Link to this definition"></a></dt>
+<dd><p>Create a new project bundle. Raises if it would overwrite existing data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.cwd">
+<span class="sig-name descname"><span class="pre">cwd</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.cwd" title="Link to this definition"></a></dt>
+<dd><p>Working directory for CLI subprocesses launched by the GUI.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.dft_run_counts">
+<span class="sig-name descname"><span class="pre">dft_run_counts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.dft_run_counts" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.dir">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span></em><a class="headerlink" href="#atlas.core.gui.project.project.Project.dir" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.init_db_name">
+<span class="sig-name descname"><span class="pre">init_db_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.init_db_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.init_db_path">
+<span class="sig-name descname"><span class="pre">init_db_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.init_db_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.latest_al_run_id">
+<span class="sig-name descname"><span class="pre">latest_al_run_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.latest_al_run_id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.list_al_iterations">
+<span class="sig-name descname"><span class="pre">list_al_iterations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.list_al_iterations" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.list_al_runs">
+<span class="sig-name descname"><span class="pre">list_al_runs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.list_al_runs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.list_config_snapshots">
+<span class="sig-name descname"><span class="pre">list_config_snapshots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.list_config_snapshots" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.list_dft_runs">
+<span class="sig-name descname"><span class="pre">list_dft_runs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.list_dft_runs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.list_structures">
+<span class="sig-name descname"><span class="pre">list_structures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.list_structures" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.log_path">
+<span class="sig-name descname"><span class="pre">log_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.log_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.meta">
+<span class="sig-name descname"><span class="pre">meta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.meta" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.modifications_breakdown">
+<span class="sig-name descname"><span class="pre">modifications_breakdown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.modifications_breakdown" title="Link to this definition"></a></dt>
+<dd><p>Count how many structures have each modification flag.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.n_atoms_list">
+<span class="sig-name descname"><span class="pre">n_atoms_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.n_atoms_list" title="Link to this definition"></a></dt>
+<dd><p>Return all non-null <code class="docutils literal notranslate"><span class="pre">n_atoms</span></code> values for histogram plotting.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.name">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.project.project.Project.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.open">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atlasproj_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#atlas.core.gui.project.project.Project" title="atlas.core.gui.project.project.Project"><span class="pre">Project</span></a></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.open" title="Link to this definition"></a></dt>
+<dd><p>Open an existing project. Applies any pending migrations.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.record_al_submission">
+<span class="sig-name descname"><span class="pre">record_al_submission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_workchain_pk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_snapshot_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'submitted'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.record_al_submission" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.record_dft_submission">
+<span class="sig-name descname"><span class="pre">record_dft_submission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">calc_uuid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aiida_pk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atl_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'submitted'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.record_dft_submission" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.refresh_al_run">
+<span class="sig-name descname"><span class="pre">refresh_al_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.refresh_al_run" title="Link to this definition"></a></dt>
+<dd><p>Query AiiDA for a single AL workchain and update its status.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.refresh_dft_runs">
+<span class="sig-name descname"><span class="pre">refresh_dft_runs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.refresh_dft_runs" title="Link to this definition"></a></dt>
+<dd><p>Query AiiDA for tracked DFT calculations and update statuses.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.refresh_structures_index">
+<span class="sig-name descname"><span class="pre">refresh_structures_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.refresh_structures_index" title="Link to this definition"></a></dt>
+<dd><p>Walk the on-disk initial DB and upsert summary rows. Returns count.</p>
+<p>Skips the expensive .xz decompression when the file hasn’t changed
+since the last successful index (based on mtime).  Pass <em>force=True</em>
+to re-scan unconditionally.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.remove_structures_from_index">
+<span class="sig-name descname"><span class="pre">remove_structures_from_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atl_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.remove_structures_from_index" title="Link to this definition"></a></dt>
+<dd><p>Remove structures from the SQLite index (main-thread only).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.save_config_snapshot">
+<span class="sig-name descname"><span class="pre">save_config_snapshot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toml_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.save_config_snapshot" title="Link to this definition"></a></dt>
+<dd><p>Insert a snapshot row; optionally activate it and mirror to disk.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.set_meta">
+<span class="sig-name descname"><span class="pre">set_meta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.set_meta" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.structure_breakdown">
+<span class="sig-name descname"><span class="pre">structure_breakdown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.structure_breakdown" title="Link to this definition"></a></dt>
+<dd><p>Group structures by <em>column</em> and return <code class="docutils literal notranslate"><span class="pre">[(value,</span> <span class="pre">count),</span> <span class="pre">…]</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.structure_counts">
+<span class="sig-name descname"><span class="pre">structure_counts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.structure_counts" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.update_al_run_status">
+<span class="sig-name descname"><span class="pre">update_al_run_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finished</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.update_al_run_status" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.upsert_al_iterations">
+<span class="sig-name descname"><span class="pre">upsert_al_iterations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.upsert_al_iterations" title="Link to this definition"></a></dt>
+<dd><p>Insert or update iteration rows parsed from a log file.</p>
+<p>Each dict in <em>iterations</em> should have keys matching
+<code class="docutils literal notranslate"><span class="pre">al_iterations</span></code> columns (<code class="docutils literal notranslate"><span class="pre">iteration</span></code>, <code class="docutils literal notranslate"><span class="pre">db_size</span></code>,
+<code class="docutils literal notranslate"><span class="pre">rmse_e</span></code>, <code class="docutils literal notranslate"><span class="pre">rmse_f</span></code>, …).  Returns the number of rows upserted.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.Project.workflow_state">
+<span class="sig-name descname"><span class="pre">workflow_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#atlas.core.gui.project.project.Project.workflow_state" title="Link to this definition"></a></dt>
+<dd><p>Return a per-stage workflow status used by the Overview tracker.</p>
+<p>Stages: <code class="docutils literal notranslate"><span class="pre">init_db</span></code>, <code class="docutils literal notranslate"><span class="pre">dft</span></code>, <code class="docutils literal notranslate"><span class="pre">al</span></code>, <code class="docutils literal notranslate"><span class="pre">reports</span></code>. Each carries a
+<code class="docutils literal notranslate"><span class="pre">status</span></code> of <code class="docutils literal notranslate"><span class="pre">empty</span></code> / <code class="docutils literal notranslate"><span class="pre">partial</span></code> / <code class="docutils literal notranslate"><span class="pre">running</span></code> / <code class="docutils literal notranslate"><span class="pre">done</span></code> and a
+short human-readable <code class="docutils literal notranslate"><span class="pre">metric</span></code>. <code class="docutils literal notranslate"><span class="pre">next_recommended</span></code> names the first
+stage that is not yet <code class="docutils literal notranslate"><span class="pre">done</span></code> (or <code class="docutils literal notranslate"><span class="pre">None</span></code> if everything is done).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="atlas.core.gui.project.project.ProjectError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.project.project.</span></span><span class="sig-name descname"><span class="pre">ProjectError</span></span><a class="headerlink" href="#atlas.core.gui.project.project.ProjectError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Raised on project create / open / migration failures.</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.project.recent">
+<span id="atlas-core-gui-project-recent-module"></span><h2>atlas.core.gui.project.recent module<a class="headerlink" href="#module-atlas.core.gui.project.recent" title="Link to this heading"></a></h2>
+<p>Persistence for the Hub’s “Recent Projects” list.</p>
+<p>A small JSON file under the user’s ATLAS config directory. Capped at 10
+entries; most-recent-first.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.project.recent.RecentEntry">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.project.recent.</span></span><span class="sig-name descname"><span class="pre">RecentEntry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_opened_at</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.project.recent.RecentEntry" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>One row in the Hub’s recent-projects list.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.project.recent.RecentEntry.last_opened_at">
+<span class="sig-name descname"><span class="pre">last_opened_at</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#atlas.core.gui.project.recent.RecentEntry.last_opened_at" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.core.gui.project.recent.RecentEntry.last_opened_when">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">last_opened_when</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.project.recent.RecentEntry.last_opened_when" title="Link to this definition"></a></dt>
+<dd><p>Human-readable relative time since last open.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.project.recent.RecentEntry.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.project.recent.RecentEntry.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.project.recent.RecentEntry.path">
+<span class="sig-name descname"><span class="pre">path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.project.recent.RecentEntry.path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.project.recent.RecentProjects">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.project.recent.</span></span><span class="sig-name descname"><span class="pre">RecentProjects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.project.recent.RecentProjects" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>File-backed recent-projects list.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.recent.RecentProjects.prune_missing">
+<span class="sig-name descname"><span class="pre">prune_missing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#atlas.core.gui.project.recent.RecentProjects.prune_missing" title="Link to this definition"></a></dt>
+<dd><p>Drop entries whose project file no longer exists. Returns count dropped.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.recent.RecentProjects.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.recent.RecentProjects.remove" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.recent.RecentProjects.touch">
+<span class="sig-name descname"><span class="pre">touch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.recent.RecentProjects.touch" title="Link to this definition"></a></dt>
+<dd><p>Record an open / create of <code class="docutils literal notranslate"><span class="pre">project_path</span></code> as most recent.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.project.schema">
+<span id="atlas-core-gui-project-schema-module"></span><h2>atlas.core.gui.project.schema module<a class="headerlink" href="#module-atlas.core.gui.project.schema" title="Link to this heading"></a></h2>
+<p>SQLite schema for ATLAS GUI project files.</p>
+<p>The DB is a thin index / summary layer over the sibling <cite>&lt;project&gt;.atlas/</cite>
+directory.  Heavy data (atom positions, model weights, plot images) is kept
+on disk; only small queryable fields and pointers live here.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.project.schema.initialise">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.project.schema.</span></span><span class="sig-name descname"><span class="pre">initialise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.schema.initialise" title="Link to this definition"></a></dt>
+<dd><p>Create every table on a fresh connection.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.project.schema.read_schema_version">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.project.schema.</span></span><span class="sig-name descname"><span class="pre">read_schema_version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#atlas.core.gui.project.schema.read_schema_version" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.project">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-atlas.core.gui.project" title="Link to this heading"></a></h2>
+<p>ATLAS GUI project layer.</p>
+<p>A <cite>Project</cite> bundles ATLAS configurations, structure databases, and run
+summaries into a single addressable unit on disk.  See <cite>project.py</cite> for the
+runtime API and <cite>schema.py</cite> for the SQLite schema.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.project.</span></span><span class="sig-name descname"><span class="pre">Project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Connection</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.project.Project" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>In-memory handle for an open ATLAS project.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.active_config">
+<span class="sig-name descname"><span class="pre">active_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.active_config" title="Link to this definition"></a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">(snapshot_id,</span> <span class="pre">toml)</span></code> for the active snapshot of <code class="docutils literal notranslate"><span class="pre">section</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.al_run_counts">
+<span class="sig-name descname"><span class="pre">al_run_counts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.al_run_counts" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.clear_structures_index">
+<span class="sig-name descname"><span class="pre">clear_structures_index</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.clear_structures_index" title="Link to this definition"></a></dt>
+<dd><p>Remove all rows from the structures table.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.close" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.config_path">
+<span class="sig-name descname"><span class="pre">config_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.config_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.create">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#atlas.core.gui.project.project.Project" title="atlas.core.gui.project.project.Project"><span class="pre">Project</span></a></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.create" title="Link to this definition"></a></dt>
+<dd><p>Create a new project bundle. Raises if it would overwrite existing data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.cwd">
+<span class="sig-name descname"><span class="pre">cwd</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.cwd" title="Link to this definition"></a></dt>
+<dd><p>Working directory for CLI subprocesses launched by the GUI.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.dft_run_counts">
+<span class="sig-name descname"><span class="pre">dft_run_counts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.dft_run_counts" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.dir">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span></em><a class="headerlink" href="#atlas.core.gui.project.Project.dir" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.init_db_name">
+<span class="sig-name descname"><span class="pre">init_db_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.init_db_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.init_db_path">
+<span class="sig-name descname"><span class="pre">init_db_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.init_db_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.latest_al_run_id">
+<span class="sig-name descname"><span class="pre">latest_al_run_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.latest_al_run_id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.list_al_iterations">
+<span class="sig-name descname"><span class="pre">list_al_iterations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.list_al_iterations" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.list_al_runs">
+<span class="sig-name descname"><span class="pre">list_al_runs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.list_al_runs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.list_config_snapshots">
+<span class="sig-name descname"><span class="pre">list_config_snapshots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.list_config_snapshots" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.list_dft_runs">
+<span class="sig-name descname"><span class="pre">list_dft_runs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.list_dft_runs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.list_structures">
+<span class="sig-name descname"><span class="pre">list_structures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.list_structures" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.log_path">
+<span class="sig-name descname"><span class="pre">log_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.log_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.meta">
+<span class="sig-name descname"><span class="pre">meta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.meta" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.modifications_breakdown">
+<span class="sig-name descname"><span class="pre">modifications_breakdown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.modifications_breakdown" title="Link to this definition"></a></dt>
+<dd><p>Count how many structures have each modification flag.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.n_atoms_list">
+<span class="sig-name descname"><span class="pre">n_atoms_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.n_atoms_list" title="Link to this definition"></a></dt>
+<dd><p>Return all non-null <code class="docutils literal notranslate"><span class="pre">n_atoms</span></code> values for histogram plotting.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.name">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.project.Project.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.open">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atlasproj_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#atlas.core.gui.project.project.Project" title="atlas.core.gui.project.project.Project"><span class="pre">Project</span></a></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.open" title="Link to this definition"></a></dt>
+<dd><p>Open an existing project. Applies any pending migrations.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.record_al_submission">
+<span class="sig-name descname"><span class="pre">record_al_submission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_workchain_pk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_snapshot_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'submitted'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.record_al_submission" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.record_dft_submission">
+<span class="sig-name descname"><span class="pre">record_dft_submission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">calc_uuid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aiida_pk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atl_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'submitted'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.record_dft_submission" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.refresh_al_run">
+<span class="sig-name descname"><span class="pre">refresh_al_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.refresh_al_run" title="Link to this definition"></a></dt>
+<dd><p>Query AiiDA for a single AL workchain and update its status.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.refresh_dft_runs">
+<span class="sig-name descname"><span class="pre">refresh_dft_runs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.refresh_dft_runs" title="Link to this definition"></a></dt>
+<dd><p>Query AiiDA for tracked DFT calculations and update statuses.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.refresh_structures_index">
+<span class="sig-name descname"><span class="pre">refresh_structures_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.refresh_structures_index" title="Link to this definition"></a></dt>
+<dd><p>Walk the on-disk initial DB and upsert summary rows. Returns count.</p>
+<p>Skips the expensive .xz decompression when the file hasn’t changed
+since the last successful index (based on mtime).  Pass <em>force=True</em>
+to re-scan unconditionally.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.remove_structures_from_index">
+<span class="sig-name descname"><span class="pre">remove_structures_from_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atl_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.remove_structures_from_index" title="Link to this definition"></a></dt>
+<dd><p>Remove structures from the SQLite index (main-thread only).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.save_config_snapshot">
+<span class="sig-name descname"><span class="pre">save_config_snapshot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toml_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.save_config_snapshot" title="Link to this definition"></a></dt>
+<dd><p>Insert a snapshot row; optionally activate it and mirror to disk.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.set_meta">
+<span class="sig-name descname"><span class="pre">set_meta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.set_meta" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.structure_breakdown">
+<span class="sig-name descname"><span class="pre">structure_breakdown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.structure_breakdown" title="Link to this definition"></a></dt>
+<dd><p>Group structures by <em>column</em> and return <code class="docutils literal notranslate"><span class="pre">[(value,</span> <span class="pre">count),</span> <span class="pre">…]</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.structure_counts">
+<span class="sig-name descname"><span class="pre">structure_counts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.structure_counts" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.update_al_run_status">
+<span class="sig-name descname"><span class="pre">update_al_run_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finished</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.update_al_run_status" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.upsert_al_iterations">
+<span class="sig-name descname"><span class="pre">upsert_al_iterations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.upsert_al_iterations" title="Link to this definition"></a></dt>
+<dd><p>Insert or update iteration rows parsed from a log file.</p>
+<p>Each dict in <em>iterations</em> should have keys matching
+<code class="docutils literal notranslate"><span class="pre">al_iterations</span></code> columns (<code class="docutils literal notranslate"><span class="pre">iteration</span></code>, <code class="docutils literal notranslate"><span class="pre">db_size</span></code>,
+<code class="docutils literal notranslate"><span class="pre">rmse_e</span></code>, <code class="docutils literal notranslate"><span class="pre">rmse_f</span></code>, …).  Returns the number of rows upserted.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.Project.workflow_state">
+<span class="sig-name descname"><span class="pre">workflow_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#atlas.core.gui.project.Project.workflow_state" title="Link to this definition"></a></dt>
+<dd><p>Return a per-stage workflow status used by the Overview tracker.</p>
+<p>Stages: <code class="docutils literal notranslate"><span class="pre">init_db</span></code>, <code class="docutils literal notranslate"><span class="pre">dft</span></code>, <code class="docutils literal notranslate"><span class="pre">al</span></code>, <code class="docutils literal notranslate"><span class="pre">reports</span></code>. Each carries a
+<code class="docutils literal notranslate"><span class="pre">status</span></code> of <code class="docutils literal notranslate"><span class="pre">empty</span></code> / <code class="docutils literal notranslate"><span class="pre">partial</span></code> / <code class="docutils literal notranslate"><span class="pre">running</span></code> / <code class="docutils literal notranslate"><span class="pre">done</span></code> and a
+short human-readable <code class="docutils literal notranslate"><span class="pre">metric</span></code>. <code class="docutils literal notranslate"><span class="pre">next_recommended</span></code> names the first
+stage that is not yet <code class="docutils literal notranslate"><span class="pre">done</span></code> (or <code class="docutils literal notranslate"><span class="pre">None</span></code> if everything is done).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="atlas.core.gui.project.ProjectError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.project.</span></span><span class="sig-name descname"><span class="pre">ProjectError</span></span><a class="headerlink" href="#atlas.core.gui.project.ProjectError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Raised on project create / open / migration failures.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.project.RecentProjects">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.project.</span></span><span class="sig-name descname"><span class="pre">RecentProjects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.project.RecentProjects" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>File-backed recent-projects list.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.RecentProjects.prune_missing">
+<span class="sig-name descname"><span class="pre">prune_missing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#atlas.core.gui.project.RecentProjects.prune_missing" title="Link to this definition"></a></dt>
+<dd><p>Drop entries whose project file no longer exists. Returns count dropped.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.RecentProjects.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.RecentProjects.remove" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.project.RecentProjects.touch">
+<span class="sig-name descname"><span class="pre">touch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.project.RecentProjects.touch" title="Link to this definition"></a></dt>
+<dd><p>Record an open / create of <code class="docutils literal notranslate"><span class="pre">project_path</span></code> as most recent.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="atlas.core.gui.process.html" class="btn btn-neutral float-left" title="atlas.core.gui.process package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="atlas.training.html" class="btn btn-neutral float-right" title="atlas.training package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='atlas.core.gui.project.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

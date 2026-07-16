@@ -1,0 +1,255 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>atlas.core.gui.process package &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="atlas.core.gui.project package" href="atlas.core.gui.project.html" />
+    <link rel="prev" title="atlas.core.gui.widgets package" href="atlas.core.gui.widgets.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">Input specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package Information</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="atlas.html">atlas package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="atlas.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html">atlas.active_learning package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.html">atlas.benchmarks package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="atlas.core.html">atlas.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.training.html">atlas.training package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html">atlas.workflows package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.html#module-atlas">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">atlas</a></li>
+          <li class="breadcrumb-item"><a href="atlas.html">atlas package</a></li>
+          <li class="breadcrumb-item"><a href="atlas.core.html">atlas.core package</a></li>
+          <li class="breadcrumb-item"><a href="atlas.core.gui.html">atlas.core.gui package</a></li>
+      <li class="breadcrumb-item active">atlas.core.gui.process package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/atlas.core.gui.process.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="atlas-core-gui-process-package">
+<h1>atlas.core.gui.process package<a class="headerlink" href="#atlas-core-gui-process-package" title="Link to this heading"></a></h1>
+<p>Background process runner for the ATLAS GUI.</p>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.core.gui.process.runner">
+<span id="atlas-core-gui-process-runner-module"></span><h2>atlas.core.gui.process.runner module<a class="headerlink" href="#module-atlas.core.gui.process.runner" title="Link to this heading"></a></h2>
+<p>Background process runner for the ATLAS GUI.</p>
+<p><cite>ProcessRunner</cite> executes an external command in a <cite>QThread</cite>, streams its
+combined stdout/stderr line-by-line to a Qt signal, optionally tees each
+line into a log file, and reports the exit code when finished.  It is the
+single point through which the GUI shells out to <cite>atl_*</cite> CLI tools.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">detached=True</span></code> the child process is launched in a new session
+(<code class="docutils literal notranslate"><span class="pre">setsid</span></code>) so it survives GUI shutdown.  A PID file is written next to
+the log file, enabling the GUI to reconnect on next launch via
+<cite>DetachedProcessMonitor</cite>.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.process.runner.DetachedProcessMonitor">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.process.runner.</span></span><span class="sig-name descname"><span class="pre">DetachedProcessMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.process.runner.DetachedProcessMonitor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QThread</span></code></p>
+<p>Reconnect to a detached process by tailing its log and watching its PID.</p>
+<p>Used when the GUI restarts and finds a PID file from a previous session.
+Emits the same signals as <code class="docutils literal notranslate"><span class="pre">ProcessRunner</span></code> so callers can treat it
+identically.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.process.runner.DetachedProcessMonitor.log_message">
+<span class="sig-name descname"><span class="pre">log_message</span></span><a class="headerlink" href="#atlas.core.gui.process.runner.DetachedProcessMonitor.log_message" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.process.runner.DetachedProcessMonitor.process_finished">
+<span class="sig-name descname"><span class="pre">process_finished</span></span><a class="headerlink" href="#atlas.core.gui.process.runner.DetachedProcessMonitor.process_finished" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.process.runner.DetachedProcessMonitor.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.process.runner.DetachedProcessMonitor.run" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.process.runner.DetachedProcessMonitor.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.process.runner.DetachedProcessMonitor.stop" title="Link to this definition"></a></dt>
+<dd><p>Stop monitoring (does NOT kill the detached process).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.process.runner.DetachedProcessMonitor.terminate_process">
+<span class="sig-name descname"><span class="pre">terminate_process</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.process.runner.DetachedProcessMonitor.terminate_process" title="Link to this definition"></a></dt>
+<dd><p>Actually kill the detached process.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.process.runner.ProcessRunner">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.process.runner.</span></span><span class="sig-name descname"><span class="pre">ProcessRunner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.process.runner.ProcessRunner" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QThread</span></code></p>
+<p>Run a command in a separate thread to keep the GUI responsive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>detached</strong> (<em>bool</em>) – If <em>True</em>, the child is started in a new session via <code class="docutils literal notranslate"><span class="pre">setsid</span></code>
+so it survives GUI shutdown.  Output goes directly to
+<em>log_file</em> (required when detached); the thread tails the log
+to emit <code class="docutils literal notranslate"><span class="pre">log_message</span></code> signals.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.process.runner.ProcessRunner.log_message">
+<span class="sig-name descname"><span class="pre">log_message</span></span><a class="headerlink" href="#atlas.core.gui.process.runner.ProcessRunner.log_message" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.core.gui.process.runner.ProcessRunner.pid_file">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pid_file</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#atlas.core.gui.process.runner.ProcessRunner.pid_file" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.process.runner.ProcessRunner.process_finished">
+<span class="sig-name descname"><span class="pre">process_finished</span></span><a class="headerlink" href="#atlas.core.gui.process.runner.ProcessRunner.process_finished" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.process.runner.ProcessRunner.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.process.runner.ProcessRunner.run" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.process.runner.ProcessRunner.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.process.runner.ProcessRunner.stop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.process.runner.find_detached_process">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.process.runner.</span></span><span class="sig-name descname"><span class="pre">find_detached_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.process.runner.find_detached_process" title="Link to this definition"></a></dt>
+<dd><p>Find a running detached process by scanning PID files.</p>
+<p>Returns <code class="docutils literal notranslate"><span class="pre">{'pid':</span> <span class="pre">int,</span> <span class="pre">'log_file':</span> <span class="pre">Path,</span> <span class="pre">'pid_file':</span> <span class="pre">Path,</span>
+<span class="pre">'command':</span> <span class="pre">list[str]}</span></code> if a live process is found, else <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.process">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-atlas.core.gui.process" title="Link to this heading"></a></h2>
+<p>Background process management for the ATLAS GUI.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="atlas.core.gui.widgets.html" class="btn btn-neutral float-left" title="atlas.core.gui.widgets package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="atlas.core.gui.project.html" class="btn btn-neutral float-right" title="atlas.core.gui.project package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='atlas.core.gui.process.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,631 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MLIP Benchmarks &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="DFT Parameter Benchmark" href="input_dft_benchmark.html" />
+    <link rel="prev" title="Active Learning Loop" href="input_active_learning.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="input.html">Input specification</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="input.html#input-formats">Input Formats</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="input_database_generation.html">Database Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input_dft.html">DFT Calculations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input_active_learning.html">Active Learning Loop</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">MLIP Benchmarks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#general-general">General - <code class="docutils literal notranslate"><span class="pre">[general]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#models-models">Models - <code class="docutils literal notranslate"><span class="pre">[models]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#slab-generation-slab-generation">Slab_Generation - <code class="docutils literal notranslate"><span class="pre">[slab_generation]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#md-parameters-md-parameters">Md_Parameters - <code class="docutils literal notranslate"><span class="pre">[md_parameters]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#benchmarks-benchmarks">Benchmarks - <code class="docutils literal notranslate"><span class="pre">[benchmarks]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-set-benchmark-settings-test-set">Test Set Benchmark Settings - <code class="docutils literal notranslate"><span class="pre">[test_set]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#database-evaluation-benchmark-settings-database-evaluation">Database Evaluation Benchmark Settings - <code class="docutils literal notranslate"><span class="pre">[database_evaluation]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#magic-cluster-benchmark-settings-magic-cluster">Magic Cluster Benchmark Settings - <code class="docutils literal notranslate"><span class="pre">[magic_cluster]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#surface-energy-benchmark-settings-surface-energy-benchmark">Surface Energy Benchmark Settings - <code class="docutils literal notranslate"><span class="pre">[surface_energy_benchmark]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#melting-point-benchmark-settings-melting-point-benchmark">Melting Point Benchmark Settings - <code class="docutils literal notranslate"><span class="pre">[melting_point_benchmark]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vacancy-formation-energy-benchmark-settings-defect-formation-energy">Vacancy Formation Energy Benchmark Settings - <code class="docutils literal notranslate"><span class="pre">[defect_formation_energy]</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="input_dft_benchmark.html">DFT Parameter Benchmark</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input_latent_space_analysis.html">Latent Space Analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Package Information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="input.html">Input specification</a></li>
+      <li class="breadcrumb-item active">MLIP Benchmarks</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/input_mlip_benchmarks.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="mlip-benchmarks">
+<h1>MLIP Benchmarks<a class="headerlink" href="#mlip-benchmarks" title="Link to this heading"></a></h1>
+<p>The MLIP Benchmarks tool allows you to run a series of benchmarks to evaluate the performance of Machine Learning Interatomic Potentials (MLIPs) trained with atlas.
+These benchmarks include:</p>
+<ul class="simple">
+<li><p>Accuracy tests on a given dataset.</p></li>
+<li><p>Melting point benchmark via the coexistence method.</p></li>
+<li><p>Monovacancy formation energy calculations.</p></li>
+<li><p>Surface energy calculations for various crystallographic facets.</p></li>
+</ul>
+<p>Generate a mlip benchmarks template file using <code class="docutils literal notranslate"><span class="pre">atl_gen_configuration_file</span> <span class="pre">-t</span> <span class="pre">mlip_benchmarks</span></code>.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>All keys are mandatory unless stated otherwise.</p>
+</div>
+<section id="general-general">
+<h2>General - <code class="docutils literal notranslate"><span class="pre">[general]</span></code><a class="headerlink" href="#general-general" title="Link to this heading"></a></h2>
+<p>General benchmark settings.</p>
+<ul class="simple">
+<li><p><span class="code-alt">output_dir</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Directory to save benchmark results.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'./mlip_evaluation'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">metal</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Metal symbol for the benchmark systems.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'Cu'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">device</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Device to run calculations on.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'cuda'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">cuda</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">dtype</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Data type for calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'float64'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">float32</span></code>, <code class="docutils literal notranslate"><span class="pre">float64</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">no_rich_ui</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Disable Rich UI and use plain text output.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="models-models">
+<h2>Models - <code class="docutils literal notranslate"><span class="pre">[models]</span></code><a class="headerlink" href="#models-models" title="Link to this heading"></a></h2>
+<p>Model specifications for benchmarking.</p>
+<ul class="simple">
+<li><p><span class="code-alt">model_files</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: List of paths to .model files.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">list[str])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">[]</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">aiida_pks</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: List of AiiDA workchain PKs/UUIDs to load models from.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">list[int])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">[]</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">foundation_models</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: List of foundation model specifications. Format: ‘library:model_name’.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">list[str])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">[]</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="slab-generation-slab-generation">
+<h2>Slab_Generation - <code class="docutils literal notranslate"><span class="pre">[slab_generation]</span></code><a class="headerlink" href="#slab-generation-slab-generation" title="Link to this heading"></a></h2>
+<p>Settings for slab generation in benchmarks.</p>
+<ul class="simple">
+<li><p><span class="code-alt">surface_indices</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Miller indices for the surface.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">list[int])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">1,</span> <span class="pre">1]</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">supercell_size</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Size of the supercell (x, y, z).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">list[int])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">[3,</span> <span class="pre">3,</span> <span class="pre">4]</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">vacuum</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Vacuum layer in Angstrom.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">10.0</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="md-parameters-md-parameters">
+<h2>Md_Parameters - <code class="docutils literal notranslate"><span class="pre">[md_parameters]</span></code><a class="headerlink" href="#md-parameters-md-parameters" title="Link to this heading"></a></h2>
+<p>Molecular dynamics simulation parameters.</p>
+<ul class="simple">
+<li><p><span class="code-alt">temp</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: MD temperature in Kelvin.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">300.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">n_steps</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of MD steps.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">10000</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">timestep</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: MD timestep in femtoseconds.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">friction</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Friction coefficient for Langevin dynamics.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.005</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="benchmarks-benchmarks">
+<h2>Benchmarks - <code class="docutils literal notranslate"><span class="pre">[benchmarks]</span></code><a class="headerlink" href="#benchmarks-benchmarks" title="Link to this heading"></a></h2>
+<p>Selection of benchmarks to run.</p>
+<ul class="simple">
+<li><p><span class="code-alt">run_energy_md</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Run the energy MD benchmark.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">run_accuracy_test_set</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Run energy and force error benchmark on a test set.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">run_elastic_properties</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Run elastic properties benchmark.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">run_defect_formation_energy</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Run defect formation energy benchmark.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">run_surface_energies</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Run surface energies benchmark.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">run_phonon_dispersion</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Run phonon dispersion benchmark.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">run_high_temp_md</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Run high-temperature MD benchmark.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">run_melting_point</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Run melting point calculation benchmark.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">run_gsfe</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Run Generalized Stacking Fault Energy (GSFE) benchmark.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">run_learning_curves</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Plot learning curves from AL runs.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">run_final_db_size</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Compare final database sizes from AL runs.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">run_md_count</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Count total MD calculations performed during AL loops.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">run_evaluate_database</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Evaluate models against a user-provided structure database.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">run_magic_cluster</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Run magic number cluster benchmark.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="test-set-benchmark-settings-test-set">
+<h2>Test Set Benchmark Settings - <code class="docutils literal notranslate"><span class="pre">[test_set]</span></code><a class="headerlink" href="#test-set-benchmark-settings-test-set" title="Link to this heading"></a></h2>
+<p>Test set configuration for accuracy benchmarks.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">test_set_path</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path to the held-out test set for accuracy benchmarks.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'/path/to/test_set.xyz'</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="database-evaluation-benchmark-settings-database-evaluation">
+<h2>Database Evaluation Benchmark Settings - <code class="docutils literal notranslate"><span class="pre">[database_evaluation]</span></code><a class="headerlink" href="#database-evaluation-benchmark-settings-database-evaluation" title="Link to this heading"></a></h2>
+<p>Configuration for database evaluation benchmark.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">database_path</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path to the structure database file for evaluation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'/path/to/database.xyz'</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="magic-cluster-benchmark-settings-magic-cluster">
+<h2>Magic Cluster Benchmark Settings - <code class="docutils literal notranslate"><span class="pre">[magic_cluster]</span></code><a class="headerlink" href="#magic-cluster-benchmark-settings-magic-cluster" title="Link to this heading"></a></h2>
+<p>Magic cluster benchmark settings.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">magic_cluster_dft_refs</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path to JSON file with DFT reference energies for magic clusters.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'/path/to/dft_refs.json'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">magic_cluster_sizes</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: List of magic number cluster sizes to test.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">list[int])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">[13,</span> <span class="pre">19,</span> <span class="pre">55,</span> <span class="pre">147,</span> <span class="pre">309,</span> <span class="pre">561]</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="surface-energy-benchmark-settings-surface-energy-benchmark">
+<h2>Surface Energy Benchmark Settings - <code class="docutils literal notranslate"><span class="pre">[surface_energy_benchmark]</span></code><a class="headerlink" href="#surface-energy-benchmark-settings-surface-energy-benchmark" title="Link to this heading"></a></h2>
+<p>Surface energy benchmark specific settings.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">plot_relative_dft</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to plot the vacancy formation energies relative to DFT reference values. If false, absolute values of the vacancy formation energies will be plotted.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">dft_refs</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path to JSON file with DFT reference energies.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'/path/to/surface_energies.json'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">bulk_structure</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path to DFT-optimized bulk structure file.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'/path/to/bulk.xyz'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">slab_structures</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Dictionary of slab structures with surface indices as keys.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+</ul>
+</li>
+</ul>
+<section id="create-slab-settings-surface-energy-benchmark-create-slab-settings">
+<h3>Create_Slab_Settings - <code class="docutils literal notranslate"><span class="pre">[surface_energy_benchmark.create_slab_settings]</span></code><a class="headerlink" href="#create-slab-settings-surface-energy-benchmark-create-slab-settings" title="Link to this heading"></a></h3>
+<p>Settings to create slabs for surface energy calculations.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">slab_layers</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of layers in the slab.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">7</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">vacuum_thickness</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Vacuum thickness in Angstrom.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">15.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">supercell_size</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Supercell size for the slab (x, y, z).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">list[int])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">[3,</span> <span class="pre">3,</span> <span class="pre">1]</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="melting-point-benchmark-settings-melting-point-benchmark">
+<h2>Melting Point Benchmark Settings - <code class="docutils literal notranslate"><span class="pre">[melting_point_benchmark]</span></code><a class="headerlink" href="#melting-point-benchmark-settings-melting-point-benchmark" title="Link to this heading"></a></h2>
+<p>Melting point benchmark settings.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">supercell_size</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Supercell size for melting point calculation (x, y, z).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">list[int])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">[6,</span> <span class="pre">6,</span> <span class="pre">6]</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">solid_temp_K</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Temperature in Kelvin for solid phase.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1100.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">liquid_temp_K</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Temperature in Kelvin for liquid phase.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1600.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">nve_initial_T_test_K</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Initial temperature in Kelvin for NVE test.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">800.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">melting_point_supercell_path</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path to the supercell structure file for melting point calculation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'/path/to/supercell.xyz'</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="vacancy-formation-energy-benchmark-settings-defect-formation-energy">
+<h2>Vacancy Formation Energy Benchmark Settings - <code class="docutils literal notranslate"><span class="pre">[defect_formation_energy]</span></code><a class="headerlink" href="#vacancy-formation-energy-benchmark-settings-defect-formation-energy" title="Link to this heading"></a></h2>
+<p>Defect formation energy benchmark settings. This test will create a vacancy in a bulk supercell and compute its formation energy.
+Alternatively, the user can provide a set of stochiometrically balanced structructures representing the bulk and vacancy-containing systems, along with any species that need to be removed to create the vacancy, and the benchmark will use these structures instead of generating them internally</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">plot_relative_dft</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to plot the vacancy formation energies relative to DFT reference values. If false, absolute values of the vacancy formation energies will be plotted.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">generate_automatically</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to generate bulk and vacancy structures automatically. If this is set to false, the user must provide reference energies and structures.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">use_static_calculations</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to use the DFT-generated structures directly, or to optimize them using the MLIP.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">supercell_size</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Supercell size for the bulk for vacancy formation energy calculation (x, y, z). Only used when generate_automatically is enabled.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(list[int])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">[4,</span> <span class="pre">4,</span> <span class="pre">4]</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">bulk_metal_symbol</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Symbol of the metal for the bulk structure. Only used when generate_automatically is enabled.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'/path/to/bulk.xyz'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">user_provided_structures</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: User-provided structures for vacancy formation energy calculation. The user might add however many structures as needed, each under an uniquely named key nested under ‘user_provided_structures’, which will contain name, path, and stoichiometry balancing factor as subkeys. Only used when generate_automatically is disabled.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">user_provided_dft_ref</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path to JSON file with DFT reference energies for user-provided structures. The DFT references should correspond to the user-provided structure names. Only used when generate_automatically is disabled.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'/path/to/dft_refs.json'</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="input_active_learning.html" class="btn btn-neutral float-left" title="Active Learning Loop" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="input_dft_benchmark.html" class="btn btn-neutral float-right" title="DFT Parameter Benchmark" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='input_mlip_benchmarks.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

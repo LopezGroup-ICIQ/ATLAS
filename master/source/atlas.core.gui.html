@@ -1,0 +1,1074 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>atlas.core.gui package &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="atlas.core.gui.pages package" href="atlas.core.gui.pages.html" />
+    <link rel="prev" title="atlas.core.filtering package" href="atlas.core.filtering.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">Input specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package Information</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="atlas.html">atlas package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="atlas.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html">atlas.active_learning package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.html">atlas.benchmarks package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="atlas.core.html">atlas.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.training.html">atlas.training package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html">atlas.workflows package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.html#module-atlas">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">atlas</a></li>
+          <li class="breadcrumb-item"><a href="atlas.html">atlas package</a></li>
+          <li class="breadcrumb-item"><a href="atlas.core.html">atlas.core package</a></li>
+      <li class="breadcrumb-item active">atlas.core.gui package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/atlas.core.gui.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="atlas-core-gui-package">
+<h1>atlas.core.gui package<a class="headerlink" href="#atlas-core-gui-package" title="Link to this heading"></a></h1>
+<p>PySide6 desktop GUI for ATLAS.</p>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="atlas.core.gui.pages.html">atlas.core.gui.pages package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.pages.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.pages.html#module-atlas.core.gui.pages.base">atlas.core.gui.pages.base module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.base.WorkflowPage"><code class="docutils literal notranslate"><span class="pre">WorkflowPage</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.base.WorkflowPage.DISPLAY_NAME"><code class="docutils literal notranslate"><span class="pre">WorkflowPage.DISPLAY_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.base.WorkflowPage.NAVIGATION_KEY"><code class="docutils literal notranslate"><span class="pre">WorkflowPage.NAVIGATION_KEY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.base.WorkflowPage.on_shown"><code class="docutils literal notranslate"><span class="pre">WorkflowPage.on_shown()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.base.WorkflowPage.process_running_changed"><code class="docutils literal notranslate"><span class="pre">WorkflowPage.process_running_changed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.base.WorkflowPage.set_app_theme"><code class="docutils literal notranslate"><span class="pre">WorkflowPage.set_app_theme()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.base.WorkflowPage.set_theme"><code class="docutils literal notranslate"><span class="pre">WorkflowPage.set_theme()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.pages.html#module-atlas.core.gui.pages.overview">atlas.core.gui.pages.overview module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.overview.OverviewPage"><code class="docutils literal notranslate"><span class="pre">OverviewPage</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.overview.OverviewPage.DISPLAY_NAME"><code class="docutils literal notranslate"><span class="pre">OverviewPage.DISPLAY_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.overview.OverviewPage.NAVIGATION_KEY"><code class="docutils literal notranslate"><span class="pre">OverviewPage.NAVIGATION_KEY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.overview.OverviewPage.on_shown"><code class="docutils literal notranslate"><span class="pre">OverviewPage.on_shown()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.overview.OverviewPage.refresh"><code class="docutils literal notranslate"><span class="pre">OverviewPage.refresh()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.pages.html#atlas-core-gui-pages-init-db-module">atlas.core.gui.pages.init_db module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.pages.html#atlas-core-gui-pages-active-learning-module">atlas.core.gui.pages.active_learning module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.pages.html#module-atlas.core.gui.pages.dft">atlas.core.gui.pages.dft module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.dft.DftPage"><code class="docutils literal notranslate"><span class="pre">DftPage</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.dft.DftPage.DISPLAY_NAME"><code class="docutils literal notranslate"><span class="pre">DftPage.DISPLAY_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.dft.DftPage.NAVIGATION_KEY"><code class="docutils literal notranslate"><span class="pre">DftPage.NAVIGATION_KEY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.dft.DftPage.on_shown"><code class="docutils literal notranslate"><span class="pre">DftPage.on_shown()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.dft.DftPage.run"><code class="docutils literal notranslate"><span class="pre">DftPage.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.pages.html#module-atlas.core.gui.pages.dft_benchmark">atlas.core.gui.pages.dft_benchmark module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.dft_benchmark.DftBenchmarkPage"><code class="docutils literal notranslate"><span class="pre">DftBenchmarkPage</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.dft_benchmark.DftBenchmarkPage.DISPLAY_NAME"><code class="docutils literal notranslate"><span class="pre">DftBenchmarkPage.DISPLAY_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.dft_benchmark.DftBenchmarkPage.NAVIGATION_KEY"><code class="docutils literal notranslate"><span class="pre">DftBenchmarkPage.NAVIGATION_KEY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.dft_benchmark.DftBenchmarkPage.on_shown"><code class="docutils literal notranslate"><span class="pre">DftBenchmarkPage.on_shown()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.dft_benchmark.DftBenchmarkPage.run"><code class="docutils literal notranslate"><span class="pre">DftBenchmarkPage.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.pages.html#module-atlas.core.gui.pages.reports">atlas.core.gui.pages.reports module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.reports.ReportsPage"><code class="docutils literal notranslate"><span class="pre">ReportsPage</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.reports.ReportsPage.DISPLAY_NAME"><code class="docutils literal notranslate"><span class="pre">ReportsPage.DISPLAY_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.reports.ReportsPage.NAVIGATION_KEY"><code class="docutils literal notranslate"><span class="pre">ReportsPage.NAVIGATION_KEY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.reports.ReportsPage.on_shown"><code class="docutils literal notranslate"><span class="pre">ReportsPage.on_shown()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.pages.html#module-atlas.core.gui.pages.logs">atlas.core.gui.pages.logs module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.logs.LogsPage"><code class="docutils literal notranslate"><span class="pre">LogsPage</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.logs.LogsPage.DISPLAY_NAME"><code class="docutils literal notranslate"><span class="pre">LogsPage.DISPLAY_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.logs.LogsPage.NAVIGATION_KEY"><code class="docutils literal notranslate"><span class="pre">LogsPage.NAVIGATION_KEY</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.pages.html#module-atlas.core.gui.pages.settings">atlas.core.gui.pages.settings module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.settings.SettingsPage"><code class="docutils literal notranslate"><span class="pre">SettingsPage</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.settings.SettingsPage.DISPLAY_NAME"><code class="docutils literal notranslate"><span class="pre">SettingsPage.DISPLAY_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.settings.SettingsPage.NAVIGATION_KEY"><code class="docutils literal notranslate"><span class="pre">SettingsPage.NAVIGATION_KEY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.settings.SettingsPage.app_theme_changed"><code class="docutils literal notranslate"><span class="pre">SettingsPage.app_theme_changed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.settings.SettingsPage.on_shown"><code class="docutils literal notranslate"><span class="pre">SettingsPage.on_shown()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.pages.html#atlas.core.gui.pages.settings.SettingsPage.theme_changed"><code class="docutils literal notranslate"><span class="pre">SettingsPage.theme_changed</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.pages.html#module-atlas.core.gui.pages">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="atlas.core.gui.widgets.html">atlas.core.gui.widgets package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#module-atlas.core.gui.widgets.aiida_suggestions">atlas.core.gui.widgets.aiida_suggestions module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.aiida_suggestions.fetch_aiida_suggestions"><code class="docutils literal notranslate"><span class="pre">fetch_aiida_suggestions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.aiida_suggestions.fetch_aiida_suggestions_async"><code class="docutils literal notranslate"><span class="pre">fetch_aiida_suggestions_async()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.aiida_suggestions.invalidate_aiida_suggestions_cache"><code class="docutils literal notranslate"><span class="pre">invalidate_aiida_suggestions_cache()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas-core-gui-widgets-al-monitor-panel-module">atlas.core.gui.widgets.al_monitor_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas-core-gui-widgets-al-outputs-panel-module">atlas.core.gui.widgets.al_outputs_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas-core-gui-widgets-boundary-panel-module">atlas.core.gui.widgets.boundary_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#module-atlas.core.gui.widgets.collapsible_log_panel">atlas.core.gui.widgets.collapsible_log_panel module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel"><code class="docutils literal notranslate"><span class="pre">CollapsibleLogPanel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.append"><code class="docutils literal notranslate"><span class="pre">CollapsibleLogPanel.append()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.clear"><code class="docutils literal notranslate"><span class="pre">CollapsibleLogPanel.clear()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.eventFilter"><code class="docutils literal notranslate"><span class="pre">CollapsibleLogPanel.eventFilter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.set_theme"><code class="docutils literal notranslate"><span class="pre">CollapsibleLogPanel.set_theme()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.toggle"><code class="docutils literal notranslate"><span class="pre">CollapsibleLogPanel.toggle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.toggled"><code class="docutils literal notranslate"><span class="pre">CollapsibleLogPanel.toggled</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.unread_count_changed"><code class="docutils literal notranslate"><span class="pre">CollapsibleLogPanel.unread_count_changed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.collapsible_log_panel.CollapsibleLogPanel.viewer"><code class="docutils literal notranslate"><span class="pre">CollapsibleLogPanel.viewer()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#module-atlas.core.gui.widgets.config_panel">atlas.core.gui.widgets.config_panel module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel"><code class="docutils literal notranslate"><span class="pre">ConfigPanel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel.add_action_button"><code class="docutils literal notranslate"><span class="pre">ConfigPanel.add_action_button()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel.collect_data"><code class="docutils literal notranslate"><span class="pre">ConfigPanel.collect_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel.current_toml"><code class="docutils literal notranslate"><span class="pre">ConfigPanel.current_toml()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel.dragEnterEvent"><code class="docutils literal notranslate"><span class="pre">ConfigPanel.dragEnterEvent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel.dropEvent"><code class="docutils literal notranslate"><span class="pre">ConfigPanel.dropEvent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel.focus_field"><code class="docutils literal notranslate"><span class="pre">ConfigPanel.focus_field()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel.load_data"><code class="docutils literal notranslate"><span class="pre">ConfigPanel.load_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel.load_toml_from_dialog"><code class="docutils literal notranslate"><span class="pre">ConfigPanel.load_toml_from_dialog()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel.parsed_config"><code class="docutils literal notranslate"><span class="pre">ConfigPanel.parsed_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel.populate_suggestions"><code class="docutils literal notranslate"><span class="pre">ConfigPanel.populate_suggestions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel.refresh_toml_preview"><code class="docutils literal notranslate"><span class="pre">ConfigPanel.refresh_toml_preview()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel.save_to_file"><code class="docutils literal notranslate"><span class="pre">ConfigPanel.save_to_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel.save_to_project"><code class="docutils literal notranslate"><span class="pre">ConfigPanel.save_to_project()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel.section_key"><code class="docutils literal notranslate"><span class="pre">ConfigPanel.section_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel.set_app_theme"><code class="docutils literal notranslate"><span class="pre">ConfigPanel.set_app_theme()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel.set_suggestions_loading"><code class="docutils literal notranslate"><span class="pre">ConfigPanel.set_suggestions_loading()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel.set_theme"><code class="docutils literal notranslate"><span class="pre">ConfigPanel.set_theme()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel.set_workflow_steps"><code class="docutils literal notranslate"><span class="pre">ConfigPanel.set_workflow_steps()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel.validate_current"><code class="docutils literal notranslate"><span class="pre">ConfigPanel.validate_current()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel.validated"><code class="docutils literal notranslate"><span class="pre">ConfigPanel.validated</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.config_panel.ConfigPanel.workflow_step_clicked"><code class="docutils literal notranslate"><span class="pre">ConfigPanel.workflow_step_clicked</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#module-atlas.core.gui.widgets.db_manage_panel">atlas.core.gui.widgets.db_manage_panel module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.db_manage_panel.DbManagePanel"><code class="docutils literal notranslate"><span class="pre">DbManagePanel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.db_manage_panel.DbManagePanel.refresh"><code class="docutils literal notranslate"><span class="pre">DbManagePanel.refresh()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas-core-gui-widgets-dft-outputs-panel-module">atlas.core.gui.widgets.dft_outputs_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#module-atlas.core.gui.widgets.dict_widgets">atlas.core.gui.widgets.dict_widgets module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.dict_widgets.IncarWidget"><code class="docutils literal notranslate"><span class="pre">IncarWidget</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.dict_widgets.IncarWidget.get_value"><code class="docutils literal notranslate"><span class="pre">IncarWidget.get_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.dict_widgets.IncarWidget.set_value"><code class="docutils literal notranslate"><span class="pre">IncarWidget.set_value()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.dict_widgets.KspacingWidget"><code class="docutils literal notranslate"><span class="pre">KspacingWidget</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.dict_widgets.KspacingWidget.get_value"><code class="docutils literal notranslate"><span class="pre">KspacingWidget.get_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.dict_widgets.KspacingWidget.set_value"><code class="docutils literal notranslate"><span class="pre">KspacingWidget.set_value()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas-core-gui-widgets-error-analysis-panel-module">atlas.core.gui.widgets.error_analysis_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#module-atlas.core.gui.widgets.latent_space_gallery">atlas.core.gui.widgets.latent_space_gallery module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.latent_space_gallery.LatentSpaceGallery"><code class="docutils literal notranslate"><span class="pre">LatentSpaceGallery</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.latent_space_gallery.LatentSpaceGallery.refresh"><code class="docutils literal notranslate"><span class="pre">LatentSpaceGallery.refresh()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#module-atlas.core.gui.widgets.periodic_table_widget">atlas.core.gui.widgets.periodic_table_widget module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.periodic_table_widget.ElementPickerField"><code class="docutils literal notranslate"><span class="pre">ElementPickerField</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.periodic_table_widget.ElementPickerField.elements"><code class="docutils literal notranslate"><span class="pre">ElementPickerField.elements()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.periodic_table_widget.ElementPickerField.elements_changed"><code class="docutils literal notranslate"><span class="pre">ElementPickerField.elements_changed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.periodic_table_widget.ElementPickerField.setText"><code class="docutils literal notranslate"><span class="pre">ElementPickerField.setText()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.periodic_table_widget.ElementPickerField.set_elements"><code class="docutils literal notranslate"><span class="pre">ElementPickerField.set_elements()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.periodic_table_widget.ElementPickerField.text"><code class="docutils literal notranslate"><span class="pre">ElementPickerField.text()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.periodic_table_widget.PeriodicTableDialog"><code class="docutils literal notranslate"><span class="pre">PeriodicTableDialog</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.periodic_table_widget.PeriodicTableDialog.selected_elements"><code class="docutils literal notranslate"><span class="pre">PeriodicTableDialog.selected_elements()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#module-atlas.core.gui.widgets.phase_card_panel">atlas.core.gui.widgets.phase_card_panel module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.phase_card_panel.PhaseCardPanel"><code class="docutils literal notranslate"><span class="pre">PhaseCardPanel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.phase_card_panel.PhaseCardPanel.collect_data"><code class="docutils literal notranslate"><span class="pre">PhaseCardPanel.collect_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.phase_card_panel.PhaseCardPanel.phase_count"><code class="docutils literal notranslate"><span class="pre">PhaseCardPanel.phase_count()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.phase_card_panel.PhaseCardPanel.populate"><code class="docutils literal notranslate"><span class="pre">PhaseCardPanel.populate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.phase_card_panel.PhaseEditDialog"><code class="docutils literal notranslate"><span class="pre">PhaseEditDialog</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.phase_card_panel.PhaseEditDialog.collected_data"><code class="docutils literal notranslate"><span class="pre">PhaseEditDialog.collected_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#module-atlas.core.gui.widgets.preflight_panel">atlas.core.gui.widgets.preflight_panel module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.preflight_panel.Check"><code class="docutils literal notranslate"><span class="pre">Check</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.preflight_panel.Check.description"><code class="docutils literal notranslate"><span class="pre">Check.description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.preflight_panel.Check.field_key"><code class="docutils literal notranslate"><span class="pre">Check.field_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.preflight_panel.Check.label"><code class="docutils literal notranslate"><span class="pre">Check.label</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.preflight_panel.Check.requires_aiida"><code class="docutils literal notranslate"><span class="pre">Check.requires_aiida</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.preflight_panel.Check.run"><code class="docutils literal notranslate"><span class="pre">Check.run</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.preflight_panel.PreflightPanel"><code class="docutils literal notranslate"><span class="pre">PreflightPanel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.preflight_panel.PreflightPanel.failing_summary"><code class="docutils literal notranslate"><span class="pre">PreflightPanel.failing_summary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.preflight_panel.PreflightPanel.has_errors"><code class="docutils literal notranslate"><span class="pre">PreflightPanel.has_errors</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.preflight_panel.PreflightPanel.run_checks"><code class="docutils literal notranslate"><span class="pre">PreflightPanel.run_checks()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#module-atlas.core.gui.widgets.prereq_banner">atlas.core.gui.widgets.prereq_banner module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.prereq_banner.PrereqBanner"><code class="docutils literal notranslate"><span class="pre">PrereqBanner</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.prereq_banner.PrereqBanner.restyle"><code class="docutils literal notranslate"><span class="pre">PrereqBanner.restyle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.prereq_banner.PrereqBanner.set_message"><code class="docutils literal notranslate"><span class="pre">PrereqBanner.set_message()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.prereq_banner.SuccessBanner"><code class="docutils literal notranslate"><span class="pre">SuccessBanner</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.prereq_banner.SuccessBanner.restyle"><code class="docutils literal notranslate"><span class="pre">SuccessBanner.restyle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.prereq_banner.SuccessBanner.set_message"><code class="docutils literal notranslate"><span class="pre">SuccessBanner.set_message()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#module-atlas.core.gui.widgets.schema_form">atlas.core.gui.widgets.schema_form module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#id1">Signals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.schema_form.SchemaForm"><code class="docutils literal notranslate"><span class="pre">SchemaForm</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.schema_form.SchemaForm.add_dynamic_item"><code class="docutils literal notranslate"><span class="pre">SchemaForm.add_dynamic_item()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.schema_form.SchemaForm.available_sections"><code class="docutils literal notranslate"><span class="pre">SchemaForm.available_sections()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.schema_form.SchemaForm.clear"><code class="docutils literal notranslate"><span class="pre">SchemaForm.clear()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.schema_form.SchemaForm.collect_data"><code class="docutils literal notranslate"><span class="pre">SchemaForm.collect_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.schema_form.SchemaForm.current_section"><code class="docutils literal notranslate"><span class="pre">SchemaForm.current_section()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.schema_form.SchemaForm.eventFilter"><code class="docutils literal notranslate"><span class="pre">SchemaForm.eventFilter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.schema_form.SchemaForm.field_focused"><code class="docutils literal notranslate"><span class="pre">SchemaForm.field_focused</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.schema_form.SchemaForm.iter_leaf_widgets"><code class="docutils literal notranslate"><span class="pre">SchemaForm.iter_leaf_widgets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.schema_form.SchemaForm.load_schema"><code class="docutils literal notranslate"><span class="pre">SchemaForm.load_schema()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.schema_form.SchemaForm.populate_from_data"><code class="docutils literal notranslate"><span class="pre">SchemaForm.populate_from_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.schema_form.SchemaForm.populate_suggestions"><code class="docutils literal notranslate"><span class="pre">SchemaForm.populate_suggestions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.schema_form.SchemaForm.schema_loaded"><code class="docutils literal notranslate"><span class="pre">SchemaForm.schema_loaded</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.schema_form.SchemaForm.section_changed"><code class="docutils literal notranslate"><span class="pre">SchemaForm.section_changed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.schema_form.SchemaForm.set_current_section"><code class="docutils literal notranslate"><span class="pre">SchemaForm.set_current_section()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.schema_form.SchemaForm.set_schema"><code class="docutils literal notranslate"><span class="pre">SchemaForm.set_schema()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.schema_form.SchemaForm.set_suggestions_loading"><code class="docutils literal notranslate"><span class="pre">SchemaForm.set_suggestions_loading()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#module-atlas.core.gui.widgets.setup_wizard">atlas.core.gui.widgets.setup_wizard module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.setup_wizard.SetupStatusPanel"><code class="docutils literal notranslate"><span class="pre">SetupStatusPanel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.setup_wizard.SetupStatusPanel.refresh"><code class="docutils literal notranslate"><span class="pre">SetupStatusPanel.refresh()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.setup_wizard.SetupWizard"><code class="docutils literal notranslate"><span class="pre">SetupWizard</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.setup_wizard.check_setup_problems"><code class="docutils literal notranslate"><span class="pre">check_setup_problems()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.setup_wizard.needs_first_run_wizard"><code class="docutils literal notranslate"><span class="pre">needs_first_run_wizard()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#module-atlas.core.gui.widgets.side_panel">atlas.core.gui.widgets.side_panel module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.side_panel.SidePanel"><code class="docutils literal notranslate"><span class="pre">SidePanel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.side_panel.SidePanel.add_view"><code class="docutils literal notranslate"><span class="pre">SidePanel.add_view()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.side_panel.SidePanel.current_view"><code class="docutils literal notranslate"><span class="pre">SidePanel.current_view()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.side_panel.SidePanel.hide_view"><code class="docutils literal notranslate"><span class="pre">SidePanel.hide_view()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.side_panel.SidePanel.set_current_view"><code class="docutils literal notranslate"><span class="pre">SidePanel.set_current_view()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.side_panel.SidePanel.set_theme"><code class="docutils literal notranslate"><span class="pre">SidePanel.set_theme()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.side_panel.SidePanel.showEvent"><code class="docutils literal notranslate"><span class="pre">SidePanel.showEvent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.side_panel.SidePanel.show_view"><code class="docutils literal notranslate"><span class="pre">SidePanel.show_view()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.side_panel.SidePanel.view_changed"><code class="docutils literal notranslate"><span class="pre">SidePanel.view_changed</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas-core-gui-widgets-structure-viewer-module">atlas.core.gui.widgets.structure_viewer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas-core-gui-widgets-structures-panel-module">atlas.core.gui.widgets.structures_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#module-atlas.core.gui.widgets.toml_editor">atlas.core.gui.widgets.toml_editor module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.toml_editor.TomlEditor"><code class="docutils literal notranslate"><span class="pre">TomlEditor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.toml_editor.TomlEditor.clear_highlight"><code class="docutils literal notranslate"><span class="pre">TomlEditor.clear_highlight()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.toml_editor.TomlEditor.highlight_path"><code class="docutils literal notranslate"><span class="pre">TomlEditor.highlight_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.toml_editor.TomlEditor.plain_text"><code class="docutils literal notranslate"><span class="pre">TomlEditor.plain_text()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.toml_editor.TomlEditor.set_text"><code class="docutils literal notranslate"><span class="pre">TomlEditor.set_text()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.toml_editor.TomlEditor.set_theme"><code class="docutils literal notranslate"><span class="pre">TomlEditor.set_theme()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.toml_editor.TomlHighlighter"><code class="docutils literal notranslate"><span class="pre">TomlHighlighter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.toml_editor.TomlHighlighter.THEMES"><code class="docutils literal notranslate"><span class="pre">TomlHighlighter.THEMES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.toml_editor.TomlHighlighter.highlightBlock"><code class="docutils literal notranslate"><span class="pre">TomlHighlighter.highlightBlock()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas-core-gui-widgets-training-report-panel-module">atlas.core.gui.widgets.training_report_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#module-atlas.core.gui.widgets.validation_dialog">atlas.core.gui.widgets.validation_dialog module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.validation_dialog.ValidationDialog"><code class="docutils literal notranslate"><span class="pre">ValidationDialog</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#module-atlas.core.gui.widgets.workflow_view">atlas.core.gui.widgets.workflow_view module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.workflow_view.WorkflowStep"><code class="docutils literal notranslate"><span class="pre">WorkflowStep</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.workflow_view.WorkflowStep.category"><code class="docutils literal notranslate"><span class="pre">WorkflowStep.category</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.workflow_view.WorkflowStep.config_key"><code class="docutils literal notranslate"><span class="pre">WorkflowStep.config_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.workflow_view.WorkflowStep.description"><code class="docutils literal notranslate"><span class="pre">WorkflowStep.description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.workflow_view.WorkflowStep.estimated_count"><code class="docutils literal notranslate"><span class="pre">WorkflowStep.estimated_count</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.workflow_view.WorkflowStep.group"><code class="docutils literal notranslate"><span class="pre">WorkflowStep.group</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.workflow_view.WorkflowStep.is_active"><code class="docutils literal notranslate"><span class="pre">WorkflowStep.is_active</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.workflow_view.WorkflowStep.is_filter"><code class="docutils literal notranslate"><span class="pre">WorkflowStep.is_filter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.workflow_view.WorkflowStep.name"><code class="docutils literal notranslate"><span class="pre">WorkflowStep.name</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.workflow_view.WorkflowView"><code class="docutils literal notranslate"><span class="pre">WorkflowView</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.workflow_view.WorkflowView.set_steps"><code class="docutils literal notranslate"><span class="pre">WorkflowView.set_steps()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.workflow_view.WorkflowView.set_theme"><code class="docutils literal notranslate"><span class="pre">WorkflowView.set_theme()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.widgets.html#atlas.core.gui.widgets.workflow_view.WorkflowView.step_clicked"><code class="docutils literal notranslate"><span class="pre">WorkflowView.step_clicked</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.widgets.html#module-atlas.core.gui.widgets">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="atlas.core.gui.process.html">atlas.core.gui.process package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.process.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.process.html#module-atlas.core.gui.process.runner">atlas.core.gui.process.runner module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.process.html#atlas.core.gui.process.runner.DetachedProcessMonitor"><code class="docutils literal notranslate"><span class="pre">DetachedProcessMonitor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.process.html#atlas.core.gui.process.runner.DetachedProcessMonitor.log_message"><code class="docutils literal notranslate"><span class="pre">DetachedProcessMonitor.log_message</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.process.html#atlas.core.gui.process.runner.DetachedProcessMonitor.process_finished"><code class="docutils literal notranslate"><span class="pre">DetachedProcessMonitor.process_finished</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.process.html#atlas.core.gui.process.runner.DetachedProcessMonitor.run"><code class="docutils literal notranslate"><span class="pre">DetachedProcessMonitor.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.process.html#atlas.core.gui.process.runner.DetachedProcessMonitor.stop"><code class="docutils literal notranslate"><span class="pre">DetachedProcessMonitor.stop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.process.html#atlas.core.gui.process.runner.DetachedProcessMonitor.terminate_process"><code class="docutils literal notranslate"><span class="pre">DetachedProcessMonitor.terminate_process()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.process.html#atlas.core.gui.process.runner.ProcessRunner"><code class="docutils literal notranslate"><span class="pre">ProcessRunner</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.process.html#atlas.core.gui.process.runner.ProcessRunner.log_message"><code class="docutils literal notranslate"><span class="pre">ProcessRunner.log_message</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.process.html#atlas.core.gui.process.runner.ProcessRunner.pid_file"><code class="docutils literal notranslate"><span class="pre">ProcessRunner.pid_file</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.process.html#atlas.core.gui.process.runner.ProcessRunner.process_finished"><code class="docutils literal notranslate"><span class="pre">ProcessRunner.process_finished</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.process.html#atlas.core.gui.process.runner.ProcessRunner.run"><code class="docutils literal notranslate"><span class="pre">ProcessRunner.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.process.html#atlas.core.gui.process.runner.ProcessRunner.stop"><code class="docutils literal notranslate"><span class="pre">ProcessRunner.stop()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.process.html#atlas.core.gui.process.runner.find_detached_process"><code class="docutils literal notranslate"><span class="pre">find_detached_process()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.process.html#module-atlas.core.gui.process">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="atlas.core.gui.project.html">atlas.core.gui.project package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.project.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.project.html#module-atlas.core.gui.project.aiida_sync">atlas.core.gui.project.aiida_sync module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.aiida_sync.SyncResult"><code class="docutils literal notranslate"><span class="pre">SyncResult</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.aiida_sync.SyncResult.al_checked"><code class="docutils literal notranslate"><span class="pre">SyncResult.al_checked</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.aiida_sync.SyncResult.al_updated"><code class="docutils literal notranslate"><span class="pre">SyncResult.al_updated</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.aiida_sync.SyncResult.dft_checked"><code class="docutils literal notranslate"><span class="pre">SyncResult.dft_checked</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.aiida_sync.SyncResult.dft_updated"><code class="docutils literal notranslate"><span class="pre">SyncResult.dft_updated</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.aiida_sync.SyncResult.errors"><code class="docutils literal notranslate"><span class="pre">SyncResult.errors</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.aiida_sync.SyncResult.summary"><code class="docutils literal notranslate"><span class="pre">SyncResult.summary</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.aiida_sync.sync_al_runs"><code class="docutils literal notranslate"><span class="pre">sync_al_runs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.aiida_sync.sync_all"><code class="docutils literal notranslate"><span class="pre">sync_all()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.aiida_sync.sync_dft_runs"><code class="docutils literal notranslate"><span class="pre">sync_dft_runs()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.project.html#module-atlas.core.gui.project.migrations">atlas.core.gui.project.migrations module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.migrations.apply_migrations"><code class="docutils literal notranslate"><span class="pre">apply_migrations()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.project.html#module-atlas.core.gui.project.project">atlas.core.gui.project.project module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.project.html#layout">Layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project"><code class="docutils literal notranslate"><span class="pre">Project</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.active_config"><code class="docutils literal notranslate"><span class="pre">Project.active_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.al_run_counts"><code class="docutils literal notranslate"><span class="pre">Project.al_run_counts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.clear_structures_index"><code class="docutils literal notranslate"><span class="pre">Project.clear_structures_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.close"><code class="docutils literal notranslate"><span class="pre">Project.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.config_path"><code class="docutils literal notranslate"><span class="pre">Project.config_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.create"><code class="docutils literal notranslate"><span class="pre">Project.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.cwd"><code class="docutils literal notranslate"><span class="pre">Project.cwd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.dft_run_counts"><code class="docutils literal notranslate"><span class="pre">Project.dft_run_counts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.dir"><code class="docutils literal notranslate"><span class="pre">Project.dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.init_db_name"><code class="docutils literal notranslate"><span class="pre">Project.init_db_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.init_db_path"><code class="docutils literal notranslate"><span class="pre">Project.init_db_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.latest_al_run_id"><code class="docutils literal notranslate"><span class="pre">Project.latest_al_run_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.list_al_iterations"><code class="docutils literal notranslate"><span class="pre">Project.list_al_iterations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.list_al_runs"><code class="docutils literal notranslate"><span class="pre">Project.list_al_runs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.list_config_snapshots"><code class="docutils literal notranslate"><span class="pre">Project.list_config_snapshots()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.list_dft_runs"><code class="docutils literal notranslate"><span class="pre">Project.list_dft_runs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.list_structures"><code class="docutils literal notranslate"><span class="pre">Project.list_structures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.log_path"><code class="docutils literal notranslate"><span class="pre">Project.log_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.meta"><code class="docutils literal notranslate"><span class="pre">Project.meta()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.modifications_breakdown"><code class="docutils literal notranslate"><span class="pre">Project.modifications_breakdown()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.n_atoms_list"><code class="docutils literal notranslate"><span class="pre">Project.n_atoms_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.name"><code class="docutils literal notranslate"><span class="pre">Project.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.open"><code class="docutils literal notranslate"><span class="pre">Project.open()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.record_al_submission"><code class="docutils literal notranslate"><span class="pre">Project.record_al_submission()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.record_dft_submission"><code class="docutils literal notranslate"><span class="pre">Project.record_dft_submission()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.refresh_al_run"><code class="docutils literal notranslate"><span class="pre">Project.refresh_al_run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.refresh_dft_runs"><code class="docutils literal notranslate"><span class="pre">Project.refresh_dft_runs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.refresh_structures_index"><code class="docutils literal notranslate"><span class="pre">Project.refresh_structures_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.remove_structures_from_index"><code class="docutils literal notranslate"><span class="pre">Project.remove_structures_from_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.save_config_snapshot"><code class="docutils literal notranslate"><span class="pre">Project.save_config_snapshot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.set_meta"><code class="docutils literal notranslate"><span class="pre">Project.set_meta()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.structure_breakdown"><code class="docutils literal notranslate"><span class="pre">Project.structure_breakdown()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.structure_counts"><code class="docutils literal notranslate"><span class="pre">Project.structure_counts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.update_al_run_status"><code class="docutils literal notranslate"><span class="pre">Project.update_al_run_status()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.upsert_al_iterations"><code class="docutils literal notranslate"><span class="pre">Project.upsert_al_iterations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.Project.workflow_state"><code class="docutils literal notranslate"><span class="pre">Project.workflow_state()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.project.ProjectError"><code class="docutils literal notranslate"><span class="pre">ProjectError</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.project.html#module-atlas.core.gui.project.recent">atlas.core.gui.project.recent module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.recent.RecentEntry"><code class="docutils literal notranslate"><span class="pre">RecentEntry</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.recent.RecentEntry.last_opened_at"><code class="docutils literal notranslate"><span class="pre">RecentEntry.last_opened_at</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.recent.RecentEntry.last_opened_when"><code class="docutils literal notranslate"><span class="pre">RecentEntry.last_opened_when</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.recent.RecentEntry.name"><code class="docutils literal notranslate"><span class="pre">RecentEntry.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.recent.RecentEntry.path"><code class="docutils literal notranslate"><span class="pre">RecentEntry.path</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.recent.RecentProjects"><code class="docutils literal notranslate"><span class="pre">RecentProjects</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.recent.RecentProjects.prune_missing"><code class="docutils literal notranslate"><span class="pre">RecentProjects.prune_missing()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.recent.RecentProjects.remove"><code class="docutils literal notranslate"><span class="pre">RecentProjects.remove()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.recent.RecentProjects.touch"><code class="docutils literal notranslate"><span class="pre">RecentProjects.touch()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.project.html#module-atlas.core.gui.project.schema">atlas.core.gui.project.schema module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.schema.initialise"><code class="docutils literal notranslate"><span class="pre">initialise()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.schema.read_schema_version"><code class="docutils literal notranslate"><span class="pre">read_schema_version()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.gui.project.html#module-atlas.core.gui.project">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project"><code class="docutils literal notranslate"><span class="pre">Project</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.active_config"><code class="docutils literal notranslate"><span class="pre">Project.active_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.al_run_counts"><code class="docutils literal notranslate"><span class="pre">Project.al_run_counts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.clear_structures_index"><code class="docutils literal notranslate"><span class="pre">Project.clear_structures_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.close"><code class="docutils literal notranslate"><span class="pre">Project.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.config_path"><code class="docutils literal notranslate"><span class="pre">Project.config_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.create"><code class="docutils literal notranslate"><span class="pre">Project.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.cwd"><code class="docutils literal notranslate"><span class="pre">Project.cwd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.dft_run_counts"><code class="docutils literal notranslate"><span class="pre">Project.dft_run_counts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.dir"><code class="docutils literal notranslate"><span class="pre">Project.dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.init_db_name"><code class="docutils literal notranslate"><span class="pre">Project.init_db_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.init_db_path"><code class="docutils literal notranslate"><span class="pre">Project.init_db_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.latest_al_run_id"><code class="docutils literal notranslate"><span class="pre">Project.latest_al_run_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.list_al_iterations"><code class="docutils literal notranslate"><span class="pre">Project.list_al_iterations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.list_al_runs"><code class="docutils literal notranslate"><span class="pre">Project.list_al_runs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.list_config_snapshots"><code class="docutils literal notranslate"><span class="pre">Project.list_config_snapshots()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.list_dft_runs"><code class="docutils literal notranslate"><span class="pre">Project.list_dft_runs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.list_structures"><code class="docutils literal notranslate"><span class="pre">Project.list_structures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.log_path"><code class="docutils literal notranslate"><span class="pre">Project.log_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.meta"><code class="docutils literal notranslate"><span class="pre">Project.meta()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.modifications_breakdown"><code class="docutils literal notranslate"><span class="pre">Project.modifications_breakdown()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.n_atoms_list"><code class="docutils literal notranslate"><span class="pre">Project.n_atoms_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.name"><code class="docutils literal notranslate"><span class="pre">Project.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.open"><code class="docutils literal notranslate"><span class="pre">Project.open()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.record_al_submission"><code class="docutils literal notranslate"><span class="pre">Project.record_al_submission()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.record_dft_submission"><code class="docutils literal notranslate"><span class="pre">Project.record_dft_submission()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.refresh_al_run"><code class="docutils literal notranslate"><span class="pre">Project.refresh_al_run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.refresh_dft_runs"><code class="docutils literal notranslate"><span class="pre">Project.refresh_dft_runs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.refresh_structures_index"><code class="docutils literal notranslate"><span class="pre">Project.refresh_structures_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.remove_structures_from_index"><code class="docutils literal notranslate"><span class="pre">Project.remove_structures_from_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.save_config_snapshot"><code class="docutils literal notranslate"><span class="pre">Project.save_config_snapshot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.set_meta"><code class="docutils literal notranslate"><span class="pre">Project.set_meta()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.structure_breakdown"><code class="docutils literal notranslate"><span class="pre">Project.structure_breakdown()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.structure_counts"><code class="docutils literal notranslate"><span class="pre">Project.structure_counts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.update_al_run_status"><code class="docutils literal notranslate"><span class="pre">Project.update_al_run_status()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.upsert_al_iterations"><code class="docutils literal notranslate"><span class="pre">Project.upsert_al_iterations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.Project.workflow_state"><code class="docutils literal notranslate"><span class="pre">Project.workflow_state()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.ProjectError"><code class="docutils literal notranslate"><span class="pre">ProjectError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.RecentProjects"><code class="docutils literal notranslate"><span class="pre">RecentProjects</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.RecentProjects.prune_missing"><code class="docutils literal notranslate"><span class="pre">RecentProjects.prune_missing()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.RecentProjects.remove"><code class="docutils literal notranslate"><span class="pre">RecentProjects.remove()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.project.html#atlas.core.gui.project.RecentProjects.touch"><code class="docutils literal notranslate"><span class="pre">RecentProjects.touch()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="atlas-core-gui-app-module">
+<h2>atlas.core.gui.app module<a class="headerlink" href="#atlas-core-gui-app-module" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.core.gui.app_params">
+<span id="atlas-core-gui-app-params-module"></span><h2>atlas.core.gui.app_params module<a class="headerlink" href="#module-atlas.core.gui.app_params" title="Link to this heading"></a></h2>
+<p>Application-wide GUI parameters.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.app_params.ApplicationParameters">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.app_params.</span></span><span class="sig-name descname"><span class="pre">ApplicationParameters</span></span><a class="headerlink" href="#atlas.core.gui.app_params.ApplicationParameters" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Holds application-wide parameters.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.app_params.ApplicationParameters.FONT_FAMILIES_MONOSPACE">
+<span class="sig-name descname"><span class="pre">FONT_FAMILIES_MONOSPACE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Fira</span> <span class="pre">Code',</span> <span class="pre">'monospace']</span></em><a class="headerlink" href="#atlas.core.gui.app_params.ApplicationParameters.FONT_FAMILIES_MONOSPACE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.app_params.ApplicationParameters.FONT_FAMILIES_REGULAR">
+<span class="sig-name descname"><span class="pre">FONT_FAMILIES_REGULAR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Noto</span> <span class="pre">Sans',</span> <span class="pre">'Sans</span> <span class="pre">Serif',</span> <span class="pre">'Arial']</span></em><a class="headerlink" href="#atlas.core.gui.app_params.ApplicationParameters.FONT_FAMILIES_REGULAR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.app_params.pretty_label">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.app_params.</span></span><span class="sig-name descname"><span class="pre">pretty_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#atlas.core.gui.app_params.pretty_label" title="Link to this definition"></a></dt>
+<dd><p>Turn a snake_case schema key into a human-readable label.</p>
+<p><code class="docutils literal notranslate"><span class="pre">key.replace('_',</span> <span class="pre">'</span> <span class="pre">').title()</span></code> but with acronyms preserved.</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.gui">
+<span id="atlas-core-gui-gui-module"></span><h2>atlas.core.gui.gui module<a class="headerlink" href="#module-atlas.core.gui.gui" title="Link to this heading"></a></h2>
+<p>A PyQt-based GUI for the ATLAS library.</p>
+<p>This application provides a user-friendly interface to configure and run
+ATLAS processes. It uses a YAML schema as a template to dynamically
+build the GUI, and outputs the configuration in TOML format.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.ApplicationParameters">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.gui.</span></span><span class="sig-name descname"><span class="pre">ApplicationParameters</span></span><a class="headerlink" href="#atlas.core.gui.gui.ApplicationParameters" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Holds application-wide parameters.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.ApplicationParameters.FONT_FAMILIES_MONOSPACE">
+<span class="sig-name descname"><span class="pre">FONT_FAMILIES_MONOSPACE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Fira</span> <span class="pre">Code',</span> <span class="pre">'monospace']</span></em><a class="headerlink" href="#atlas.core.gui.gui.ApplicationParameters.FONT_FAMILIES_MONOSPACE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.ApplicationParameters.FONT_FAMILIES_REGULAR">
+<span class="sig-name descname"><span class="pre">FONT_FAMILIES_REGULAR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Noto</span> <span class="pre">Sans',</span> <span class="pre">'Sans</span> <span class="pre">Serif',</span> <span class="pre">'Arial']</span></em><a class="headerlink" href="#atlas.core.gui.gui.ApplicationParameters.FONT_FAMILIES_REGULAR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.InputFileTab">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.gui.</span></span><span class="sig-name descname"><span class="pre">InputFileTab</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.gui.InputFileTab" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>Manages UI for creating and editing TOML files based on a schema.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.InputFileTab.add_dynamic_item">
+<span class="sig-name descname"><span class="pre">add_dynamic_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'new_item'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.gui.InputFileTab.add_dynamic_item" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.InputFileTab.check_configuration">
+<span class="sig-name descname"><span class="pre">check_configuration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.gui.InputFileTab.check_configuration" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.InputFileTab.eventFilter">
+<span class="sig-name descname"><span class="pre">eventFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.gui.InputFileTab.eventFilter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.InputFileTab.load_schema">
+<span class="sig-name descname"><span class="pre">load_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.gui.InputFileTab.load_schema" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.InputFileTab.load_toml_from_dialog">
+<span class="sig-name descname"><span class="pre">load_toml_from_dialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.gui.InputFileTab.load_toml_from_dialog" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.InputFileTab.on_schema_selected">
+<span class="sig-name descname"><span class="pre">on_schema_selected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.gui.InputFileTab.on_schema_selected" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.InputFileTab.on_toml_text_changed">
+<span class="sig-name descname"><span class="pre">on_toml_text_changed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.gui.InputFileTab.on_toml_text_changed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.InputFileTab.run_process">
+<span class="sig-name descname"><span class="pre">run_process</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.gui.InputFileTab.run_process" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.InputFileTab.save_to_file">
+<span class="sig-name descname"><span class="pre">save_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.gui.InputFileTab.save_to_file" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.InputFileTab.set_highlighter_theme">
+<span class="sig-name descname"><span class="pre">set_highlighter_theme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.gui.InputFileTab.set_highlighter_theme" title="Link to this definition"></a></dt>
+<dd><p>Creates a new highlighter with the selected theme and applies it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.InputFileTab.update_toml_preview">
+<span class="sig-name descname"><span class="pre">update_toml_preview</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.gui.InputFileTab.update_toml_preview" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.LauncherDialog">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.gui.</span></span><span class="sig-name descname"><span class="pre">LauncherDialog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.gui.LauncherDialog" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<p>A modal dialog that serves as the application’s entry point.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.MainWindow">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.gui.</span></span><span class="sig-name descname"><span class="pre">MainWindow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.gui.MainWindow" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QMainWindow</span></code></p>
+<p>The main window of the application.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.MainWindow.log">
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.gui.MainWindow.log" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.MainWindow.on_process_finished">
+<span class="sig-name descname"><span class="pre">on_process_finished</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">return_code</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.gui.MainWindow.on_process_finished" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.ProcessWorker">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.gui.</span></span><span class="sig-name descname"><span class="pre">ProcessWorker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.gui.ProcessWorker" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QThread</span></code></p>
+<p>Run a command in a separate thread to keep the GUI responsive.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.ProcessWorker.log_message">
+<span class="sig-name descname"><span class="pre">log_message</span></span><a class="headerlink" href="#atlas.core.gui.gui.ProcessWorker.log_message" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.ProcessWorker.process_finished">
+<span class="sig-name descname"><span class="pre">process_finished</span></span><a class="headerlink" href="#atlas.core.gui.gui.ProcessWorker.process_finished" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.ProcessWorker.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.gui.ProcessWorker.run" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.ProcessWorker.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.gui.ProcessWorker.stop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.TomlHighlighter">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.gui.</span></span><span class="sig-name descname"><span class="pre">TomlHighlighter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.gui.TomlHighlighter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QSyntaxHighlighter</span></code></p>
+<p>A syntax highlighter for TOML format that can be applied to a QTextDocument.
+It supports multiple color themes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.TomlHighlighter.THEMES">
+<span class="sig-name descname"><span class="pre">THEMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'Catppuccin</span> <span class="pre">Latte':</span> <span class="pre">{'background':</span> <span class="pre">None,</span> <span class="pre">'comment':</span> <span class="pre">'#9ca0b0',</span> <span class="pre">'keyword':</span> <span class="pre">'#8839ef',</span> <span class="pre">'number':</span> <span class="pre">'#e64553',</span> <span class="pre">'section':</span> <span class="pre">'#40a02b',</span> <span class="pre">'string':</span> <span class="pre">'#d20f39'},</span> <span class="pre">'Default':</span> <span class="pre">{'background':</span> <span class="pre">None,</span> <span class="pre">'comment':</span> <span class="pre">'#808080',</span> <span class="pre">'keyword':</span> <span class="pre">'#0033cc',</span> <span class="pre">'number':</span> <span class="pre">'#c500c5',</span> <span class="pre">'section':</span> <span class="pre">'#107c10',</span> <span class="pre">'string':</span> <span class="pre">'#A31515'},</span> <span class="pre">'Gruvbox</span> <span class="pre">Light':</span> <span class="pre">{'background':</span> <span class="pre">None,</span> <span class="pre">'comment':</span> <span class="pre">'#928374',</span> <span class="pre">'keyword':</span> <span class="pre">'#427b58',</span> <span class="pre">'number':</span> <span class="pre">'#8f3f71',</span> <span class="pre">'section':</span> <span class="pre">'#79740e',</span> <span class="pre">'string':</span> <span class="pre">'#9d0006'},</span> <span class="pre">'Solarized</span> <span class="pre">Light':</span> <span class="pre">{'background':</span> <span class="pre">'#fdf6e3',</span> <span class="pre">'comment':</span> <span class="pre">'#93a1a1',</span> <span class="pre">'keyword':</span> <span class="pre">'#d33682',</span> <span class="pre">'number':</span> <span class="pre">'#cb4b16',</span> <span class="pre">'section':</span> <span class="pre">'#859900',</span> <span class="pre">'string':</span> <span class="pre">'#dc322f'}}</span></em><a class="headerlink" href="#atlas.core.gui.gui.TomlHighlighter.THEMES" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.gui.TomlHighlighter.highlightBlock">
+<span class="sig-name descname"><span class="pre">highlightBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.gui.TomlHighlighter.highlightBlock" title="Link to this definition"></a></dt>
+<dd><p>Apply syntax highlighting to the given block of text.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.hub">
+<span id="atlas-core-gui-hub-module"></span><h2>atlas.core.gui.hub module<a class="headerlink" href="#module-atlas.core.gui.hub" title="Link to this heading"></a></h2>
+<p>Hub dialog, entry point for <cite>atl_gui</cite>.</p>
+<p>The Hub lets the user create, open, or pick a recently-used project.  On
+success it sets <code class="docutils literal notranslate"><span class="pre">self.selected_project</span></code> to an open <code class="docutils literal notranslate"><span class="pre">Project</span></code> instance
+and accepts; otherwise the dialog is rejected and the application exits.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.hub.HubDialog">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.hub.</span></span><span class="sig-name descname"><span class="pre">HubDialog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.hub.HubDialog" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<p>Entry-point dialog: create / open / pick recent project.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.hub.NewProjectDialog">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.hub.</span></span><span class="sig-name descname"><span class="pre">NewProjectDialog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.hub.NewProjectDialog" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<p>Small modal to pick a parent directory and project name.</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.icons">
+<span id="atlas-core-gui-icons-module"></span><h2>atlas.core.gui.icons module<a class="headerlink" href="#module-atlas.core.gui.icons" title="Link to this heading"></a></h2>
+<p>Theme-adaptive icon loading for the ATLAS GUI.</p>
+<p>SVG icons ship with <code class="docutils literal notranslate"><span class="pre">fill=&quot;#000&quot;</span></code> and the fill is replaced at load time
+to match the active theme’s foreground colour.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.icons.app_icon">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.icons.</span></span><span class="sig-name descname"><span class="pre">app_icon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">PySide6.QtGui.QIcon</span></span></span><a class="headerlink" href="#atlas.core.gui.icons.app_icon" title="Link to this definition"></a></dt>
+<dd><p>Return the application icon for window/tray use.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.icons.ensure_arrow_svgs">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.icons.</span></span><span class="sig-name descname"><span class="pre">ensure_arrow_svgs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fg_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.icons.ensure_arrow_svgs" title="Link to this definition"></a></dt>
+<dd><p>Generate themed spinbox arrow SVGs and return (up_path, down_path).</p>
+<p>Results are cached per colour so the files are written at most once
+per theme.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.icons.themed_icon">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.icons.</span></span><span class="sig-name descname"><span class="pre">themed_icon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">PySide6.QtGui.QIcon</span></span></span><a class="headerlink" href="#atlas.core.gui.icons.themed_icon" title="Link to this definition"></a></dt>
+<dd><p>Return a <code class="docutils literal notranslate"><span class="pre">QIcon</span></code> for <em>name</em> recoloured to <em>color</em>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.icons.tray_icon">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.icons.</span></span><span class="sig-name descname"><span class="pre">tray_icon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">PySide6.QtGui.QIcon</span></span></span><a class="headerlink" href="#atlas.core.gui.icons.tray_icon" title="Link to this definition"></a></dt>
+<dd><p>Return the icon for the system tray.</p>
+<p>Always uses the light version with a blue accent since system
+trays render on an independent background.</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.themes">
+<span id="atlas-core-gui-themes-module"></span><h2>atlas.core.gui.themes module<a class="headerlink" href="#module-atlas.core.gui.themes" title="Link to this heading"></a></h2>
+<p>Application themes for the ATLAS GUI.</p>
+<p>Each theme is derived from a Gogh terminal color scheme and mapped onto
+Qt widget roles.  The mapping uses the 16 ANSI colours plus background,
+foreground, and cursor from the Gogh palette:</p>
+<blockquote>
+<div><p>background  → window / base background
+foreground  → text colour
+color_01    → dark accent (borders, subtle text in dark themes)
+color_02    → red / error / danger
+color_03    → green / success / done
+color_04    → yellow / warning / in-progress
+color_05    → blue / primary / links
+color_06    → magenta / accent
+color_07    → cyan / info
+color_08    → light grey (alt row, muted text in dark themes)
+color_09–16 → bright variants of 01–08</p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">build_stylesheet(theme_name)</span></code> returns a full QSS string.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.themes.</span></span><span class="sig-name descname"><span class="pre">Theme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variant</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">foreground</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cursor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c01</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c02</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c03</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c04</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c05</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c06</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c07</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c08</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c09</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c10</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c11</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c12</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c13</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c14</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c15</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c16</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.themes.Theme" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme.background">
+<span class="sig-name descname"><span class="pre">background</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.themes.Theme.background" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme.c01">
+<span class="sig-name descname"><span class="pre">c01</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.themes.Theme.c01" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme.c02">
+<span class="sig-name descname"><span class="pre">c02</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.themes.Theme.c02" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme.c03">
+<span class="sig-name descname"><span class="pre">c03</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.themes.Theme.c03" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme.c04">
+<span class="sig-name descname"><span class="pre">c04</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.themes.Theme.c04" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme.c05">
+<span class="sig-name descname"><span class="pre">c05</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.themes.Theme.c05" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme.c06">
+<span class="sig-name descname"><span class="pre">c06</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.themes.Theme.c06" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme.c07">
+<span class="sig-name descname"><span class="pre">c07</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.themes.Theme.c07" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme.c08">
+<span class="sig-name descname"><span class="pre">c08</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.themes.Theme.c08" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme.c09">
+<span class="sig-name descname"><span class="pre">c09</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.themes.Theme.c09" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme.c10">
+<span class="sig-name descname"><span class="pre">c10</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.themes.Theme.c10" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme.c11">
+<span class="sig-name descname"><span class="pre">c11</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.themes.Theme.c11" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme.c12">
+<span class="sig-name descname"><span class="pre">c12</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.themes.Theme.c12" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme.c13">
+<span class="sig-name descname"><span class="pre">c13</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.themes.Theme.c13" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme.c14">
+<span class="sig-name descname"><span class="pre">c14</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.themes.Theme.c14" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme.c15">
+<span class="sig-name descname"><span class="pre">c15</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.themes.Theme.c15" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme.c16">
+<span class="sig-name descname"><span class="pre">c16</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.themes.Theme.c16" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme.cursor">
+<span class="sig-name descname"><span class="pre">cursor</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.themes.Theme.cursor" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme.foreground">
+<span class="sig-name descname"><span class="pre">foreground</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.themes.Theme.foreground" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.themes.Theme.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.Theme.variant">
+<span class="sig-name descname"><span class="pre">variant</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.core.gui.themes.Theme.variant" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.apply_theme_to_app">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.themes.</span></span><span class="sig-name descname"><span class="pre">apply_theme_to_app</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.themes.apply_theme_to_app" title="Link to this definition"></a></dt>
+<dd><p>Apply theme to QApplication via QPalette + static QSS.</p>
+<p>The QSS uses <code class="docutils literal notranslate"><span class="pre">palette(...)</span></code> references and is set only once (at
+startup, when few widgets exist).  Subsequent theme switches update
+the QPalette and selectively re-polish only visible widgets, hidden
+pages in the QStackedWidget are skipped and re-polished lazily.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.build_static_stylesheet">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.themes.</span></span><span class="sig-name descname"><span class="pre">build_static_stylesheet</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#atlas.core.gui.themes.build_static_stylesheet" title="Link to this definition"></a></dt>
+<dd><p>Return a static QSS that uses palette(…) references for all colors.</p>
+<p>The same QSS works for every theme, only the QPalette changes.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.build_stylesheet">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.themes.</span></span><span class="sig-name descname"><span class="pre">build_stylesheet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#atlas.core.gui.themes.build_stylesheet" title="Link to this definition"></a></dt>
+<dd><p>Generate a full QSS stylesheet for the given theme.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version Use: </span><code class="docutils literal notranslate"><span class="pre">build_static_stylesheet</span></code> + <code class="docutils literal notranslate"><span class="pre">build_theme_palette</span></code>.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.build_theme_palette">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.themes.</span></span><span class="sig-name descname"><span class="pre">build_theme_palette</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.themes.build_theme_palette" title="Link to this definition"></a></dt>
+<dd><p>Build a QPalette with all theme-derived colors mapped to roles.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.save_global_toml_theme">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.themes.</span></span><span class="sig-name descname"><span class="pre">save_global_toml_theme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.themes.save_global_toml_theme" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.saved_global_theme">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.themes.</span></span><span class="sig-name descname"><span class="pre">saved_global_theme</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#atlas.core.gui.themes.saved_global_theme" title="Link to this definition"></a></dt>
+<dd><p>Return the globally persisted theme name (via QSettings).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.saved_global_toml_theme">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.themes.</span></span><span class="sig-name descname"><span class="pre">saved_global_toml_theme</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#atlas.core.gui.themes.saved_global_toml_theme" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.theme_colors">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.themes.</span></span><span class="sig-name descname"><span class="pre">theme_colors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.themes.theme_colors" title="Link to this definition"></a></dt>
+<dd><p>Return derived colors for the theme (bg, fg, surface, border, etc.).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.theme_names">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.themes.</span></span><span class="sig-name descname"><span class="pre">theme_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.gui.themes.theme_names" title="Link to this definition"></a></dt>
+<dd><p>Return theme names, light themes first, then dark.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.gui.themes.theme_variant">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.gui.themes.</span></span><span class="sig-name descname"><span class="pre">theme_variant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#atlas.core.gui.themes.theme_variant" title="Link to this definition"></a></dt>
+<dd><p>Return ‘light’ or ‘dark’ for the given theme name.</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-atlas.core.gui" title="Link to this heading"></a></h2>
+<p>PySide6 desktop GUI for ATLAS.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="atlas.core.filtering.html" class="btn btn-neutral float-left" title="atlas.core.filtering package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="atlas.core.gui.pages.html" class="btn btn-neutral float-right" title="atlas.core.gui.pages package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='atlas.core.gui.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,270 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="CLI Arguments" href="tools.html" />
+    <link rel="prev" title="Introduction" href="intro.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation-procedure">Installation procedure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-a-pyton-environment">1. Creating a pyton environment</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#option-a-conda">Option A - <code class="docutils literal notranslate"><span class="pre">conda</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#option-b-venv">Option B - <code class="docutils literal notranslate"><span class="pre">venv</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#option-c-uv">Option C - <code class="docutils literal notranslate"><span class="pre">uv</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#getting-the-atlas-code">2. Getting the ATLAS code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#installing-the-library-in-the-activated-python-environment">3. Installing the library in the activated python environment</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#using-pip">Using <code class="docutils literal notranslate"><span class="pre">pip</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-uv">Using <code class="docutils literal notranslate"><span class="pre">uv</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#setup-steps-specific-to-active-learning">5. Setup steps specific to active learning</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">Input specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Package Information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Installation</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/install.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h1>
+<section id="installation-procedure">
+<h2>Installation procedure<a class="headerlink" href="#installation-procedure" title="Link to this heading"></a></h2>
+<p>To install ATLAS, you can use pip in a python virtual environment or conda environment. Development has been made with <code class="docutils literal notranslate"><span class="pre">python3.11</span></code> in mind, which can be installed through the OS’s package manager or conda.</p>
+<section id="creating-a-pyton-environment">
+<h3>1. Creating a pyton environment<a class="headerlink" href="#creating-a-pyton-environment" title="Link to this heading"></a></h3>
+<p>First, <strong>create a virtual environment</strong> and activate it. This can be done in several ways, but we provide some examples using <code class="docutils literal notranslate"><span class="pre">conda</span></code>, python <code class="docutils literal notranslate"><span class="pre">venv</span></code> or <code class="docutils literal notranslate"><span class="pre">uv</span></code>.</p>
+<section id="option-a-conda">
+<h4>Option A - <code class="docutils literal notranslate"><span class="pre">conda</span></code><a class="headerlink" href="#option-a-conda" title="Link to this heading"></a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a conda environment named atlas which uses python 3.11</span>
+conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>atlas<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.11
+
+<span class="c1"># Activate the environment</span>
+conda<span class="w"> </span>activate<span class="w"> </span>atlas
+</pre></div>
+</div>
+</section>
+<section id="option-b-venv">
+<h4>Option B - <code class="docutils literal notranslate"><span class="pre">venv</span></code><a class="headerlink" href="#option-b-venv" title="Link to this heading"></a></h4>
+<p>An example for an Ubuntu 22.04 system, using python3.11 and venv:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install python3.11 and venv</span>
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>python3.11<span class="w"> </span>python3.11-venv
+
+<span class="c1"># Using python venv - create and activate the environment</span>
+python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>atlas
+<span class="nb">source</span><span class="w"> </span>atlas/bin/activate
+</pre></div>
+</div>
+</section>
+<section id="option-c-uv">
+<h4>Option C - <code class="docutils literal notranslate"><span class="pre">uv</span></code><a class="headerlink" href="#option-c-uv" title="Link to this heading"></a></h4>
+<p>First, install the <code class="docutils literal notranslate"><span class="pre">uv</span></code> tool. Either as shown below using the standalone installer, or please refer to the <a class="reference external" href="https://docs.astral.sh/uv/getting-started/installation/">official uv installation guide</a>) for more options.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget<span class="w"> </span>-qO-<span class="w"> </span>https://astral.sh/uv/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
+</pre></div>
+</div>
+<p>Once <code class="docutils literal notranslate"><span class="pre">uv</span></code> is isntalled, create an environment named atlas specifically with Python 3.11:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create the virtual environment</span>
+uv<span class="w"> </span>venv<span class="w"> </span>atlas<span class="w"> </span>--python<span class="w"> </span><span class="m">3</span>.11
+</pre></div>
+</div>
+<p>Make sure to navigate to a folder where you would like your python environment to be located, or specify the desired path.
+You can activate the newly created environment as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>atlas/bin/activate
+</pre></div>
+</div>
+<p>With the environment now activated, the library can be installed.</p>
+</section>
+</section>
+<section id="getting-the-atlas-code">
+<h3>2. Getting the ATLAS code<a class="headerlink" href="#getting-the-atlas-code" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clone the reposittory</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/pol-sb/atlas.git
+</pre></div>
+</div>
+</section>
+<section id="installing-the-library-in-the-activated-python-environment">
+<h3>3. Installing the library in the activated python environment<a class="headerlink" href="#installing-the-library-in-the-activated-python-environment" title="Link to this heading"></a></h3>
+<p>There are several installation mechanisms, and several optional dependencies depending on what packages you want to use. Check the list and details of optional dependencies in the <a class="reference download internal" download="" href="../_downloads/079962c730e6e61f3f9971f670e9cf70/pyproject.toml"><span class="xref download myst">pyproject.toml</span></a>. Currently, the following are available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mace</span></code> — MACE model training and evaluation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">allegro</span></code> — Allegro model support (via nequip-allegro)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nequip</span></code> — NequIP model support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dev</span></code> — Development dependencies (pytest, pre-commit, commitizen)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gui</span></code> — Desktop GUI (PySide6)</p></li>
+</ul>
+<p>Optional dependencies are installed using the following syntax:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>./ATLAS<span class="o">[</span><span class="s1">&#39;OPTIONAL_DEPENDENCY_NAME&#39;</span><span class="o">]</span>
+</pre></div>
+</div>
+<p>Some installation examples follow:</p>
+<blockquote>
+<div><p>[!WARNING]
+<strong>MACE and Allegro/NequIP cannot be installed in the same environment.</strong> Both <code class="docutils literal notranslate"><span class="pre">mace-torch</span></code> and <code class="docutils literal notranslate"><span class="pre">nequip</span></code> depend on <code class="docutils literal notranslate"><span class="pre">e3nn</span></code> but pin incompatible versions. You must choose one backend per environment, or use separate virtual environments if you need to switch between them.</p>
+</div></blockquote>
+<section id="using-pip">
+<h4>Using <code class="docutils literal notranslate"><span class="pre">pip</span></code><a class="headerlink" href="#using-pip" title="Link to this heading"></a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install the library and the MACE dependencies in the venv using pip</span>
+python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>./ATLAS<span class="o">[</span><span class="s1">&#39;mace&#39;</span><span class="o">]</span>
+</pre></div>
+</div>
+</section>
+<section id="using-uv">
+<h4>Using <code class="docutils literal notranslate"><span class="pre">uv</span></code><a class="headerlink" href="#using-uv" title="Link to this heading"></a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install the library and the MACE and dev dependencies using uv</span>
+uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>./ATLAS<span class="o">[</span><span class="s1">&#39;mace&#39;</span>,<span class="w"> </span><span class="s1">&#39;dev&#39;</span><span class="o">]</span>
+
+<span class="c1">#### Installing the GUI</span>
+
+The<span class="w"> </span>ATLAS<span class="w"> </span>Hub<span class="w"> </span>desktop<span class="w"> </span>GUI<span class="w"> </span>requires<span class="w"> </span>the<span class="w"> </span>optional<span class="w"> </span><span class="sb">`</span>gui<span class="sb">`</span><span class="w"> </span>dependency:
+
+<span class="sb">```</span>bash
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;.[gui]&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+### 4. Initialize configuration files
+
+Finally, initialize configuration files by running the **initial configuration command** (`atl_init_setup`). Then, enter your [Materials Project API key](https://next-gen.materialsproject.org/api) in the path displayed in the output to finish the setup process:
+
+```shell
+# Run the last setup step - configuration initialization
+atl_init_setup
+</pre></div>
+</div>
+<blockquote>
+<div><p>[!NOTE]
+If the user is only interested in database generation, the setup can be completed only up until this point, skipping the following AiiDA setup.</p>
+</div></blockquote>
+</section>
+</section>
+<section id="setup-steps-specific-to-active-learning">
+<h3>5. Setup steps specific to active learning<a class="headerlink" href="#setup-steps-specific-to-active-learning" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The <strong>active learning (AL)</strong> loop uses the <a class="reference external" href="https://github.com/aiidateam/aiida-core">AiiDA</a> library for managing the workflow. In order to run the AL loop in compute clusters, codes and computers must be conifigured in AiiDA. See the <a class="reference external" href="https://aiida.readthedocs.io/projects/aiida-core/en/stable/installation/guide_quick.html">AiiDA installation guide</a> for installation instructions.</p></li>
+<li><p>DFT calculations with VASP use the <a class="reference external" href="https://aiida-vasp.readthedocs.io/en/latest/">aiida-vasp</a> plugin, which needs additional configuration. Please, follow the <a class="reference external" href="https://aiida-vasp.readthedocs.io/en/latest/getting_started/general.html">instructions on their website</a>.</p></li>
+<li><p>The steps required to set up the active learning loop with the simplest AiiDA configuration are the following:</p>
+<ol class="arabic simple">
+<li><p>Set up an aiida profile and database with <code class="docutils literal notranslate"><span class="pre">verdi</span> <span class="pre">presto</span></code>.</p></li>
+<li><p>Create the AiiDA computer and code entries for ATLAS and aiida-vasp.</p></li>
+<li><p>Add the potential datasets for aiida-vasp (<a class="reference external" href="https://aiida-vasp.readthedocs.io/en/latest/getting_started/potentials.html">information here</a>).</p></li>
+</ol>
+</li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="intro.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tools.html" class="btn btn-neutral float-right" title="CLI Arguments" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='install.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

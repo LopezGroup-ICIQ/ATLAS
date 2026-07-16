@@ -1,0 +1,726 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>atlas package &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="atlas.active_learning package" href="atlas.active_learning.html" />
+    <link rel="prev" title="atlas" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">Input specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package Information</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">atlas package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html">atlas.active_learning package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.html">atlas.benchmarks package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html">atlas.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.training.html">atlas.training package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html">atlas.workflows package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-atlas">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">atlas</a></li>
+      <li class="breadcrumb-item active">atlas package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/atlas.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="atlas-package">
+<h1>atlas package<a class="headerlink" href="#atlas-package" title="Link to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="atlas.active_learning.html">atlas.active_learning package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="atlas.active_learning.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.backends.html">atlas.active_learning.backends package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.html#module-atlas.active_learning.backends._base">atlas.active_learning.backends._base module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.html#module-atlas.active_learning.backends">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.dashboard.html">atlas.active_learning.dashboard package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.dashboard.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.dashboard.html#module-atlas.active_learning.dashboard.training_dashboard_flask">atlas.active_learning.dashboard.training_dashboard_flask module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.dashboard.html#module-atlas.active_learning.dashboard">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.eval_test_db.html">atlas.active_learning.eval_test_db package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.eval_test_db.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.eval_test_db.html#module-atlas.active_learning.eval_test_db.eval_test_db">atlas.active_learning.eval_test_db.eval_test_db module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.eval_test_db.html#module-atlas.active_learning.eval_test_db">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.extrapolation.html">atlas.active_learning.extrapolation package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.extrapolation.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.extrapolation.html#module-atlas.active_learning.extrapolation.autoencoder">atlas.active_learning.extrapolation.autoencoder module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.extrapolation.html#module-atlas.active_learning.extrapolation.autoencoder_tools_aiida">atlas.active_learning.extrapolation.autoencoder_tools_aiida module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.extrapolation.html#module-atlas.active_learning.extrapolation.concave_hull">atlas.active_learning.extrapolation.concave_hull module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.extrapolation.html#module-atlas.active_learning.extrapolation.morphological_closing">atlas.active_learning.extrapolation.morphological_closing module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.extrapolation.html#module-atlas.active_learning.extrapolation.quadtree">atlas.active_learning.extrapolation.quadtree module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.extrapolation.html#module-atlas.active_learning.extrapolation.train_autoencoder">atlas.active_learning.extrapolation.train_autoencoder module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.extrapolation.html#module-atlas.active_learning.extrapolation">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.safeguard.html">atlas.active_learning.safeguard package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.safeguard.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.safeguard.html#module-atlas.active_learning.safeguard.safeguard_utils">atlas.active_learning.safeguard.safeguard_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.safeguard.html#module-atlas.active_learning.safeguard">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.active_learning.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.active_learning.html#module-atlas.active_learning.active_learning_utils">atlas.active_learning.active_learning_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.aiida_serialized_ase_dict_to_atoms"><code class="docutils literal notranslate"><span class="pre">aiida_serialized_ase_dict_to_atoms()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.aiida_wait_submit"><code class="docutils literal notranslate"><span class="pre">aiida_wait_submit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.calculate_fps_scores_descriptor"><code class="docutils literal notranslate"><span class="pre">calculate_fps_scores_descriptor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.check_atl_ids"><code class="docutils literal notranslate"><span class="pre">check_atl_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.check_atom_in_domain"><code class="docutils literal notranslate"><span class="pre">check_atom_in_domain()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.check_md_seed_agreement"><code class="docutils literal notranslate"><span class="pre">check_md_seed_agreement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.convert_database_to_ase_atoms"><code class="docutils literal notranslate"><span class="pre">convert_database_to_ase_atoms()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.create_mace_lammps_model"><code class="docutils literal notranslate"><span class="pre">create_mace_lammps_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.filter_dft_calcs_threshold"><code class="docutils literal notranslate"><span class="pre">filter_dft_calcs_threshold()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.flush_system_memory"><code class="docutils literal notranslate"><span class="pre">flush_system_memory()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.gather_dft_calcs_mlip"><code class="docutils literal notranslate"><span class="pre">gather_dft_calcs_mlip()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.gather_dft_calcs_vasp"><code class="docutils literal notranslate"><span class="pre">gather_dft_calcs_vasp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.gen_xyz_file_from_traj"><code class="docutils literal notranslate"><span class="pre">gen_xyz_file_from_traj()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.generate_descriptors"><code class="docutils literal notranslate"><span class="pre">generate_descriptors()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.generate_descriptors_mace"><code class="docutils literal notranslate"><span class="pre">generate_descriptors_mace()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.generate_descriptors_soap"><code class="docutils literal notranslate"><span class="pre">generate_descriptors_soap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.generate_model_name"><code class="docutils literal notranslate"><span class="pre">generate_model_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.get_dft_calc_builder_mlip_list"><code class="docutils literal notranslate"><span class="pre">get_dft_calc_builder_mlip_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.get_dft_calc_builder_vasp"><code class="docutils literal notranslate"><span class="pre">get_dft_calc_builder_vasp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.get_final_db_path"><code class="docutils literal notranslate"><span class="pre">get_final_db_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.get_model_energies_std"><code class="docutils literal notranslate"><span class="pre">get_model_energies_std()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.get_model_energies_variance"><code class="docutils literal notranslate"><span class="pre">get_model_energies_variance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.get_model_forces_std"><code class="docutils literal notranslate"><span class="pre">get_model_forces_std()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.get_model_forces_variance"><code class="docutils literal notranslate"><span class="pre">get_model_forces_variance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.get_outliers_from_calc_list"><code class="docutils literal notranslate"><span class="pre">get_outliers_from_calc_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.get_results_dir_path"><code class="docutils literal notranslate"><span class="pre">get_results_dir_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.get_species_from_database"><code class="docutils literal notranslate"><span class="pre">get_species_from_database()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.get_total_num_frames"><code class="docutils literal notranslate"><span class="pre">get_total_num_frames()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.iqr_outlier_check"><code class="docutils literal notranslate"><span class="pre">iqr_outlier_check()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.load_database"><code class="docutils literal notranslate"><span class="pre">load_database()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.manual_progress_display"><code class="docutils literal notranslate"><span class="pre">manual_progress_display()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.md_apply_temperature_ramp"><code class="docutils literal notranslate"><span class="pre">md_apply_temperature_ramp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.md_coexistence_final_step_log"><code class="docutils literal notranslate"><span class="pre">md_coexistence_final_step_log()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.md_save_gen_structs"><code class="docutils literal notranslate"><span class="pre">md_save_gen_structs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.md_stop_explode_filter"><code class="docutils literal notranslate"><span class="pre">md_stop_explode_filter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.md_write_frame_traj"><code class="docutils literal notranslate"><span class="pre">md_write_frame_traj()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.model_res_dict_to_arr"><code class="docutils literal notranslate"><span class="pre">model_res_dict_to_arr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.plot_concave_hull"><code class="docutils literal notranslate"><span class="pre">plot_concave_hull()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.prepare_output_dataframe"><code class="docutils literal notranslate"><span class="pre">prepare_output_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.prepare_output_final_training_db"><code class="docutils literal notranslate"><span class="pre">prepare_output_final_training_db()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.prepare_test_set"><code class="docutils literal notranslate"><span class="pre">prepare_test_set()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.process_call_root"><code class="docutils literal notranslate"><span class="pre">process_call_root()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.read_toml_settings"><code class="docutils literal notranslate"><span class="pre">read_toml_settings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.remove_isolated_atoms"><code class="docutils literal notranslate"><span class="pre">remove_isolated_atoms()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.remove_structs_from_seed_gen_db"><code class="docutils literal notranslate"><span class="pre">remove_structs_from_seed_gen_db()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.return_code_from_settings"><code class="docutils literal notranslate"><span class="pre">return_code_from_settings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.run_mace_md_ase"><code class="docutils literal notranslate"><span class="pre">run_mace_md_ase()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.sampler_populate_E_and_F_list"><code class="docutils literal notranslate"><span class="pre">sampler_populate_E_and_F_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.save_descriptors"><code class="docutils literal notranslate"><span class="pre">save_descriptors()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.select_dft_structures"><code class="docutils literal notranslate"><span class="pre">select_dft_structures()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.select_md_frames_to_keep"><code class="docutils literal notranslate"><span class="pre">select_md_frames_to_keep()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.select_structures_data_reduction"><code class="docutils literal notranslate"><span class="pre">select_structures_data_reduction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.select_structures_fps"><code class="docutils literal notranslate"><span class="pre">select_structures_fps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.select_structures_lowest_energy"><code class="docutils literal notranslate"><span class="pre">select_structures_lowest_energy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.select_structures_random"><code class="docutils literal notranslate"><span class="pre">select_structures_random()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.select_structures_uncertainty"><code class="docutils literal notranslate"><span class="pre">select_structures_uncertainty()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.serialize_ase"><code class="docutils literal notranslate"><span class="pre">serialize_ase()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.simplify_forces_struct"><code class="docutils literal notranslate"><span class="pre">simplify_forces_struct()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.standardize_atoms_info"><code class="docutils literal notranslate"><span class="pre">standardize_atoms_info()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.suppress_stdout"><code class="docutils literal notranslate"><span class="pre">suppress_stdout()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.update_mace_train_settings_dict"><code class="docutils literal notranslate"><span class="pre">update_mace_train_settings_dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.vasprun_add_info_dict"><code class="docutils literal notranslate"><span class="pre">vasprun_add_info_dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.active_learning_utils.write_gathered_dft_calcs_to_file"><code class="docutils literal notranslate"><span class="pre">write_gathered_dft_calcs_to_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.active_learning.html#module-atlas.active_learning.conversion">atlas.active_learning.conversion module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.conversion.Units"><code class="docutils literal notranslate"><span class="pre">Units</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.conversion.Units.Ang2Bohr"><code class="docutils literal notranslate"><span class="pre">Units.Ang2Bohr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.conversion.Units.Bohr2Ang"><code class="docutils literal notranslate"><span class="pre">Units.Bohr2Ang</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.conversion.Units.Eh2eV"><code class="docutils literal notranslate"><span class="pre">Units.Eh2eV</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.conversion.Units.eV2Eh"><code class="docutils literal notranslate"><span class="pre">Units.eV2Eh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.conversion.Units.kB"><code class="docutils literal notranslate"><span class="pre">Units.kB</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.conversion.atl_database_to_mace_train"><code class="docutils literal notranslate"><span class="pre">atl_database_to_mace_train()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.conversion.gather_calc_data_from_node"><code class="docutils literal notranslate"><span class="pre">gather_calc_data_from_node()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.conversion.gen_mace_train_aiida"><code class="docutils literal notranslate"><span class="pre">gen_mace_train_aiida()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.conversion.gen_mace_train_structure_list"><code class="docutils literal notranslate"><span class="pre">gen_mace_train_structure_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.conversion.gen_n2p2_train_aiida"><code class="docutils literal notranslate"><span class="pre">gen_n2p2_train_aiida()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.conversion.get_struct_type"><code class="docutils literal notranslate"><span class="pre">get_struct_type()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.active_learning.html#module-atlas.active_learning.mace_tools_aiida">atlas.active_learning.mace_tools_aiida module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.mace_tools_aiida.EvalTestDatabaseCalculation"><code class="docutils literal notranslate"><span class="pre">EvalTestDatabaseCalculation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.mace_tools_aiida.EvalTestDatabaseCalculation.define"><code class="docutils literal notranslate"><span class="pre">EvalTestDatabaseCalculation.define()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.mace_tools_aiida.EvalTestDatabaseCalculation.prepare_for_submission"><code class="docutils literal notranslate"><span class="pre">EvalTestDatabaseCalculation.prepare_for_submission()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.mace_tools_aiida.EvalTestDatabaseCalculationParser"><code class="docutils literal notranslate"><span class="pre">EvalTestDatabaseCalculationParser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.mace_tools_aiida.EvalTestDatabaseCalculationParser.parse"><code class="docutils literal notranslate"><span class="pre">EvalTestDatabaseCalculationParser.parse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html#id0"><code class="docutils literal notranslate"><span class="pre">EvalTestDatabaseCalculationParser.parse()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.mace_tools_aiida.GetDescriptorsCombinedCalculation"><code class="docutils literal notranslate"><span class="pre">GetDescriptorsCombinedCalculation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.mace_tools_aiida.GetDescriptorsCombinedCalculation.define"><code class="docutils literal notranslate"><span class="pre">GetDescriptorsCombinedCalculation.define()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.mace_tools_aiida.GetDescriptorsCombinedCalculation.prepare_for_submission"><code class="docutils literal notranslate"><span class="pre">GetDescriptorsCombinedCalculation.prepare_for_submission()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.mace_tools_aiida.GetDescriptorsCombinedParser"><code class="docutils literal notranslate"><span class="pre">GetDescriptorsCombinedParser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.mace_tools_aiida.GetDescriptorsCombinedParser.parse"><code class="docutils literal notranslate"><span class="pre">GetDescriptorsCombinedParser.parse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html#id1"><code class="docutils literal notranslate"><span class="pre">GetDescriptorsCombinedParser.parse()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.mace_tools_aiida.ProcessMDSeedStructCalculation"><code class="docutils literal notranslate"><span class="pre">ProcessMDSeedStructCalculation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.mace_tools_aiida.ProcessMDSeedStructCalculation.define"><code class="docutils literal notranslate"><span class="pre">ProcessMDSeedStructCalculation.define()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.mace_tools_aiida.ProcessMDSeedStructCalculation.prepare_for_submission"><code class="docutils literal notranslate"><span class="pre">ProcessMDSeedStructCalculation.prepare_for_submission()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.mace_tools_aiida.ProcessMDSeedStructCalculationParser"><code class="docutils literal notranslate"><span class="pre">ProcessMDSeedStructCalculationParser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.mace_tools_aiida.ProcessMDSeedStructCalculationParser.parse"><code class="docutils literal notranslate"><span class="pre">ProcessMDSeedStructCalculationParser.parse()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.active_learning.html#module-atlas.active_learning.report_utils">atlas.active_learning.report_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.report_utils.gather_stdout_and_scheduler"><code class="docutils literal notranslate"><span class="pre">gather_stdout_and_scheduler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.report_utils.gen_al_loop_report"><code class="docutils literal notranslate"><span class="pre">gen_al_loop_report()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.report_utils.gen_batch_report"><code class="docutils literal notranslate"><span class="pre">gen_batch_report()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.report_utils.gen_init_db_report"><code class="docutils literal notranslate"><span class="pre">gen_init_db_report()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.report_utils.gen_performance_report"><code class="docutils literal notranslate"><span class="pre">gen_performance_report()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.report_utils.generate_error_plot"><code class="docutils literal notranslate"><span class="pre">generate_error_plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.report_utils.generate_latent_space_evol"><code class="docutils literal notranslate"><span class="pre">generate_latent_space_evol()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.report_utils.get_al_loop_performance"><code class="docutils literal notranslate"><span class="pre">get_al_loop_performance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.report_utils.get_al_step_performance"><code class="docutils literal notranslate"><span class="pre">get_al_step_performance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.report_utils.get_latent_spaces_database_files"><code class="docutils literal notranslate"><span class="pre">get_latent_spaces_database_files()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.report_utils.get_latent_spaces_workchain"><code class="docutils literal notranslate"><span class="pre">get_latent_spaces_workchain()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.report_utils.get_loop_report"><code class="docutils literal notranslate"><span class="pre">get_loop_report()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.report_utils.get_mlip_eval_results"><code class="docutils literal notranslate"><span class="pre">get_mlip_eval_results()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.report_utils.get_ncores_from_calcjob"><code class="docutils literal notranslate"><span class="pre">get_ncores_from_calcjob()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.report_utils.get_runtime_from_calcjob"><code class="docutils literal notranslate"><span class="pre">get_runtime_from_calcjob()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.report_utils.mark_and_remove_outliers"><code class="docutils literal notranslate"><span class="pre">mark_and_remove_outliers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.report_utils.output_al_stats_dict"><code class="docutils literal notranslate"><span class="pre">output_al_stats_dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.report_utils.plot_al_loop_report"><code class="docutils literal notranslate"><span class="pre">plot_al_loop_report()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.report_utils.plot_performance_stacked_bar"><code class="docutils literal notranslate"><span class="pre">plot_performance_stacked_bar()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.report_utils.print_performance_report"><code class="docutils literal notranslate"><span class="pre">print_performance_report()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.html#atlas.active_learning.report_utils.simplify_timedelta_str"><code class="docutils literal notranslate"><span class="pre">simplify_timedelta_str()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.active_learning.html#module-atlas.active_learning">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="atlas.benchmarks.html">atlas.benchmarks package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="atlas.benchmarks.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.benchmarks.dft.html">atlas.benchmarks.dft package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.dft.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.dft.html#module-atlas.benchmarks.dft.dft_benchmark_core">atlas.benchmarks.dft.dft_benchmark_core module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.dft.html#module-atlas.benchmarks.dft.dft_benchmark_report">atlas.benchmarks.dft.dft_benchmark_report module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.dft.html#module-atlas.benchmarks.dft.run_dft_benchmark">atlas.benchmarks.dft.run_dft_benchmark module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.dft.html#module-atlas.benchmarks.dft">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.benchmarks.mlip.html">atlas.benchmarks.mlip package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.mlip.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.mlip.html#module-atlas.benchmarks.mlip.mlip_benchmark_utils">atlas.benchmarks.mlip.mlip_benchmark_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.mlip.html#module-atlas.benchmarks.mlip.mlip_benchmarks">atlas.benchmarks.mlip.mlip_benchmarks module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.mlip.html#module-atlas.benchmarks.mlip.evaluate_mlip_performance">atlas.benchmarks.mlip.evaluate_mlip_performance module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.mlip.html#module-atlas.benchmarks.mlip">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.benchmarks.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.benchmarks.html#module-atlas.benchmarks.benchmark_utils">atlas.benchmarks.benchmark_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.benchmarks.html#atlas.benchmarks.benchmark_utils.compute_kpt_density"><code class="docutils literal notranslate"><span class="pre">compute_kpt_density()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.benchmarks.html#atlas.benchmarks.benchmark_utils.gen_kspacing_from_vasp_input"><code class="docutils literal notranslate"><span class="pre">gen_kspacing_from_vasp_input()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.benchmarks.html#module-atlas.benchmarks">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="atlas.core.html">atlas.core package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.command_line.html">atlas.core.command_line package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.command_line.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.command_line.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.command_line.html#module-atlas.core.command_line.cli_active_learning">atlas.core.command_line.cli_active_learning module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.command_line.html#module-atlas.core.command_line.cli_dashboard">atlas.core.command_line.cli_dashboard module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.command_line.html#module-atlas.core.command_line.cli_db_analysis">atlas.core.command_line.cli_db_analysis module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.command_line.html#module-atlas.core.command_line.cli_generate_configuration_file">atlas.core.command_line.cli_generate_configuration_file module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.command_line.html#module-atlas.core.command_line.cli_generate_docs">atlas.core.command_line.cli_generate_docs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.command_line.html#module-atlas.core.command_line.cli_generate_init_db">atlas.core.command_line.cli_generate_init_db module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.command_line.html#module-atlas.core.command_line.cli_latent_space_analysis">atlas.core.command_line.cli_latent_space_analysis module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.command_line.html#module-atlas.core.command_line.cli_run_initial_config">atlas.core.command_line.cli_run_initial_config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.command_line.html#module-atlas.core.command_line.cli_train_autoencoder">atlas.core.command_line.cli_train_autoencoder module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.command_line.html#module-atlas.core.command_line.command_line_utils">atlas.core.command_line.command_line_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.command_line.html#module-atlas.core.command_line">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.database.html">atlas.core.database package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.database.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.database.html#module-atlas.core.database.diversity_metrics">atlas.core.database.diversity_metrics module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.database.html#module-atlas.core.database">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.filtering.html">atlas.core.filtering package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.filtering.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.filtering.html#module-atlas.core.filtering.structure_filters">atlas.core.filtering.structure_filters module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.filtering.html#module-atlas.core.filtering">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.gui.html">atlas.core.gui package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.html#atlas-core-gui-app-module">atlas.core.gui.app module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.html#module-atlas.core.gui.app_params">atlas.core.gui.app_params module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.html#module-atlas.core.gui.gui">atlas.core.gui.gui module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.html#module-atlas.core.gui.hub">atlas.core.gui.hub module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.html#module-atlas.core.gui.icons">atlas.core.gui.icons module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.html#module-atlas.core.gui.themes">atlas.core.gui.themes module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.gui.html#module-atlas.core.gui">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.html#module-atlas.core.clusters">atlas.core.clusters module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.clusters.apply_gauss_perturb_db"><code class="docutils literal notranslate"><span class="pre">apply_gauss_perturb_db()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.clusters.apply_gauss_perturb_list"><code class="docutils literal notranslate"><span class="pre">apply_gauss_perturb_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.clusters.apply_replacement_cluster"><code class="docutils literal notranslate"><span class="pre">apply_replacement_cluster()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.clusters.apply_replacement_cluster_db"><code class="docutils literal notranslate"><span class="pre">apply_replacement_cluster_db()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.clusters.bottom_structure"><code class="docutils literal notranslate"><span class="pre">bottom_structure()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.clusters.center_structure"><code class="docutils literal notranslate"><span class="pre">center_structure()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.clusters.get_center_of_mass"><code class="docutils literal notranslate"><span class="pre">get_center_of_mass()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.clusters.get_element_constants"><code class="docutils literal notranslate"><span class="pre">get_element_constants()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.clusters.make_clean_cluster"><code class="docutils literal notranslate"><span class="pre">make_clean_cluster()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.clusters.make_clean_dimer"><code class="docutils literal notranslate"><span class="pre">make_clean_dimer()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.html#module-atlas.core.code_utils">atlas.core.code_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.ATLHighlighter"><code class="docutils literal notranslate"><span class="pre">ATLHighlighter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.ATLHighlighter.base_style"><code class="docutils literal notranslate"><span class="pre">ATLHighlighter.base_style</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.ATLHighlighter.highlights"><code class="docutils literal notranslate"><span class="pre">ATLHighlighter.highlights</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.ATLRichHandler"><code class="docutils literal notranslate"><span class="pre">ATLRichHandler</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.ATLRichHandler.emit"><code class="docutils literal notranslate"><span class="pre">ATLRichHandler.emit()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.LevelNameFilter"><code class="docutils literal notranslate"><span class="pre">LevelNameFilter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.LevelNameFilter.filter"><code class="docutils literal notranslate"><span class="pre">LevelNameFilter.filter()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.atl_show_progress"><code class="docutils literal notranslate"><span class="pre">atl_show_progress()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.check_atl_version"><code class="docutils literal notranslate"><span class="pre">check_atl_version()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.create_handler_filters"><code class="docutils literal notranslate"><span class="pre">create_handler_filters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.custom_print"><code class="docutils literal notranslate"><span class="pre">custom_print()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.deprecated"><code class="docutils literal notranslate"><span class="pre">deprecated()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.display_qr_in_cli"><code class="docutils literal notranslate"><span class="pre">display_qr_in_cli()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.get_atl_version_info"><code class="docutils literal notranslate"><span class="pre">get_atl_version_info()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.get_cache_path"><code class="docutils literal notranslate"><span class="pre">get_cache_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.get_config_path"><code class="docutils literal notranslate"><span class="pre">get_config_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.get_console_handler"><code class="docutils literal notranslate"><span class="pre">get_console_handler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.get_last_tagged_version"><code class="docutils literal notranslate"><span class="pre">get_last_tagged_version()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.get_last_tagged_version_local"><code class="docutils literal notranslate"><span class="pre">get_last_tagged_version_local()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.get_list_of_tags"><code class="docutils literal notranslate"><span class="pre">get_list_of_tags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.init_cache_dir"><code class="docutils literal notranslate"><span class="pre">init_cache_dir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.init_config_dir"><code class="docutils literal notranslate"><span class="pre">init_config_dir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.init_logger"><code class="docutils literal notranslate"><span class="pre">init_logger()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.logging_set_levels"><code class="docutils literal notranslate"><span class="pre">logging_set_levels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.code_utils.save_qr_to_file"><code class="docutils literal notranslate"><span class="pre">save_qr_to_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.html#module-atlas.core.exceptions">atlas.core.exceptions module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.exceptions.AtomNotFoundForCluster"><code class="docutils literal notranslate"><span class="pre">AtomNotFoundForCluster</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.exceptions.BaseStructureNotFound"><code class="docutils literal notranslate"><span class="pre">BaseStructureNotFound</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.exceptions.CompositionNotMatchingElementListError"><code class="docutils literal notranslate"><span class="pre">CompositionNotMatchingElementListError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.exceptions.EmptyDataBase"><code class="docutils literal notranslate"><span class="pre">EmptyDataBase</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.exceptions.FilterError"><code class="docutils literal notranslate"><span class="pre">FilterError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.exceptions.IncompatibleDataBase"><code class="docutils literal notranslate"><span class="pre">IncompatibleDataBase</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.exceptions.IncompatiblePhaseError"><code class="docutils literal notranslate"><span class="pre">IncompatiblePhaseError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.exceptions.MissingElementError"><code class="docutils literal notranslate"><span class="pre">MissingElementError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.exceptions.MissingMandatoryParameterError"><code class="docutils literal notranslate"><span class="pre">MissingMandatoryParameterError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.exceptions.PhaseDiagramEmpty"><code class="docutils literal notranslate"><span class="pre">PhaseDiagramEmpty</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.exceptions.PhaseNotFound"><code class="docutils literal notranslate"><span class="pre">PhaseNotFound</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.html#module-atlas.core.initial_db">atlas.core.initial_db module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase"><code class="docutils literal notranslate"><span class="pre">InitialDatabase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.df"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.df</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.database_name"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.database_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.database_path"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.database_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.max_num_atoms"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.max_num_atoms</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.secrets"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.secrets</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.use_offset"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.use_offset</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.Ang2Bohr"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.Ang2Bohr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.Bohr2Ang"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.Bohr2Ang</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.Eh2eV"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.Eh2eV</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.add_single_atoms"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.add_single_atoms()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.apply_min_deformation"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.apply_min_deformation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.apply_vacancies_random"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.apply_vacancies_random()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.db_struct_to_ase"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.db_struct_to_ase()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.descriptors_concave_hull"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.descriptors_concave_hull()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.display_db_ase"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.display_db_ase()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.eV2Eh"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.eV2Eh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.export_db"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.export_db()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.find_repeat_structures"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.find_repeat_structures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.gather_base_structures"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.gather_base_structures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.gen_init_md_frames"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.gen_init_md_frames()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.gen_report"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.gen_report()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.generate_bulk_structures"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.generate_bulk_structures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.generate_clusters"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.generate_clusters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.generate_n2p2_input_aiida"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.generate_n2p2_input_aiida()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.get_base_structs_current_phase"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.get_base_structs_current_phase()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.get_db_shape"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.get_db_shape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.get_soap_descriptors"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.get_soap_descriptors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.get_structure_list"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.get_structure_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.kB"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.kB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.limit_structure_number_phases"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.limit_structure_number_phases()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.load_database"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.load_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.plot_database_composition"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.plot_database_composition()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.query_mp_api_prototype"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.query_mp_api_prototype()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.read_base_structures"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.read_base_structures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.remove_structs_out_of_atom_count_range"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.remove_structs_out_of_atom_count_range()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.remove_structs_out_of_cell_size_range"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.remove_structs_out_of_cell_size_range()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.save_database"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.save_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase.standardize_struct_ids"><code class="docutils literal notranslate"><span class="pre">InitialDatabase.standardize_struct_ids()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.cli_gen_db_report"><code class="docutils literal notranslate"><span class="pre">cli_gen_db_report()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.cli_run_gen_initial_database"><code class="docutils literal notranslate"><span class="pre">cli_run_gen_initial_database()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.get_database_report"><code class="docutils literal notranslate"><span class="pre">get_database_report()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.get_step_to_structure_mapping"><code class="docutils literal notranslate"><span class="pre">get_step_to_structure_mapping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.get_struct_idx_from_uuid"><code class="docutils literal notranslate"><span class="pre">get_struct_idx_from_uuid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.output_db_status"><code class="docutils literal notranslate"><span class="pre">output_db_status()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.report_completed_step"><code class="docutils literal notranslate"><span class="pre">report_completed_step()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.html#module-atlas.core.phase_diagram">atlas.core.phase_diagram module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.phase_diagram.BasePhaseDiagram"><code class="docutils literal notranslate"><span class="pre">BasePhaseDiagram</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.phase_diagram.BasePhaseDiagram.phases"><code class="docutils literal notranslate"><span class="pre">BasePhaseDiagram.phases</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.phase_diagram.BasePhaseDiagram.material"><code class="docutils literal notranslate"><span class="pre">BasePhaseDiagram.material</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.phase_diagram.BasePhaseDiagram.add_phase"><code class="docutils literal notranslate"><span class="pre">BasePhaseDiagram.add_phase()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.phase_diagram.BasePhaseDiagram.get_phase"><code class="docutils literal notranslate"><span class="pre">BasePhaseDiagram.get_phase()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.phase_diagram.BinaryPhaseDiagram"><code class="docutils literal notranslate"><span class="pre">BinaryPhaseDiagram</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.phase_diagram.BinaryPhaseDiagram.plot_diagram"><code class="docutils literal notranslate"><span class="pre">BinaryPhaseDiagram.plot_diagram()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.phase_diagram.Phase"><code class="docutils literal notranslate"><span class="pre">Phase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.phase_diagram.Phase.get_base_elem_perc"><code class="docutils literal notranslate"><span class="pre">Phase.get_base_elem_perc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.phase_diagram.Phase.perc_in_phase"><code class="docutils literal notranslate"><span class="pre">Phase.perc_in_phase()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.phase_diagram.PhaseDiagram"><code class="docutils literal notranslate"><span class="pre">PhaseDiagram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.phase_diagram.SinglePhaseDiagram"><code class="docutils literal notranslate"><span class="pre">SinglePhaseDiagram</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.phase_diagram.SinglePhaseDiagram.plot_diagram"><code class="docutils literal notranslate"><span class="pre">SinglePhaseDiagram.plot_diagram()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.phase_diagram.TernaryPhaseDiagram"><code class="docutils literal notranslate"><span class="pre">TernaryPhaseDiagram</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.phase_diagram.TernaryPhaseDiagram.plot_diagram"><code class="docutils literal notranslate"><span class="pre">TernaryPhaseDiagram.plot_diagram()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.html#module-atlas.core.structure">atlas.core.structure module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.structure.Bulk"><code class="docutils literal notranslate"><span class="pre">Bulk</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.structure.Cluster"><code class="docutils literal notranslate"><span class="pre">Cluster</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.structure.IsolatedAtom"><code class="docutils literal notranslate"><span class="pre">IsolatedAtom</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.structure.Structure"><code class="docutils literal notranslate"><span class="pre">Structure</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.structure.Structure.from_ase_atoms"><code class="docutils literal notranslate"><span class="pre">Structure.from_ase_atoms()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.structure.Structure.from_db_row"><code class="docutils literal notranslate"><span class="pre">Structure.from_db_row()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.structure.Structure.from_vasprun"><code class="docutils literal notranslate"><span class="pre">Structure.from_vasprun()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.structure.Structure.save_to_db"><code class="docutils literal notranslate"><span class="pre">Structure.save_to_db()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.structure.Structure.to_ase_atoms"><code class="docutils literal notranslate"><span class="pre">Structure.to_ase_atoms()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.structure.Structure.to_bulk"><code class="docutils literal notranslate"><span class="pre">Structure.to_bulk()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.structure.Structure.to_cluster"><code class="docutils literal notranslate"><span class="pre">Structure.to_cluster()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.structure.Structure.to_surface"><code class="docutils literal notranslate"><span class="pre">Structure.to_surface()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.structure.Surface"><code class="docutils literal notranslate"><span class="pre">Surface</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.html#module-atlas.core.surfaces">atlas.core.surfaces module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.surfaces.adjust_vacuum"><code class="docutils literal notranslate"><span class="pre">adjust_vacuum()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.surfaces.apply_replacement_surface"><code class="docutils literal notranslate"><span class="pre">apply_replacement_surface()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.surfaces.check_correct_vacuum_size"><code class="docutils literal notranslate"><span class="pre">check_correct_vacuum_size()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.surfaces.gen_perc_surfaces"><code class="docutils literal notranslate"><span class="pre">gen_perc_surfaces()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.surfaces.gen_surfaces_diff_miller_parallel"><code class="docutils literal notranslate"><span class="pre">gen_surfaces_diff_miller_parallel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.surfaces.get_miller_index_str"><code class="docutils literal notranslate"><span class="pre">get_miller_index_str()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.surfaces.process_row_parallel"><code class="docutils literal notranslate"><span class="pre">process_row_parallel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.surfaces.slab_to_bottom"><code class="docutils literal notranslate"><span class="pre">slab_to_bottom()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.html#module-atlas.core.utils">atlas.core.utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.utils.AdsorbateAdder"><code class="docutils literal notranslate"><span class="pre">AdsorbateAdder</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html#atlas.core.utils.AdsorbateAdder.is_exposed"><code class="docutils literal notranslate"><span class="pre">AdsorbateAdder.is_exposed()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.utils.add_adsorbates"><code class="docutils literal notranslate"><span class="pre">add_adsorbates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.utils.apply_central_atom_octahedral"><code class="docutils literal notranslate"><span class="pre">apply_central_atom_octahedral()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.utils.apply_filters_db"><code class="docutils literal notranslate"><span class="pre">apply_filters_db()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.utils.apply_gauss_perturb_db"><code class="docutils literal notranslate"><span class="pre">apply_gauss_perturb_db()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.utils.apply_replacement"><code class="docutils literal notranslate"><span class="pre">apply_replacement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.utils.apply_replacement_no_db"><code class="docutils literal notranslate"><span class="pre">apply_replacement_no_db()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.utils.check_incorrect_ratios"><code class="docutils literal notranslate"><span class="pre">check_incorrect_ratios()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.utils.clear_previous_print"><code class="docutils literal notranslate"><span class="pre">clear_previous_print()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.utils.create_symmetrical_prototype"><code class="docutils literal notranslate"><span class="pre">create_symmetrical_prototype()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.utils.display_dataframe_ase"><code class="docutils literal notranslate"><span class="pre">display_dataframe_ase()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.utils.display_struct_list_ase"><code class="docutils literal notranslate"><span class="pre">display_struct_list_ase()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.utils.find_supercell_indices"><code class="docutils literal notranslate"><span class="pre">find_supercell_indices()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.utils.fit_replacements_phase"><code class="docutils literal notranslate"><span class="pre">fit_replacements_phase()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.utils.fix_bottom_layers"><code class="docutils literal notranslate"><span class="pre">fix_bottom_layers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.utils.gather_secrets"><code class="docutils literal notranslate"><span class="pre">gather_secrets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.utils.gauss_perturb"><code class="docutils literal notranslate"><span class="pre">gauss_perturb()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.utils.gen_base_elem_perc"><code class="docutils literal notranslate"><span class="pre">gen_base_elem_perc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.utils.limit_num_structures_phase"><code class="docutils literal notranslate"><span class="pre">limit_num_structures_phase()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.core.html#atlas.core.utils.similarity_check_list"><code class="docutils literal notranslate"><span class="pre">similarity_check_list()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.core.html#module-atlas.core">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="atlas.training.html">atlas.training package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="atlas.training.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.training.html#atlas-training-gen-mace-input-module">atlas.training.gen_mace_input module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.training.html#module-atlas.training">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="atlas.workflows.html">atlas.workflows package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="atlas.workflows.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.datatypes.html">atlas.workflows.datatypes package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.datatypes.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.datatypes.html#atlas-workflows-datatypes-aiida-cli-module">atlas.workflows.datatypes.aiida_cli module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.datatypes.html#module-atlas.workflows.datatypes.image_types">atlas.workflows.datatypes.image_types module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.datatypes.html#module-atlas.workflows.datatypes.mlip">atlas.workflows.datatypes.mlip module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.datatypes.html#module-atlas.workflows.datatypes">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.dft.html">atlas.workflows.dft package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.dft.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.dft.html#module-atlas.workflows.dft">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.workflows.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.workflows.html#module-atlas.workflows.aiida_utils">atlas.workflows.aiida_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.CalcType"><code class="docutils literal notranslate"><span class="pre">CalcType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.CalcType.DEFAULT"><code class="docutils literal notranslate"><span class="pre">CalcType.DEFAULT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.CalcType.RELAX_BULK"><code class="docutils literal notranslate"><span class="pre">CalcType.RELAX_BULK</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.CalcType.RELAX_CLUSTER"><code class="docutils literal notranslate"><span class="pre">CalcType.RELAX_CLUSTER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.CalcType.RELAX_SURFACE"><code class="docutils literal notranslate"><span class="pre">CalcType.RELAX_SURFACE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.CalcType.SP_BULK"><code class="docutils literal notranslate"><span class="pre">CalcType.SP_BULK</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.CalcType.SP_CLUSTER"><code class="docutils literal notranslate"><span class="pre">CalcType.SP_CLUSTER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.CalcType.SP_ISOLATEDATOM"><code class="docutils literal notranslate"><span class="pre">CalcType.SP_ISOLATEDATOM</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.CalcType.SP_SURFACE"><code class="docutils literal notranslate"><span class="pre">CalcType.SP_SURFACE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.CalcType.from_string"><code class="docutils literal notranslate"><span class="pre">CalcType.from_string()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.add_aiida_group_to_db"><code class="docutils literal notranslate"><span class="pre">add_aiida_group_to_db()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.can_submit_calculation"><code class="docutils literal notranslate"><span class="pre">can_submit_calculation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.choose_queue"><code class="docutils literal notranslate"><span class="pre">choose_queue()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.choose_queue_from_struct"><code class="docutils literal notranslate"><span class="pre">choose_queue_from_struct()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.determine_vacuum_direction"><code class="docutils literal notranslate"><span class="pre">determine_vacuum_direction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.gather_calc_data_from_row"><code class="docutils literal notranslate"><span class="pre">gather_calc_data_from_row()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.generate_incar"><code class="docutils literal notranslate"><span class="pre">generate_incar()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.generate_kpoints_data"><code class="docutils literal notranslate"><span class="pre">generate_kpoints_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.generate_potential_mapping"><code class="docutils literal notranslate"><span class="pre">generate_potential_mapping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.get_or_create_containerized_code"><code class="docutils literal notranslate"><span class="pre">get_or_create_containerized_code()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.get_or_create_portable_code"><code class="docutils literal notranslate"><span class="pre">get_or_create_portable_code()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.get_vdw_params"><code class="docutils literal notranslate"><span class="pre">get_vdw_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.kpoint_mesh_from_density"><code class="docutils literal notranslate"><span class="pre">kpoint_mesh_from_density()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.parse_stress_from_structure"><code class="docutils literal notranslate"><span class="pre">parse_stress_from_structure()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.run_dataframe_vasp_aiida_queue"><code class="docutils literal notranslate"><span class="pre">run_dataframe_vasp_aiida_queue()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.run_dataframe_vasp_simulations_aiida"><code class="docutils literal notranslate"><span class="pre">run_dataframe_vasp_simulations_aiida()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.select_kspacing"><code class="docutils literal notranslate"><span class="pre">select_kspacing()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.sort_chunk_size"><code class="docutils literal notranslate"><span class="pre">sort_chunk_size()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.submit_aiida_vasp_calculation"><code class="docutils literal notranslate"><span class="pre">submit_aiida_vasp_calculation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.update_db_with_dft_results"><code class="docutils literal notranslate"><span class="pre">update_db_with_dft_results()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.aiida_utils.validate_kspacing"><code class="docutils literal notranslate"><span class="pre">validate_kspacing()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.workflows.html#module-atlas.workflows.monitors">atlas.workflows.monitors module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.monitors.output_monitor"><code class="docutils literal notranslate"><span class="pre">output_monitor()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.workflows.html#module-atlas.workflows.simple_active_learning">atlas.workflows.simple_active_learning module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.add_dft_results_to_db"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.add_dft_results_to_db()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.check_al_loop_conditions"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.check_al_loop_conditions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.check_resume_mode"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.check_resume_mode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.compile_safeguard_model"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.compile_safeguard_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.copy_input_toml_file"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.copy_input_toml_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.define"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.define()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.gather_safeguard_compiled"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.gather_safeguard_compiled()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.get_al_loop_break_conditions"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.get_al_loop_break_conditions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.get_data_reduction_seed"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.get_data_reduction_seed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.get_database"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.get_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.get_input_report"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.get_input_report()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.get_md_seed"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.get_md_seed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.get_results_loop"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.get_results_loop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.get_seed_structures"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.get_seed_structures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.log_atl_version"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.log_atl_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.parse_safeguard_check_results"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.parse_safeguard_check_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.results_final"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.results_final()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.run_safeguard_check"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.run_safeguard_check()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.safeguard_check_md"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.safeguard_check_md()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.setup"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.setup_textfile_logging"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.setup_textfile_logging()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.should_run_according_to_safeguard_check"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.should_run_according_to_safeguard_check()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.should_run_safeguard"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningBaseWorkChain.should_run_safeguard()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningWorkChain</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.check_extrapolation_enabled"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningWorkChain.check_extrapolation_enabled()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.compile_models_for_inference"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningWorkChain.compile_models_for_inference()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.define"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningWorkChain.define()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.gather_compiled_models"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningWorkChain.gather_compiled_models()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.gen_descriptors_and_concave_hull"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningWorkChain.gen_descriptors_and_concave_hull()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.get_descriptor_results"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningWorkChain.get_descriptor_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.get_mlip_train_output"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningWorkChain.get_mlip_train_output()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.get_test_db_results"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningWorkChain.get_test_db_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.is_test_db_evaluation_enabled"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningWorkChain.is_test_db_evaluation_enabled()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.perform_test_db_evaluation"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningWorkChain.perform_test_db_evaluation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.return_seed_dft_and_model"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningWorkChain.return_seed_dft_and_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.run_md_seed"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningWorkChain.run_md_seed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.select_data_reduction_structures"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningWorkChain.select_data_reduction_structures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.send_calc_or_remove_structures"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningWorkChain.send_calc_or_remove_structures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.set_step_logger"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningWorkChain.set_step_logger()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.should_select_data_reduction_structures"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningWorkChain.should_select_data_reduction_structures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.step_setup"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningWorkChain.step_setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.train_mlip_model"><code class="docutils literal notranslate"><span class="pre">SimpleActiveLearningWorkChain.train_mlip_model()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.workflows.html#module-atlas.workflows">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="module-atlas">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-atlas" title="Link to this heading"></a></h2>
+<p>Library for streamlining the structure creation and training for NNPs.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="atlas" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="atlas.active_learning.html" class="btn btn-neutral float-right" title="atlas.active_learning package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='atlas.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1093 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Database Generation &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="DFT Calculations" href="input_dft.html" />
+    <link rel="prev" title="Input specification" href="input.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="input.html">Input specification</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="input.html#input-formats">Input Formats</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Database Generation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#database-database">Database - <code class="docutils literal notranslate"><span class="pre">[database]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#phase-diagram-phase-diagram">Phase_Diagram - <code class="docutils literal notranslate"><span class="pre">[phase_diagram]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generation-generation">Generation - <code class="docutils literal notranslate"><span class="pre">[generation]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deformation-deformation">Deformation - <code class="docutils literal notranslate"><span class="pre">[deformation]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#perturbation-perturbation">Perturbation - <code class="docutils literal notranslate"><span class="pre">[perturbation]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#adsorbates-adsorbates">Adsorbates - <code class="docutils literal notranslate"><span class="pre">[adsorbates]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#struct-filters-struct-filters">Struct_Filters - <code class="docutils literal notranslate"><span class="pre">[struct_filters]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vacancies-vacancies">Vacancies - <code class="docutils literal notranslate"><span class="pre">[vacancies]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#targeted-modification-targeted-modification">Targeted_Modification - <code class="docutils literal notranslate"><span class="pre">[targeted_modification]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#concave-hull-concave-hull">Concave_Hull - <code class="docutils literal notranslate"><span class="pre">[concave_hull]</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="input_dft.html">DFT Calculations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input_active_learning.html">Active Learning Loop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input_mlip_benchmarks.html">MLIP Benchmarks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input_dft_benchmark.html">DFT Parameter Benchmark</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input_latent_space_analysis.html">Latent Space Analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Package Information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="input.html">Input specification</a></li>
+      <li class="breadcrumb-item active">Database Generation</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/input_database_generation.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="database-generation">
+<h1>Database Generation<a class="headerlink" href="#database-generation" title="Link to this heading"></a></h1>
+<p>Generate a database generation template file using <code class="docutils literal notranslate"><span class="pre">atl_gen_configuration_file</span> <span class="pre">-t</span> <span class="pre">database_generation</span></code>.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>All keys are mandatory unless stated otherwise.</p>
+</div>
+<section id="database-database">
+<h2>Database - <code class="docutils literal notranslate"><span class="pre">[database]</span></code><a class="headerlink" href="#database-database" title="Link to this heading"></a></h2>
+<p>General settings and file paths for the database.</p>
+<ul class="simple">
+<li><p><span class="code-alt">database_name</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Name of the database to be used for internal reference and as the filename.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'my_material_db'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">min_num_atoms</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Minimum number of atoms allowed in the generated structures.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">64</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_num_atoms</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum number of atoms allowed in the generated structures.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">128</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">min_cell_size</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Minimum cell size in Angstrom.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">5.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">relax_struct_path</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path to a folder containing DFT optimized structures.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">''</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">database_path</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path where the final database will be saved.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str,</span> <span class="pre">PosixPath)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">''</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">rng_seed</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Numerical value used to fix the RNG seed. If not specified, it will be chosen randomly each run.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">42</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">overwrite_db</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Allow database overwrite. If false, and the database exists, the new database name will include a timestamp.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="composition-database-composition">
+<h3>Composition - <code class="docutils literal notranslate"><span class="pre">[database.composition]</span></code><a class="headerlink" href="#composition-database-composition" title="Link to this heading"></a></h3>
+<p>Settings for the composition of the database.</p>
+<ul class="simple">
+<li><p><span class="code-alt">size</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum number of structures to generate for the database.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">7500</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="ratios-database-composition-ratios">
+<h4>Ratios - <code class="docutils literal notranslate"><span class="pre">[database.composition.ratios]</span></code><a class="headerlink" href="#ratios-database-composition-ratios" title="Link to this heading"></a></h4>
+<p>Fraction of different structure types. The sum of the fractions must be equal to 1.0.</p>
+<ul class="simple">
+<li><p><span class="code-alt">bulk</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Fraction of structures that will be bulk.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.4</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">surface</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Fraction of structures that will be surfaces.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.6</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">cluster</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Fraction of structures that will be clusters.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="plot-db-database-plot-db">
+<h3>Plot_Db - <code class="docutils literal notranslate"><span class="pre">[database.plot_db]</span></code><a class="headerlink" href="#plot-db-database-plot-db" title="Link to this heading"></a></h3>
+<p>Display and Export Options for the phase diagram plot.</p>
+<ul class="simple">
+<li><p><span class="code-alt">show</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to display the database with a phase diagram after creation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">format</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Format for the figure.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'png'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">png</span></code>, <code class="docutils literal notranslate"><span class="pre">svg</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="rc-params-database-plot-db-rc-params">
+<h4>Rc_Params - <code class="docutils literal notranslate"><span class="pre">[database.plot_db.rc_params]</span></code><a class="headerlink" href="#rc-params-database-plot-db-rc-params" title="Link to this heading"></a></h4>
+<p>Matplotlib rcParams for the plot.</p>
+<ul class="simple">
+<li><p><span class="code-alt">font.family</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Font family for the phase diagram plot.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'monospace'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">font.size</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Font size for the phase diagram plot.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">14</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="show-db-ase-database-show-db-ase">
+<h3>Show_Db_Ase - <code class="docutils literal notranslate"><span class="pre">[database.show_db_ase]</span></code><a class="headerlink" href="#show-db-ase-database-show-db-ase" title="Link to this heading"></a></h3>
+<p>ASE GUI display options.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">show</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to display the database using ASE GUI after creation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="export-database-export">
+<h3>Export - <code class="docutils literal notranslate"><span class="pre">[database.export]</span></code><a class="headerlink" href="#export-database-export" title="Link to this heading"></a></h3>
+<p>Export options for the database.</p>
+<ul class="simple">
+<li><p><span class="code-alt">export</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to export the database.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">format</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Export format supported by ASE (e.g., ‘extxyz’).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'extxyz'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">file_path</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path where the exported file will be saved.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str,</span> <span class="pre">PosixPath)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">''</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">file_name</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Name of the exported file.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'export_db_filename'</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="phase-diagram-phase-diagram">
+<h2>Phase_Diagram - <code class="docutils literal notranslate"><span class="pre">[phase_diagram]</span></code><a class="headerlink" href="#phase-diagram-phase-diagram" title="Link to this heading"></a></h2>
+<p>Description of the phase diagram.</p>
+<ul class="simple">
+<li><p><span class="code-alt">material_name</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Internal name for the material in the phase diagram.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'default_material_name'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">element_list</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: List of elements to include in the phase diagram.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(list[str])</span></code></p></li>
+<li><p><strong>Example</strong>:</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;Cu&#39;</span><span class="p">,</span> <span class="s1">&#39;O&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">base_element</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Symbol of the most abundant element in the phase.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'Cu'</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="phase-definition-phase-diagram-phase">
+<h3>Phase Definition - <code class="docutils literal notranslate"><span class="pre">[phase_diagram.phase]</span></code><a class="headerlink" href="#phase-definition-phase-diagram-phase" title="Link to this heading"></a></h3>
+<p>Defines a specific phase within the phase diagram. Multiple phases can be added.</p>
+<section id="phase-definition-phase-diagram-phase-xxxxx">
+<h4>Phase Definition - <code class="docutils literal notranslate"><span class="pre">[phase_diagram.phase.XXXXX]</span></code><a class="headerlink" href="#phase-definition-phase-diagram-phase-xxxxx" title="Link to this heading"></a></h4>
+<p>This key describes settings for dynamic entries. Several entries can be added by using different key names.</p>
+<p>The key name (<code class="docutils literal notranslate"><span class="pre">XXXXX</span></code>) is used as the reference name. <strong>Replace XXXXX with a name of your choice.</strong></p>
+<p>Accepted parameters for each entry:</p>
+<ul class="simple">
+<li><p><span class="code-alt">name</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Name to be used as reference for the phase.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'alpha'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">cluster_element</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Symbol of the element defining the cluster.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">prototype</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Materials Project ID of the prototypical structure.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'mp-30'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">offset</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Fraction of composition allowed over and under the phase limits.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">limit_max_num_structures</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum number of structures to generate for this phase.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">allow_modifications</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Allow modifications (supercells, replacements, etc.) to the base structure.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">use_cache</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Store structures in cache to speed up generation. Can consume a lot of disk space.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<p>Parameters using <code class="docutils literal notranslate"><span class="pre">composition.</span></code> prefix:</p>
+<p>Parameters using <code class="docutils literal notranslate"><span class="pre">replacements.</span></code> prefix:</p>
+<ul class="simple">
+<li><p><span class="code-alt">replacements.replace</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to replace specific elements. Elements in element_list will be considered for replacement and replaced by a single element species.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">replacements.element_list</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: List of elements to be replaced.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">list[str])</span></code></p></li>
+<li><p><strong>Example</strong>:</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;Ti&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">replacements.replace_with</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Element to replace with.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'Ir'</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="generation-generation">
+<h2>Generation - <code class="docutils literal notranslate"><span class="pre">[generation]</span></code><a class="headerlink" href="#generation-generation" title="Link to this heading"></a></h2>
+<p>Structure generation settings.</p>
+<ul class="simple">
+<li><p><span class="code-alt">generate_type</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Types of structures to generate.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(list[str])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">['bulk',</span> <span class="pre">'surface',</span> <span class="pre">'cluster']</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">bulk</span></code>, <code class="docutils literal notranslate"><span class="pre">surface</span></code>, <code class="docutils literal notranslate"><span class="pre">cluster</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="bulk-generation-bulk">
+<h3>Bulk - <code class="docutils literal notranslate"><span class="pre">[generation.bulk]</span></code><a class="headerlink" href="#bulk-generation-bulk" title="Link to this heading"></a></h3>
+<p>Bulk structure generation settings.</p>
+<ul class="simple">
+<li><p><span class="code-alt">num_struct</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of structures to generate.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">25</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_repeat</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of repeats for each structure.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">supercell_max_idx</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum Miller index for the bulk supercells.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="surface-generation-surface">
+<h3>Surface - <code class="docutils literal notranslate"><span class="pre">[generation.surface]</span></code><a class="headerlink" href="#surface-generation-surface" title="Link to this heading"></a></h3>
+<p>Surface structure generation settings.</p>
+<ul class="simple">
+<li><p><span class="code-alt">min_miller_index</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Minimum Miller index used to generate surface structures.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_miller_index</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum Miller index used to generate surface structures.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">min_slab_size_ang</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Minimum slab thickness in Angstrom.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">7.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">min_vacuum_size_ang</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Minimum size of the vacuum layer in Angstroms.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">12.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">get_supercells</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to generate supercells for surface structures.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">fixed_layers</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of fixed layers in the surface slab.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_number_supercells</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum number of surface supercells to generate.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">200</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">save_in_db</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to save generated surfaces in the database.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_replacements</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of replacement percentages to generate for each structure.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">20</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_repeat_replace</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of repeats for each replacement.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">frac_slabs_save</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Fraction of slabs to save after generation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">frac_supercells_save</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Fraction of unreplaced supercells to save after generation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_slab_num</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum number of slabs to gather from the slab generation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">15</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">n_workers</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum number of workers for parallel processing.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="cluster-generation-cluster">
+<h3>Cluster - <code class="docutils literal notranslate"><span class="pre">[generation.cluster]</span></code><a class="headerlink" href="#cluster-generation-cluster" title="Link to this heading"></a></h3>
+<p>Cluster structure generation settings.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">size_range</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: List of cluster sizes (number of atoms) to generate.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(list[int])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">[10,</span> <span class="pre">20,</span> <span class="pre">30,</span> <span class="pre">40,</span> <span class="pre">50,</span> <span class="pre">60]</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">add_dimer</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to add a 2-atom dimer structure.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">save_in_db</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to save generated clusters in the database.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">get_replacements</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to generate replacement clusters (substitute atoms).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">get_perturbed</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to generate perturbed clusters (Gaussian displacement).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_struct</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of replacement/perturbation structures to generate per base cluster.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_repeat</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of repeats for each replacement/perturbation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">limit_max_num_structures</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum number of cluster structures to generate in total.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">perturbation_ang</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Gaussian perturbation magnitude in Angstroms.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.04</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">cluster_method</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Method for initial cluster geometry. ‘wulff’ uses Wulff construction (FCC/BCC, falls back to spherical for HCP). ‘spherical’ uses random spherical packing.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'wulff'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">basin_hopping</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to relax clusters via basin hopping with a Lennard-Jones potential.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">bh_totalsteps</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of basin hopping steps for cluster relaxation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">10</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">bh_fmax</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Force convergence criterion (eV/Angstrom) for basin hopping.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.05</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">lj_sigma</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Lennard-Jones sigma parameter (Angstrom) for basin hopping. When omitted, sigma is auto-derived from the element’s bulk nearest-neighbor distance.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'None'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">lj_epsilon</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Lennard-Jones epsilon parameter (eV) for basin hopping.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="deformation-deformation">
+<h2>Deformation - <code class="docutils literal notranslate"><span class="pre">[deformation]</span></code><a class="headerlink" href="#deformation-deformation" title="Link to this heading"></a></h2>
+<p>Lattice deformation settings.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">lattice_frac_deform_max</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum deformation value as a percentage of the lattice side length.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.05</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">lattice_frac_deform_min</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Minimum deformation value as a percentage of the lattice side length.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.01</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_repeats</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of repeats for each structure with random deformations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">limit_max_num_deformations</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum number of lattice deformations to generate.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="perturbation-perturbation">
+<h2>Perturbation - <code class="docutils literal notranslate"><span class="pre">[perturbation]</span></code><a class="headerlink" href="#perturbation-perturbation" title="Link to this heading"></a></h2>
+<p>Perturbation settings.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">filter_struct_types</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Types of structures to which the perturbation will be applied.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(list[str])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">['bulk',</span> <span class="pre">'surface']</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">bulk</span></code>, <code class="docutils literal notranslate"><span class="pre">surface</span></code>, <code class="docutils literal notranslate"><span class="pre">cluster</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">limit_max_num_perturbs</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum number of perturbations to generate.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_repeats</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of repeats for each structure with random perturbations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">perturbation_ang</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Perturbation magnitude in Angstrom.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.04</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="adsorbates-adsorbates">
+<h2>Adsorbates - <code class="docutils literal notranslate"><span class="pre">[adsorbates]</span></code><a class="headerlink" href="#adsorbates-adsorbates" title="Link to this heading"></a></h2>
+<p>Adsorbate placement settings.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">filter_struct_types</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Types of structures to which adsorbates will be added.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">list[str])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">['surface']</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">bulk</span></code>, <code class="docutils literal notranslate"><span class="pre">surface</span></code>, <code class="docutils literal notranslate"><span class="pre">cluster</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">limit_max_num_perturbs</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum number of structures with adsorbates to generate.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_repeats</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of repeats for each structure.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">adsorbate_species</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: List of adsorbate species to consider.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(list[str])</span></code></p></li>
+<li><p><strong>Example</strong>:</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="s1">&#39;H2O&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="struct-filters-struct-filters">
+<h2>Struct_Filters - <code class="docutils literal notranslate"><span class="pre">[struct_filters]</span></code><a class="headerlink" href="#struct-filters-struct-filters" title="Link to this heading"></a></h2>
+<p>Settings for filtering out incorrect structures.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<section id="no-neighbors-struct-filters-no-neighbors">
+<h3>No_Neighbors - <code class="docutils literal notranslate"><span class="pre">[struct_filters.no_neighbors]</span></code><a class="headerlink" href="#no-neighbors-struct-filters-no-neighbors" title="Link to this heading"></a></h3>
+<p>Filter for structures with atoms that have no neighbors.</p>
+<ul class="simple">
+<li><p><span class="code-alt">cov_rad_multiplier</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Multiplier applied to the covalent radii to be used as cutoff radius for the neighbor check.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1.2</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="layer-distance-struct-filters-layer-distance">
+<h3>Layer_Distance - <code class="docutils literal notranslate"><span class="pre">[struct_filters.layer_distance]</span></code><a class="headerlink" href="#layer-distance-struct-filters-layer-distance" title="Link to this heading"></a></h3>
+<p>Filter for layer distances in surface slabs.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">max_layer_distance_ang</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum accepted distance between layers in Angstrom.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">4.0</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="duplicate-slabs-struct-filters-duplicate-slabs">
+<h3>Duplicate_Slabs - <code class="docutils literal notranslate"><span class="pre">[struct_filters.duplicate_slabs]</span></code><a class="headerlink" href="#duplicate-slabs-struct-filters-duplicate-slabs" title="Link to this heading"></a></h3>
+<p>Filter for duplicate slabs.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">tolerance</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Tolerance for the duplicate slabs filter.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.2</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="vacancies-vacancies">
+<h2>Vacancies - <code class="docutils literal notranslate"><span class="pre">[vacancies]</span></code><a class="headerlink" href="#vacancies-vacancies" title="Link to this heading"></a></h2>
+<p>Settings for vacancy generation.</p>
+<ul class="simple">
+<li><p><span class="code-alt">filter_struct_types</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Types of structures to which vacancies will be applied.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(list[str])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">['bulk',</span> <span class="pre">'surface']</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">bulk</span></code>, <code class="docutils literal notranslate"><span class="pre">surface</span></code>, <code class="docutils literal notranslate"><span class="pre">cluster</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">limit_max_num_vacancies</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum number of structures with vacancies to generate.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">400</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_repeats</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of repeats for each structure with different random vacancies.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_vacancy_percentage</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum vacancies to generate as a percentage of the total number of atoms.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.75</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">min_vacancy_percentage</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Minimum vacancies to generate as a percentage of the total number of atoms.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.025</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">element_list</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: List of elements to consider for the vacancies.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(list[str])</span></code></p></li>
+<li><p><strong>Example</strong>:</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;O&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="targeted-modification-targeted-modification">
+<h2>Targeted_Modification - <code class="docutils literal notranslate"><span class="pre">[targeted_modification]</span></code><a class="headerlink" href="#targeted-modification-targeted-modification" title="Link to this heading"></a></h2>
+<p>Settings for targeted structural modifications.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<section id="central-atom-octahedral-targeted-modification-central-atom-octahedral">
+<h3>Central_Atom_Octahedral - <code class="docutils literal notranslate"><span class="pre">[targeted_modification.central_atom_octahedral]</span></code><a class="headerlink" href="#central-atom-octahedral-targeted-modification-central-atom-octahedral" title="Link to this heading"></a></h3>
+<p>Apply perturbations to the central atom in octahedral sites.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">filter_phases</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Only apply the modification to the following phases.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">list[str])</span></code></p></li>
+<li><p><strong>Example</strong>:</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s1">&#39;rutile&#39;</span><span class="p">,</span> <span class="s1">&#39;original_IrO2&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">filter_struct_types</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Types of structures to which the modification will be applied.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">list[str])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">['bulk',</span> <span class="pre">'surface']</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">bulk</span></code>, <code class="docutils literal notranslate"><span class="pre">surface</span></code>, <code class="docutils literal notranslate"><span class="pre">cluster</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">central_element</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Symbol of the central element of the octahedral site.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'Ir'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_repeats</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of repeats for each structure with different perturbations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">limit_max_num_modifications</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum number of modified structures to generate.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">200</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_perturbation_ang</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum perturbation movement of the central atom in Angstrom.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.2</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="concave-hull-concave-hull">
+<h2>Concave_Hull - <code class="docutils literal notranslate"><span class="pre">[concave_hull]</span></code><a class="headerlink" href="#concave-hull-concave-hull" title="Link to this heading"></a></h2>
+<p>Settings for descriptors and boundary determination.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">gen_concave_hull</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to generate the boundary of the descriptors for all structures in the database.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">boundary_method</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Algorithm for boundary determination.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'concave_hull'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">concave_hull</span></code>, <code class="docutils literal notranslate"><span class="pre">morphological_closing</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">descriptor</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Descriptor to use for the boundary generation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'SOAP'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">SOAP</span></code>, <code class="docutils literal notranslate"><span class="pre">MACE</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">dim_reduction</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Dimensionality reduction method for the boundary generation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'autoencoder'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">PCA</span></code>, <code class="docutils literal notranslate"><span class="pre">autoencoder</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">plot_filename</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Filename for the figure displaying the boundary.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'descriptors_concave_hull.png'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">morph_disk_size</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Disk size for morphological closing structuring element. Larger values bridge wider gaps between points.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">10</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">morph_threshold</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Grayscale intensity threshold (0-255) for point detection in morphological closing.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">250</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">morph_dpi</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: DPI of the internal rasterisation used by morphological closing. Higher values give finer boundaries.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="input.html" class="btn btn-neutral float-left" title="Input specification" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="input_dft.html" class="btn btn-neutral float-right" title="DFT Calculations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='input_database_generation.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

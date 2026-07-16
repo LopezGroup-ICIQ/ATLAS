@@ -1,0 +1,1067 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>atlas.active_learning.extrapolation package &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="atlas.active_learning.safeguard package" href="atlas.active_learning.safeguard.html" />
+    <link rel="prev" title="atlas.active_learning.eval_test_db package" href="atlas.active_learning.eval_test_db.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">Input specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package Information</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="atlas.html">atlas package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="atlas.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="atlas.active_learning.html">atlas.active_learning package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.html">atlas.benchmarks package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html">atlas.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.training.html">atlas.training package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html">atlas.workflows package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.html#module-atlas">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">atlas</a></li>
+          <li class="breadcrumb-item"><a href="atlas.html">atlas package</a></li>
+          <li class="breadcrumb-item"><a href="atlas.active_learning.html">atlas.active_learning package</a></li>
+      <li class="breadcrumb-item active">atlas.active_learning.extrapolation package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/atlas.active_learning.extrapolation.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="atlas-active-learning-extrapolation-package">
+<h1>atlas.active_learning.extrapolation package<a class="headerlink" href="#atlas-active-learning-extrapolation-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.active_learning.extrapolation.autoencoder">
+<span id="atlas-active-learning-extrapolation-autoencoder-module"></span><h2>atlas.active_learning.extrapolation.autoencoder module<a class="headerlink" href="#module-atlas.active_learning.extrapolation.autoencoder" title="Link to this heading"></a></h2>
+<p>Autoencoder model for dimensionality reduction and data reconstruction.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.Autoencoder">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.autoencoder.</span></span><span class="sig-name descname"><span class="pre">Autoencoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l1_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l2_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottleneck_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.Autoencoder" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Autoencoder model for dimensionality reduction and data reconstruction.</p>
+<p>This class implements a simple feedforward autoencoder model using PyTorch’s
+<cite>nn.Module</cite>. It consists of two main components:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Encoder: Compresses the input data to a lower-dimensional</dt><dd><p>bottleneck (latent space).</p>
+</dd>
+</dl>
+</li>
+<li><p>Decoder: Reconstructs the input data from the bottleneck representation.</p></li>
+</ul>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.Autoencoder.encoder">
+<span class="sig-name descname"><span class="pre">encoder</span></span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.Autoencoder.encoder" title="Link to this definition"></a></dt>
+<dd><p>A neural network stack that reduces the input dimensionality down to the
+specified bottleneck dimension, capturing important features in a
+compressed form.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nn.Sequential</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.Autoencoder.decoder">
+<span class="sig-name descname"><span class="pre">decoder</span></span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.Autoencoder.decoder" title="Link to this definition"></a></dt>
+<dd><p>A neural network stack that reconstructs the input from the bottleneck
+representation, attempting to match the original input as closely as possible.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nn.Sequential</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dim</strong> (<em>int</em>) – Dimension of the input data.</p></li>
+<li><p><strong>l1_dim</strong> (<em>int</em>) – Dimension of the first hidden layer in the encoder (last hidden layer
+in the decoder).</p></li>
+<li><p><strong>l2_dim</strong> (<em>int</em>) – Dimension of the second hidden layer in the encoder (second-to-last
+hidden layer in the decoder).</p></li>
+<li><p><strong>bottleneck_dim</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>default=2</em>) – Dimension of the bottleneck layer (latent space) where input is compressed.</p></li>
+<li><p><strong>bias_flag</strong> (<em>bool</em><em>, </em><em>optional</em><em>, </em><em>default=True</em>) – Whether to include a bias term in each linear layer. Setting to False makes the
+model less dependent on training data and more generalizable to unseen data.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">forward(x):</span></span></dt>
+<dd><p>Performs a forward pass through the encoder and decoder, compressing
+the input to the bottleneck and reconstructing it to its original dimension.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">Example</span> <span class="pre">Usage:</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">--------------</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">&gt;&gt;&gt;</span> <span class="pre">model</span> <span class="pre">=</span> <span class="pre">Autoencoder(</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">...</span>&#160;&#160;&#160;&#160; <span class="pre">input_dim=100,</span> <span class="pre">l1_dim=64,</span> <span class="pre">l2_dim=32,</span> <span class="pre">bottleneck_dim=10</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">...</span> <span class="pre">)</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">&gt;&gt;&gt;</span> <span class="pre">input_data</span> <span class="pre">=</span> <span class="pre">torch.randn(1,</span> <span class="pre">100)</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">&gt;&gt;&gt;</span> <span class="pre">reconstructed_data</span> <span class="pre">=</span> <span class="pre">model(input_data)</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.Autoencoder.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.Autoencoder.forward" title="Link to this definition"></a></dt>
+<dd><p>Define the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.autoencoder.</span></span><span class="sig-name descname"><span class="pre">AutoencoderSettings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'float32'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng_seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'all_descriptors.npz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'autoencoder_model.pth'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_frac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_frac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_frac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">standardize_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l1_hidden_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">256</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l2_hidden_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottleneck_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias_flag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4096</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patience</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_decay</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'mse'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wandb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wandb_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wandb_project</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Configuration settings for Autoencoder training.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.batch_size">
+<span class="sig-name descname"><span class="pre">batch_size</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4096</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.batch_size" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.bias_flag">
+<span class="sig-name descname"><span class="pre">bias_flag</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.bias_flag" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.bottleneck_dim">
+<span class="sig-name descname"><span class="pre">bottleneck_dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.bottleneck_dim" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.dataset">
+<span class="sig-name descname"><span class="pre">dataset</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'all_descriptors.npz'</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.dataset" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.device">
+<span class="sig-name descname"><span class="pre">device</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'cpu'</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.device" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.dtype">
+<span class="sig-name descname"><span class="pre">dtype</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'float32'</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.dtype" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.l1_hidden_dim">
+<span class="sig-name descname"><span class="pre">l1_hidden_dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">256</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.l1_hidden_dim" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.l2_hidden_dim">
+<span class="sig-name descname"><span class="pre">l2_hidden_dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.l2_hidden_dim" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.load_model">
+<span class="sig-name descname"><span class="pre">load_model</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.load_model" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.loss">
+<span class="sig-name descname"><span class="pre">loss</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'mse'</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.loss" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.lr">
+<span class="sig-name descname"><span class="pre">lr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.001</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.lr" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.model_path">
+<span class="sig-name descname"><span class="pre">model_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'autoencoder_model.pth'</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.model_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.num_epochs">
+<span class="sig-name descname"><span class="pre">num_epochs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">50</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.num_epochs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.patience">
+<span class="sig-name descname"><span class="pre">patience</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.patience" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.rng_seed">
+<span class="sig-name descname"><span class="pre">rng_seed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.rng_seed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.standardize_data">
+<span class="sig-name descname"><span class="pre">standardize_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.standardize_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.test_frac">
+<span class="sig-name descname"><span class="pre">test_frac</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.1</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.test_frac" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.train_frac">
+<span class="sig-name descname"><span class="pre">train_frac</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.8</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.train_frac" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.valid_frac">
+<span class="sig-name descname"><span class="pre">valid_frac</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.1</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.valid_frac" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.wandb">
+<span class="sig-name descname"><span class="pre">wandb</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.wandb" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.wandb_name">
+<span class="sig-name descname"><span class="pre">wandb_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.wandb_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.wandb_project">
+<span class="sig-name descname"><span class="pre">wandb_project</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.wandb_project" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.weight_decay">
+<span class="sig-name descname"><span class="pre">weight_decay</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1e-05</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.AutoencoderSettings.weight_decay" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.evaluate_reconstruction">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.autoencoder.</span></span><span class="sig-name descname"><span class="pre">evaluate_reconstruction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">autoencoder_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">standardize_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">autoencoder_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.evaluate_reconstruction" title="Link to this definition"></a></dt>
+<dd><p>Evaluates the autoencoder by computing reconstruction MAE and RMSE.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.get_latent_space_autoencoder">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.autoencoder.</span></span><span class="sig-name descname"><span class="pre">get_latent_space_autoencoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">standardize_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">autoencoder_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.get_latent_space_autoencoder" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.load_autoencoder_model">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.autoencoder.</span></span><span class="sig-name descname"><span class="pre">load_autoencoder_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.load_autoencoder_model" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder.locate_standarization_files">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.autoencoder.</span></span><span class="sig-name descname"><span class="pre">locate_standarization_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">autoencoder_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder.locate_standarization_files" title="Link to this definition"></a></dt>
+<dd><p>Check for the existence of standardization files.</p>
+<p>These files are stored as numpy arrays containing values necessary
+to apply same standarization scale.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>autoencoder_path</strong> (<em>pl.Path</em>) – Path for the autoencoder model</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>mean_vals</strong> – Array of mean values for each feature, or False if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray or False</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-atlas.active_learning.extrapolation.autoencoder_tools_aiida">
+<span id="atlas-active-learning-extrapolation-autoencoder-tools-aiida-module"></span><h2>atlas.active_learning.extrapolation.autoencoder_tools_aiida module<a class="headerlink" href="#module-atlas.active_learning.extrapolation.autoencoder_tools_aiida" title="Link to this heading"></a></h2>
+<p>AiiDA CalcJob and Parser for the autoencoder training and latent space.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder_tools_aiida.GetConcaveHullCalculation">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.autoencoder_tools_aiida.</span></span><span class="sig-name descname"><span class="pre">GetConcaveHullCalculation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder_tools_aiida.GetConcaveHullCalculation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">CalcJob</span></code></p>
+<p>Calculation to get the concave hull of the latent space
+of a set of descriptors for a structure database.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder_tools_aiida.GetConcaveHullCalculation.define">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">define</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder_tools_aiida.GetConcaveHullCalculation.define" title="Link to this definition"></a></dt>
+<dd><p>Define the process specification, including its inputs, outputs and known exit codes.</p>
+<p>Ports are added to the <cite>metadata</cite> input namespace (inherited from the base Process),
+and a <cite>code</cite> input Port, a <cite>remote_folder</cite> output Port and retrieved folder output Port
+are added.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>spec</strong> – the calculation job process spec to define.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder_tools_aiida.GetConcaveHullCalculation.prepare_for_submission">
+<span class="sig-name descname"><span class="pre">prepare_for_submission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder_tools_aiida.GetConcaveHullCalculation.prepare_for_submission" title="Link to this definition"></a></dt>
+<dd><p>Write the input files that are required for the code to run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>folder</strong> – a <cite>Folder</cite> to temporarily write files on disk</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><cite>CalcInfo</cite> instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder_tools_aiida.GetConcaveHullCalculationParser">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.autoencoder_tools_aiida.</span></span><span class="sig-name descname"><span class="pre">GetConcaveHullCalculationParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CalcJobNode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder_tools_aiida.GetConcaveHullCalculationParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Parser</span></code></p>
+<p>Parser for the retrieved files from a MACE descriptors job.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder_tools_aiida.GetConcaveHullCalculationParser.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder_tools_aiida.GetConcaveHullCalculationParser.parse" title="Link to this definition"></a></dt>
+<dd><p>Parse the retrieved files of the calculation job.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder_tools_aiida.GetLatentSpaceAutoencoderCalculation">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.autoencoder_tools_aiida.</span></span><span class="sig-name descname"><span class="pre">GetLatentSpaceAutoencoderCalculation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder_tools_aiida.GetLatentSpaceAutoencoderCalculation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">CalcJob</span></code></p>
+<p>Calculation to train an autoencoder and use it to get the latent space
+for the descriptors of a structure database.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder_tools_aiida.GetLatentSpaceAutoencoderCalculation.define">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">define</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder_tools_aiida.GetLatentSpaceAutoencoderCalculation.define" title="Link to this definition"></a></dt>
+<dd><p>Define the process specification, including its inputs, outputs and known exit codes.</p>
+<p>Ports are added to the <cite>metadata</cite> input namespace (inherited from the base Process),
+and a <cite>code</cite> input Port, a <cite>remote_folder</cite> output Port and retrieved folder output Port
+are added.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>spec</strong> – the calculation job process spec to define.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder_tools_aiida.GetLatentSpaceAutoencoderCalculation.prepare_for_submission">
+<span class="sig-name descname"><span class="pre">prepare_for_submission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder_tools_aiida.GetLatentSpaceAutoencoderCalculation.prepare_for_submission" title="Link to this definition"></a></dt>
+<dd><p>Write the input files that are required for the code to run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>folder</strong> – a <cite>Folder</cite> to temporarily write files on disk</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><cite>CalcInfo</cite> instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder_tools_aiida.GetLatentSpaceAutoencoderCalculationParser">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.autoencoder_tools_aiida.</span></span><span class="sig-name descname"><span class="pre">GetLatentSpaceAutoencoderCalculationParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CalcJobNode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder_tools_aiida.GetLatentSpaceAutoencoderCalculationParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Parser</span></code></p>
+<p>Parser for the retrieved files from a MACE descriptors job.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder_tools_aiida.GetLatentSpaceAutoencoderCalculationParser.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder_tools_aiida.GetLatentSpaceAutoencoderCalculationParser.parse" title="Link to this definition"></a></dt>
+<dd><p>Parse the retrieved files of the calculation job.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder_tools_aiida.TrainAutoencoderCalculation">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.autoencoder_tools_aiida.</span></span><span class="sig-name descname"><span class="pre">TrainAutoencoderCalculation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder_tools_aiida.TrainAutoencoderCalculation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">CalcJob</span></code></p>
+<p>Implementation of a CalcJob to perform an Autoencoder training using
+a settings dir.</p>
+<section id="inputs">
+<h3>Inputs<a class="headerlink" href="#inputs" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>settings_dict<span class="classifier">orm.Dict</span></dt><dd><p>Dictionary containing training settings.</p>
+</dd>
+<dt>descriptors_file_path<span class="classifier">orm.Str</span></dt><dd><p>Path to the descriptors to evaluate in npy format.</p>
+</dd>
+</dl>
+</section>
+<section id="outputs">
+<h3>Outputs<a class="headerlink" href="#outputs" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>model_file<span class="classifier">orm.SinglefileData</span></dt><dd><p>Path of the trained Autoencoder model.</p>
+</dd>
+<dt>training_log<span class="classifier">orm.SinglefileData</span></dt><dd><p>Log file containing the training process.</p>
+</dd>
+</dl>
+</section>
+<section id="exit-codes">
+<h3>Exit Codes<a class="headerlink" href="#exit-codes" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>420<span class="classifier">ERROR_INVALID_OUTPUT</span></dt><dd><p>Autoencoder Training calculation could not run.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder_tools_aiida.TrainAutoencoderCalculation.define">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">define</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder_tools_aiida.TrainAutoencoderCalculation.define" title="Link to this definition"></a></dt>
+<dd><p>Define the input and output specifications for the CalcJob.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder_tools_aiida.TrainAutoencoderCalculation.prepare_for_submission">
+<span class="sig-name descname"><span class="pre">prepare_for_submission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder_tools_aiida.TrainAutoencoderCalculation.prepare_for_submission" title="Link to this definition"></a></dt>
+<dd><p>Write the input files that are required for the code to run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>folder</strong> – an <cite>Folder</cite> to temporarily write files on disk</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><cite>CalcInfo</cite> instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder_tools_aiida.TrainAutoencoderCalculationParser">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.autoencoder_tools_aiida.</span></span><span class="sig-name descname"><span class="pre">TrainAutoencoderCalculationParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CalcJobNode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder_tools_aiida.TrainAutoencoderCalculationParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Parser</span></code></p>
+<p>Parser for the retrieved files from an Autoencoder training calculation job.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder_tools_aiida.TrainAutoencoderCalculationParser.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder_tools_aiida.TrainAutoencoderCalculationParser.parse" title="Link to this definition"></a></dt>
+<dd><p>Parse the retrieved files of the calculation job.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.autoencoder_tools_aiida.prepare_cli_args_autoencoder">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.autoencoder_tools_aiida.</span></span><span class="sig-name descname"><span class="pre">prepare_cli_args_autoencoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.autoencoder_tools_aiida.prepare_cli_args_autoencoder" title="Link to this definition"></a></dt>
+<dd><p>Prepare the command line arguments for the Autoencoder training.</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.active_learning.extrapolation.concave_hull">
+<span id="atlas-active-learning-extrapolation-concave-hull-module"></span><h2>atlas.active_learning.extrapolation.concave_hull module<a class="headerlink" href="#module-atlas.active_learning.extrapolation.concave_hull" title="Link to this heading"></a></h2>
+<p>Utilities to compute the concave hull for a point cloud of atomic descriptors.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.concave_hull.alpha_shape">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.concave_hull.</span></span><span class="sig-name descname"><span class="pre">alpha_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_outer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.concave_hull.alpha_shape" title="Link to this definition"></a></dt>
+<dd><p>Compute the 2-D alpha-shape (concave hull) of a set of points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (<em>(</em><em>N</em><em>, </em><em>2</em><em>) </em><em>array-like</em>) – Input coordinates.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Inverse length scale.  Smaller alpha -&gt; coarser (more concave) hull.
+A good starting point is alpha ~ 1 / (average edge length).</p></li>
+<li><p><strong>only_outer</strong> (<em>bool</em><em>, </em><em>default True</em>) – If True, return only the outer boundary.  If False, keep holes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>shapely.geometry.Polygon | MultiPolygon</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.concave_hull.check_atom_in_domain">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.concave_hull.</span></span><span class="sig-name descname"><span class="pre">check_atom_in_domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concave_hull</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.active_learning.extrapolation.concave_hull.check_atom_in_domain" title="Link to this definition"></a></dt>
+<dd><p>Check if the generated descriptors are inside the precomputed concave hull.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>concave_hull</strong> (<em>np.ndarray</em>) – Concave hull of the latent space for the database, corresponding
+to its convex or concave hull.</p></li>
+<li><p><strong>descriptors</strong> (<em>np.ndarray</em>) – The descriptors to check, typically of shape (N, 2).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>np.ndarray</em> – Array containing the descriptors that are inside the concave hull.</p></li>
+<li><p><em>np.ndarray</em> – Array containing the descriptors that are outside the concave hull.</p></li>
+<li><p><em>np.ndarray</em> – Array containing boolean values showing if the frame is inside the concave hull.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.concave_hull.check_traj_in_domain">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.concave_hull.</span></span><span class="sig-name descname"><span class="pre">check_traj_in_domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concave_hull</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hull_scale_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.active_learning.extrapolation.concave_hull.check_traj_in_domain" title="Link to this definition"></a></dt>
+<dd><p>Check if the generated descriptors are inside the precomputed concave hull.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>concave_hull</strong> (<em>np.ndarray</em>) – Concave hull of the latent space for the database, corresponding
+to its convex or concave hull.</p></li>
+<li><p><strong>descriptor_dict</strong> (<em>dict</em>) – <p>Descriptor dictionary containing the descriptors for each frame.
+The structure is as follows:
+<a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>python
+{</p>
+<blockquote>
+<div><dl class="simple">
+<dt>uuid: {</dt><dd><p>‘latent_space’: np.ndarray,
+‘descriptors’: np.ndarray,
+‘is_extrapolating’: np.ndarray,</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>hull_scale_factor</strong> (<em>float</em><em>, </em><em>optional</em>) – Tolerance percentage to enlarge the concave hull.
+For example, 0.1 adds 10% tolerance. Default is 0.0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>np.ndarray</em> – Array containing the descriptors that are inside the concave hull.</p></li>
+<li><p><em>np.ndarray</em> – Array containing the descriptors that are outside the concave hull.</p></li>
+<li><p><em>np.ndarray</em> – Array containing boolean values showing if the frame is inside the concave</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.concave_hull.get_concave_hull_python">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.concave_hull.</span></span><span class="sig-name descname"><span class="pre">get_concave_hull_python</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">latent_space:</span> <span class="pre">~numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_alpha_range:</span> <span class="pre">tuple[float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float]</span> <span class="pre">=</span> <span class="pre">(3.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">8.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_alpha_if_issues:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nn_dist_scale_factor:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frac_points_allowed_out:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.002</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_attempts:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decrease_factor_multiplier:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_alpha:</span> <span class="pre">float</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None)</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'numpy.ndarray'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'float'&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.concave_hull.get_concave_hull_python" title="Link to this definition"></a></dt>
+<dd><p>Compute the concave hull of a set of points using the alpha-shape algorithm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>latent_space</strong> (<em>np.ndarray</em>) – The input points (N, 2) for which to compute the concave hull.</p></li>
+<li><p><strong>target_alpha_range</strong> (<em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>, </em><em>optional</em>) – The desired (min_alpha, max_alpha) range for the alpha parameter.
+Alpha will be clipped to this range. Defaults to (3.0, 8.0).</p></li>
+<li><p><strong>default_alpha_if_issues</strong> (<em>float</em><em>, </em><em>optional</em>) – Default alpha value to use if nearest neighbor distance calculation
+is not possible (e.g., too few points) or other issues arise.
+Defaults to 5 (midpoint of common 3-8 range).</p></li>
+<li><p><strong>nn_dist_scale_factor</strong> (<em>float</em><em>, </em><em>optional</em>) – Scaling factor for the alpha candidate calculation:
+<cite>alpha_candidate = nn_dist_scale_factor / mean_nn_dist</cite>.
+Defaults to 1.5.</p></li>
+<li><p><strong>frac_points_allowed_out</strong> (<em>float</em><em>, </em><em>optional</em>) – The maximum fraction of points allowed to be outside the concave hull.
+If the fraction of points outside the hull exceeds this value,
+alpha will be decreased iteratively until the condition is met or
+alpha reaches zero. Defaults to 0.002 (0.2%).</p></li>
+<li><p><strong>n_attempts</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of attempts to compute the concave hull by adjusting alpha.</p></li>
+<li><p><strong>use_alpha</strong> (<em>float</em><em>, </em><em>optional</em>) – If provided, this alpha value will be used directly to compute
+the concave hull without optimization. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>np.ndarray</em> – The coordinates of the vertices of the concave hull (N, 2).
+Returns an empty array np.empty((0,2)) if a hull cannot be formed.</p></li>
+<li><p><em>float</em> – The alpha value used to compute the concave hull.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.concave_hull.get_optimized_concave_hull">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.concave_hull.</span></span><span class="sig-name descname"><span class="pre">get_optimized_concave_hull</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">latent_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_alpha_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0.0,</span> <span class="pre">10.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frac_points_allowed_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.02</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.active_learning.extrapolation.concave_hull.get_optimized_concave_hull" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.concave_hull.plot_concave_hull">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.concave_hull.</span></span><span class="sig-name descname"><span class="pre">plot_concave_hull</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concave_hull</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latent_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_inside</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_outside</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaled_hull</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_density</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Concave</span> <span class="pre">Hull'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.concave_hull.plot_concave_hull" title="Link to this definition"></a></dt>
+<dd><p>Generate a plot for the concave hull area in 2D space, including in and out
+of domain points if provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>concave_hull</strong> (<em>np.ndarray</em>) – The coordinates of the concave hull vertices (N, 2).</p></li>
+<li><p><strong>latent_space</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – The full set of points in the latent space (N, 2).</p></li>
+<li><p><strong>point_inside</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Points inside the concave hull (M, 2).</p></li>
+<li><p><strong>point_outside</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Points outside the concave hull (K, 2).</p></li>
+<li><p><strong>scaled_hull</strong> (<em>np.ndarray</em><em> | </em><em>list</em><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – The coordinates of the scaled concave hull vertices (N, 2).</p></li>
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>optional</em>) – The filename to save the plot. Defaults to ‘concave_hull.png’.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>optional</em>) – If provided, a single alpha value will be used used to compute the concave hull,
+instead of attempting to optimize it.</p></li>
+<li><p><strong>plot_density</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to color points by density. Defaults to False.</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – The title of the plot. Defaults to ‘Concave Hull’.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-atlas.active_learning.extrapolation.morphological_closing">
+<span id="atlas-active-learning-extrapolation-morphological-closing-module"></span><h2>atlas.active_learning.extrapolation.morphological_closing module<a class="headerlink" href="#module-atlas.active_learning.extrapolation.morphological_closing" title="Link to this heading"></a></h2>
+<p>Utilities for boundary determination using morphological closing.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.morphological_closing.create_image_mask">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.morphological_closing.</span></span><span class="sig-name descname"><span class="pre">create_image_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10,</span> <span class="pre">8)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.morphological_closing.create_image_mask" title="Link to this definition"></a></dt>
+<dd><p>Creates mask for 2D points by applying morphological closing to plot.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.morphological_closing.extract_boundaries_from_mask">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.morphological_closing.</span></span><span class="sig-name descname"><span class="pre">extract_boundaries_from_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solid_mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_seg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax_seg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contour_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.morphological_closing.extract_boundaries_from_mask" title="Link to this definition"></a></dt>
+<dd><p>Extracts data-space boundaries from the pixel mask.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.morphological_closing.filter_points_by_mask">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.morphological_closing.</span></span><span class="sig-name descname"><span class="pre">filter_points_by_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solid_mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax_seg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_h</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.morphological_closing.filter_points_by_mask" title="Link to this definition"></a></dt>
+<dd><p>Filters points based on whether they fall inside the generated mask.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.morphological_closing.process_morphological_closing">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.morphological_closing.</span></span><span class="sig-name descname"><span class="pre">process_morphological_closing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10,</span> <span class="pre">8)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#atlas.active_learning.extrapolation.morphological_closing.process_morphological_closing" title="Link to this definition"></a></dt>
+<dd><p>Extract shape and filter points using morphological closing.</p>
+<p>Returns a dictionary containing the filtered points, selected indices,
+boundaries, and the generated mask.</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.active_learning.extrapolation.quadtree">
+<span id="atlas-active-learning-extrapolation-quadtree-module"></span><h2>atlas.active_learning.extrapolation.quadtree module<a class="headerlink" href="#module-atlas.active_learning.extrapolation.quadtree" title="Link to this heading"></a></h2>
+<p>Utility functions for QuadTree operations.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.quadtree.QuadTree">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.quadtree.</span></span><span class="sig-name descname"><span class="pre">QuadTree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#atlas.active_learning.extrapolation.quadtree.Rectangle" title="atlas.active_learning.extrapolation.quadtree.Rectangle"><span class="pre">Rectangle</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_capacity_fraction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_data_amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_range_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_range_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.quadtree.QuadTree" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A QuadTree for spatial partitioning of 2D points.</p>
+<p>The QuadTree subdivides space into quadrants to efficiently manage and query points.
+The reasoning behind its use is to identify dense regions in a 2D space by
+recursively subdividing areas until a certain density criterion is met, which
+allows to select regions for alpha-shape computation in multi-resolution datasets.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.quadtree.QuadTree.find_dense_leaves">
+<span class="sig-name descname"><span class="pre">find_dense_leaves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_width_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#atlas.active_learning.extrapolation.quadtree.Rectangle" title="atlas.active_learning.extrapolation.quadtree.Rectangle"><span class="pre">Rectangle</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.active_learning.extrapolation.quadtree.QuadTree.find_dense_leaves" title="Link to this definition"></a></dt>
+<dd><p>Traverse the tree and return the boundaries of leaf nodes that are
+smaller than the threshold (indicating high density).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>max_width_threshold</strong> (<em>float</em>) – The width (2 * w) below which a node is considered ‘dense’.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of bounding boxes representing dense regions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="#atlas.active_learning.extrapolation.quadtree.Rectangle" title="atlas.active_learning.extrapolation.quadtree.Rectangle">Rectangle</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.quadtree.QuadTree.find_dense_leaves_density">
+<span class="sig-name descname"><span class="pre">find_dense_leaves_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min_density_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_area</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#atlas.active_learning.extrapolation.quadtree.Rectangle" title="atlas.active_learning.extrapolation.quadtree.Rectangle"><span class="pre">Rectangle</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.active_learning.extrapolation.quadtree.QuadTree.find_dense_leaves_density" title="Link to this definition"></a></dt>
+<dd><p>Traverse the tree and return leaf nodes that meet a density requirement.
+Density = (number of points) / (area of node).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.quadtree.QuadTree.insert">
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Point</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#atlas.active_learning.extrapolation.quadtree.QuadTree.insert" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.quadtree.QuadTree.subdivide">
+<span class="sig-name descname"><span class="pre">subdivide</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.active_learning.extrapolation.quadtree.QuadTree.subdivide" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.quadtree.Rectangle">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.quadtree.</span></span><span class="sig-name descname"><span class="pre">Rectangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.quadtree.Rectangle" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Object representing a rectangle for a QuadTree.</p>
+<p>Axis-aligned rectangle represented by its center (x, y)
+and half-width (w) and half-height (h).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.quadtree.Rectangle.contains">
+<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#atlas.active_learning.extrapolation.quadtree.Rectangle.contains" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.quadtree.Rectangle.get_area">
+<span class="sig-name descname"><span class="pre">get_area</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#atlas.active_learning.extrapolation.quadtree.Rectangle.get_area" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.quadtree.Rectangle.h">
+<span class="sig-name descname"><span class="pre">h</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.quadtree.Rectangle.h" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.quadtree.Rectangle.w">
+<span class="sig-name descname"><span class="pre">w</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.quadtree.Rectangle.w" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.quadtree.Rectangle.x">
+<span class="sig-name descname"><span class="pre">x</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.quadtree.Rectangle.x" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.quadtree.Rectangle.xmax">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">xmax</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.quadtree.Rectangle.xmax" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.quadtree.Rectangle.xmin">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">xmin</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.quadtree.Rectangle.xmin" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.quadtree.Rectangle.y">
+<span class="sig-name descname"><span class="pre">y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.quadtree.Rectangle.y" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.quadtree.Rectangle.ymax">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ymax</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.quadtree.Rectangle.ymax" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.quadtree.Rectangle.ymin">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ymin</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#atlas.active_learning.extrapolation.quadtree.Rectangle.ymin" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.quadtree.check_if_points_in_polygons">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.quadtree.</span></span><span class="sig-name descname"><span class="pre">check_if_points_in_polygons</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha_shapes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Point</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.quadtree.check_if_points_in_polygons" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.quadtree.separate_clusters">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.quadtree.</span></span><span class="sig-name descname"><span class="pre">separate_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dense_boxes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#atlas.active_learning.extrapolation.quadtree.Rectangle" title="atlas.active_learning.extrapolation.quadtree.Rectangle"><span class="pre">Rectangle</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#atlas.active_learning.extrapolation.quadtree.Rectangle" title="atlas.active_learning.extrapolation.quadtree.Rectangle"><span class="pre">Rectangle</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.active_learning.extrapolation.quadtree.separate_clusters" title="Link to this definition"></a></dt>
+<dd><p>Groups dense boxes into connected clusters.
+Boxes are considered connected if they touch or overlap.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.quadtree.setup_quadtree">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.quadtree.</span></span><span class="sig-name descname"><span class="pre">setup_quadtree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_frac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_frac_capacity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.015</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.quadtree.setup_quadtree" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.quadtree.visualize_quadtree">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.quadtree.</span></span><span class="sig-name descname"><span class="pre">visualize_quadtree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#atlas.active_learning.extrapolation.quadtree.QuadTree" title="atlas.active_learning.extrapolation.quadtree.QuadTree"><span class="pre">QuadTree</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Point</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#atlas.active_learning.extrapolation.quadtree.Rectangle" title="atlas.active_learning.extrapolation.quadtree.Rectangle"><span class="pre">Rectangle</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_shapes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'quadtree_viz.png'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frac_outside</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.quadtree.visualize_quadtree" title="Link to this definition"></a></dt>
+<dd><p>Visualizes the quadtree structure, data points, and clusters.</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.active_learning.extrapolation.train_autoencoder">
+<span id="atlas-active-learning-extrapolation-train-autoencoder-module"></span><h2>atlas.active_learning.extrapolation.train_autoencoder module<a class="headerlink" href="#module-atlas.active_learning.extrapolation.train_autoencoder" title="Link to this heading"></a></h2>
+<p>Train an autoencoder for dimensionality reduction.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.train_autoencoder.return_dataset_loader">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.train_autoencoder.</span></span><span class="sig-name descname"><span class="pre">return_dataset_loader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_frac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_frac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng_seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.train_autoencoder.return_dataset_loader" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.train_autoencoder.run_training">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.train_autoencoder.</span></span><span class="sig-name descname"><span class="pre">run_training</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.train_autoencoder.run_training" title="Link to this definition"></a></dt>
+<dd><p>Train an autoencoder model for dimensionality reduction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> (<em>Namespace</em>) – <p>Namespace object containing the following attributes:
+- dataset : str</p>
+<blockquote>
+<div><p>Path to the dataset file.</p>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>device<span class="classifier">str</span></dt><dd><p>Device to run the model on.
+If not given, the device is set to cuda if available, else cpu.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>dtype<span class="classifier">str</span></dt><dd><p>Data type to use for the model. One of float32 or float64.
+Default is float32.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>lr<span class="classifier">float</span></dt><dd><p>Learning rate for the optimizer.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>num_epochs<span class="classifier">int</span></dt><dd><p>Number of epochs to train the model.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>batch_size<span class="classifier">int</span></dt><dd><p>Batch size for training.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>patience<span class="classifier">int</span></dt><dd><p>Early stopping patience: number of epochs without validation loss
+improvement before stopping training. Also controls LR reduction.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>train_frac<span class="classifier">float</span></dt><dd><p>Fraction of the dataset to use for training.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>valid_frac<span class="classifier">float</span></dt><dd><p>Fraction of the dataset to use for validation.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>test_frac<span class="classifier">float</span></dt><dd><p>Fraction of the dataset to use for testing.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>l1_hidden_dim<span class="classifier">int</span></dt><dd><p>Number of hidden units in the first layer of the autoencoder.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>l2_hidden_dim<span class="classifier">int</span></dt><dd><p>Number of hidden units in the second layer of the autoencoder.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>weight_decay<span class="classifier">float</span></dt><dd><p>Weight decay for the optimizer.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>bias_flag<span class="classifier">bool</span></dt><dd><p>Flag to include bias in the linear layers.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>verbose<span class="classifier">bool</span></dt><dd><p>Flag to print verbose output.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>rng_seed<span class="classifier">int</span></dt><dd><p>Random seed for reproducibility.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>model_path<span class="classifier">str</span></dt><dd><p>Path to save the trained model.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>wandb<span class="classifier">bool</span></dt><dd><p>Flag to enable logging to wandb.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>wandb_project<span class="classifier">str</span></dt><dd><p>Name of the wandb project.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>wandb_name<span class="classifier">str</span></dt><dd><p>Name of the wandb run.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>standardize_data<span class="classifier">bool</span></dt><dd><p>Whether to normalize the data before training the autoencoder</p>
+</dd>
+</dl>
+</li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Autoencoder model trained for dimensionality reduction.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#atlas.active_learning.extrapolation.autoencoder.Autoencoder" title="atlas.active_learning.extrapolation.autoencoder.Autoencoder">Autoencoder</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.train_autoencoder.safe_to_gpu">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.train_autoencoder.</span></span><span class="sig-name descname"><span class="pre">safe_to_gpu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arrays</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.train_autoencoder.safe_to_gpu" title="Link to this definition"></a></dt>
+<dd><p>Checks if there is enough VRAM to move an array to the GPU.
+Returns True if safe, False if it will likely OOM.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.train_autoencoder.split_dataset">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.train_autoencoder.</span></span><span class="sig-name descname"><span class="pre">split_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_frac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_frac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_frac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng_seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.float32</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.train_autoencoder.split_dataset" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.train_autoencoder.train_loop">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.train_autoencoder.</span></span><span class="sig-name descname"><span class="pre">train_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.train_autoencoder.train_loop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.extrapolation.train_autoencoder.val_loop">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.extrapolation.train_autoencoder.</span></span><span class="sig-name descname"><span class="pre">val_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.extrapolation.train_autoencoder.val_loop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-atlas.active_learning.extrapolation">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-atlas.active_learning.extrapolation" title="Link to this heading"></a></h2>
+<p>Extrapolation utilities.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="atlas.active_learning.eval_test_db.html" class="btn btn-neutral float-left" title="atlas.active_learning.eval_test_db package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="atlas.active_learning.safeguard.html" class="btn btn-neutral float-right" title="atlas.active_learning.safeguard package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='atlas.active_learning.extrapolation.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

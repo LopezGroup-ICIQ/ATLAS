@@ -1,0 +1,926 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>atlas.active_learning.backends package &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="atlas.active_learning.backends.mace package" href="atlas.active_learning.backends.mace.html" />
+    <link rel="prev" title="atlas.active_learning package" href="atlas.active_learning.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">Input specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package Information</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="atlas.html">atlas package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="atlas.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="atlas.active_learning.html">atlas.active_learning package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.html">atlas.benchmarks package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html">atlas.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.training.html">atlas.training package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html">atlas.workflows package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.html#module-atlas">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">atlas</a></li>
+          <li class="breadcrumb-item"><a href="atlas.html">atlas package</a></li>
+          <li class="breadcrumb-item"><a href="atlas.active_learning.html">atlas.active_learning package</a></li>
+      <li class="breadcrumb-item active">atlas.active_learning.backends package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/atlas.active_learning.backends.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="atlas-active-learning-backends-package">
+<h1>atlas.active_learning.backends package<a class="headerlink" href="#atlas-active-learning-backends-package" title="Link to this heading"></a></h1>
+<p>MLIP backend registry for model-agnostic active learning.</p>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="atlas.active_learning.backends.mace.html">atlas.active_learning.backends.mace package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="atlas.active_learning.backends.mace.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.active_learning.backends.mace.html#module-atlas.active_learning.backends.mace.calcjobs">atlas.active_learning.backends.mace.calcjobs module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.CheckMACECommiteeResultsCalculationParser"><code class="docutils literal notranslate"><span class="pre">CheckMACECommiteeResultsCalculationParser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.CheckMACECommiteeResultsCalculationParser.parse"><code class="docutils literal notranslate"><span class="pre">CheckMACECommiteeResultsCalculationParser.parse()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.CheckMACECommitteeResultsCalculation"><code class="docutils literal notranslate"><span class="pre">CheckMACECommitteeResultsCalculation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.CheckMACECommitteeResultsCalculation.define"><code class="docutils literal notranslate"><span class="pre">CheckMACECommitteeResultsCalculation.define()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.CheckMACECommitteeResultsCalculation.prepare_for_submission"><code class="docutils literal notranslate"><span class="pre">CheckMACECommitteeResultsCalculation.prepare_for_submission()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.EvaluateMACEConfigsCalculation"><code class="docutils literal notranslate"><span class="pre">EvaluateMACEConfigsCalculation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.EvaluateMACEConfigsCalculation.define"><code class="docutils literal notranslate"><span class="pre">EvaluateMACEConfigsCalculation.define()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.EvaluateMACEConfigsCalculation.prepare_for_submission"><code class="docutils literal notranslate"><span class="pre">EvaluateMACEConfigsCalculation.prepare_for_submission()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.EvaluateMACEConfigsCalculationParser"><code class="docutils literal notranslate"><span class="pre">EvaluateMACEConfigsCalculationParser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.EvaluateMACEConfigsCalculationParser.parse"><code class="docutils literal notranslate"><span class="pre">EvaluateMACEConfigsCalculationParser.parse()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.GetMACEDescriptorsCalculation"><code class="docutils literal notranslate"><span class="pre">GetMACEDescriptorsCalculation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.GetMACEDescriptorsCalculation.define"><code class="docutils literal notranslate"><span class="pre">GetMACEDescriptorsCalculation.define()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.GetMACEDescriptorsCalculation.prepare_for_submission"><code class="docutils literal notranslate"><span class="pre">GetMACEDescriptorsCalculation.prepare_for_submission()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.GetMACEDescriptorsCalculationParser"><code class="docutils literal notranslate"><span class="pre">GetMACEDescriptorsCalculationParser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.GetMACEDescriptorsCalculationParser.parse"><code class="docutils literal notranslate"><span class="pre">GetMACEDescriptorsCalculationParser.parse()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.LAMMPSMACERawParser"><code class="docutils literal notranslate"><span class="pre">LAMMPSMACERawParser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.LAMMPSMACERawParser.parse"><code class="docutils literal notranslate"><span class="pre">LAMMPSMACERawParser.parse()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.RunMDCalculationGPULAMMPS"><code class="docutils literal notranslate"><span class="pre">RunMDCalculationGPULAMMPS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.RunMDCalculationGPULAMMPS.prepare_for_submission"><code class="docutils literal notranslate"><span class="pre">RunMDCalculationGPULAMMPS.prepare_for_submission()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.RunMDCalculationGPULAMMPSMACE"><code class="docutils literal notranslate"><span class="pre">RunMDCalculationGPULAMMPSMACE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.TrainMACEModelCalculation"><code class="docutils literal notranslate"><span class="pre">TrainMACEModelCalculation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.TrainMACEModelCalculation.define"><code class="docutils literal notranslate"><span class="pre">TrainMACEModelCalculation.define()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.TrainMACEModelCalculation.prepare_for_submission"><code class="docutils literal notranslate"><span class="pre">TrainMACEModelCalculation.prepare_for_submission()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.TrainMACEModelCalculationParser"><code class="docutils literal notranslate"><span class="pre">TrainMACEModelCalculationParser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.TrainMACEModelCalculationParser.parse"><code class="docutils literal notranslate"><span class="pre">TrainMACEModelCalculationParser.parse()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calcjobs.prepare_cli_args_mace"><code class="docutils literal notranslate"><span class="pre">prepare_cli_args_mace()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.active_learning.backends.mace.html#module-atlas.active_learning.backends.mace.calculator">atlas.active_learning.backends.mace.calculator module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.calculator.create_mace_calculator"><code class="docutils literal notranslate"><span class="pre">create_mace_calculator()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.active_learning.backends.mace.html#module-atlas.active_learning.backends.mace.descriptors">atlas.active_learning.backends.mace.descriptors module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.descriptors.generate_descriptors_mace"><code class="docutils literal notranslate"><span class="pre">generate_descriptors_mace()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.active_learning.backends.mace.html#module-atlas.active_learning.backends.mace.training">atlas.active_learning.backends.mace.training module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.training.create_mace_lammps_model_impl"><code class="docutils literal notranslate"><span class="pre">create_mace_lammps_model_impl()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.training.update_mace_train_settings_dict"><code class="docutils literal notranslate"><span class="pre">update_mace_train_settings_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.active_learning.backends.mace.html#module-atlas.active_learning.backends.mace">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.MACEBackend"><code class="docutils literal notranslate"><span class="pre">MACEBackend</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.MACEBackend.calcjob_entry_point"><code class="docutils literal notranslate"><span class="pre">MACEBackend.calcjob_entry_point</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.MACEBackend.create_calculator"><code class="docutils literal notranslate"><span class="pre">MACEBackend.create_calculator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.MACEBackend.create_lammps_potential"><code class="docutils literal notranslate"><span class="pre">MACEBackend.create_lammps_potential()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.MACEBackend.evaluate_committee"><code class="docutils literal notranslate"><span class="pre">MACEBackend.evaluate_committee()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.MACEBackend.generate_descriptors"><code class="docutils literal notranslate"><span class="pre">MACEBackend.generate_descriptors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.MACEBackend.lammps_pair_style"><code class="docutils literal notranslate"><span class="pre">MACEBackend.lammps_pair_style</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.MACEBackend.model_file_extension"><code class="docutils literal notranslate"><span class="pre">MACEBackend.model_file_extension</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.MACEBackend.parse_training_results"><code class="docutils literal notranslate"><span class="pre">MACEBackend.parse_training_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.MACEBackend.parser_entry_point"><code class="docutils literal notranslate"><span class="pre">MACEBackend.parser_entry_point</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.MACEBackend.prepare_builder"><code class="docutils literal notranslate"><span class="pre">MACEBackend.prepare_builder()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.MACEBackend.prepare_training_data"><code class="docutils literal notranslate"><span class="pre">MACEBackend.prepare_training_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.MACEBackend.run_training"><code class="docutils literal notranslate"><span class="pre">MACEBackend.run_training()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.MACEBackend.select_best_model"><code class="docutils literal notranslate"><span class="pre">MACEBackend.select_best_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.backends.mace.html#atlas.active_learning.backends.mace.MACEBackend.supports_committee_training"><code class="docutils literal notranslate"><span class="pre">MACEBackend.supports_committee_training</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.active_learning.backends._base">
+<span id="atlas-active-learning-backends-base-module"></span><h2>atlas.active_learning.backends._base module<a class="headerlink" href="#module-atlas.active_learning.backends._base" title="Link to this heading"></a></h2>
+<p>Protocol definitions for MLIP backend interfaces.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.backends._base.MLIPCalculatorFactory">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends._base.</span></span><span class="sig-name descname"><span class="pre">MLIPCalculatorFactory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends._base.MLIPCalculatorFactory" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Protocol for creating ASE calculators from trained MLIP models.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends._base.MLIPCalculatorFactory.create_calculator">
+<span class="sig-name descname"><span class="pre">create_calculator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'float32'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Calculator</span></span></span><a class="headerlink" href="#atlas.active_learning.backends._base.MLIPCalculatorFactory.create_calculator" title="Link to this definition"></a></dt>
+<dd><p>Create an ASE Calculator from a model file on disk.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_path</strong> (<em>str</em><em> | </em><em>Path</em>) – Path to the model file.</p></li>
+<li><p><strong>device</strong> (<em>str</em>) – Device for inference (‘cpu’ or ‘cuda’).</p></li>
+<li><p><strong>dtype</strong> (<em>str</em>) – Data type for inference.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An ASE-compatible calculator.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Calculator</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.active_learning.backends._base.MLIPCalculatorFactory.lammps_pair_style">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lammps_pair_style</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.active_learning.backends._base.MLIPCalculatorFactory.lammps_pair_style" title="Link to this definition"></a></dt>
+<dd><p>LAMMPS pair_style string for this backend (e.g. ‘mace’, ‘allegro’).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.active_learning.backends._base.MLIPCalculatorFactory.model_file_extension">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">model_file_extension</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.active_learning.backends._base.MLIPCalculatorFactory.model_file_extension" title="Link to this definition"></a></dt>
+<dd><p>File extension for model files (e.g. ‘.model’ for MACE).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.backends._base.MLIPCommitteeEvaluator">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends._base.</span></span><span class="sig-name descname"><span class="pre">MLIPCommitteeEvaluator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends._base.MLIPCommitteeEvaluator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Protocol for committee-based uncertainty quantification.</p>
+<p>Backends that support training multiple models with different seeds
+implement this protocol to evaluate structures with the committee
+and compute disagreement statistics.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends._base.MLIPCommitteeEvaluator.evaluate_committee">
+<span class="sig-name descname"><span class="pre">evaluate_committee</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structures</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'float32'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.active_learning.backends._base.MLIPCommitteeEvaluator.evaluate_committee" title="Link to this definition"></a></dt>
+<dd><p>Evaluate structures with multiple committee models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>structures</strong> (<em>list</em><em>[</em><em>Atoms</em><em>]</em>) – Structures to evaluate.</p></li>
+<li><p><strong>model_files</strong> (<em>list</em><em>[</em><em>str</em><em> | </em><em>Path</em><em>]</em>) – Paths to committee model files.</p></li>
+<li><p><strong>device</strong> (<em>str</em>) – Device for inference.</p></li>
+<li><p><strong>dtype</strong> (<em>str</em>) – Data type for inference.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary keyed by model name, each containing ‘REF_energy’
+(meV/atom) and ‘REF_forces’ (meV/A) lists.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.active_learning.backends._base.MLIPCommitteeEvaluator.supports_committee_training">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">supports_committee_training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#atlas.active_learning.backends._base.MLIPCommitteeEvaluator.supports_committee_training" title="Link to this definition"></a></dt>
+<dd><p>Whether this backend supports training multiple committee models.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.backends._base.MLIPDescriptorProvider">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends._base.</span></span><span class="sig-name descname"><span class="pre">MLIPDescriptorProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends._base.MLIPDescriptorProvider" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Protocol for models that can provide structural descriptors.</p>
+<p>Not all MLIP backends support descriptor extraction. Backends that
+do not can omit this protocol, and the workflow will fall back to
+SOAP descriptors.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends._base.MLIPDescriptorProvider.generate_descriptors">
+<span class="sig-name descname"><span class="pre">generate_descriptors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.active_learning.backends._base.MLIPDescriptorProvider.generate_descriptors" title="Link to this definition"></a></dt>
+<dd><p>Generate structural descriptors for a list of structures.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database</strong> (<em>list</em><em>[</em><em>Atoms</em><em>]</em>) – List of ASE Atoms objects.</p></li>
+<li><p><strong>model_path</strong> (<em>str</em><em> | </em><em>Path</em><em> | </em><em>None</em>) – Path to the model file for descriptor extraction.</p></li>
+<li><p><strong>settings</strong> (<em>dict</em>) – Descriptor generation settings.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(descriptor_dict, descriptor_array, uuid_list) where
+descriptor_dict is keyed by atl_id, descriptor_array is a
+vertically stacked numpy array, and uuid_list contains the
+UUIDs of newly assigned structures.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.backends._base.MLIPModelCompiler">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends._base.</span></span><span class="sig-name descname"><span class="pre">MLIPModelCompiler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends._base.MLIPModelCompiler" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Protocol for backends whose models must be compiled before inference.</p>
+<p>Some backends (e.g. Allegro/NequIP) cannot run inference from the raw
+trained checkpoint. It must first be compiled (<code class="docutils literal notranslate"><span class="pre">nequip-compile</span></code>) into a
+device-specific artifact. Compilation is expensive and toolchain-sensitive,
+so it is best done once, on the computer where inference will run, and
+the compiled artifact reused there.</p>
+<p>Backends that need no compilation (e.g. MACE) simply omit this protocol;
+callers gate on <code class="docutils literal notranslate"><span class="pre">isinstance(backend,</span> <span class="pre">MLIPModelCompiler)</span></code> and, when absent,
+ship the raw model unchanged.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends._base.MLIPModelCompiler.compile_model">
+<span class="sig-name descname"><span class="pre">compile_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'aotinductor'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ase'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.active_learning.backends._base.MLIPModelCompiler.compile_model" title="Link to this definition"></a></dt>
+<dd><p>Compile a trained model into an inference-ready artifact.</p>
+<p>Runs on the compute node where the artifact will be used, so the
+compiled result matches that node’s device/toolchain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_path</strong> (<em>str</em><em> | </em><em>Path</em>) – Path to the trained model/checkpoint.</p></li>
+<li><p><strong>device</strong> (<em>str</em>) – Target device for the compiled model (‘cpu’ or ‘cuda’). The
+artifact is device-specific.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) – Compilation backend (e.g. ‘aotinductor’).</p></li>
+<li><p><strong>target</strong> (<em>str</em>) – Inference target the artifact is compiled for (e.g. ‘ase’).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path to the compiled artifact, or None on failure.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.active_learning.backends._base.MLIPModelCompiler.compiled_model_extension">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compiled_model_extension</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.active_learning.backends._base.MLIPModelCompiler.compiled_model_extension" title="Link to this definition"></a></dt>
+<dd><p>File extension of the compiled artifact (e.g. ‘.nequip.pt2’).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.backends._base.MLIPTrainer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends._base.</span></span><span class="sig-name descname"><span class="pre">MLIPTrainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends._base.MLIPTrainer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Protocol for MLIP training backends.</p>
+<p>Backends that support model training implement this protocol to provide
+the AiiDA CalcJob entry point, training data preparation, builder
+configuration, and model selection logic.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.active_learning.backends._base.MLIPTrainer.calcjob_entry_point">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calcjob_entry_point</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.active_learning.backends._base.MLIPTrainer.calcjob_entry_point" title="Link to this definition"></a></dt>
+<dd><p>AiiDA entry point string for the training CalcJob.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends._base.MLIPTrainer.create_lammps_potential">
+<span class="sig-name descname"><span class="pre">create_lammps_potential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.active_learning.backends._base.MLIPTrainer.create_lammps_potential" title="Link to this definition"></a></dt>
+<dd><p>Convert a trained model to LAMMPS-compatible format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model_file</strong> (<em>SinglefileData</em>) – The trained model file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LAMMPS potential file, or None if not supported.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SinglefileData | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends._base.MLIPTrainer.parse_training_results">
+<span class="sig-name descname"><span class="pre">parse_training_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#atlas.active_learning.backends._base.MLIPTrainer.parse_training_results" title="Link to this definition"></a></dt>
+<dd><p>Extract model file path and metrics from training output.</p>
+<p>Called by the remote training script after training completes.
+Each backend knows its own output format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>results_dir</strong> (<em>Path</em>) – Directory containing training outputs.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary with keys ‘model_file’ (str), ‘rmse_e’ (float,
+meV/atom), ‘rmse_f’ (float, meV/A), and optionally
+‘train_log’ (str).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.active_learning.backends._base.MLIPTrainer.parser_entry_point">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parser_entry_point</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.active_learning.backends._base.MLIPTrainer.parser_entry_point" title="Link to this definition"></a></dt>
+<dd><p>AiiDA entry point string for the training parser.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends._base.MLIPTrainer.prepare_builder">
+<span class="sig-name descname"><span class="pre">prepare_builder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">builder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_data_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iteration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">containerized</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#atlas.active_learning.backends._base.MLIPTrainer.prepare_builder" title="Link to this definition"></a></dt>
+<dd><p>Populate the AiiDA CalcJob builder with model-specific inputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>builder</strong> (<em>ProcessBuilder</em>) – The AiiDA CalcJob builder to populate.</p></li>
+<li><p><strong>settings_dict</strong> (<em>dict</em>) – Model-specific training settings from the TOML config.</p></li>
+<li><p><strong>train_data_path</strong> (<em>str</em>) – Path to the training data file.</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – Unique name for this training run.</p></li>
+<li><p><strong>iteration</strong> (<em>int</em>) – Current AL loop iteration number.</p></li>
+<li><p><strong>db_size</strong> (<em>int</em>) – Number of structures in the training database.</p></li>
+<li><p><strong>containerized</strong> (<em>bool</em>) – Whether to use containerized execution.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The populated builder, ready for submission.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ProcessBuilder</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends._base.MLIPTrainer.prepare_training_data">
+<span class="sig-name descname"><span class="pre">prepare_training_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">structure_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#atlas.active_learning.backends._base.MLIPTrainer.prepare_training_data" title="Link to this definition"></a></dt>
+<dd><p>Convert structure list to model-specific training format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em><em> | </em><em>Path</em>) – Output file path for the training data.</p></li>
+<li><p><strong>structure_list</strong> (<em>list</em><em>[</em><em>Atoms</em><em>]</em>) – List of ASE Atoms objects with DFT reference data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path to the written training data file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends._base.MLIPTrainer.run_training">
+<span class="sig-name descname"><span class="pre">run_training</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.active_learning.backends._base.MLIPTrainer.run_training" title="Link to this definition"></a></dt>
+<dd><p>Execute model training from a config file.</p>
+<p>Called by the remote training script on the HPC node.
+Each backend dispatches to its own training CLI.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config_path</strong> (<em>str</em><em> | </em><em>Path</em>) – Path to the backend-specific training config file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends._base.MLIPTrainer.select_best_model">
+<span class="sig-name descname"><span class="pre">select_best_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">training_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.active_learning.backends._base.MLIPTrainer.select_best_model" title="Link to this definition"></a></dt>
+<dd><p>Select the best model from N trained models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>training_results</strong> (<em>list</em>) – List of completed AiiDA CalcJobNode results.</p></li>
+<li><p><strong>force_weight</strong> (<em>float</em>) – Weight for forces in the RMSE-based selection criterion.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of (best_model_name, best_model_file, rmse_e, rmse_f,
+committee_models_tupl_name_uuid). The last element is a list
+of (name, uuid) tuples for the non-best models.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-atlas.active_learning.backends">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-atlas.active_learning.backends" title="Link to this heading"></a></h2>
+<p>MLIP backend registry for model-agnostic active learning.</p>
+<p>This module provides a registry pattern for MLIP backends. Each backend
+(MACE, NequIP, Allegro, DeepMD, etc.) registers itself and can then be
+looked up by name from the TOML configuration.</p>
+<section id="usage">
+<h3>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>from atlas.active_learning.backends import get_backend</p>
+<p>backend = get_backend(‘mace’)
+calculator = backend.create_calculator(model_path, device=’cuda’)</p>
+</div></blockquote>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.MLIPCalculatorFactory">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.</span></span><span class="sig-name descname"><span class="pre">MLIPCalculatorFactory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.MLIPCalculatorFactory" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Protocol for creating ASE calculators from trained MLIP models.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.MLIPCalculatorFactory.create_calculator">
+<span class="sig-name descname"><span class="pre">create_calculator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'float32'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Calculator</span></span></span><a class="headerlink" href="#atlas.active_learning.backends.MLIPCalculatorFactory.create_calculator" title="Link to this definition"></a></dt>
+<dd><p>Create an ASE Calculator from a model file on disk.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_path</strong> (<em>str</em><em> | </em><em>Path</em>) – Path to the model file.</p></li>
+<li><p><strong>device</strong> (<em>str</em>) – Device for inference (‘cpu’ or ‘cuda’).</p></li>
+<li><p><strong>dtype</strong> (<em>str</em>) – Data type for inference.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An ASE-compatible calculator.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Calculator</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.MLIPCalculatorFactory.lammps_pair_style">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lammps_pair_style</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.active_learning.backends.MLIPCalculatorFactory.lammps_pair_style" title="Link to this definition"></a></dt>
+<dd><p>LAMMPS pair_style string for this backend (e.g. ‘mace’, ‘allegro’).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.MLIPCalculatorFactory.model_file_extension">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">model_file_extension</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.active_learning.backends.MLIPCalculatorFactory.model_file_extension" title="Link to this definition"></a></dt>
+<dd><p>File extension for model files (e.g. ‘.model’ for MACE).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.MLIPCommitteeEvaluator">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.</span></span><span class="sig-name descname"><span class="pre">MLIPCommitteeEvaluator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.MLIPCommitteeEvaluator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Protocol for committee-based uncertainty quantification.</p>
+<p>Backends that support training multiple models with different seeds
+implement this protocol to evaluate structures with the committee
+and compute disagreement statistics.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.MLIPCommitteeEvaluator.evaluate_committee">
+<span class="sig-name descname"><span class="pre">evaluate_committee</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structures</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'float32'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.active_learning.backends.MLIPCommitteeEvaluator.evaluate_committee" title="Link to this definition"></a></dt>
+<dd><p>Evaluate structures with multiple committee models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>structures</strong> (<em>list</em><em>[</em><em>Atoms</em><em>]</em>) – Structures to evaluate.</p></li>
+<li><p><strong>model_files</strong> (<em>list</em><em>[</em><em>str</em><em> | </em><em>Path</em><em>]</em>) – Paths to committee model files.</p></li>
+<li><p><strong>device</strong> (<em>str</em>) – Device for inference.</p></li>
+<li><p><strong>dtype</strong> (<em>str</em>) – Data type for inference.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary keyed by model name, each containing ‘REF_energy’
+(meV/atom) and ‘REF_forces’ (meV/A) lists.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.MLIPCommitteeEvaluator.supports_committee_training">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">supports_committee_training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#atlas.active_learning.backends.MLIPCommitteeEvaluator.supports_committee_training" title="Link to this definition"></a></dt>
+<dd><p>Whether this backend supports training multiple committee models.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.MLIPDescriptorProvider">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.</span></span><span class="sig-name descname"><span class="pre">MLIPDescriptorProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.MLIPDescriptorProvider" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Protocol for models that can provide structural descriptors.</p>
+<p>Not all MLIP backends support descriptor extraction. Backends that
+do not can omit this protocol, and the workflow will fall back to
+SOAP descriptors.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.MLIPDescriptorProvider.generate_descriptors">
+<span class="sig-name descname"><span class="pre">generate_descriptors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.active_learning.backends.MLIPDescriptorProvider.generate_descriptors" title="Link to this definition"></a></dt>
+<dd><p>Generate structural descriptors for a list of structures.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database</strong> (<em>list</em><em>[</em><em>Atoms</em><em>]</em>) – List of ASE Atoms objects.</p></li>
+<li><p><strong>model_path</strong> (<em>str</em><em> | </em><em>Path</em><em> | </em><em>None</em>) – Path to the model file for descriptor extraction.</p></li>
+<li><p><strong>settings</strong> (<em>dict</em>) – Descriptor generation settings.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(descriptor_dict, descriptor_array, uuid_list) where
+descriptor_dict is keyed by atl_id, descriptor_array is a
+vertically stacked numpy array, and uuid_list contains the
+UUIDs of newly assigned structures.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.MLIPModelCompiler">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.</span></span><span class="sig-name descname"><span class="pre">MLIPModelCompiler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.MLIPModelCompiler" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Protocol for backends whose models must be compiled before inference.</p>
+<p>Some backends (e.g. Allegro/NequIP) cannot run inference from the raw
+trained checkpoint. It must first be compiled (<code class="docutils literal notranslate"><span class="pre">nequip-compile</span></code>) into a
+device-specific artifact. Compilation is expensive and toolchain-sensitive,
+so it is best done once, on the computer where inference will run, and
+the compiled artifact reused there.</p>
+<p>Backends that need no compilation (e.g. MACE) simply omit this protocol;
+callers gate on <code class="docutils literal notranslate"><span class="pre">isinstance(backend,</span> <span class="pre">MLIPModelCompiler)</span></code> and, when absent,
+ship the raw model unchanged.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.MLIPModelCompiler.compile_model">
+<span class="sig-name descname"><span class="pre">compile_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'aotinductor'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ase'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.active_learning.backends.MLIPModelCompiler.compile_model" title="Link to this definition"></a></dt>
+<dd><p>Compile a trained model into an inference-ready artifact.</p>
+<p>Runs on the compute node where the artifact will be used, so the
+compiled result matches that node’s device/toolchain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_path</strong> (<em>str</em><em> | </em><em>Path</em>) – Path to the trained model/checkpoint.</p></li>
+<li><p><strong>device</strong> (<em>str</em>) – Target device for the compiled model (‘cpu’ or ‘cuda’). The
+artifact is device-specific.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) – Compilation backend (e.g. ‘aotinductor’).</p></li>
+<li><p><strong>target</strong> (<em>str</em>) – Inference target the artifact is compiled for (e.g. ‘ase’).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path to the compiled artifact, or None on failure.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.MLIPModelCompiler.compiled_model_extension">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compiled_model_extension</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.active_learning.backends.MLIPModelCompiler.compiled_model_extension" title="Link to this definition"></a></dt>
+<dd><p>File extension of the compiled artifact (e.g. ‘.nequip.pt2’).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.MLIPTrainer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.</span></span><span class="sig-name descname"><span class="pre">MLIPTrainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.MLIPTrainer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Protocol for MLIP training backends.</p>
+<p>Backends that support model training implement this protocol to provide
+the AiiDA CalcJob entry point, training data preparation, builder
+configuration, and model selection logic.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.MLIPTrainer.calcjob_entry_point">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calcjob_entry_point</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.active_learning.backends.MLIPTrainer.calcjob_entry_point" title="Link to this definition"></a></dt>
+<dd><p>AiiDA entry point string for the training CalcJob.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.MLIPTrainer.create_lammps_potential">
+<span class="sig-name descname"><span class="pre">create_lammps_potential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.active_learning.backends.MLIPTrainer.create_lammps_potential" title="Link to this definition"></a></dt>
+<dd><p>Convert a trained model to LAMMPS-compatible format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model_file</strong> (<em>SinglefileData</em>) – The trained model file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LAMMPS potential file, or None if not supported.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SinglefileData | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.MLIPTrainer.parse_training_results">
+<span class="sig-name descname"><span class="pre">parse_training_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#atlas.active_learning.backends.MLIPTrainer.parse_training_results" title="Link to this definition"></a></dt>
+<dd><p>Extract model file path and metrics from training output.</p>
+<p>Called by the remote training script after training completes.
+Each backend knows its own output format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>results_dir</strong> (<em>Path</em>) – Directory containing training outputs.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary with keys ‘model_file’ (str), ‘rmse_e’ (float,
+meV/atom), ‘rmse_f’ (float, meV/A), and optionally
+‘train_log’ (str).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.MLIPTrainer.parser_entry_point">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parser_entry_point</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#atlas.active_learning.backends.MLIPTrainer.parser_entry_point" title="Link to this definition"></a></dt>
+<dd><p>AiiDA entry point string for the training parser.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.MLIPTrainer.prepare_builder">
+<span class="sig-name descname"><span class="pre">prepare_builder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">builder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_data_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iteration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">containerized</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#atlas.active_learning.backends.MLIPTrainer.prepare_builder" title="Link to this definition"></a></dt>
+<dd><p>Populate the AiiDA CalcJob builder with model-specific inputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>builder</strong> (<em>ProcessBuilder</em>) – The AiiDA CalcJob builder to populate.</p></li>
+<li><p><strong>settings_dict</strong> (<em>dict</em>) – Model-specific training settings from the TOML config.</p></li>
+<li><p><strong>train_data_path</strong> (<em>str</em>) – Path to the training data file.</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – Unique name for this training run.</p></li>
+<li><p><strong>iteration</strong> (<em>int</em>) – Current AL loop iteration number.</p></li>
+<li><p><strong>db_size</strong> (<em>int</em>) – Number of structures in the training database.</p></li>
+<li><p><strong>containerized</strong> (<em>bool</em>) – Whether to use containerized execution.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The populated builder, ready for submission.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ProcessBuilder</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.MLIPTrainer.prepare_training_data">
+<span class="sig-name descname"><span class="pre">prepare_training_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">structure_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#atlas.active_learning.backends.MLIPTrainer.prepare_training_data" title="Link to this definition"></a></dt>
+<dd><p>Convert structure list to model-specific training format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em><em> | </em><em>Path</em>) – Output file path for the training data.</p></li>
+<li><p><strong>structure_list</strong> (<em>list</em><em>[</em><em>Atoms</em><em>]</em>) – List of ASE Atoms objects with DFT reference data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path to the written training data file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.MLIPTrainer.run_training">
+<span class="sig-name descname"><span class="pre">run_training</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.active_learning.backends.MLIPTrainer.run_training" title="Link to this definition"></a></dt>
+<dd><p>Execute model training from a config file.</p>
+<p>Called by the remote training script on the HPC node.
+Each backend dispatches to its own training CLI.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config_path</strong> (<em>str</em><em> | </em><em>Path</em>) – Path to the backend-specific training config file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.MLIPTrainer.select_best_model">
+<span class="sig-name descname"><span class="pre">select_best_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">training_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.active_learning.backends.MLIPTrainer.select_best_model" title="Link to this definition"></a></dt>
+<dd><p>Select the best model from N trained models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>training_results</strong> (<em>list</em>) – List of completed AiiDA CalcJobNode results.</p></li>
+<li><p><strong>force_weight</strong> (<em>float</em>) – Weight for forces in the RMSE-based selection criterion.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of (best_model_name, best_model_file, rmse_e, rmse_f,
+committee_models_tupl_name_uuid). The last element is a list
+of (name, uuid) tuples for the non-best models.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.find_inference_model">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.</span></span><span class="sig-name descname"><span class="pre">find_inference_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.find_inference_model" title="Link to this definition"></a></dt>
+<dd><p>Return the model file to hand to <code class="docutils literal notranslate"><span class="pre">backend.create_calculator</span></code>.</p>
+<p>Prefers a pre-compiled inference artifact (shipped by the optional
+compile-once step, e.g. <code class="docutils literal notranslate"><span class="pre">{stem}.nequip.pt2</span></code>) when present in <code class="docutils literal notranslate"><span class="pre">directory</span></code>,
+otherwise falls back to the raw model <code class="docutils literal notranslate"><span class="pre">{stem}{backend.model_file_extension}</span></code>.</p>
+<p>Backends without compilation (no <code class="docutils literal notranslate"><span class="pre">MLIPModelCompiler</span></code>) always resolve to the
+raw model, so behaviour is unchanged for them.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.get_backend">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.</span></span><span class="sig-name descname"><span class="pre">get_backend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.get_backend" title="Link to this definition"></a></dt>
+<dd><p>Instantiate and return a backend by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Registered backend name.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the backend name is not registered.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.list_backends">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.</span></span><span class="sig-name descname"><span class="pre">list_backends</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.active_learning.backends.list_backends" title="Link to this definition"></a></dt>
+<dd><p>Return the list of registered backend names.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.list_inference_models">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.</span></span><span class="sig-name descname"><span class="pre">list_inference_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#atlas.active_learning.backends.list_inference_models" title="Link to this definition"></a></dt>
+<dd><p>Return all model files in <code class="docutils literal notranslate"><span class="pre">directory</span></code> to use for inference.</p>
+<p>Prefers pre-compiled artifacts (<code class="docutils literal notranslate"><span class="pre">*.nequip.pt2</span></code>) when any are present,
+otherwise the raw models (<code class="docutils literal notranslate"><span class="pre">*{backend.model_file_extension}</span></code>). Used by the
+committee evaluation, which loads every committee member. Falls back to the
+raw extension for backends without compilation.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.model_file_ext">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.</span></span><span class="sig-name descname"><span class="pre">model_file_ext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.model'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#atlas.active_learning.backends.model_file_ext" title="Link to this definition"></a></dt>
+<dd><p>Return a model file’s extension, honouring compound nequip suffixes.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Path('m.nequip.zip').suffix</span></code> is only <code class="docutils literal notranslate"><span class="pre">'.zip'</span></code>; this returns the full
+<code class="docutils literal notranslate"><span class="pre">'.nequip.zip'</span></code> so calcjobs name copied model files consistently with
+what the remote scripts (which use <code class="docutils literal notranslate"><span class="pre">backend.model_file_extension</span></code>) expect.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.model_file_stem">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.</span></span><span class="sig-name descname"><span class="pre">model_file_stem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#atlas.active_learning.backends.model_file_stem" title="Link to this definition"></a></dt>
+<dd><p>Return a model filename with its (possibly compound) extension removed.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.backends.register_backend">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.backends.</span></span><span class="sig-name descname"><span class="pre">register_backend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.backends.register_backend" title="Link to this definition"></a></dt>
+<dd><p>Decorator to register an MLIP backend class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Short name for the backend (e.g. ‘mace’, ‘nequip’, ‘allegro’).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="atlas.active_learning.html" class="btn btn-neutral float-left" title="atlas.active_learning package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="atlas.active_learning.backends.mace.html" class="btn btn-neutral float-right" title="atlas.active_learning.backends.mace package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='atlas.active_learning.backends.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

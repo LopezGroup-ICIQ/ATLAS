@@ -1,0 +1,405 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>atlas.core.gui.pages package &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="atlas.core.gui.widgets package" href="atlas.core.gui.widgets.html" />
+    <link rel="prev" title="atlas.core.gui package" href="atlas.core.gui.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">Input specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package Information</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="atlas.html">atlas package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="atlas.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html">atlas.active_learning package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.html">atlas.benchmarks package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="atlas.core.html">atlas.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.training.html">atlas.training package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html">atlas.workflows package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.html#module-atlas">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">atlas</a></li>
+          <li class="breadcrumb-item"><a href="atlas.html">atlas package</a></li>
+          <li class="breadcrumb-item"><a href="atlas.core.html">atlas.core package</a></li>
+          <li class="breadcrumb-item"><a href="atlas.core.gui.html">atlas.core.gui package</a></li>
+      <li class="breadcrumb-item active">atlas.core.gui.pages package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/atlas.core.gui.pages.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="atlas-core-gui-pages-package">
+<h1>atlas.core.gui.pages package<a class="headerlink" href="#atlas-core-gui-pages-package" title="Link to this heading"></a></h1>
+<p>Workflow pages for the ATLAS GUI sidebar navigation.</p>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.core.gui.pages.base">
+<span id="atlas-core-gui-pages-base-module"></span><h2>atlas.core.gui.pages.base module<a class="headerlink" href="#module-atlas.core.gui.pages.base" title="Link to this heading"></a></h2>
+<p>Base class for ATLAS GUI workflow pages.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.base.WorkflowPage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.pages.base.</span></span><span class="sig-name descname"><span class="pre">WorkflowPage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.pages.base.WorkflowPage" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>Common interface every sidebar-navigated workflow page provides.</p>
+<p><code class="docutils literal notranslate"><span class="pre">NAVIGATION_KEY</span></code> is the stable identifier passed to <code class="docutils literal notranslate"><span class="pre">navigate()</span></code> so
+other pages can jump here without hard-coding sidebar indices.</p>
+<p>Pages emit <code class="docutils literal notranslate"><span class="pre">workflow_state_changed</span></code> after actions that may affect the
+project’s pipeline status (e.g. a successful Run, a recorded submission).
+<code class="docutils literal notranslate"><span class="pre">MainWindow</span></code> listens on every page and refreshes peers so the Overview
+tracker and downstream banners stay current without manual navigation.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.base.WorkflowPage.DISPLAY_NAME">
+<span class="sig-name descname"><span class="pre">DISPLAY_NAME</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page'</span></em><a class="headerlink" href="#atlas.core.gui.pages.base.WorkflowPage.DISPLAY_NAME" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.base.WorkflowPage.NAVIGATION_KEY">
+<span class="sig-name descname"><span class="pre">NAVIGATION_KEY</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'page'</span></em><a class="headerlink" href="#atlas.core.gui.pages.base.WorkflowPage.NAVIGATION_KEY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.base.WorkflowPage.on_shown">
+<span class="sig-name descname"><span class="pre">on_shown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.pages.base.WorkflowPage.on_shown" title="Link to this definition"></a></dt>
+<dd><p>Hook called when the sidebar switches to this page. No-op by default.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.base.WorkflowPage.process_running_changed">
+<span class="sig-name descname"><span class="pre">process_running_changed</span></span><a class="headerlink" href="#atlas.core.gui.pages.base.WorkflowPage.process_running_changed" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.base.WorkflowPage.set_app_theme">
+<span class="sig-name descname"><span class="pre">set_app_theme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.pages.base.WorkflowPage.set_app_theme" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.base.WorkflowPage.set_theme">
+<span class="sig-name descname"><span class="pre">set_theme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theme_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.pages.base.WorkflowPage.set_theme" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.pages.overview">
+<span id="atlas-core-gui-pages-overview-module"></span><h2>atlas.core.gui.pages.overview module<a class="headerlink" href="#module-atlas.core.gui.pages.overview" title="Link to this heading"></a></h2>
+<p>Project overview page, first sidebar entry.</p>
+<p>Layout:
+* Project metadata at the top.
+* A horizontal pipeline tracker (Initial DB → DFT → AL → Reports) showing</p>
+<blockquote>
+<div><p>each stage’s status and metric; the next recommended stage is visually
+highlighted with a “Start here” badge.  Clicking a card jumps to the
+matching workflow page.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>Indexed data counts.</p></li>
+<li><p>Refresh actions.</p></li>
+</ul>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.overview.OverviewPage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.pages.overview.</span></span><span class="sig-name descname"><span class="pre">OverviewPage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.pages.overview.OverviewPage" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#atlas.core.gui.pages.base.WorkflowPage" title="atlas.core.gui.pages.base.WorkflowPage"><code class="xref py py-class docutils literal notranslate"><span class="pre">WorkflowPage</span></code></a></p>
+<p>Project metadata, milestone tracker, and refresh actions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.overview.OverviewPage.DISPLAY_NAME">
+<span class="sig-name descname"><span class="pre">DISPLAY_NAME</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Overview'</span></em><a class="headerlink" href="#atlas.core.gui.pages.overview.OverviewPage.DISPLAY_NAME" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.overview.OverviewPage.NAVIGATION_KEY">
+<span class="sig-name descname"><span class="pre">NAVIGATION_KEY</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'overview'</span></em><a class="headerlink" href="#atlas.core.gui.pages.overview.OverviewPage.NAVIGATION_KEY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.overview.OverviewPage.on_shown">
+<span class="sig-name descname"><span class="pre">on_shown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.pages.overview.OverviewPage.on_shown" title="Link to this definition"></a></dt>
+<dd><p>Hook called when the sidebar switches to this page. No-op by default.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.overview.OverviewPage.refresh">
+<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.pages.overview.OverviewPage.refresh" title="Link to this definition"></a></dt>
+<dd><p>Recompute counts and pipeline tracker. Safe to call repeatedly.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="atlas-core-gui-pages-init-db-module">
+<h2>atlas.core.gui.pages.init_db module<a class="headerlink" href="#atlas-core-gui-pages-init-db-module" title="Link to this heading"></a></h2>
+</section>
+<section id="atlas-core-gui-pages-active-learning-module">
+<h2>atlas.core.gui.pages.active_learning module<a class="headerlink" href="#atlas-core-gui-pages-active-learning-module" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.core.gui.pages.dft">
+<span id="atlas-core-gui-pages-dft-module"></span><h2>atlas.core.gui.pages.dft module<a class="headerlink" href="#module-atlas.core.gui.pages.dft" title="Link to this heading"></a></h2>
+<p>DFT batch run page (<code class="docutils literal notranslate"><span class="pre">atl_run_dft_database</span></code>).</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.dft.DftPage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.pages.dft.</span></span><span class="sig-name descname"><span class="pre">DftPage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.pages.dft.DftPage" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#atlas.core.gui.pages.base.WorkflowPage" title="atlas.core.gui.pages.base.WorkflowPage"><code class="xref py py-class docutils literal notranslate"><span class="pre">WorkflowPage</span></code></a></p>
+<p>Configure and launch a DFT labelling run on an ATLAS database.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.dft.DftPage.DISPLAY_NAME">
+<span class="sig-name descname"><span class="pre">DISPLAY_NAME</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DFT</span> <span class="pre">Labelling'</span></em><a class="headerlink" href="#atlas.core.gui.pages.dft.DftPage.DISPLAY_NAME" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.dft.DftPage.NAVIGATION_KEY">
+<span class="sig-name descname"><span class="pre">NAVIGATION_KEY</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'dft'</span></em><a class="headerlink" href="#atlas.core.gui.pages.dft.DftPage.NAVIGATION_KEY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.dft.DftPage.on_shown">
+<span class="sig-name descname"><span class="pre">on_shown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.pages.dft.DftPage.on_shown" title="Link to this definition"></a></dt>
+<dd><p>Hook called when the sidebar switches to this page. No-op by default.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.dft.DftPage.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.pages.dft.DftPage.run" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.pages.dft_benchmark">
+<span id="atlas-core-gui-pages-dft-benchmark-module"></span><h2>atlas.core.gui.pages.dft_benchmark module<a class="headerlink" href="#module-atlas.core.gui.pages.dft_benchmark" title="Link to this heading"></a></h2>
+<p>DFT parameter benchmark page (<code class="docutils literal notranslate"><span class="pre">atl_dft_benchmark</span></code>).</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.dft_benchmark.DftBenchmarkPage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.pages.dft_benchmark.</span></span><span class="sig-name descname"><span class="pre">DftBenchmarkPage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.pages.dft_benchmark.DftBenchmarkPage" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#atlas.core.gui.pages.base.WorkflowPage" title="atlas.core.gui.pages.base.WorkflowPage"><code class="xref py py-class docutils literal notranslate"><span class="pre">WorkflowPage</span></code></a></p>
+<p>Configure and launch DFT parameter benchmarks.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.dft_benchmark.DftBenchmarkPage.DISPLAY_NAME">
+<span class="sig-name descname"><span class="pre">DISPLAY_NAME</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DFT</span> <span class="pre">Benchmark'</span></em><a class="headerlink" href="#atlas.core.gui.pages.dft_benchmark.DftBenchmarkPage.DISPLAY_NAME" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.dft_benchmark.DftBenchmarkPage.NAVIGATION_KEY">
+<span class="sig-name descname"><span class="pre">NAVIGATION_KEY</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'dft_benchmark'</span></em><a class="headerlink" href="#atlas.core.gui.pages.dft_benchmark.DftBenchmarkPage.NAVIGATION_KEY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.dft_benchmark.DftBenchmarkPage.on_shown">
+<span class="sig-name descname"><span class="pre">on_shown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.pages.dft_benchmark.DftBenchmarkPage.on_shown" title="Link to this definition"></a></dt>
+<dd><p>Hook called when the sidebar switches to this page. No-op by default.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.dft_benchmark.DftBenchmarkPage.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.pages.dft_benchmark.DftBenchmarkPage.run" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.pages.reports">
+<span id="atlas-core-gui-pages-reports-module"></span><h2>atlas.core.gui.pages.reports module<a class="headerlink" href="#module-atlas.core.gui.pages.reports" title="Link to this heading"></a></h2>
+<p>Reports page, training report, error analysis, latent space gallery.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.reports.ReportsPage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.pages.reports.</span></span><span class="sig-name descname"><span class="pre">ReportsPage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.pages.reports.ReportsPage" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#atlas.core.gui.pages.base.WorkflowPage" title="atlas.core.gui.pages.base.WorkflowPage"><code class="xref py py-class docutils literal notranslate"><span class="pre">WorkflowPage</span></code></a></p>
+<p>AL training report, error analysis, and latent space gallery.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.reports.ReportsPage.DISPLAY_NAME">
+<span class="sig-name descname"><span class="pre">DISPLAY_NAME</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Reports'</span></em><a class="headerlink" href="#atlas.core.gui.pages.reports.ReportsPage.DISPLAY_NAME" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.reports.ReportsPage.NAVIGATION_KEY">
+<span class="sig-name descname"><span class="pre">NAVIGATION_KEY</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'reports'</span></em><a class="headerlink" href="#atlas.core.gui.pages.reports.ReportsPage.NAVIGATION_KEY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.reports.ReportsPage.on_shown">
+<span class="sig-name descname"><span class="pre">on_shown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.pages.reports.ReportsPage.on_shown" title="Link to this definition"></a></dt>
+<dd><p>Hook called when the sidebar switches to this page. No-op by default.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.pages.logs">
+<span id="atlas-core-gui-pages-logs-module"></span><h2>atlas.core.gui.pages.logs module<a class="headerlink" href="#module-atlas.core.gui.pages.logs" title="Link to this heading"></a></h2>
+<p>Full-view logs page with a shared text document.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.logs.LogsPage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.pages.logs.</span></span><span class="sig-name descname"><span class="pre">LogsPage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.pages.logs.LogsPage" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#atlas.core.gui.pages.base.WorkflowPage" title="atlas.core.gui.pages.base.WorkflowPage"><code class="xref py py-class docutils literal notranslate"><span class="pre">WorkflowPage</span></code></a></p>
+<p>Full-height log viewer accessible from the sidebar.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.logs.LogsPage.DISPLAY_NAME">
+<span class="sig-name descname"><span class="pre">DISPLAY_NAME</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Logs'</span></em><a class="headerlink" href="#atlas.core.gui.pages.logs.LogsPage.DISPLAY_NAME" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.logs.LogsPage.NAVIGATION_KEY">
+<span class="sig-name descname"><span class="pre">NAVIGATION_KEY</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'logs'</span></em><a class="headerlink" href="#atlas.core.gui.pages.logs.LogsPage.NAVIGATION_KEY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.pages.settings">
+<span id="atlas-core-gui-pages-settings-module"></span><h2>atlas.core.gui.pages.settings module<a class="headerlink" href="#module-atlas.core.gui.pages.settings" title="Link to this heading"></a></h2>
+<p>Settings page (theme picker, AiiDA profile, MP API key).</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.settings.SettingsPage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.gui.pages.settings.</span></span><span class="sig-name descname"><span class="pre">SettingsPage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.gui.pages.settings.SettingsPage" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#atlas.core.gui.pages.base.WorkflowPage" title="atlas.core.gui.pages.base.WorkflowPage"><code class="xref py py-class docutils literal notranslate"><span class="pre">WorkflowPage</span></code></a></p>
+<p>Settings: app theme picker, TOML syntax theme, AiiDA profile, MP API key.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.settings.SettingsPage.DISPLAY_NAME">
+<span class="sig-name descname"><span class="pre">DISPLAY_NAME</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Settings'</span></em><a class="headerlink" href="#atlas.core.gui.pages.settings.SettingsPage.DISPLAY_NAME" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.settings.SettingsPage.NAVIGATION_KEY">
+<span class="sig-name descname"><span class="pre">NAVIGATION_KEY</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'settings'</span></em><a class="headerlink" href="#atlas.core.gui.pages.settings.SettingsPage.NAVIGATION_KEY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.settings.SettingsPage.app_theme_changed">
+<span class="sig-name descname"><span class="pre">app_theme_changed</span></span><a class="headerlink" href="#atlas.core.gui.pages.settings.SettingsPage.app_theme_changed" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.settings.SettingsPage.on_shown">
+<span class="sig-name descname"><span class="pre">on_shown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.core.gui.pages.settings.SettingsPage.on_shown" title="Link to this definition"></a></dt>
+<dd><p>Hook called when the sidebar switches to this page. No-op by default.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.gui.pages.settings.SettingsPage.theme_changed">
+<span class="sig-name descname"><span class="pre">theme_changed</span></span><a class="headerlink" href="#atlas.core.gui.pages.settings.SettingsPage.theme_changed" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.gui.pages">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-atlas.core.gui.pages" title="Link to this heading"></a></h2>
+<p>Workflow pages for the ATLAS GUI sidebar navigation.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="atlas.core.gui.html" class="btn btn-neutral float-left" title="atlas.core.gui package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="atlas.core.gui.widgets.html" class="btn btn-neutral float-right" title="atlas.core.gui.widgets package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='atlas.core.gui.pages.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

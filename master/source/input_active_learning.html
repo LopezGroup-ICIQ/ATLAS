@@ -1,0 +1,2515 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Active Learning Loop &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="MLIP Benchmarks" href="input_mlip_benchmarks.html" />
+    <link rel="prev" title="DFT Calculations" href="input_dft.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="input.html">Input specification</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="input.html#input-formats">Input Formats</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="input_database_generation.html">Database Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input_dft.html">DFT Calculations</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Active Learning Loop</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#active-learning-active-learning">Active Learning - <code class="docutils literal notranslate"><span class="pre">[active_learning]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#active-learning-stopping-conditions-stop-conditions">Active Learning Stopping Conditions - <code class="docutils literal notranslate"><span class="pre">[stop_conditions]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#debug-mock-debug">Debug / Mock - <code class="docutils literal notranslate"><span class="pre">[debug]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-set-settings-test-db">Test Set Settings - <code class="docutils literal notranslate"><span class="pre">[test_db]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#data-reduction-settings-data-reduction">Data Reduction Settings - <code class="docutils literal notranslate"><span class="pre">[data_reduction]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#active-learning-seed-settings-al-seed">Active Learning Seed Settings - <code class="docutils literal notranslate"><span class="pre">[al_seed]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interpolation-check-settings-interpolation">Interpolation Check Settings - <code class="docutils literal notranslate"><span class="pre">[interpolation]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#extrapolation-check-settings-extrapolation">Extrapolation Check Settings - <code class="docutils literal notranslate"><span class="pre">[extrapolation]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#active-learning-safeguard-settings-safeguard">Active Learning Safeguard Settings - <code class="docutils literal notranslate"><span class="pre">[safeguard]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#molecular-dynamics-settings-md">Molecular Dynamics Settings - <code class="docutils literal notranslate"><span class="pre">[md]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#code-and-containerization-settings-code">Code and Containerization Settings - <code class="docutils literal notranslate"><span class="pre">[code]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mlip-backend-settings-mlip">MLIP Backend Settings - <code class="docutils literal notranslate"><span class="pre">[mlip]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mlip-training-settings-mace-train">MLIP Training Settings - <code class="docutils literal notranslate"><span class="pre">[mace_train]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#allegro-training-settings-allegro-train">Allegro Training Settings - <code class="docutils literal notranslate"><span class="pre">[allegro_train]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#committee-evaluation-settings-committee-eval">Committee Evaluation Settings - <code class="docutils literal notranslate"><span class="pre">[committee_eval]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#descriptor-computation-settings-descriptors">Descriptor Computation Settings - <code class="docutils literal notranslate"><span class="pre">[descriptors]</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dft-calculation-settings-dft">DFT Calculation Settings - <code class="docutils literal notranslate"><span class="pre">[dft]</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="input_mlip_benchmarks.html">MLIP Benchmarks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input_dft_benchmark.html">DFT Parameter Benchmark</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input_latent_space_analysis.html">Latent Space Analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Package Information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="input.html">Input specification</a></li>
+      <li class="breadcrumb-item active">Active Learning Loop</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/input_active_learning.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="active-learning-loop">
+<h1>Active Learning Loop<a class="headerlink" href="#active-learning-loop" title="Link to this heading"></a></h1>
+<p>Generate a active learning template file using <code class="docutils literal notranslate"><span class="pre">atl_gen_configuration_file</span> <span class="pre">-t</span> <span class="pre">active_learning</span></code>.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>All keys are mandatory unless stated otherwise.</p>
+</div>
+<section id="active-learning-active-learning">
+<h2>Active Learning - <code class="docutils literal notranslate"><span class="pre">[active_learning]</span></code><a class="headerlink" href="#active-learning-active-learning" title="Link to this heading"></a></h2>
+<p>General active learning settings.</p>
+<ul class="simple">
+<li><p><span class="code-alt">aiida_profile</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Name of the AiiDA profile to be used.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">enable_ntfysh</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Enable notifications using ntfy.sh for the run.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">run_name</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Internal name for the run.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">init_db_path</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path to the folder containing the initial database.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str,</span> <span class="pre">PosixPath)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">results_dir</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path for final results. A folder named run_{uuid} will be created inside.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str,</span> <span class="pre">PosixPath)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">reset_seed_db</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to reset the seed database when resuming a stopped AL loop.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">log_path</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path for the log file. Defaults to results_dir if not specified.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str,</span> <span class="pre">PosixPath)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">final_db_name</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Name for the final database (extxyz format).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'final_data_test'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_iterations</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum number of AL loop iterations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">load_init_models</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Load initial models from a list of AiiDA UUIDs/PKs. The format is <code class="docutils literal notranslate"><span class="pre">[UUID1/PK1,</span> <span class="pre">UUID2/PK2,</span> <span class="pre">...]</span></code>.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">list[int])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">[]</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">load_descriptor_calc</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Load a single descriptor calculation from a AiiDA UUID/PK.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">''</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">load_md_calcs</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Load MD calculations from a list of AiiDA UUIDs/PKs.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">list[int])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">[]</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">al_mode</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Active learning mode.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'data_acquisition'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">md</span></code>, <code class="docutils literal notranslate"><span class="pre">data_reduction</span></code>, <code class="docutils literal notranslate"><span class="pre">data_acquisition</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="active-learning-stopping-conditions-stop-conditions">
+<h2>Active Learning Stopping Conditions - <code class="docutils literal notranslate"><span class="pre">[stop_conditions]</span></code><a class="headerlink" href="#active-learning-stopping-conditions-stop-conditions" title="Link to this heading"></a></h2>
+<p>Settings for the stopping conditions of the active learning loop.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">energy_threshold_mev</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Energy error threshold in meV/atom for the stopping criterion of the active learning loop. If not specified, a default of 43.0 is used.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">43.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">forces_threshold_mev_per_ang</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Forces error threshold in meV/Å for the stopping criterion of the active learning loop. If not specified, a default of 50.0 is used.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">50.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">stopping_threshold_type</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: This option allows to select which error metric to compare with a threshold for the stopping criterion of the active learning loop. If not specified, this is not inclduded in the stopping criterion.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'None'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">validation</span></code>, <code class="docutils literal notranslate"><span class="pre">testing</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="debug-mock-debug">
+<h2>Debug / Mock - <code class="docutils literal notranslate"><span class="pre">[debug]</span></code><a class="headerlink" href="#debug-mock-debug" title="Link to this heading"></a></h2>
+<p>Developer debugging options for the active learning loop.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<section id="mock-debug-mock">
+<h3>Mock - <code class="docutils literal notranslate"><span class="pre">[debug.mock]</span></code><a class="headerlink" href="#mock-debug-mock" title="Link to this heading"></a></h3>
+<p>Replace remote calcjobs (training, descriptors, MD, DFT) with instant local surrogates. For debugging loop logic only; results are physically meaningless.</p>
+<ul class="simple">
+<li><p><span class="code-alt">enable</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to enable mock mode.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">stages</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Stages to mock. If omitted or empty, all stages are mocked. Mocking ‘training’ implies its model-consuming stages (md, descriptors, test_db) are mocked too, since a placeholder model cannot feed a real remote job.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">list[str])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">[]</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">md</span></code>, <code class="docutils literal notranslate"><span class="pre">dft</span></code>, <code class="docutils literal notranslate"><span class="pre">training</span></code>, <code class="docutils literal notranslate"><span class="pre">descriptors</span></code>, <code class="docutils literal notranslate"><span class="pre">test_db</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">dft_potential</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Classical potential used for mock DFT energies/forces. ‘emt’ uses ASE EMT (falls back to Lennard-Jones for unsupported elements); ‘lj’ always uses Lennard-Jones.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'emt'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">emt</span></code>, <code class="docutils literal notranslate"><span class="pre">lj</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">md_rattle_stdev</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Standard deviation (Å) of the random perturbation applied to the seed frame in mock MD.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">md_n_frames</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of perturbed frames produced per seed structure in mock MD.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">train_rmse_e_start</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Mock committee/test-DB energy RMSE (meV/atom) at iteration 0; decays geometrically over iterations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">90.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">train_rmse_f_start</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Mock committee/test-DB forces RMSE (meV/A) at iteration 0; decays geometrically over iterations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">275.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">train_rmse_decay</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Per-iteration geometric decay factor for mock RMSE curves (0-1).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.7</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="test-set-settings-test-db">
+<h2>Test Set Settings - <code class="docutils literal notranslate"><span class="pre">[test_db]</span></code><a class="headerlink" href="#test-set-settings-test-db" title="Link to this heading"></a></h2>
+<p>Settings for the test database used to evaluate model performance during active learning. The test database is defined at the start of the active learning run, and is kept constant throughout the entire process. It can either be generated at random from the initial database, or loaded from a file. The test set is only used for evaluation and is not included in the training data.</p>
+<p>The test database evaluation is performed after training the committee of models of each active learning iteration, using the sampler model. The test set and the evaluation results are logged and saved in the base workchain and in each of the active learning loop steps as outputs.</p>
+<p>Since the test database can be a subset of the training database, which is removed in place, a backup of the database is created under the same path and name as the original database, using the prefix <code class="docutils literal notranslate"><span class="pre">_original</span></code> and suffix <code class="docutils literal notranslate"><span class="pre">.bak</span></code>.</p>
+<ul class="simple">
+<li><p><span class="code-alt">use_test_db</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to use a constant test set during active learning.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">ignore_container</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to ignore container settings for MACE training.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">test_db_path</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path to the test set database file.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str,</span> <span class="pre">PosixPath)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">test_db_frac</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Fraction of the initial database to be used as test set if no test_db_path is provided.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.1</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="aiida-metadata-for-test-set-calculations-test-db-metadata">
+<h3>AiiDA Metadata for Test Set Calculations - <code class="docutils literal notranslate"><span class="pre">[test_db.metadata]</span></code><a class="headerlink" href="#aiida-metadata-for-test-set-calculations-test-db-metadata" title="Link to this heading"></a></h3>
+<p>AiiDA metadata options for the test set.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">computer</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Name of the AiiDA computer where the test set calculations were run.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">prepend_text</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Text to prepend to the AiiDA calculation label for the test set calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+</ul>
+</li>
+</ul>
+<section id="aiida-options-for-test-set-calculations-test-db-metadata-options">
+<h4>AiiDA Options for Test Set Calculations - <code class="docutils literal notranslate"><span class="pre">[test_db.metadata.options]</span></code><a class="headerlink" href="#aiida-options-for-test-set-calculations-test-db-metadata-options" title="Link to this heading"></a></h4>
+<p>AiiDA options dictionary for the test set calculations.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">queue_name</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: (SGE) Queue name.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">qos</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: (SLURM) QoS name.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">account</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: (SLURM) Account name.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_wallclock_seconds</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum wallclock time in seconds.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_memory_kb</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum memory in KB.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">withmpi</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to run with MPI.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">custom_scheduler_commands</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Custom scheduler commands.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+</ul>
+</li>
+</ul>
+<section id="resources-test-db-metadata-options-resources">
+<h5>Resources - <code class="docutils literal notranslate"><span class="pre">[test_db.metadata.options.resources]</span></code><a class="headerlink" href="#resources-test-db-metadata-options-resources" title="Link to this heading"></a></h5>
+<p>Resources dictionary.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">parallel_env</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Parallel environment.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">tot_num_mpiprocs</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Total number of MPI processes.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_cores_per_mpiproc</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of cores per MPI process.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_machines</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of machines.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="model-settings-for-test-set-evaluation-test-db-model-settings">
+<h3>Model Settings for Test Set Evaluation - <code class="docutils literal notranslate"><span class="pre">[test_db.model_settings]</span></code><a class="headerlink" href="#model-settings-for-test-set-evaluation-test-db-model-settings" title="Link to this heading"></a></h3>
+<p>Settings for the model used to evaluate the test set during active learning.</p>
+<ul class="simple">
+<li><p><span class="code-alt">model_type</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Type of model to be used for test set evaluation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'mace'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">mace</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">default_dtype</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Default data type for the model.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'float32'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">float32</span></code>, <code class="docutils literal notranslate"><span class="pre">float64</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">device</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Device to be used for the model.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'cpu'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">cuda</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="data-reduction-settings-data-reduction">
+<h2>Data Reduction Settings - <code class="docutils literal notranslate"><span class="pre">[data_reduction]</span></code><a class="headerlink" href="#data-reduction-settings-data-reduction" title="Link to this heading"></a></h2>
+<p>Settings for the data reduction AL mode.</p>
+<ul class="simple">
+<li><p><span class="code-alt">large_database_path</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path to the large database file from which to select structures.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str,</span> <span class="pre">PosixPath)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">initial_selection_size</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of structures to select from the large database for initial training.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">initial_selection_method</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Selection method for initial structures.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'lowest_energy'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">random</span></code>, <code class="docutils literal notranslate"><span class="pre">lowest_energy</span></code>, <code class="docutils literal notranslate"><span class="pre">fps</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">structures_per_iteration</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of structures to select per iteration from the large database.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">50</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">iterative_selection_method</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Selection method for iterative structures.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'uncertainty'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">random</span></code>, <code class="docutils literal notranslate"><span class="pre">fps</span></code>, <code class="docutils literal notranslate"><span class="pre">uncertainty</span></code>, <code class="docutils literal notranslate"><span class="pre">lowest_energy</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="active-learning-seed-settings-al-seed">
+<h2>Active Learning Seed Settings - <code class="docutils literal notranslate"><span class="pre">[al_seed]</span></code><a class="headerlink" href="#active-learning-seed-settings-al-seed" title="Link to this heading"></a></h2>
+<p>Settings for the AL seed generation for MD.</p>
+<ul class="simple">
+<li><p><span class="code-alt">seed_size_frac</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Sets total structures in an MD seed as a fraction of the training db size.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">seed_min_num_structs</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Minimum number of structures in an MD seed.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">25</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">seed_max_num_structs</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum number of structures in the MD seed.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">500</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">delete_seed_structs</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to delete structures from the seed database even if they are in domain.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="seed-selection-settings-al-seed-seed-select-settings">
+<h3>Seed Selection Settings - <code class="docutils literal notranslate"><span class="pre">[al_seed.seed_select_settings]</span></code><a class="headerlink" href="#seed-selection-settings-al-seed-seed-select-settings" title="Link to this heading"></a></h3>
+<p>MD seed selection mode settings.</p>
+<ul class="simple">
+<li><p><span class="code-alt">seed_select_type</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: MD seed selection mode.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'random'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">random</span></code>, <code class="docutils literal notranslate"><span class="pre">small_first</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">small_first_max_size</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum size in number of atoms for structures selected with small_first mode.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">50</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">small_first_max_iter</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Apply small_first mode for the first n iterations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="seed-ranking-settings-for-seed-selection-al-seed-seed-ranking-settings">
+<h3>Seed Ranking Settings for Seed Selection - <code class="docutils literal notranslate"><span class="pre">[al_seed.seed_ranking_settings]</span></code><a class="headerlink" href="#seed-ranking-settings-for-seed-selection-al-seed-seed-ranking-settings" title="Link to this heading"></a></h3>
+<p>Settings for the seed ranking methods.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">seed_ranking_algorithm</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Algorithm used for seed selection.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'random'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">random</span></code>, <code class="docutils literal notranslate"><span class="pre">descriptor_fps</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="farthest-point-sampling-fps-configuration-al-seed-seed-ranking-settings-descriptor-fps">
+<h4>Farthest Point Sampling (FPS) Configuration - <code class="docutils literal notranslate"><span class="pre">[al_seed.seed_ranking_settings.descriptor_fps]</span></code><a class="headerlink" href="#farthest-point-sampling-fps-configuration-al-seed-seed-ranking-settings-descriptor-fps" title="Link to this heading"></a></h4>
+<p>Farthest Point Sampling (FPS) ranking.</p>
+<ul class="simple">
+<li><p><span class="code-alt">descriptor_type</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: What descriptors to use for the seed selection process.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'soap'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">soap</span></code>, <code class="docutils literal notranslate"><span class="pre">mace</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">initial_structure</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to gather a structure at random or select the one with the lowest energy available.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'random'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">random</span></code>, <code class="docutils literal notranslate"><span class="pre">lowest_energy</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="fps-seed-selection-selected-descriptor-settings-al-seed-seed-ranking-settings-descriptor-fps-descriptor">
+<h5>FPS Seed Selection - Selected Descriptor Settings - <code class="docutils literal notranslate"><span class="pre">[al_seed.seed_ranking_settings.descriptor_fps.descriptor]</span></code><a class="headerlink" href="#fps-seed-selection-selected-descriptor-settings-al-seed-seed-ranking-settings-descriptor-fps-descriptor" title="Link to this heading"></a></h5>
+<p>Entry containing settings that depend on the descriptor type selected.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">r_cut</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Cutoff radius for SOAP descriptor.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">6.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">n_max</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum number of radial basis functions for SOAP.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">8</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">l_max</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum degree of spherical harmonics for SOAP.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">6</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">periodic</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to consider the system as periodic.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">average</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Averaging mode for SOAP descriptor.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'off'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">inner</span></code>, <code class="docutils literal notranslate"><span class="pre">outer</span></code>, <code class="docutils literal notranslate"><span class="pre">off</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">model_path</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path to the trained MACE model.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">device</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: What device to use for MACE.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'cpu'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">cuda</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">dtype</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Floating point number precision for MACE.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'float32'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">float32</span></code>, <code class="docutils literal notranslate"><span class="pre">float64</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">enable_cueq</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Enable CUEQ for MACE.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+</section>
+</section>
+<section id="interpolation-check-settings-interpolation">
+<h2>Interpolation Check Settings - <code class="docutils literal notranslate"><span class="pre">[interpolation]</span></code><a class="headerlink" href="#interpolation-check-settings-interpolation" title="Link to this heading"></a></h2>
+<p>Settings for the interpolation check. The interpolation check determines whether a structure is within the model’s knowledge domain by checking the committee models disagreement, considering the model accuracy threshold.</p>
+<ul class="simple">
+<li><p><span class="code-alt">model_acc_multiplier</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Multiplier for model accuracy threshold. Higher values mean more DFT calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">10.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">disagreement_check_type</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Approach for energy and force (E&amp;F) committee disagreement check. With <code class="docutils literal notranslate"><span class="pre">training</span></code>, compare E&amp;F with a threshold obtained from the training RMSE values multiplied by a threshold. With <code class="docutils literal notranslate"><span class="pre">md_threshold</span></code>, compare E&amp;F with a threshold obtained from the standard deviaiton of the MD frames.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'training'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">training</span></code>, <code class="docutils literal notranslate"><span class="pre">md_threshold</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">target_accuracy_e_meV_per_at</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Target accuracy for energy per atom in meV/atom. This should roughly correspond to the noise floor of your reference method, e.g., 1-2 meV/atom for DFT. By default, a relatively large value of 43 meV/atom is selected, since it correponds with a typical measure of chemical accuracy. However, this might be too high for some properties, such as long term diffusion or phase transitions.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">43.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">target_accuracy_f_meV_per_A</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Target accuracy for force, in meV/Angstrom. This should roughly correspond to the noise floor of your reference method, e.g., 10-20 meV/atom for DFT. By default, a relatively large value of 50 meV/atom is selected, since it correponds with a typical measure of chemical accuracy.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">50.0</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="extrapolation-check-settings-extrapolation">
+<h2>Extrapolation Check Settings - <code class="docutils literal notranslate"><span class="pre">[extrapolation]</span></code><a class="headerlink" href="#extrapolation-check-settings-extrapolation" title="Link to this heading"></a></h2>
+<p>Settings for extrapolation checks.</p>
+<ul class="simple">
+<li><p><span class="code-alt">check_extrapolation_type</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Method for extrapolation check. With <code class="docutils literal notranslate"><span class="pre">min-max</span></code> or <code class="docutils literal notranslate"><span class="pre">basic</span></code>, check for extrapolation using the range of the model descriptors. With <code class="docutils literal notranslate"><span class="pre">alpha-shape</span></code> or <code class="docutils literal notranslate"><span class="pre">advanced</span></code>, check for extrapolation using the concave hull of the model descriptors. With <code class="docutils literal notranslate"><span class="pre">disabled</span></code> or <code class="docutils literal notranslate"><span class="pre">none</span></code>, disable the extrapolation check, only leaving committee disagreement for EF for the domain.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'none'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">disabled</span></code>, <code class="docutils literal notranslate"><span class="pre">none</span></code>, <code class="docutils literal notranslate"><span class="pre">basic</span></code>, <code class="docutils literal notranslate"><span class="pre">min-max</span></code>, <code class="docutils literal notranslate"><span class="pre">alpha-shape</span></code>, <code class="docutils literal notranslate"><span class="pre">advanced</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="concave-hull-extrapolation-check-settings-extrapolation-concave-hull">
+<h3>Concave Hull Extrapolation Check Settings - <code class="docutils literal notranslate"><span class="pre">[extrapolation.concave_hull]</span></code><a class="headerlink" href="#concave-hull-extrapolation-check-settings-extrapolation-concave-hull" title="Link to this heading"></a></h3>
+<p>Settings for the concave hull / alpha shape extrapolation check.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">target_alpha_range_min</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Minimum alpha value for the concave hull.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">target_alpha_range_max</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum alpha value for the concave hull.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">350.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">default_alpha_if_issues</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Default alpha value if there are issues with the concave hull generation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">10.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">nn_dist_scale_factor</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Scaling factor for the alpha candidate calculation, where <code class="docutils literal notranslate"><span class="pre">alpha_candidate</span> <span class="pre">=</span> <span class="pre">nn_dist_scale_factor</span> <span class="pre">/</span> <span class="pre">mean_nn_dist</span></code></p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1.5</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">frac_points_allowed_out</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum fraction of points allowed to be outside the concave hull. If the fraction of points outside the hull exceeds this value, alpha will be decreased iteratively until the condition is met or alpha reaches zero. Value is expressed as a fraction, thus 0.002 means 0.2%.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.002</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">qt_offset_frac</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Offset fraction for the boundary of the root quadtree as a fraction of the data range. This will leave an extra margin around the data to avoid edge effects.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">qt_data_frac_capacity</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Fraction of the total number of data points to be used as the capacity of each quadtree node. Any quadtree node that goes above the capacity will be split further.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.015</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">qt_subdivision_factor</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Subdivision factor for searching dense leaves of the quadtree. Higher values lead to more subdivisions and finer search.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">4</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">concave_hull_scale_factor</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Scaling factor for the concave hull to be used when checking for extrapolation. For example, 0.1 results in a 10% size increase of the hull. A value of 0.0 means no scaling.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">boundary_method</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Algorithm for boundary determination during the extrapolation check. With <code class="docutils literal notranslate"><span class="pre">concave_hull</span></code>, the boundary is the alpha shape of the latent space (per quadtree cluster). With <code class="docutils literal notranslate"><span class="pre">morphological_closing</span></code>, the boundary is obtained by rasterising the latent space and applying a morphological closing operation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'concave_hull'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">concave_hull</span></code>, <code class="docutils literal notranslate"><span class="pre">morphological_closing</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">morph_disk_size</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Disk size for the morphological closing structuring element. Larger values bridge wider gaps between points. Only used when <code class="docutils literal notranslate"><span class="pre">boundary_method</span></code> is <code class="docutils literal notranslate"><span class="pre">morphological_closing</span></code>.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">10</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">morph_threshold</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Grayscale intensity threshold (0-255) for point detection in morphological closing. Only used when <code class="docutils literal notranslate"><span class="pre">boundary_method</span></code> is <code class="docutils literal notranslate"><span class="pre">morphological_closing</span></code>.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">250</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">morph_dpi</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: DPI of the internal rasterisation used by morphological closing. Higher values give finer boundaries. Only used when <code class="docutils literal notranslate"><span class="pre">boundary_method</span></code> is <code class="docutils literal notranslate"><span class="pre">morphological_closing</span></code>.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="active-learning-safeguard-settings-safeguard">
+<h2>Active Learning Safeguard Settings - <code class="docutils literal notranslate"><span class="pre">[safeguard]</span></code><a class="headerlink" href="#active-learning-safeguard-settings-safeguard" title="Link to this heading"></a></h2>
+<p>Settings for active learning safeguard mechanisms. The safeguard will run long MD simulations on selected structures and perform an uncertainty quantification check in order to determine if the active learning loop is robust enough to stop at the current point.</p>
+<ul class="simple">
+<li><p><span class="code-alt">enable</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to enable the safeguard mechanism.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">target_structure_mode</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Type of structures to include in the safeguard. Multiple types can be selected. If <code class="docutils literal notranslate"><span class="pre">base</span></code> is provided, the structures labelled as ‘base’ in the initial database will be used as target structures, after applying lateral expansion controlled with the base_struct_supercell_size option. If <code class="docutils literal notranslate"><span class="pre">target</span></code> is provided, a selection of targeted structures (via paths or atl_id) must be included through the <code class="docutils literal notranslate"><span class="pre">struct_target_list</span></code> option below.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'base'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">base</span></code>, <code class="docutils literal notranslate"><span class="pre">target</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">base_struct_supercell_size</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: 3D vector representing the lateral expansion factors to be used. Only used if <code class="docutils literal notranslate"><span class="pre">target_structure_mode</span></code> is set to <code class="docutils literal notranslate"><span class="pre">base</span></code>.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">list[int])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">[3,</span> <span class="pre">3,</span> <span class="pre">3]</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">struct_target_list</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: List of structure IDs or paths to be used as target structures in the safeguard. Only used if <code class="docutils literal notranslate"><span class="pre">target_structure_mode</span></code> is set to <code class="docutils literal notranslate"><span class="pre">target</span></code>.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">list[str,</span> <span class="pre">int])</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">ignore_container</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to ignore the container specified in the container settings for the safeguard.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="safeguard-md-settings-safeguard-md">
+<h3>Safeguard MD Settings - <code class="docutils literal notranslate"><span class="pre">[safeguard.md]</span></code><a class="headerlink" href="#safeguard-md-settings-safeguard-md" title="Link to this heading"></a></h3>
+<p>MD simulation options for safeguard.</p>
+<section id="safeguard-md-parameters-safeguard-md-parameters">
+<h4>Safeguard MD Parameters - <code class="docutils literal notranslate"><span class="pre">[safeguard.md.parameters]</span></code><a class="headerlink" href="#safeguard-md-parameters-safeguard-md-parameters" title="Link to this heading"></a></h4>
+<p>MD simulation parameters for safeguard. These settings will override the general MD settings for the safeguard simulations. This section supports the same parameters as the <code class="docutils literal notranslate"><span class="pre">md.parameters</span></code> section.</p>
+<ul class="simple">
+<li><p><span class="code-alt">temperature_list_K</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: List of different temperatures (in K) for MD simulations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(list[float])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">[300.0,</span> <span class="pre">500.0,</span> <span class="pre">900.0]</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">sample_frames_during_md</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to sample frames during MD simulations for AL.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">al_keep_struct_every_n_ps</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Keep a structure every N picoseconds of MD simulation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">log_save_interval</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Log energy and force information every N MD steps.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_at_large_struct</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of structures with a number of atoms larger than <code class="docutils literal notranslate"><span class="pre">large_struct_size</span></code> to consider for MD simulations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'None'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_temp_multiplier</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Multiplier for MD temperature to determine the upper bound of the temperature.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1.3</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_steps</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Total number of timesteps for each MD simulation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">33334</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">timestep_duration_ps</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Duration of each timestep in picoseconds.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.003</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">md_thermostat</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Ensemble used in the MD simulation. The ensemble parameter changes the selection of the ASE integrator and thermostat and barostat. <code class="docutils literal notranslate"><span class="pre">langevin</span></code> and <code class="docutils literal notranslate"><span class="pre">nvt</span></code> ensembles use the ASE Langevin thermostat. <code class="docutils literal notranslate"><span class="pre">npt</span></code> and <code class="docutils literal notranslate"><span class="pre">npt-mtk</span></code> uses ASE’s implementation of the Full Martyna-Tobias-Klein (MTK) method <a href="#id7"><span class="problematic" id="id1">[^1]</span></a>, similar to the one used for NPT in LAMMPS. The <code class="docutils literal notranslate"><span class="pre">npt-melchionna</span></code> ensemble uses a combined Nose-Hoover and Parrinello-Rahman  method, as proposed by Melchionna et al. and provided in ASE as the default NPT class. However, this implementation is not recommended for use by ASE due stability issues!<br />
+<a href="#id8"><span class="problematic" id="id2">[^1]</span></a> MTKNPT: https://ase-lib.org/ase/md.html#full-martyna-tobias-klein-mtk-dynamics</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'langevin'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">langevin</span></code>, <code class="docutils literal notranslate"><span class="pre">nvt</span></code>, <code class="docutils literal notranslate"><span class="pre">npt</span></code>, <code class="docutils literal notranslate"><span class="pre">npt-mtk</span></code>, <code class="docutils literal notranslate"><span class="pre">npt-melchionna</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">langevin_friction_ps-1</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Friction coefficient for the Langevin thermostat in picoseconds.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">10.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">npt_ttime_fs</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Time constant for temperature coupling in NPT thermostat in femtoseconds.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">100.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">npt_ptime_fs</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Time constant for pressure coupling in NPT thermostat in femtoseconds.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">25.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">md_stage_order</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: List containing the names of the stages, written in the order in which the MD stages will be applied. Each stage must be defined under <code class="docutils literal notranslate"><span class="pre">md.parameters.stages</span></code>.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(list[str])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">[]</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">gather_traj_cnt_lattice</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Consider constant lattice when gathering trajectories.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">use_kokkos</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to use Kokkos to run the MD.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">device</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Device for the MACE model in MD simulations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'cuda'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">cuda</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">enable_cueq</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Enable CUEQ for MACE.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">default_dtype</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Default data type for the MACE model in MD simulations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'float32'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">float32</span></code>, <code class="docutils literal notranslate"><span class="pre">float64</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_energy_threshold_per_atom</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum energy threshold per atom in eV.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1000.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_cpus_large_struct</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of CPUs to use for structures larger than <code class="docutils literal notranslate"><span class="pre">large_struct_size</span></code>.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">16</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="metadata-safeguard-metadata">
+<h3>Metadata - <code class="docutils literal notranslate"><span class="pre">[safeguard.metadata]</span></code><a class="headerlink" href="#metadata-safeguard-metadata" title="Link to this heading"></a></h3>
+<p>AiiDA metadata and scheduler options for the safeguard.</p>
+<ul class="simple">
+<li><p><span class="code-alt">computer</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: AiiDA computer name for safeguard calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'my_cluster'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">prepend_text</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Text to prepend to job scripts for AiiDA.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'module</span> <span class="pre">load</span> <span class="pre">singularity</span> <span class="pre">export</span> <span class="pre">PATH=$PATH:.'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">options</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: AiiDA scheduler options for safeguard calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(dict)</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="molecular-dynamics-settings-md">
+<h2>Molecular Dynamics Settings - <code class="docutils literal notranslate"><span class="pre">[md]</span></code><a class="headerlink" href="#molecular-dynamics-settings-md" title="Link to this heading"></a></h2>
+<p>Settings for MD simulations.</p>
+<ul class="simple">
+<li><p><span class="code-alt">ignore_container</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to ignore the container specified in the container settings for the MD calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="parameters-md-parameters">
+<h3>Parameters - <code class="docutils literal notranslate"><span class="pre">[md.parameters]</span></code><a class="headerlink" href="#parameters-md-parameters" title="Link to this heading"></a></h3>
+<p>MD simulation parameters.</p>
+<ul class="simple">
+<li><p><span class="code-alt">temperature_list_K</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: List of different temperatures (in K) for MD simulations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(list[float])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">[300.0,</span> <span class="pre">500.0,</span> <span class="pre">900.0]</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">sample_frames_during_md</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to sample frames during MD simulations for AL.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">al_keep_struct_every_n_ps</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Keep a structure every N picoseconds of MD simulation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">log_save_interval</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Log energy and force information every N MD steps.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_at_large_struct</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of structures with a number of atoms larger than <code class="docutils literal notranslate"><span class="pre">large_struct_size</span></code> to consider for MD simulations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'None'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_temp_multiplier</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Multiplier for MD temperature to determine the upper bound of the temperature.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1.3</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_steps</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Total number of timesteps for each MD simulation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">33334</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">timestep_duration_ps</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Duration of each timestep in picoseconds.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.003</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">md_thermostat</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Ensemble used in the MD simulation. The ensemble parameter changes the selection of the ASE integrator and thermostat and barostat. <code class="docutils literal notranslate"><span class="pre">langevin</span></code> and <code class="docutils literal notranslate"><span class="pre">nvt</span></code> ensembles use the ASE Langevin thermostat. <code class="docutils literal notranslate"><span class="pre">npt</span></code> and <code class="docutils literal notranslate"><span class="pre">npt-mtk</span></code> uses ASE’s implementation of the Full Martyna-Tobias-Klein (MTK) method <a href="#id9"><span class="problematic" id="id3">[^1]</span></a>, similar to the one used for NPT in LAMMPS. The <code class="docutils literal notranslate"><span class="pre">npt-melchionna</span></code> ensemble uses a combined Nose-Hoover and Parrinello-Rahman  method, as proposed by Melchionna et al. and provided in ASE as the default NPT class. However, this implementation is not recommended for use by ASE due stability issues!<br />
+<a href="#id10"><span class="problematic" id="id4">[^1]</span></a> MTKNPT: https://ase-lib.org/ase/md.html#full-martyna-tobias-klein-mtk-dynamics</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'langevin'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">langevin</span></code>, <code class="docutils literal notranslate"><span class="pre">nvt</span></code>, <code class="docutils literal notranslate"><span class="pre">npt</span></code>, <code class="docutils literal notranslate"><span class="pre">npt-mtk</span></code>, <code class="docutils literal notranslate"><span class="pre">npt-melchionna</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">langevin_friction_ps-1</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Friction coefficient for the Langevin thermostat in picoseconds.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">10.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">npt_ttime_fs</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Time constant for temperature coupling in NPT thermostat in femtoseconds.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">100.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">npt_ptime_fs</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Time constant for pressure coupling in NPT thermostat in femtoseconds.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">25.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">md_stage_order</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: List containing the names of the stages, written in the order in which the MD stages will be applied. Each stage must be defined under <code class="docutils literal notranslate"><span class="pre">md.parameters.stages</span></code>.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(list[str])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">[]</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">gather_traj_cnt_lattice</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Consider constant lattice when gathering trajectories.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">use_kokkos</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to use Kokkos to run the MD.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">device</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Device for the MACE model in MD simulations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'cuda'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">cuda</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">enable_cueq</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Enable CUEQ for MACE.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">default_dtype</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Default data type for the MACE model in MD simulations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'float32'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">float32</span></code>, <code class="docutils literal notranslate"><span class="pre">float64</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_energy_threshold_per_atom</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum energy threshold per atom in eV.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1000.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_cpus_large_struct</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of CPUs to use for structures larger than <code class="docutils literal notranslate"><span class="pre">large_struct_size</span></code>.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">16</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="md-simulation-stages-md-parameters-stages">
+<h4>MD Simulation Stages - <code class="docutils literal notranslate"><span class="pre">[md.parameters.stages]</span></code><a class="headerlink" href="#md-simulation-stages-md-parameters-stages" title="Link to this heading"></a></h4>
+<p>Collection of named keys representing a particular stage of an MD simulation. These stages will be chained together and applied to single MD calculation job following the order defined in <code class="docutils literal notranslate"><span class="pre">md.parameters.md_stage_order</span></code>, resulting in a continuous MD calculation with different settings for every stage. Each stage key will contain contain settings to be applied during each stage, overriding the default MD settings specified under <code class="docutils literal notranslate"><span class="pre">md.parameters</span></code>. Each dictionary must contain a mandatory <code class="docutils literal notranslate"><span class="pre">use_during_al_steps</span></code> or <code class="docutils literal notranslate"><span class="pre">use_for_structure_types</span></code> key, which specifies when given stage must be run. If none of these two keys are not present, the stage will be ignored.</p>
+<section id="md-simulation-stages-md-parameters-stages-xxxxx">
+<h5>MD Simulation Stages - <code class="docutils literal notranslate"><span class="pre">[md.parameters.stages.XXXXX]</span></code><a class="headerlink" href="#md-simulation-stages-md-parameters-stages-xxxxx" title="Link to this heading"></a></h5>
+<p>This key describes settings for dynamic entries. Several entries can be added by using different key names.</p>
+<p>The key name (<code class="docutils literal notranslate"><span class="pre">XXXXX</span></code>) is used as the reference name. <strong>Replace XXXXX with a name of your choice.</strong></p>
+<p>Accepted parameters for each entry:</p>
+<ul class="simple">
+<li><p><span class="code-alt">use_during_al_steps</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: String representing a number of AL steps or interval of AL steps in which the stage will be used. For example, <code class="docutils literal notranslate"><span class="pre">0</span></code> means that the stage will be used during step 0, while <code class="docutils literal notranslate"><span class="pre">3-6</span></code> means that the stage will be used from AL step 3 to AL step 6 (inclusive). The example <code class="docutils literal notranslate"><span class="pre">'0-1,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5-9,</span> <span class="pre">11'</span></code> would execute the current stage for steps 0, 1, 3, 4, 5, 6, 7, 8, 9, and 11.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'0-1,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5-9,</span> <span class="pre">11'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">use_for_structure_types</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: List of structure types for which to use the current stage. Structure types must be among those defined in the initial database (e.g., <code class="docutils literal notranslate"><span class="pre">bulk</span></code>, <code class="docutils literal notranslate"><span class="pre">surface</span></code>, <code class="docutils literal notranslate"><span class="pre">cluster</span></code>), if a structure contains multiple types, the stage will be applied if at least one type matches for the initial structure in the MD simulation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">list[str])</span></code></p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">bulk</span></code>, <code class="docutils literal notranslate"><span class="pre">surface</span></code>, <code class="docutils literal notranslate"><span class="pre">cluster</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">temperature_list_K</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: List of different temperatures (in K) for MD simulations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(list[float])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">[300.0,</span> <span class="pre">500.0,</span> <span class="pre">900.0]</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">sample_frames_during_md</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to sample frames during MD simulations for AL.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">al_keep_struct_every_n_ps</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Keep a structure every N picoseconds of MD simulation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">log_save_interval</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Log energy and force information every N MD steps.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_at_large_struct</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of structures with a number of atoms larger than <code class="docutils literal notranslate"><span class="pre">large_struct_size</span></code> to consider for MD simulations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'None'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_temp_multiplier</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Multiplier for MD temperature to determine the upper bound of the temperature.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1.3</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_steps</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Total number of timesteps for each MD simulation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">33334</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">timestep_duration_ps</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Duration of each timestep in picoseconds.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.003</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">md_thermostat</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Ensemble used in the MD simulation. The ensemble parameter changes the selection of the ASE integrator and thermostat and barostat. <code class="docutils literal notranslate"><span class="pre">langevin</span></code> and <code class="docutils literal notranslate"><span class="pre">nvt</span></code> ensembles use the ASE Langevin thermostat. <code class="docutils literal notranslate"><span class="pre">npt</span></code> and <code class="docutils literal notranslate"><span class="pre">npt-mtk</span></code> uses ASE’s implementation of the Full Martyna-Tobias-Klein (MTK) method <a href="#id11"><span class="problematic" id="id5">[^1]</span></a>, similar to the one used for NPT in LAMMPS. The <code class="docutils literal notranslate"><span class="pre">npt-melchionna</span></code> ensemble uses a combined Nose-Hoover and Parrinello-Rahman  method, as proposed by Melchionna et al. and provided in ASE as the default NPT class. However, this implementation is not recommended for use by ASE due stability issues!<br />
+<a href="#id12"><span class="problematic" id="id6">[^1]</span></a> MTKNPT: https://ase-lib.org/ase/md.html#full-martyna-tobias-klein-mtk-dynamics</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'langevin'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">langevin</span></code>, <code class="docutils literal notranslate"><span class="pre">nvt</span></code>, <code class="docutils literal notranslate"><span class="pre">npt</span></code>, <code class="docutils literal notranslate"><span class="pre">npt-mtk</span></code>, <code class="docutils literal notranslate"><span class="pre">npt-melchionna</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">langevin_friction_ps-1</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Friction coefficient for the Langevin thermostat in picoseconds.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">10.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">npt_ttime_fs</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Time constant for temperature coupling in NPT thermostat in femtoseconds.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">100.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">npt_ptime_fs</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Time constant for pressure coupling in NPT thermostat in femtoseconds.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">25.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">md_stage_order</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: List containing the names of the stages, written in the order in which the MD stages will be applied. Each stage must be defined under <code class="docutils literal notranslate"><span class="pre">md.parameters.stages</span></code>.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(list[str])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">[]</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">gather_traj_cnt_lattice</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Consider constant lattice when gathering trajectories.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">use_kokkos</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to use Kokkos to run the MD.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">device</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Device for the MACE model in MD simulations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'cuda'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">cuda</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">enable_cueq</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Enable CUEQ for MACE.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">default_dtype</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Default data type for the MACE model in MD simulations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'float32'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">float32</span></code>, <code class="docutils literal notranslate"><span class="pre">float64</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_energy_threshold_per_atom</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum energy threshold per atom in eV.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1000.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_cpus_large_struct</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of CPUs to use for structures larger than <code class="docutils literal notranslate"><span class="pre">large_struct_size</span></code>.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">16</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="md-trajectory-filters-md-filters">
+<h3>MD Trajectory Filters - <code class="docutils literal notranslate"><span class="pre">[md.filters]</span></code><a class="headerlink" href="#md-trajectory-filters-md-filters" title="Link to this heading"></a></h3>
+<p>Settings for MD trajectory filters.</p>
+<ul class="simple">
+<li><p><span class="code-alt">save_filtered_structures</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to save filtered structures.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="check-atoms-no-neighbor-md-filters-check-atoms-no-neighbor">
+<h4>Check_Atoms_No_Neighbor - <code class="docutils literal notranslate"><span class="pre">[md.filters.check_atoms_no_neighbor]</span></code><a class="headerlink" href="#check-atoms-no-neighbor-md-filters-check-atoms-no-neighbor" title="Link to this heading"></a></h4>
+<p>Filter for structures with atoms that have no neighbors.</p>
+<ul class="simple">
+<li><p><span class="code-alt">enable</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: No description available.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">covalent_radius_multiplier</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Multiplier for covalent radii to define cutoff for neighbor check.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1.05</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="layer-distance-md-filters-layer-distance">
+<h4>Layer_Distance - <code class="docutils literal notranslate"><span class="pre">[md.filters.layer_distance]</span></code><a class="headerlink" href="#layer-distance-md-filters-layer-distance" title="Link to this heading"></a></h4>
+<p>Filter for layer distances in surface slabs.</p>
+<ul class="simple">
+<li><p><span class="code-alt">enable</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: No description available.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_layer_distance_ang</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum accepted distance between layers in Angstrom.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">3.5</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="exploding-structures-md-filters-exploding-structures">
+<h4>Exploding_Structures - <code class="docutils literal notranslate"><span class="pre">[md.filters.exploding_structures]</span></code><a class="headerlink" href="#exploding-structures-md-filters-exploding-structures" title="Link to this heading"></a></h4>
+<p>Filter for exploding structures based on covalent radius limits.</p>
+<ul class="simple">
+<li><p><span class="code-alt">enable</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to enable the exploding structures filter.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">cov_rad_multiplier_max</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum multiplier for covalent radius threshold.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">10.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">cov_rad_multiplier_min</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Minimum multiplier for covalent radius threshold.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1.5</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">explode_check_interval_perc</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Interval percentage (as a fraction) of MD steps to check for exploding structures.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_F</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum force component allowed in the structure.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">25.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_V</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum velocity component allowed in the structure.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="md-metadata-and-scheduler-options-aiida-md-metadata">
+<h3>MD Metadata and Scheduler Options (AiiDA) - <code class="docutils literal notranslate"><span class="pre">[md.metadata]</span></code><a class="headerlink" href="#md-metadata-and-scheduler-options-aiida-md-metadata" title="Link to this heading"></a></h3>
+<p>AiiDA metadata and scheduler options for MD simulations.</p>
+<ul class="simple">
+<li><p><span class="code-alt">code</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: AiiDA code name for MD software.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'mace_lammps&#64;cluster'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">computer</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: AiiDA computer name for MD calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'my_cluster'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">prepend_text</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Text to prepend to job scripts for AiiDA.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'module</span> <span class="pre">load</span> <span class="pre">singularity</span> <span class="pre">export</span> <span class="pre">PATH=$PATH:.'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">options</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: AiiDA scheduler options for MD calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="code-and-containerization-settings-code">
+<h2>Code and Containerization Settings - <code class="docutils literal notranslate"><span class="pre">[code]</span></code><a class="headerlink" href="#code-and-containerization-settings-code" title="Link to this heading"></a></h2>
+<p>Settings for containerized code execution.</p>
+<section id="container-code-container">
+<h3>Container - <code class="docutils literal notranslate"><span class="pre">[code.container]</span></code><a class="headerlink" href="#container-code-container" title="Link to this heading"></a></h3>
+<p>Container settings for code execution.</p>
+<ul class="simple">
+<li><p><span class="code-alt">use_container</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to use a containerized version of the code.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">image_name</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path to the container image on calculation nodes.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'/path/to/container.sif'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">engine_command</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Command template for the container engine.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'singularity</span> <span class="pre">exec</span> <span class="pre">--bind</span> <span class="pre">.:/atl_data</span> <span class="pre">--nv</span> <span class="pre">--contain</span> <span class="pre">--writable-tmpfs</span> <span class="pre">{image_name}'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">prepend_text</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Text to prepend to job scripts for container setup.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'module</span> <span class="pre">load</span> <span class="pre">singularity</span> <span class="pre">export</span> <span class="pre">PATH=$PATH:.'</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="mlip-backend-settings-mlip">
+<h2>MLIP Backend Settings - <code class="docutils literal notranslate"><span class="pre">[mlip]</span></code><a class="headerlink" href="#mlip-backend-settings-mlip" title="Link to this heading"></a></h2>
+<p>Configuration for the MLIP backend used in the active learning workflow. Supports a modular backend system with a plugin interface for adding new models. If this section is absent, the workflow defaults to MACE for all stages.</p>
+<ul class="simple">
+<li><p><span class="code-alt">training_backend</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Which MLIP backend to use for model training, committee evaluation, and calculator creation. Available backends are registered in the atlas.active_learning.backends registry.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'mace'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">md_backend</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Which MLIP backend to use for MD simulations. Defaults to the training_backend value if not specified.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'mace'</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="mlip-training-settings-mace-train">
+<h2>MLIP Training Settings - <code class="docutils literal notranslate"><span class="pre">[mace_train]</span></code><a class="headerlink" href="#mlip-training-settings-mace-train" title="Link to this heading"></a></h2>
+<p>Settings for MACE model training. Used when mlip.training_backend is ‘mace’ (default).</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">result_force_weight</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Weight of the force when considering model performance in weighted sum calculation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">test_fraction</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Fraction of the training data to be used for testing.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">code</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: AiiDA code name for MLIP training. Optional when using PortableCode (omit to use the bundled training script).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'mace_train&#64;cluster'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">computer</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: AiiDA computer name for MLIP training. Required when ‘code’ is not set (PortableCode mode).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'my_cluster'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">ignore_container</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to ignore container settings for MACE training.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">multihead_finetuning</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to use multihead finetuning.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">metadata</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: AiiDA metadata and scheduler options for MACE training.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">train_settings</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: MACE training parameters and hyperparameters.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="allegro-training-settings-allegro-train">
+<h2>Allegro Training Settings - <code class="docutils literal notranslate"><span class="pre">[allegro_train]</span></code><a class="headerlink" href="#allegro-training-settings-allegro-train" title="Link to this heading"></a></h2>
+<p>Settings for Allegro model training. Used when mlip.training_backend is ‘allegro’.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">result_force_weight</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Weight of the force when considering model performance in weighted sum calculation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">code</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: AiiDA code name for Allegro training. Optional when using PortableCode.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'nequip-train&#64;cluster'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">computer</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: AiiDA computer name for Allegro training. Required when ‘code’ is not set.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'my_cluster'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">ignore_container</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to ignore container settings for Allegro training.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">metadata</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: AiiDA metadata and scheduler options for Allegro training.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_workers</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of DataLoader workers for Allegro training.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">4</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">batch_size</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Batch size for Allegro training.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">train_settings</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Allegro/NequIP training parameters and hyperparameters.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="committee-evaluation-settings-committee-eval">
+<h2>Committee Evaluation Settings - <code class="docutils literal notranslate"><span class="pre">[committee_eval]</span></code><a class="headerlink" href="#committee-evaluation-settings-committee-eval" title="Link to this heading"></a></h2>
+<p>Settings for committee evaluation using multiple MLIP models.</p>
+<ul class="simple">
+<li><p><span class="code-alt">committee_num_models</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Total number of MLIP models in the committee.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">4</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">openmp_threads</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of OpenMP threads for MLIP CPU evaluation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">24</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">ignore_container</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to ignore container settings for committee evaluation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">prepend_text</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Text to prepend to job scripts for committee evaluation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">metadata</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: AiiDA metadata and scheduler options for committee evaluation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+</ul>
+</li>
+</ul>
+<section id="committee-evaluation-mace-settings-committee-eval-mace">
+<h3>Committee Evaluation - MACE Settings - <code class="docutils literal notranslate"><span class="pre">[committee_eval.mace]</span></code><a class="headerlink" href="#committee-evaluation-mace-settings-committee-eval-mace" title="Link to this heading"></a></h3>
+<p>Settings for MACE evaluator. Used when training_backend is ‘mace’.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">device</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Device for MLIP evaluation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'cpu'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">cuda</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">default_dtype</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Default data type for MLIP evaluation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'float32'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">float32</span></code>, <code class="docutils literal notranslate"><span class="pre">float64</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">batch_size</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Batch size for MLIP evaluation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">32</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">compute_stress</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to compute stress during evaluation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="committee-evaluation-allegro-settings-committee-eval-allegro">
+<h3>Committee Evaluation - Allegro Settings - <code class="docutils literal notranslate"><span class="pre">[committee_eval.allegro]</span></code><a class="headerlink" href="#committee-evaluation-allegro-settings-committee-eval-allegro" title="Link to this heading"></a></h3>
+<p>Settings for Allegro evaluator. Used when training_backend is ‘allegro’.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">device</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Device for MLIP evaluation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'cpu'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">cuda</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">default_dtype</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Default data type for MLIP evaluation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'float32'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">float32</span></code>, <code class="docutils literal notranslate"><span class="pre">float64</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">batch_size</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Batch size for MLIP evaluation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">32</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">compute_stress</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to compute stress during evaluation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="descriptor-computation-settings-descriptors">
+<h2>Descriptor Computation Settings - <code class="docutils literal notranslate"><span class="pre">[descriptors]</span></code><a class="headerlink" href="#descriptor-computation-settings-descriptors" title="Link to this heading"></a></h2>
+<p>Settings for descriptor computation and dimensionality reduction.</p>
+<ul class="simple">
+<li><p><span class="code-alt">descriptor_type</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Type of descriptor to compute.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'mace'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">mace</span></code>, <code class="docutils literal notranslate"><span class="pre">soap</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">dimensionality_reduction_method</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Dimensionality reduction method for model descriptors.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'none'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">autoencoder</span></code>, <code class="docutils literal notranslate"><span class="pre">pca</span></code>, <code class="docutils literal notranslate"><span class="pre">none</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">ignore_container</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to ignore container settings for descriptor computation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">metadata</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: AiiDA metadata for descriptor computation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(dict)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">dtype</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Data type of descriptor to compute.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'float32'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">float32</span></code>, <code class="docutils literal notranslate"><span class="pre">float64</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">device</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Device for descriptor computation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'cpu'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">cuda</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="autoencoder-dimensionality-reduction-settings-descriptors-autoencoder">
+<h3>Autoencoder Dimensionality Reduction Settings - <code class="docutils literal notranslate"><span class="pre">[descriptors.autoencoder]</span></code><a class="headerlink" href="#autoencoder-dimensionality-reduction-settings-descriptors-autoencoder" title="Link to this heading"></a></h3>
+<p>Settings for autoencoder-based dimensionality reduction.</p>
+<section id="train-settings-descriptors-autoencoder-train-settings">
+<h4>Train_Settings - <code class="docutils literal notranslate"><span class="pre">[descriptors.autoencoder.train_settings]</span></code><a class="headerlink" href="#train-settings-descriptors-autoencoder-train-settings" title="Link to this heading"></a></h4>
+<p>Training settings for the autoencoder.</p>
+<ul class="simple">
+<li><p><span class="code-alt">device</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Device for autoencoder training.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'cuda'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">cuda</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">dtype</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Data type for autoencoder training.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'float32'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">float32</span></code>, <code class="docutils literal notranslate"><span class="pre">float64</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">model_path</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path to save the autoencoder model.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'autoencoder_model.pth'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">load_model</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to load the model from the model path.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">dataset</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path to the training dataset.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'all_descriptors.npz'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">l1_hidden_dim</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of units in the first hidden layer.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">256</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">l2_hidden_dim</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of units in the second hidden layer.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">32</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">bottleneck_dim</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Dimensionality of the bottleneck (latent space).</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">bias_flag</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Flag to include bias terms in the layers.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">num_epochs</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of epochs to train the model.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">50</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">batch_size</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Batch size for training.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">2048</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">patience</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Early stopping patience (epochs without val loss improvement). Also controls LR reduction schedule.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">lr</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Learning rate for the optimizer.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.001</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">weight_decay</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: L2 regularization parameter.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'1e-5'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">loss</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Loss function type.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'mse'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">mse</span></code>, <code class="docutils literal notranslate"><span class="pre">mae</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">train_frac</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Fraction of the data to use for training.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.8</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">valid_frac</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Fraction of the data to use for validation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">test_frac</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Fraction of the data to use for testing.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">0.1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">wandb</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to log metrics to wandb.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">wandb_name</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Name of the wandb run.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">''</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">wandb_project</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Name of the wandb project.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">''</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="dft-calculation-settings-dft">
+<h2>DFT Calculation Settings - <code class="docutils literal notranslate"><span class="pre">[dft]</span></code><a class="headerlink" href="#dft-calculation-settings-dft" title="Link to this heading"></a></h2>
+<p>DFT settings specific to active learning (different from top-level dft section).</p>
+<ul class="simple">
+<li><p><span class="code-alt">ignore_container</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to ignore container settings for DFT calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">dft_method</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Selection of DFT calculator.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'mace'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">vasp</span></code>, <code class="docutils literal notranslate"><span class="pre">mace</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">calc_type</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Type of calculation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'single_point'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">single_point</span></code>, <code class="docutils literal notranslate"><span class="pre">relax</span></code>, <code class="docutils literal notranslate"><span class="pre">static</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">dft_calc_limit</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum number of DFT calculations to perform per AL step.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'None'</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="mace-dft-calculator-settings-dft-mace">
+<h3>MACE DFT Calculator Settings - <code class="docutils literal notranslate"><span class="pre">[dft.mace]</span></code><a class="headerlink" href="#mace-dft-calculator-settings-dft-mace" title="Link to this heading"></a></h3>
+<p>MACE settings as DFT calculator.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">mace_potential_path</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Path to MACE potential file.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'model.model'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">metadata</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: AiiDA metadata for MACE calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">options</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: AiiDA scheduler options for MACE calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+</ul>
+</li>
+</ul>
+<section id="settings-dft-mace-settings">
+<h4>Settings - <code class="docutils literal notranslate"><span class="pre">[dft.mace.settings]</span></code><a class="headerlink" href="#settings-dft-mace-settings" title="Link to this heading"></a></h4>
+<p>Options for MACE that will be passed as arguments during execution.</p>
+<ul class="simple">
+<li><p><span class="code-alt">device</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Device for MACE calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'cuda'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">cuda</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">default_dtype</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Default data type for MACE calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'float64'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">float32</span></code>, <code class="docutils literal notranslate"><span class="pre">float64</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">batch_size</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Batch size for MACE calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">11</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">compute_stress</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to compute stress.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="filter-dft-mace-filter">
+<h4>Filter - <code class="docutils literal notranslate"><span class="pre">[dft.mace.filter]</span></code><a class="headerlink" href="#filter-dft-mace-filter" title="Link to this heading"></a></h4>
+<p>Settings for filtering structures after DFT calculations, based on energy and force thresholds.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">filter_dft_calcs</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to filter structures based on energy and force thresholds.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">threshold_E_meV</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Energy threshold in meV/atom for filtering structures.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1000.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">threshold_F_meV</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Force threshold in meV/Å for filtering structures.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">10000.0</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="vasp-dft-calculator-settings-dft-vasp">
+<h3>VASP DFT Calculator Settings - <code class="docutils literal notranslate"><span class="pre">[dft.vasp]</span></code><a class="headerlink" href="#vasp-dft-calculator-settings-dft-vasp" title="Link to this heading"></a></h3>
+<p>VASP settings as DFT calculator.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">calc_type</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Type of calculation.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'static'</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">static</span></code>, <code class="docutils literal notranslate"><span class="pre">relax</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">dft_calc_limit</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum number of DFT calculations to perform per AL step.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">200</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">potential_family</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: VASP potential family name.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'vasp-5.4-PBE-2024'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">structure_types</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: List of structure types to process.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">list[str])</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">['bulk',</span> <span class="pre">'surface',</span> <span class="pre">'cluster']</span></code>.</p></li>
+<li><p>Possible values are: <code class="docutils literal notranslate"><span class="pre">bulk</span></code>, <code class="docutils literal notranslate"><span class="pre">surface</span></code>, <code class="docutils literal notranslate"><span class="pre">cluster</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">kspacing</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: K-spacing settings for different phases or default value. The k-spacing values will be applied on a per-phase basis, according to the keys added to the dictionary which must match phases in the database. The <code class="docutils literal notranslate"><span class="pre">ATL_DEFAULT</span></code> key can be used to set a default k-spacing value for all phases not explicitly listed.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+<li><p><strong>Example</strong>:</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;ATL_DEFAULT&#39;</span><span class="p">:</span> <span class="mf">0.15</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">0.135</span><span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">incar</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: INCAR settings for VASP calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+<li><p><strong>Example</strong>:</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;encut&#39;</span><span class="p">:</span> <span class="mi">450</span><span class="p">,</span> <span class="s1">&#39;gga&#39;</span><span class="p">:</span> <span class="s1">&#39;Pe&#39;</span><span class="p">,</span> <span class="s1">&#39;icharg&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;istart&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+</pre></div>
+</div>
+<section id="filter-dft-vasp-filter">
+<h4>Filter - <code class="docutils literal notranslate"><span class="pre">[dft.vasp.filter]</span></code><a class="headerlink" href="#filter-dft-vasp-filter" title="Link to this heading"></a></h4>
+<p>Settings for filtering structures after DFT calculations, based on energy and force thresholds.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This section is optional.</p>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">filter_dft_calcs</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to filter structures based on energy and force thresholds.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">threshold_E_meV</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Energy threshold in meV/atom for filtering structures.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1000.0</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">threshold_F_meV</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Force threshold in meV/Å for filtering structures.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">float)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">10000.0</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="queue-dft-vasp-queue">
+<h4>Queue - <code class="docutils literal notranslate"><span class="pre">[dft.vasp.queue]</span></code><a class="headerlink" href="#queue-dft-vasp-queue" title="Link to this heading"></a></h4>
+<p>Queue settings for VASP calculations.</p>
+<ul class="simple">
+<li><p><span class="code-alt">queue_type</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Scheduler type.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">'slurm'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">computer</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: AiiDA computer name for VASP calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'aiida-computer-name'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">code_string</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Name of the VASP code as defined in AiiDA.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'vasp&#64;computer'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">withmpi</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Whether to run with MPI.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">bool)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">qos</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Quality of service parameter.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'gp_partition'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">account</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Account to be used for calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+<li><p><strong>Example</strong>: <code class="docutils literal notranslate"><span class="pre">'account_name'</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">node_cpus</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Number of CPUs per node.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">48</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">max_wallclock_seconds</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Maximum wallclock time in seconds.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">28800</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">options_resources</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Resource options for the scheduler.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+<li><p><strong>Example</strong>:</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;num_machines&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;tot_num_mpiprocs&#39;</span><span class="p">:</span> <span class="mi">112</span><span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">multiple</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Multiple factor for resources.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">int)</span></code></p></li>
+<li><p><strong>Default</strong>: <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><span class="code-alt">custom_scheduler_commands</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Custom scheduler commands.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">str)</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="surface-dft-vasp-surface">
+<h4>Surface - <code class="docutils literal notranslate"><span class="pre">[dft.vasp.surface]</span></code><a class="headerlink" href="#surface-dft-vasp-surface" title="Link to this heading"></a></h4>
+<p>Surface-specific INCAR settings.</p>
+<ul class="simple">
+<li><p><span class="code-alt">incar</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: INCAR settings specific to surface calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+<li><p><strong>Example</strong>:</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;idipol&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;ispin&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;ldipol&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="cluster-dft-vasp-cluster">
+<h4>Cluster - <code class="docutils literal notranslate"><span class="pre">[dft.vasp.cluster]</span></code><a class="headerlink" href="#cluster-dft-vasp-cluster" title="Link to this heading"></a></h4>
+<p>Cluster-specific INCAR settings.</p>
+<ul class="simple">
+<li><p><span class="code-alt">incar</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: INCAR settings specific to cluster calculations.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+<li><p><strong>Example</strong>:</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;dipol&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="s1">&#39;idipol&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;ldipol&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="aiida-vasp-settings-dft-vasp-aiida-vasp">
+<h4>AiiDA-VASP Settings - <code class="docutils literal notranslate"><span class="pre">[dft.vasp.aiida_vasp]</span></code><a class="headerlink" href="#aiida-vasp-settings-dft-vasp-aiida-vasp" title="Link to this heading"></a></h4>
+<p>AiiDA-VASP specific settings.</p>
+<ul class="simple">
+<li><p><span class="code-alt">parser_settings</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Contains entries to include in the results gathered using the aiida-vasp parser settings</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+<li><p><strong>Example</strong>:</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>   <span class="s1">&#39;add_bands&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;add_born_charges&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;add_charge_density&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;add_dielectrics&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;add_dos&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;add_dynmat&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;add_energies&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_forces&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;add_hessian&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;add_kpoints&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;add_misc&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_projectors&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;add_stress&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;add_structure&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;add_trajectory&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;add_wavecar&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><span class="code-alt">critical_notifications</span>:</p>
+<ul>
+<li><p><strong>Description</strong>: Critical error and warning notifications. These represent VASP errors and warnings to be treated as critical, which will result in an error code being thrown by the aiida calculation job. The example contains all defults.</p></li>
+<li><p><strong>Type</strong>: <code class="docutils literal notranslate"><span class="pre">(optional,</span> <span class="pre">dict)</span></code></p></li>
+<li><p><strong>Example</strong>:</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>   <span class="s1">&#39;add_bandocc&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_brmix&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_cnormn&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_denmp&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_dentet&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_edddav_zhegv&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_eddrmm_zhegv&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_edwav&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_fexcp&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_fock_acc&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_magmom&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_no_potimm&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_non_collinear&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_not_hermitian&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_psmaxn&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_pzstein&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_real_optlay&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_rhosyg&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_rspher&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_set_indpw_full&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;add_sgrcon&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="input_dft.html" class="btn btn-neutral float-left" title="DFT Calculations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="input_mlip_benchmarks.html" class="btn btn-neutral float-right" title="MLIP Benchmarks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='input_active_learning.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

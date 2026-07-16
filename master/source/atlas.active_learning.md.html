@@ -1,0 +1,306 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>atlas.active_learning.md package &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">Input specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Package Information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">atlas.active_learning.md package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/atlas.active_learning.md.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="atlas-active-learning-md-package">
+<h1>atlas.active_learning.md package<a class="headerlink" href="#atlas-active-learning-md-package" title="Link to this heading"></a></h1>
+<p>Molecular dynamics simulation utilities.</p>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.active_learning.md.ase_calculators">
+<span id="atlas-active-learning-md-ase-calculators-module"></span><h2>atlas.active_learning.md.ase_calculators module<a class="headerlink" href="#module-atlas.active_learning.md.ase_calculators" title="Link to this heading"></a></h2>
+<p>Custom ASE calculators for ATL active learning.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.md.ase_calculators.ATLSafeCalculatorWrapper">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.md.ase_calculators.</span></span><span class="sig-name descname"><span class="pre">ATLSafeCalculatorWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_energy_threshold_per_atom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.md.ase_calculators.ATLSafeCalculatorWrapper" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Calculator</span></code></p>
+<p>A wrapper around an ASE calculator that checks for unphysical energies
+(too high, NaN, or Inf) or forces (NaN or Inf) and raises
+UnphysicalStateError to allow for graceful termination of MD.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.md.ase_calculators.ATLSafeCalculatorWrapper.calculate">
+<span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">properties</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_changes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.md.ase_calculators.ATLSafeCalculatorWrapper.calculate" title="Link to this definition"></a></dt>
+<dd><p>Perform the calculation.</p>
+<p>This method calls the wrapped calculator and then checks the results.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.active_learning.md.ase_calculators.ATLSafeCalculatorWrapper.get_property">
+<span class="sig-name descname"><span class="pre">get_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_calculation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.md.ase_calculators.ATLSafeCalculatorWrapper.get_property" title="Link to this definition"></a></dt>
+<dd><p>Get a property from the calculator.</p>
+<p>This ensures that even direct calls like <cite>atoms.get_potential_energy()</cite>
+go through the check if a calculation is triggered.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.active_learning.md.ase_calculators.ATLSafeCalculatorWrapper.implemented_properties">
+<span class="sig-name descname"><span class="pre">implemented_properties</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#atlas.active_learning.md.ase_calculators.ATLSafeCalculatorWrapper.implemented_properties" title="Link to this definition"></a></dt>
+<dd><p>Properties calculator can handle (energy, forces, …)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="atlas.active_learning.md.ase_calculators.UnphysicalStateError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.md.ase_calculators.</span></span><span class="sig-name descname"><span class="pre">UnphysicalStateError</span></span><a class="headerlink" href="#atlas.active_learning.md.ase_calculators.UnphysicalStateError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Custom exception raised when unphysical energies or forces are detected.</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.active_learning.md.atl_process_structure">
+<span id="atlas-active-learning-md-atl-process-structure-module"></span><h2>atlas.active_learning.md.atl_process_structure module<a class="headerlink" href="#module-atlas.active_learning.md.atl_process_structure" title="Link to this heading"></a></h2>
+<p>Script to run MACE MD simulations, descriptor generation and extrapolation checks.</p>
+<p>This script is part of ATLAS’s active learning loop, and is used to combine
+in one single calculation job the acquisition of the MD trajectory, the generation
+of the descriptors followed by performing any extrapolation checks, filtering
+the MD trajectory if necessary.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.md.atl_process_structure.check_traj_in_domain">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.md.atl_process_structure.</span></span><span class="sig-name descname"><span class="pre">check_traj_in_domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">concave_hull</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hull_scale_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.active_learning.md.atl_process_structure.check_traj_in_domain" title="Link to this definition"></a></dt>
+<dd><p>Check if the generated descriptors are inside the precomputed concave hull.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>concave_hull</strong> (<em>np.ndarray</em>) – Concave hull of the latent space for the database, corresponding
+to its convex or concave hull.</p></li>
+<li><p><strong>descriptor_dict</strong> (<em>dict</em>) – <p>Descriptor dictionary containing the descriptors for each frame.
+The structure is as follows:
+<a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>python
+{</p>
+<blockquote>
+<div><dl class="simple">
+<dt>uuid: {</dt><dd><p>‘latent_space’: np.ndarray,
+‘descriptors’: np.ndarray,
+‘is_extrapolating’: np.ndarray,</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>hull_scale_factor</strong> (<em>float</em><em>, </em><em>optional</em>) – Tolerance percentage to enlarge the concave hull.
+For example, 0.1 adds 10% tolerance. Default is 0.0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>np.ndarray</em> – Array containing the descriptors that are inside the concave hull.</p></li>
+<li><p><em>np.ndarray</em> – Array containing the descriptors that are outside the concave hull.</p></li>
+<li><p><em>np.ndarray</em> – Array containing boolean values showing if the frame is inside the concave</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.md.atl_process_structure.define_allowed_stages">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.md.atl_process_structure.</span></span><span class="sig-name descname"><span class="pre">define_allowed_stages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">md_stages</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_al_step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_structure</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Atoms</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.active_learning.md.atl_process_structure.define_allowed_stages" title="Link to this definition"></a></dt>
+<dd><p>Define allowed MD stages based on the current active learning step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>md_stages</strong> (<em>dict</em>) – Dictionary containing the MD stages settings.</p></li>
+<li><p><strong>current_al_step</strong> (<em>int</em>) – Current active learning iteration step.</p></li>
+<li><p><strong>init_structure</strong> (<em>Atoms</em>) – Initial structure object, used to determine the type
+from its info dict, one of: ‘bulk’, ‘surface’ or ‘cluster’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of allowed stage names.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.md.atl_process_structure.limit_md_frames">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.md.atl_process_structure.</span></span><span class="sig-name descname"><span class="pre">limit_md_frames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">md_traj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">md_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.md.atl_process_structure.limit_md_frames" title="Link to this definition"></a></dt>
+<dd><p>Limit the number of frames in the MD trajectory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>md_traj</strong> (<em>Atoms</em>) – MD trajectory.</p></li>
+<li><p><strong>md_params</strong> (<em>dict</em>) – Dictionary containing the ATL settings for MD.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>list</em> – List containing the MD trajectory with the limited number of frames.</p></li>
+<li><p><em>list</em> – Mask containing the indices of the frames that were kept.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.active_learning.md.atl_process_structure.simple_extrapolation_check">
+<span class="sig-prename descclassname"><span class="pre">atlas.active_learning.md.atl_process_structure.</span></span><span class="sig-name descname"><span class="pre">simple_extrapolation_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curr_it_db_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curr_it_db_min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.md.atl_process_structure.simple_extrapolation_check" title="Link to this definition"></a></dt>
+<dd><p>Apply a basic extrapolation check based on the maximum and minimum values
+of the descriptors for the entire database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>curr_it_db_max</strong> (<em>np.ndarray</em>) – Maximum value for the descriptors for the entire database.</p></li>
+<li><p><strong>curr_it_db_min</strong> (<em>np.ndarray</em>) – Minimum value for the descriptors for the entire database.</p></li>
+<li><p><strong>descriptor_dict</strong> (<em>dict</em>) – Descriptor dictionary containing the descriptors for each frame.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Updated descriptor dictionary with the extrapolation check applied.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-atlas.active_learning.md.md_utils">
+<span id="atlas-active-learning-md-md-utils-module"></span><h2>atlas.active_learning.md.md_utils module<a class="headerlink" href="#module-atlas.active_learning.md.md_utils" title="Link to this heading"></a></h2>
+<p>Utilities for molecular dynamics.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.active_learning.md.md_utils.CoexistenceMDTemperatureLogger">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.active_learning.md.md_utils.</span></span><span class="sig-name descname"><span class="pre">CoexistenceMDTemperatureLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dyn:</span> <span class="pre">~typing.Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms:</span> <span class="pre">~ase.atoms.Atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logfile:</span> <span class="pre">~typing.IO</span> <span class="pre">|</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stress:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peratom:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'a'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comm=&lt;ase.parallel.MPI</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.active_learning.md.md_utils.CoexistenceMDTemperatureLogger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IOContext</span></code></p>
+<p>Class for logging molecular dynamics simulations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dyn</strong> (<em>The dynamics.  Only a weak reference is kept.</em>)</p></li>
+<li><p><strong>atoms</strong> (<em>The atoms.</em>)</p></li>
+<li><p><strong>logfile</strong> (<em>File name</em><em> or </em><em>open file</em><em>, </em><em>&quot;-&quot; meaning standard output.</em>)</p></li>
+<li><p><strong>stress=False</strong> (<em>Include stress in log.</em>)</p></li>
+<li><p><strong>peratom=False</strong> (<em>Write energies per atom.</em>)</p></li>
+<li><p><strong>mode=&quot;a&quot;</strong> (<em>How the file is opened if logfile is a filename.</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-atlas.active_learning.md">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-atlas.active_learning.md" title="Link to this heading"></a></h2>
+<p>MD simulation utilities including safe calculator wrapper.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='atlas.active_learning.md.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

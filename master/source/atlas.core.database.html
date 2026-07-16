@@ -1,0 +1,264 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>atlas.core.database package &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="atlas.core.filtering package" href="atlas.core.filtering.html" />
+    <link rel="prev" title="atlas.core.command_line.setup package" href="atlas.core.command_line.setup.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">Input specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package Information</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="atlas.html">atlas package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="atlas.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html">atlas.active_learning package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.html">atlas.benchmarks package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="atlas.core.html">atlas.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.training.html">atlas.training package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html">atlas.workflows package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.html#module-atlas">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">atlas</a></li>
+          <li class="breadcrumb-item"><a href="atlas.html">atlas package</a></li>
+          <li class="breadcrumb-item"><a href="atlas.core.html">atlas.core package</a></li>
+      <li class="breadcrumb-item active">atlas.core.database package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/atlas.core.database.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="atlas-core-database-package">
+<h1>atlas.core.database package<a class="headerlink" href="#atlas-core-database-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.core.database.diversity_metrics">
+<span id="atlas-core-database-diversity-metrics-module"></span><h2>atlas.core.database.diversity_metrics module<a class="headerlink" href="#module-atlas.core.database.diversity_metrics" title="Link to this heading"></a></h2>
+<p>Contains functions used to compute completeness metrics on the database.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.database.diversity_metrics.TestVendiScore">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.database.diversity_metrics.</span></span><span class="sig-name descname"><span class="pre">TestVendiScore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.database.diversity_metrics.TestVendiScore" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<p>Unit tests for the Vendi Score computation.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.database.diversity_metrics.TestVendiScore.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.database.diversity_metrics.TestVendiScore.setUp" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.database.diversity_metrics.TestVendiScore.tearDown">
+<span class="sig-name descname"><span class="pre">tearDown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.database.diversity_metrics.TestVendiScore.tearDown" title="Link to this definition"></a></dt>
+<dd><p>Hook method for deconstructing the test fixture after testing it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.database.diversity_metrics.TestVendiScore.test_identical_modes">
+<span class="sig-name descname"><span class="pre">test_identical_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.database.diversity_metrics.TestVendiScore.test_identical_modes" title="Link to this definition"></a></dt>
+<dd><p>Test Scenario 2: All items are identical.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.database.diversity_metrics.TestVendiScore.test_orthogonal_modes">
+<span class="sig-name descname"><span class="pre">test_orthogonal_modes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.database.diversity_metrics.TestVendiScore.test_orthogonal_modes" title="Link to this definition"></a></dt>
+<dd><p>Test Scenario 1: Completely distinct items (Identity Matrix).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.database.diversity_metrics.TestVendiScore.test_shape_and_color_overlap">
+<span class="sig-name descname"><span class="pre">test_shape_and_color_overlap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.database.diversity_metrics.TestVendiScore.test_shape_and_color_overlap" title="Link to this definition"></a></dt>
+<dd><p>Test Scenario 4: Partial overlap (Shape &amp; Color logic from paper).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.core.database.diversity_metrics.TestVendiScore.test_two_distinct_groups">
+<span class="sig-name descname"><span class="pre">test_two_distinct_groups</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.database.diversity_metrics.TestVendiScore.test_two_distinct_groups" title="Link to this definition"></a></dt>
+<dd><p>Test Scenario 3: 4 items, 2 identical groups of 2.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.database.diversity_metrics.compute_heuristic_sigma">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.database.diversity_metrics.</span></span><span class="sig-name descname"><span class="pre">compute_heuristic_sigma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">420</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.database.diversity_metrics.compute_heuristic_sigma" title="Link to this definition"></a></dt>
+<dd><p>Computes the median pairwise Euclidean distance of a subsample of the dataset.
+This is the standard heuristic for choosing the RBF kernel bandwidth (sigma).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.database.diversity_metrics.cosine_distance">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.database.diversity_metrics.</span></span><span class="sig-name descname"><span class="pre">cosine_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.database.diversity_metrics.cosine_distance" title="Link to this definition"></a></dt>
+<dd><p>Calculates the cosine distance between two real-valued vectors.
+Returns a value between 0 (identical) and 1 (orthogonal for non-negative vectors).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.database.diversity_metrics.get_circles_metric_db">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.database.diversity_metrics.</span></span><span class="sig-name descname"><span class="pre">get_circles_metric_db</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">dataset:</span> <span class="pre">list[~ase.atoms.Atoms],</span> <span class="pre">distance_threshold:</span> <span class="pre">float,</span> <span class="pre">descriptor_settings:</span> <span class="pre">dict,</span> <span class="pre">distance_function=&lt;function</span> <span class="pre">cosine_distance&gt;,</span> <span class="pre">use_custom_features:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">save_descriptors:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">load_descriptors:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">descriptors_path:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'descriptors.npy',</span> <span class="pre">mace_model_path:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">descriptor_type:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'soap'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.database.diversity_metrics.get_circles_metric_db" title="Link to this definition"></a></dt>
+<dd><p>Computes the Circles Metric for the database.</p>
+<p>#Circles(S; d, t) := max <a href="#id1"><span class="problematic" id="id2">|C|</span></a> s.t. d(x, y) &gt; t, ∀x ≠ y ∈ C</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.database.diversity_metrics.get_feature_matrix_with_custom_features">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.database.diversity_metrics.</span></span><span class="sig-name descname"><span class="pre">get_feature_matrix_with_custom_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_matrix_X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.database.diversity_metrics.get_feature_matrix_with_custom_features" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.database.diversity_metrics.get_vendi_score">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.database.diversity_metrics.</span></span><span class="sig-name descname"><span class="pre">get_vendi_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_matrix_X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#atlas.core.database.diversity_metrics.get_vendi_score" title="Link to this definition"></a></dt>
+<dd><p>Lower time complexity than the alternative
+O(n^3) implementation above, but requires that the embeddings
+are available, and that the embedding dimension d is
+significantly smaller than n (d &lt;&lt; n). This is usually the case
+when using MLIPs, and for large datasets.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.database.diversity_metrics.get_vendi_score_db_rbf">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.database.diversity_metrics.</span></span><span class="sig-name descname"><span class="pre">get_vendi_score_db_rbf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'soap'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mace_model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_descriptors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_descriptors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptors_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'descriptors.npy'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.database.diversity_metrics.get_vendi_score_db_rbf" title="Link to this definition"></a></dt>
+<dd><p>Computes the Vendi Score for a dataset of n structures using RBF kernel.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.database.diversity_metrics.get_vendi_score_db_simple">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.database.diversity_metrics.</span></span><span class="sig-name descname"><span class="pre">get_vendi_score_db_simple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'soap'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mace_model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_custom_features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_descriptors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_descriptors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptors_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'descriptors.npy'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.database.diversity_metrics.get_vendi_score_db_simple" title="Link to this definition"></a></dt>
+<dd><p>Computes the Vendi Score for a dataset of n structures.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.database.diversity_metrics.get_vendi_score_subsampling">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.database.diversity_metrics.</span></span><span class="sig-name descname"><span class="pre">get_vendi_score_subsampling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1624</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.database.diversity_metrics.get_vendi_score_subsampling" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.database.diversity_metrics.load_and_save_descriptors">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.database.diversity_metrics.</span></span><span class="sig-name descname"><span class="pre">load_and_save_descriptors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor_settings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mace_model_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_descriptors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_descriptors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptors_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.database.diversity_metrics.load_and_save_descriptors" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.database.diversity_metrics.tanimoto_distance">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.database.diversity_metrics.</span></span><span class="sig-name descname"><span class="pre">tanimoto_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">struct_1_descriptors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">struct_2_descriptors</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.database.diversity_metrics.tanimoto_distance" title="Link to this definition"></a></dt>
+<dd><p>Computes the Tanimoto distance.</p>
+<p>Also known as Jaccard distance.</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.database">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-atlas.core.database" title="Link to this heading"></a></h2>
+<p>Collection of utilities for structure database management and creation.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="atlas.core.command_line.setup.html" class="btn btn-neutral float-left" title="atlas.core.command_line.setup package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="atlas.core.filtering.html" class="btn btn-neutral float-right" title="atlas.core.filtering package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='atlas.core.database.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

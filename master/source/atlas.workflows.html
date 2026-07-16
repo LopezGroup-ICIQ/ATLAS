@@ -1,0 +1,948 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>atlas.workflows package &mdash; ATLAS 0.55.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=370fbe24"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="atlas.workflows.datatypes package" href="atlas.workflows.datatypes.html" />
+    <link rel="prev" title="atlas.training package" href="atlas.training.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">Input specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package Information</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="atlas.html">atlas package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="atlas.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html">atlas.active_learning package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.html">atlas.benchmarks package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.core.html">atlas.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.training.html">atlas.training package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">atlas.workflows package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.html#module-atlas">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">atlas</a></li>
+          <li class="breadcrumb-item"><a href="atlas.html">atlas package</a></li>
+      <li class="breadcrumb-item active">atlas.workflows package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/atlas.workflows.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="atlas-workflows-package">
+<h1>atlas.workflows package<a class="headerlink" href="#atlas-workflows-package" title="Link to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="atlas.workflows.datatypes.html">atlas.workflows.datatypes package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="atlas.workflows.datatypes.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.workflows.datatypes.html#atlas-workflows-datatypes-aiida-cli-module">atlas.workflows.datatypes.aiida_cli module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.workflows.datatypes.html#module-atlas.workflows.datatypes.image_types">atlas.workflows.datatypes.image_types module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.datatypes.html#atlas.workflows.datatypes.image_types.ImagePNGData"><code class="docutils literal notranslate"><span class="pre">ImagePNGData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.datatypes.html#atlas.workflows.datatypes.image_types.ImagePNGData.display_image"><code class="docutils literal notranslate"><span class="pre">ImagePNGData.display_image()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.workflows.datatypes.html#module-atlas.workflows.datatypes.mlip">atlas.workflows.datatypes.mlip module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.datatypes.html#atlas.workflows.datatypes.mlip.MLIPModelFileData"><code class="docutils literal notranslate"><span class="pre">MLIPModelFileData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.datatypes.html#atlas.workflows.datatypes.mlip.MLIPModelFileData.architecture"><code class="docutils literal notranslate"><span class="pre">MLIPModelFileData.architecture</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.datatypes.html#atlas.workflows.datatypes.mlip.MLIPModelFileData.fields"><code class="docutils literal notranslate"><span class="pre">MLIPModelFileData.fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.datatypes.html#atlas.workflows.datatypes.mlip.MLIPModelFileData.load_model"><code class="docutils literal notranslate"><span class="pre">MLIPModelFileData.load_model()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.workflows.datatypes.html#module-atlas.workflows.datatypes">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="atlas.workflows.dft.html">atlas.workflows.dft package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="atlas.workflows.dft.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas.workflows.dft.vasp.html">atlas.workflows.dft.vasp package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.dft.vasp.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.dft.vasp.html#module-atlas.workflows.dft.vasp.aiida_run_vasp_dft_database">atlas.workflows.dft.vasp.aiida_run_vasp_dft_database module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.dft.vasp.html#module-atlas.workflows.dft.vasp">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas.workflows.dft.html#module-atlas.workflows.dft">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.workflows.aiida_utils">
+<span id="atlas-workflows-aiida-utils-module"></span><h2>atlas.workflows.aiida_utils module<a class="headerlink" href="#module-atlas.workflows.aiida_utils" title="Link to this heading"></a></h2>
+<p>Utility functions for running several through aiida for active learning loops.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.CalcType">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">CalcType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.aiida_utils.CalcType" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Class representing the available calculation types for DFT.
+This allows multiple aliases for the same calculation type.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.CalcType.DEFAULT">
+<span class="sig-name descname"><span class="pre">DEFAULT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'single_point_bulk'</span></em><a class="headerlink" href="#atlas.workflows.aiida_utils.CalcType.DEFAULT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.CalcType.RELAX_BULK">
+<span class="sig-name descname"><span class="pre">RELAX_BULK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'relaxation_bulk'</span></em><a class="headerlink" href="#atlas.workflows.aiida_utils.CalcType.RELAX_BULK" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.CalcType.RELAX_CLUSTER">
+<span class="sig-name descname"><span class="pre">RELAX_CLUSTER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'relaxation_cluster'</span></em><a class="headerlink" href="#atlas.workflows.aiida_utils.CalcType.RELAX_CLUSTER" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.CalcType.RELAX_SURFACE">
+<span class="sig-name descname"><span class="pre">RELAX_SURFACE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'relaxation_surface'</span></em><a class="headerlink" href="#atlas.workflows.aiida_utils.CalcType.RELAX_SURFACE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.CalcType.SP_BULK">
+<span class="sig-name descname"><span class="pre">SP_BULK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'single_point_bulk'</span></em><a class="headerlink" href="#atlas.workflows.aiida_utils.CalcType.SP_BULK" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.CalcType.SP_CLUSTER">
+<span class="sig-name descname"><span class="pre">SP_CLUSTER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'single_point_cluster'</span></em><a class="headerlink" href="#atlas.workflows.aiida_utils.CalcType.SP_CLUSTER" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.CalcType.SP_ISOLATEDATOM">
+<span class="sig-name descname"><span class="pre">SP_ISOLATEDATOM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'single_point_isolatedatom'</span></em><a class="headerlink" href="#atlas.workflows.aiida_utils.CalcType.SP_ISOLATEDATOM" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.CalcType.SP_SURFACE">
+<span class="sig-name descname"><span class="pre">SP_SURFACE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'single_point_surface'</span></em><a class="headerlink" href="#atlas.workflows.aiida_utils.CalcType.SP_SURFACE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.CalcType.from_string">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.aiida_utils.CalcType.from_string" title="Link to this definition"></a></dt>
+<dd><p>Get the CalcType corresponding to a string, considering aliases.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.add_aiida_group_to_db">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">add_aiida_group_to_db</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.aiida_utils.add_aiida_group_to_db" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.can_submit_calculation">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">can_submit_calculation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">computer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">aiida.orm.Computer</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#atlas.workflows.aiida_utils.can_submit_calculation" title="Link to this definition"></a></dt>
+<dd><p>Check if a calculation can be submitted to a given computer’s queue.</p>
+<p>This function checks if the number of jobs currently running
+is smaller than the limit given. If smaller, the calculation
+can be submitted.</p>
+<p>In some supercomputer clusters there is a limit on the number
+of jobs that can be submitted at the same time, and going over
+this limit will result in the job not entering the queue.
+AiiDA will reattempt to submit after the time given by
+<cite>exponential_backoff_retry</cite> is elapsed and for <cite>task_maximum_attempts</cite>
+attempts, and if the number of attempts is exceeded, the calculation
+will be paused, holding the loop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>code</strong> (<em>str</em>) – AiiDA code label. Will be used to get the computer.</p></li>
+<li><p><strong>computer</strong> (<em>orm.Computer</em>) – AiiDA computer.</p></li>
+<li><p><strong>limit</strong> (<em>int</em>) – Maximum number of calculations that can be submitted.
+The limit will be set by the supercomputer’s scheduler,
+in the case of SLURM, it can be checked with <cite>sacctmgr show qos XXXX</cite>
+under the <cite>MaxSubmitPU</cite> column.</p></li>
+<li><p><strong>user</strong> (<em>str</em><em>, </em><em>optional</em>) – Username for the calculation. If not given, the default user
+will be used.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Whether the calculation can be submitted or not.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.choose_queue">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">choose_queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tot_procs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.aiida_utils.choose_queue" title="Link to this definition"></a></dt>
+<dd><p>Choose the scheduler and aiida’s computer and code options.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node_type</strong> (<em>int</em>) – Whether to use 12, 24 or 28 core nodes in tekla.</p></li>
+<li><p><strong>tot_procs</strong> (<em>int</em>) – How many cores to be used. Using more than the total number of cores in
+a single node will make use of more nodes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>dict</em> – The OPTIONS dict is aiida jobfile equivalent</p></li>
+<li><p><em>str</em> – The CODE_STRING str is aiida code identifier.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.choose_queue_from_struct">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">choose_queue_from_struct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queue_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">computer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">aiida.orm.Computer</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.aiida_utils.choose_queue_from_struct" title="Link to this definition"></a></dt>
+<dd><p>Choose scheduler options for aiida.</p>
+<p>Choose the scheduler and aiida’s computer and code options according
+to the size of the structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>structure</strong> (<em>pymatgen.core.structure.Structure</em>) – Structure</p></li>
+<li><p><strong>queue_data</strong> (<em>dict</em>) – Dictionary specifying which queue gets assigned to every atom
+interval.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>dict</em> – The OPTIONS dict is aiida jobfile equivalent</p></li>
+<li><p><em>str</em> – The CODE_STRING str is aiida code identifier.</p></li>
+<li><p><em>int</em> – The number of nodes that will be used.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.determine_vacuum_direction">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">determine_vacuum_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structure</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.aiida_utils.determine_vacuum_direction" title="Link to this definition"></a></dt>
+<dd><p>A heuristic function that determines the vacuum direction by
+examining the spread of atomic positions in fractional coordinates.</p>
+<p>Returns the index (0, 1, or 2) corresponding to the direction
+with the largest vacuum gap.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.gather_calc_data_from_row">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">gather_calc_data_from_row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curr_structure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.aiida_utils.gather_calc_data_from_row" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.generate_incar">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">generate_incar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kspacing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">0.133203528512207,</span> <span class="pre">'beta-prime':</span> <span class="pre">0.100530964914873,</span> <span class="pre">'epsilon':</span> <span class="pre">0.153309721495182,</span> <span class="pre">'eta':</span> <span class="pre">0.0948760981384118,</span> <span class="pre">'gamma':</span> <span class="pre">0.141371669411541,</span> <span class="pre">'m1':</span> <span class="pre">0.100530964914873,</span> <span class="pre">'m2':</span> <span class="pre">0.100530964914873,</span> <span class="pre">'m3':</span> <span class="pre">0.166504410640259,</span> <span class="pre">'m4':</span> <span class="pre">0.0948760981384118}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.aiida_utils.generate_incar" title="Link to this definition"></a></dt>
+<dd><p>Generate an incar file using depending on the calculation type.</p>
+<p>This incar includes a kspacing variable that depends on the phase.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>structure</strong> (<em>pymatgen.core.structure.Structure</em>) – Current structure</p></li>
+<li><p><strong>phase</strong> (<em>str</em>) – Phase of the current structure</p></li>
+<li><p><strong>calc_type</strong> (<em>str</em>) – Calculation type, can be either ‘relax’ for relaxation
+or ‘sp’ for single point</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dictionary representation of the INCAR</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.generate_kpoints_data">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">generate_kpoints_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kspacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kspacing_vec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.aiida_utils.generate_kpoints_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.generate_potential_mapping">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">generate_potential_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">assign_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#atlas.workflows.aiida_utils.generate_potential_mapping" title="Link to this definition"></a></dt>
+<dd><p>Generate a dictionary specifying the pseudopotential mapping for vasp.</p>
+<p>This function only assigns the default potential for every
+atom. The user can specify different mappings if needed.</p>
+<section id="inputs">
+<h3>Inputs<a class="headerlink" href="#inputs" title="Link to this heading"></a></h3>
+<p>The function itself requires no input when called, but it will
+attempt to read the contents of a ‘potential_mapping’ file on
+the same folder where the code is being executed (CWD).
+There will be an example on the github repo. Also, an example
+follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Header lines for comments that will be ignored.</span>
+<span class="c1"># The lines following the headers should not have any comment marks, i.e. &#39;#&#39;.</span>
+<span class="n">Ag</span> <span class="o">=</span> <span class="n">Ag_gw</span>
+<span class="n">Au</span> <span class="o">=</span> <span class="n">Au_gw</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary containing the potential assignation for each atom of
+the periodic table, with the shape:
+<cite>{‘H’: ‘H’, ‘He’: ‘He’, …}</cite>.</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.get_or_create_containerized_code">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">get_or_create_containerized_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">computer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">aiida.orm.Computer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine_command</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath_executable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">aiida.orm.ContainerizedCode</span></span></span><a class="headerlink" href="#atlas.workflows.aiida_utils.get_or_create_containerized_code" title="Link to this definition"></a></dt>
+<dd><p>Return a cached ContainerizedCode, or create one if none exists.</p>
+<p>Matches on <cite>(label, computer, image_name, engine_command,
+filepath_executable)</cite>. <cite>prepend_text</cite> is never baked into the code;
+callers should pass it dynamically via
+<cite>builder.metadata.options.prepend_text</cite>.</p>
+<p>Unlike <a class="reference internal" href="#atlas.workflows.aiida_utils.get_or_create_portable_code" title="atlas.workflows.aiida_utils.get_or_create_portable_code"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_or_create_portable_code()</span></code></a>, no source hash is needed:
+a ContainerizedCode stores only the image path, not the image contents,
+so rebuilding the container image at the same path is automatically
+picked up at runtime. Old codes remain in the database for provenance
+but are not reused when the construction parameters change.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.get_or_create_portable_code">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">get_or_create_portable_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath_executable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prepend_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">aiida.orm.PortableCode</span></span></span><a class="headerlink" href="#atlas.workflows.aiida_utils.get_or_create_portable_code" title="Link to this definition"></a></dt>
+<dd><p>Return a PortableCode for <em>label</em>, recreating it if source has changed.</p>
+<p>Queries for the most recent <cite>PortableCode</cite> with the given label. If one
+is found, its bundled <cite>*.py</cite> files are compared (via a SHA-256 hash
+stored as the <cite>source_hash_v2</cite> extra) against the current source
+directory. When the hash differs, i.e. the source files were edited
+since the code was created, a new PortableCode is created instead of
+reusing the stale one. This prevents situations where an edited
+PortableCode script (e.g. <cite>atl_process_structure.py</cite>) silently keeps
+running the old version.</p>
+<p>Environment setup (module loads, venv activation, <cite>OMP_NUM_THREADS</cite>)
+is not baked into the PortableCode. Callers should pass it dynamically
+via <cite>builder.metadata.options.prepend_text</cite> instead, which AiiDA
+appends after the code’s (empty) prepend_text in the final submission
+script. This way changing the TOML settings takes effect immediately
+without recreating the code node.</p>
+<p>The <cite>prepend_text</cite> parameter is accepted for backward compatibility but
+is ignored; callers should set it on the builder.</p>
+<p>The old node remains in the database for provenance of past calculations
+but is not reused for new submissions.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.get_vdw_params">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">get_vdw_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incar</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.aiida_utils.get_vdw_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.kpoint_mesh_from_density">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">kpoint_mesh_from_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kspacing</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.aiida_utils.kpoint_mesh_from_density" title="Link to this definition"></a></dt>
+<dd><p>Return kpoint mesh (3x3) from kpoint array,
+intended for surfaces.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.parse_stress_from_structure">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">parse_stress_from_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_struct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Atoms</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.workflows.aiida_utils.parse_stress_from_structure" title="Link to this definition"></a></dt>
+<dd><p>Parse stress from results dictionary and add it to
+the structure info, updating it in-place.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>results_dict</strong> (<em>dict</em>) – Dictionary containing the results from a VASP DFT calculation.</p></li>
+<li><p><strong>new_struct</strong> (<em>Atoms</em>) – Structure to update.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.run_dataframe_vasp_aiida_queue">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">run_dataframe_vasp_aiida_queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase" title="atlas.core.initial_db.InitialDatabase"><span class="pre">InitialDatabase</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.aiida_utils.run_dataframe_vasp_aiida_queue" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.run_dataframe_vasp_simulations_aiida">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">run_dataframe_vasp_simulations_aiida</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sel_struct_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#atlas.workflows.aiida_utils.CalcType" title="atlas.workflows.aiida_utils.CalcType"><span class="pre">CalcType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">kspacing_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_batch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_on</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential_mapping</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential_family</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase" title="atlas.core.initial_db.InitialDatabase"><span class="pre">InitialDatabase</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incar_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dry_run</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.aiida_utils.run_dataframe_vasp_simulations_aiida" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.select_kspacing">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">select_kspacing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curr_structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kspacing_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.aiida_utils.select_kspacing" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.sort_chunk_size">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">sort_chunk_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunk</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.aiida_utils.sort_chunk_size" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.submit_aiida_vasp_calculation">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">submit_aiida_vasp_calculation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kspacing_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incar_settings_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential_family</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential_mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dry_run</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_builder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aiida_vasp_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.aiida_utils.submit_aiida_vasp_calculation" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.update_db_with_dft_results">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">update_db_with_dft_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sel_struct_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.aiida_utils.update_db_with_dft_results" title="Link to this definition"></a></dt>
+<dd><p>Update the original database with the results from the calculations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sel_struct_db</strong> (<em>list</em><em>[</em><em>Atoms</em><em>]</em>) – List of structures to be updated.</p></li>
+<li><p><strong>queue</strong> (<em>list</em><em>[</em><em>aiida.orm.nodes.process.workflow.workchain.WorkChainNode</em><em>]</em>) – List of AiiDA workchain nodes with the results of the calculations.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.aiida_utils.validate_kspacing">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.aiida_utils.</span></span><span class="sig-name descname"><span class="pre">validate_kspacing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kspacing_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phases</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#atlas.workflows.aiida_utils.validate_kspacing" title="Link to this definition"></a></dt>
+<dd><p>Validate that kspacing values exist for all phases.</p>
+<p>Checks each phase against the kspacing dict. Missing phases fall back to
+<cite>ATL_DEFAULT</cite> (or the legacy <cite>MDB_DEFAULT</cite>). If neither default exists
+and some phases are missing, raises <cite>ValueError</cite> listing the missing
+phases and suggesting how to fix the TOML.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kspacing_dict</strong> (<em>dict</em>) – The kspacing dictionary from the TOML <cite>[dft.vasp.kspacing]</cite> section.
+Modified in-place: if <cite>MDB_DEFAULT</cite> is present but <cite>ATL_DEFAULT</cite> is
+not, <cite>MDB_DEFAULT</cite> is copied to <cite>ATL_DEFAULT</cite>.</p></li>
+<li><p><strong>phases</strong> (<em>list</em><em> of </em><em>str</em>) – Phase names present in the structures to be submitted for DFT.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-atlas.workflows.monitors">
+<span id="atlas-workflows-monitors-module"></span><h2>atlas.workflows.monitors module<a class="headerlink" href="#module-atlas.workflows.monitors" title="Link to this heading"></a></h2>
+<p>Monitors for the ATLAS workflows.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.workflows.monitors.output_monitor">
+<span class="sig-prename descclassname"><span class="pre">atlas.workflows.monitors.</span></span><span class="sig-name descname"><span class="pre">output_monitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CalcJobNode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transport</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Transport</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#atlas.workflows.monitors.output_monitor" title="Link to this definition"></a></dt>
+<dd><p>Retrieve and inspect files in working directory of job to determine whether
+the job should be killed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node</strong> – The node representing the calculation job.</p></li>
+<li><p><strong>transport</strong> – The transport that can be used to retrieve files from remote
+working directory.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A string if the job should be killed, <cite>None</cite> otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-atlas.workflows.simple_active_learning">
+<span id="atlas-workflows-simple-active-learning-module"></span><h2>atlas.workflows.simple_active_learning module<a class="headerlink" href="#module-atlas.workflows.simple_active_learning" title="Link to this heading"></a></h2>
+<p>AiiDA workchain for NNP active learning loops using MD.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.workflows.simple_active_learning.</span></span><span class="sig-name descname"><span class="pre">SimpleActiveLearningBaseWorkChain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseRestartWorkChain</span></code></p>
+<p>Base workchain for ATL active learning workflows.</p>
+<p>This workchain is used as a base for the <cite>SimpleActiveLearningWorkChain</cite> workchain.
+It handles setup of the workchain and the main loop, where the active learning
+steps are launched. After every step, the results are checked and added to the
+database, and the next step is prepared. The workchain will loop until the
+stopping conditions are met. If the stopping conditions and the safeguard check
+is enabled, a MD-based safeguard mechanism will be employed to ensure the current
+sampler model is robust, and therefore the loop can be stopped.</p>
+<p>It takes all the inputs of the <cite>SimpleActiveLearningWorkChain</cite> workchain, except for
+the inputs that are specific to the active learning loop.
+Additionally, the mandatory <cite>log_path</cite> and optional <cite>resume_dict</cite> can be provided.
+See the <cite>define</cite> method for more information on the inputs and outputs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This workchain can be restarted from a previous running workchain if its
+files are recovered. The optional <cite>resume_dict</cite> input is used for this.
+<cite>resume_dict</cite> must be a dictionary that contains the following keys:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>last_iteration</cite>: The current iteration of the active learning loop.</p></li>
+<li><p><cite>train_db_path</cite>: The path to the last training database.</p></li>
+<li><p><cite>seed_db_path</cite>: The path to the last seed generation database.</p></li>
+</ul>
+</div></blockquote>
+<p>The loop will only be restarted from the beginning of the last step.</p>
+<p>Check <cite>SimpleActiveLearningWorkChain</cite> for information on what is done in each step.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.add_dft_results_to_db">
+<span class="sig-name descname"><span class="pre">add_dft_results_to_db</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.add_dft_results_to_db" title="Link to this definition"></a></dt>
+<dd><p>Incorporate DFT calculation results into the training/seed generation databases.</p>
+<p>This method updates the training and seed generation databases with DFT
+calculation results. If any DFT calculations have been performed,
+their results are appended to both the training database and the seed
+generation database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.check_al_loop_conditions">
+<span class="sig-name descname"><span class="pre">check_al_loop_conditions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.check_al_loop_conditions" title="Link to this definition"></a></dt>
+<dd><p>Evaluate conditions to determine whether to continue the active learning loop.</p>
+<p>This method assesses multiple conditions to decide if the active learning (AL)
+loop should continue. It considers whether the maximum number of iterations
+has been reached, and the following two criteria:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Depletion of the seed generation database. (if True: stop)</p></li>
+<li><p>No disagreement among predictions for an entire MD seed. However,
+this condition can optionally be overriden if the user enables the
+<cite>XXXXXXXXXX</cite> option, which forces the AL Loop to continue if the sampler
+model validation or test performance is above a certain threshold,
+which can be configured. (if True: stop)</p></li>
+</ul>
+</div></blockquote>
+<p>The function updates the workchain context with the iteration status and
+generates reports based on the evaluation of these conditions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A boolean value indicating whether the AL loop should continue. Returns
+<cite>True</cite> if conditions are met for another iteration; otherwise,
+returns <cite>False</cite>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>orm.Bool</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The method uses <cite>self.ctx.is_finished</cite>, <cite>self.ctx.iteration</cite>,
+<cite>self.inputs.active_learning.max_iterations.value</cite>,
+<cite>self.ctx.stop_md_seed_no_disagreement.value</cite>,
+and <cite>self.ctx.seed_gen_db_all_structs_removed.value</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.check_resume_mode">
+<span class="sig-name descname"><span class="pre">check_resume_mode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.check_resume_mode" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.compile_safeguard_model">
+<span class="sig-name descname"><span class="pre">compile_safeguard_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.compile_safeguard_model" title="Link to this definition"></a></dt>
+<dd><p>Optionally pre-compile the sampler model for the safeguard node.</p>
+<p>No-op unless the backend implements <code class="docutils literal notranslate"><span class="pre">MLIPModelCompiler</span></code>. Result is
+collected in <a class="reference internal" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.gather_safeguard_compiled" title="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.gather_safeguard_compiled"><code class="xref py py-meth docutils literal notranslate"><span class="pre">gather_safeguard_compiled()</span></code></a> and used by the safeguard
+MD calc; inference falls back to on-demand compilation otherwise.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.copy_input_toml_file">
+<span class="sig-name descname"><span class="pre">copy_input_toml_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.copy_input_toml_file" title="Link to this definition"></a></dt>
+<dd><p>Copy the input toml file to the results directory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.define">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">define</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.define" title="Link to this definition"></a></dt>
+<dd><p>Define the process specification.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.gather_safeguard_compiled">
+<span class="sig-name descname"><span class="pre">gather_safeguard_compiled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.gather_safeguard_compiled" title="Link to this definition"></a></dt>
+<dd><p>Store the compiled safeguard model if its compile calc succeeded.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.get_al_loop_break_conditions">
+<span class="sig-name descname"><span class="pre">get_al_loop_break_conditions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.get_al_loop_break_conditions" title="Link to this definition"></a></dt>
+<dd><p>Evaluate and set conditions to potentially break the active learning loop.</p>
+<p>This function checks for specific conditions that might warrant terminating the
+active learning (AL) loop early:</p>
+<ul class="simple">
+<li><p>Gathers <cite>stop_md_seed_no_disagreement</cite> from the outputs of the inner workchain
+and stores it in the workchain’s context. If this is True, the workchain will
+stop.</p></li>
+<li><p>Checks whether all structures have been removed from the seed generation
+database (indicating no further candidates for evaluation). If this is True,
+the workchain will stop.</p></li>
+</ul>
+<p>The results of these checks are stored in the workflow’s context.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.get_data_reduction_seed">
+<span class="sig-name descname"><span class="pre">get_data_reduction_seed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.get_data_reduction_seed" title="Link to this definition"></a></dt>
+<dd><p>Filter structures for data reduction mode.</p>
+<p>In data reduction mode, we need to filter out any structures that are
+already in the training database from the seed database. This ensures
+we don’t re-select structures that have already been chosen.</p>
+<p>The actual structure selection for training will happen in the
+SimpleActiveLearningWorkChain.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.get_database">
+<span class="sig-name descname"><span class="pre">get_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.get_database" title="Link to this definition"></a></dt>
+<dd><p>Loading initial database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.get_input_report">
+<span class="sig-name descname"><span class="pre">get_input_report</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.get_input_report" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.get_md_seed">
+<span class="sig-name descname"><span class="pre">get_md_seed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.get_md_seed" title="Link to this definition"></a></dt>
+<dd><p>Selects a random subset of structures from the seed generation database to
+create a MD seed for the active learning loop.</p>
+<p>This function calculates the number of structures to be included in the MD
+seed based on the specified fraction of the seed generation database’s length.
+It then randomly selects and populates the training seed with these structures.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><em>None. The function updates current_md_seed_structs with the</em></p></li>
+<li><p><em>selected structures.</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.get_results_loop">
+<span class="sig-name descname"><span class="pre">get_results_loop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.get_results_loop" title="Link to this definition"></a></dt>
+<dd><p>Attach the outputs specified in the spec from the last completed process.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.get_seed_structures">
+<span class="sig-name descname"><span class="pre">get_seed_structures</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.get_seed_structures" title="Link to this definition"></a></dt>
+<dd><p>Dispatcher method to get seed structures based on the active learning mode.</p>
+<p>For MD mode: calls get_md_seed()
+For data_reduction mode: calls get_data_reduction_seed()</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.log_atl_version">
+<span class="sig-name descname"><span class="pre">log_atl_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.log_atl_version" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.parse_safeguard_check_results">
+<span class="sig-name descname"><span class="pre">parse_safeguard_check_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.parse_safeguard_check_results" title="Link to this definition"></a></dt>
+<dd><p>Check safeguard output, setting flags to stop/continue the AL Loop.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.results_final">
+<span class="sig-name descname"><span class="pre">results_final</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.results_final" title="Link to this definition"></a></dt>
+<dd><p>Finalize the results at the end of the workchain.</p>
+<p>This method prepares and returns the final training database at the
+conclusion of the workchain. It serializes the structures within the training
+database to a format compatible with AiiDA storage and subsequent processing.
+The serialized structures are then used to prepare the final training database,
+which is outputted from the workchain. This signifies the completion of the
+workchain and the availability of the processed training data for further use.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.run_safeguard_check">
+<span class="sig-name descname"><span class="pre">run_safeguard_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.run_safeguard_check" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.safeguard_check_md">
+<span class="sig-name descname"><span class="pre">safeguard_check_md</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.safeguard_check_md" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.setup" title="Link to this definition"></a></dt>
+<dd><p>Call <cite>BaseRestartWorkChain</cite> setup and create input dict in self.ctx.inputs.</p>
+<p>This <cite>self.ctx.inputs</cite> dictionary will be used by the <cite>BaseRestartWorkChain</cite>
+to submit the process in the internal loop.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.setup_textfile_logging">
+<span class="sig-name descname"><span class="pre">setup_textfile_logging</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.setup_textfile_logging" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.should_run_according_to_safeguard_check">
+<span class="sig-name descname"><span class="pre">should_run_according_to_safeguard_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.should_run_according_to_safeguard_check" title="Link to this definition"></a></dt>
+<dd><p>Decide whether to continue the AL loop based on the safeguard check.</p>
+<p>The loop will continue if the safeguard check has not been completed or has
+passed correctly in the previous attempt, and the maximum number of iterations
+has not been reached.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the loop should continue, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.should_run_safeguard">
+<span class="sig-name descname"><span class="pre">should_run_safeguard</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningBaseWorkChain.should_run_safeguard" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.workflows.simple_active_learning.</span></span><span class="sig-name descname"><span class="pre">SimpleActiveLearningWorkChain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">WorkChain</span></code></p>
+<p>WorkChain to run an active learning loop for a MLIP using MD simulations
+to generate training data.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.check_extrapolation_enabled">
+<span class="sig-name descname"><span class="pre">check_extrapolation_enabled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.check_extrapolation_enabled" title="Link to this definition"></a></dt>
+<dd><p>Check if the extrapolation check is enabled.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.compile_models_for_inference">
+<span class="sig-name descname"><span class="pre">compile_models_for_inference</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.compile_models_for_inference" title="Link to this definition"></a></dt>
+<dd><p>Optionally pre-compile trained model(s) for each inference target.</p>
+<p>No-op unless the MLIP backend implements <code class="docutils literal notranslate"><span class="pre">MLIPModelCompiler</span></code> (e.g.
+Allegro). Otherwise, for each distinct <code class="docutils literal notranslate"><span class="pre">(computer,</span> <span class="pre">device,</span> <span class="pre">model)</span></code> an
+enabled inference consumer will use, submit one compile CalcJob on that
+computer so the artifact matches the node’s device/toolchain. Results
+are collected in <a class="reference internal" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.gather_compiled_models" title="atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.gather_compiled_models"><code class="xref py py-meth docutils literal notranslate"><span class="pre">gather_compiled_models()</span></code></a>. Purely an optimization:
+consumers fall back to on-demand compilation if an artifact is missing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.define">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">define</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.define" title="Link to this definition"></a></dt>
+<dd><p>Specify inputs and outputs.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.gather_compiled_models">
+<span class="sig-name descname"><span class="pre">gather_compiled_models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.gather_compiled_models" title="Link to this definition"></a></dt>
+<dd><p>Collect compiled artifacts from the compile calcs into the cache.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.gen_descriptors_and_concave_hull">
+<span class="sig-name descname"><span class="pre">gen_descriptors_and_concave_hull</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.gen_descriptors_and_concave_hull" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.get_descriptor_results">
+<span class="sig-name descname"><span class="pre">get_descriptor_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.get_descriptor_results" title="Link to this definition"></a></dt>
+<dd><p>Get descriptor results from the calculation and store them in the context.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.get_mlip_train_output">
+<span class="sig-name descname"><span class="pre">get_mlip_train_output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.get_mlip_train_output" title="Link to this definition"></a></dt>
+<dd><p>Retrieve and process MLIP training output for model selection.</p>
+<p>Evaluates training results to select the best model based on a
+weighted sum of RMSE for energy and forces. Creates a
+LAMMPS-compatible potential and updates context with model info.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.get_test_db_results">
+<span class="sig-name descname"><span class="pre">get_test_db_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.get_test_db_results" title="Link to this definition"></a></dt>
+<dd><p>Retrieve and process test database evaluation results.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.is_test_db_evaluation_enabled">
+<span class="sig-name descname"><span class="pre">is_test_db_evaluation_enabled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.is_test_db_evaluation_enabled" title="Link to this definition"></a></dt>
+<dd><p>Check if test database evaluation is enabled.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.perform_test_db_evaluation">
+<span class="sig-name descname"><span class="pre">perform_test_db_evaluation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.perform_test_db_evaluation" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.return_seed_dft_and_model">
+<span class="sig-name descname"><span class="pre">return_seed_dft_and_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.return_seed_dft_and_model" title="Link to this definition"></a></dt>
+<dd><p>Gather and output the last NNP model and DFT calculations for the current seed.</p>
+<p>This function collects DFT calculations for the structures in the current seed,
+which are then returned as outputs in the workchain using the namespace
+<cite>dft_calcs</cite>. A check is performed to determine if the results agree using
+MACE models, and this check also outputted to the workchain using the
+namespace <cite>stop_md_seed_no_disagreement</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.run_md_seed">
+<span class="sig-name descname"><span class="pre">run_md_seed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.run_md_seed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.select_data_reduction_structures">
+<span class="sig-name descname"><span class="pre">select_data_reduction_structures</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.select_data_reduction_structures" title="Link to this definition"></a></dt>
+<dd><p>Select additional structures from the large database for training.</p>
+<p>This method is only called in data reduction mode and after the first iteration.
+It selects structures based on the iterative_selection_method and adds them
+to the training database while removing them from the seed database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.send_calc_or_remove_structures">
+<span class="sig-name descname"><span class="pre">send_calc_or_remove_structures</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.send_calc_or_remove_structures" title="Link to this definition"></a></dt>
+<dd><p>Decide which structures to keep and send to DFT or remove from DB.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.set_step_logger">
+<span class="sig-name descname"><span class="pre">set_step_logger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.set_step_logger" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.should_select_data_reduction_structures">
+<span class="sig-name descname"><span class="pre">should_select_data_reduction_structures</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.should_select_data_reduction_structures" title="Link to this definition"></a></dt>
+<dd><p>Check if we should select additional structures for data reduction mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.step_setup">
+<span class="sig-name descname"><span class="pre">step_setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.step_setup" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.train_mlip_model">
+<span class="sig-name descname"><span class="pre">train_mlip_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atlas.workflows.simple_active_learning.SimpleActiveLearningWorkChain.train_mlip_model" title="Link to this definition"></a></dt>
+<dd><p>Submit MLIP training calculations using the active backend.</p>
+<p>Generates a training database, then submits N training calculations
+(one per committee model). Uses PortableCode by default; falls back
+to a registered AiiDA Code if the <code class="docutils literal notranslate"><span class="pre">code</span></code> key is present in the
+training settings.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-atlas.workflows">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-atlas.workflows" title="Link to this heading"></a></h2>
+<p>Module containing utilities to interact with the workflow tool AiiDA.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="atlas.training.html" class="btn btn-neutral float-left" title="atlas.training package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="atlas.workflows.datatypes.html" class="btn btn-neutral float-right" title="atlas.workflows.datatypes package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='atlas.workflows.html', version='', release='0.55.2', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
