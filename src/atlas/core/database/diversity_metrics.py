@@ -513,7 +513,7 @@ def compute_heuristic_sigma(feature_matrix, sample_size=10000, seed=420):
     import scipy.sparse as sp
     from scipy.spatial.distance import pdist
 
-    # Use the existing custom_print from your script
+    # Use the existing custom_print as in old script
     from atlas.core.code_utils import custom_print
 
     n_samples = feature_matrix.shape[0]

@@ -368,9 +368,10 @@ def _evaluate_model(model_path: str, db_path: str) -> dict:
         }
 
     try:
-        from mace.calculators import MACECalculator
+        from atlas.active_learning.backends import get_backend
 
-        calc = MACECalculator(model_paths=model_path, device='cpu')
+        backend = get_backend('mace')
+        calc = backend.create_calculator(model_path=model_path, device='cpu')
     except ImportError:
         return {
             'error': 'MACE is not installed. Install mace-torch to use error analysis.'

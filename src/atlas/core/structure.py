@@ -210,35 +210,35 @@ class Structure:
             The resulting Structure object.
         """
         # Convert ASE atoms to Pymatgen structure
-        # We use the same adaptor class as used in your db_struct_to_ase
+        # We use the same adaptor class as used in db_struct_to_ase
         pmg_structure = AseAtomsAdaptor().get_structure(ase_atoms)
 
         # Extract info dictionary for easier access
         info = ase_atoms.info
 
         # Determine isolated_atom flag from the stored structure type
-        is_isolated = info.get("atl_struct_type") == "isolated_atom"
+        is_isolated = info.get('atl_struct_type') == 'isolated_atom'
 
         return cls(
             structure=pmg_structure,
-            unique_id=info.get("atl_id"),
-            material_name=info.get("struct_name", 'unknown'),
-            phase=info.get("phase"),
-            perturb=info.get("perturb", False),
-            replacement=info.get("replacement", False),
-            base=info.get("base", False),
-            bulk=info.get("bulk", False),
-            cluster=info.get("cluster", False),
-            surface=info.get("surface", False),
-            surface_miller=info.get("surface_miller"),
-            supercell=info.get("supercell"),
-            symmetry=info.get("symmetry"),
-            calc_type=info.get("calc_type"),
-            calc_performed=info.get("calc_performed", False),
-            deformation=info.get("deformation", False),
-            vacancy=info.get("vacancy", False),
-            init_md=info.get("init_md", False),
-            targeted_modification=info.get("targeted_modification", False),
+            unique_id=info.get('atl_id'),
+            material_name=info.get('struct_name', 'unknown'),
+            phase=info.get('phase'),
+            perturb=info.get('perturb', False),
+            replacement=info.get('replacement', False),
+            base=info.get('base', False),
+            bulk=info.get('bulk', False),
+            cluster=info.get('cluster', False),
+            surface=info.get('surface', False),
+            surface_miller=info.get('surface_miller'),
+            supercell=info.get('supercell'),
+            symmetry=info.get('symmetry'),
+            calc_type=info.get('calc_type'),
+            calc_performed=info.get('calc_performed', False),
+            deformation=info.get('deformation', False),
+            vacancy=info.get('vacancy', False),
+            init_md=info.get('init_md', False),
+            targeted_modification=info.get('targeted_modification', False),
             isolated_atom=is_isolated,
         )
 

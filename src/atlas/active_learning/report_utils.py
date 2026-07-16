@@ -51,13 +51,15 @@ COLORS = [
 ]
 LINE_COLOR = '#28282855'
 
-# Define the process labels for the different calculation types
-TRAINING_LABEL = 'TrainMACEModelCalculation'
+# Define the process labels for the different calculation types.
+# Training labels are per-backend (process_label == CalcJob class name), so
+# list every backend's training CalcJob to keep reports backend-agnostic.
+TRAINING_LABELS = ('TrainMACEModelCalculation', 'TrainAllegroModelCalculation')
 DESCRIPTORS_LABEL = 'GetDescriptorsCombinedCalculation'
 MD_LABEL = 'ProcessMDSeedStructCalculation'
 DFT_LABELS = ['EvaluateMACEConfigsCalculation', 'VaspCalculation']
 AL_STEP_WORKCHAIN_LABEL = (
-    'SimpleActiveLearningWorkChain'  # Ensure this matches your WorkChain label
+    'SimpleActiveLearningWorkChain'  # Ensure this matches the AL WorkChain label
 )
 
 # Define stage keys for iteration
@@ -358,6 +360,7 @@ def gen_al_loop_report(
                         wandb=False,
                         l1_hidden_dim=256,
                         l2_hidden_dim=32,
+                        bottleneck_dim=2,
                         bias_flag=True,
                         loss='mse',
                         patience=5,
@@ -366,6 +369,7 @@ def gen_al_loop_report(
                         num_epochs=250,
                         model_path='./autoencoder_model.pth',
                         weight_decay=1e-5,
+                        standardize_data=False,
                         verbose=True,
                     )
                     autoencoder_model = run_training(autoencoder_args)
@@ -396,14 +400,14 @@ def gen_al_loop_report(
                     train_calc = [
                         calc
                         for calc in last_iter.called
-                        if calc.process_label == TRAINING_LABEL and calc.is_finished_ok
+                        if calc.process_label in TRAINING_LABELS and calc.is_finished_ok
                     ][0]
                 except IndexError:
                     last_iter = al_loop_node.called[-2]
                     train_calc = [
                         calc
                         for calc in last_iter.called
-                        if calc.process_label == TRAINING_LABEL and calc.is_finished_ok
+                        if calc.process_label in TRAINING_LABELS and calc.is_finished_ok
                     ][0]
 
                 # Get last iteration database
@@ -660,7 +664,7 @@ def get_loop_report(
     )
 
 
-def get_mace_eval_results(
+def get_mlip_eval_results(
     al_loop_node: list[orm.Node],
     database_path: str | Path,
     device_str: str = 'cpu',
@@ -668,11 +672,11 @@ def get_mace_eval_results(
     folder_path: str | Path = None,
     enable_cueq: bool = False,
 ):
-    from mace.calculators import MACECalculator
-    from mace.tools import torch_tools
     from rich.progress import track
 
-    torch_tools.set_default_dtype('float32')
+    from atlas.active_learning.backends import get_backend
+
+    backend = get_backend('mace')
 
     # Getting children if not done yet
     if isinstance(al_loop_node, orm.Node):
@@ -744,12 +748,10 @@ def get_mace_eval_results(
         # Load the training database
         train_db = ase_read(training_db_cp_path, format='extxyz', index=':')
 
-        # Load model
-        mace_model = MACECalculator(
-            model_paths=model_path,
+        mace_model = backend.create_calculator(
+            model_path=model_path,
             device=device_str,
-            default_dtype='float32',
-            enable_cueq=enable_cueq,
+            dtype='float32',
         )
 
         if not folder_path:
@@ -878,7 +880,7 @@ def generate_error_plot(
     enable_cueq: bool = False,
     # train_db:list=None,
 ):
-    E_nn_list, F_nn_list = get_mace_eval_results(
+    E_nn_list, F_nn_list = get_mlip_eval_results(
         al_loop_node=al_loop_node,
         device_str=device_str,
         database_path=database_path,
@@ -1254,7 +1256,7 @@ def gen_batch_report(
         mace_f_plot.append(mace_f[-1])
 
         ## MAE and RMSD
-        E_nn_list, F_nn_list = get_mace_eval_results(
+        E_nn_list, F_nn_list = get_mlip_eval_results(
             al_loop_node=al_loop_node,
             device_str=device_str,
             folder_path=dir_path,
@@ -2620,7 +2622,7 @@ def get_al_step_performance(al_step: orm.WorkChainNode) -> dict:
         # Get the number of cores used
         n_cores = get_ncores_from_calcjob(job)
 
-        if label == TRAINING_LABEL:
+        if label in TRAINING_LABELS:
             stage_stats['training']['ctimes'].append(job_ctime)
             stage_stats['training']['mtimes'].append(job_mtime)
             stage_stats['training']['durations'].append(job_duration)

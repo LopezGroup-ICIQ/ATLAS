@@ -41,7 +41,7 @@ AL_TABS: list[tuple[str, list[str]]] = [
     ('Seed & Selection', ['al_seed', 'data_reduction']),
     ('Domain Checks', ['interpolation', 'extrapolation', 'safeguard']),
     ('MD Simulation', ['md']),
-    ('Training & Committee', ['mace_train', 'committee_eval']),
+    ('Training & Committee', ['mlip', 'mace_train', 'committee_eval']),
     ('Descriptors & Code', ['descriptors', 'code']),
 ]
 

@@ -9,31 +9,17 @@ import numpy as np
 import torch
 from aiida.common.extendeddicts import AttributeDict
 from ase.io import read as ase_read
-from mace.calculators import MACECalculator
 
 from atlas.active_learning.extrapolation import train_autoencoder as atl_train_ae
 
 
 def generate_descriptors(model_path: str, database):
-    calculator = MACECalculator(
-        model_paths=model_path, device='cpu', default_dtype='float32'
+    from atlas.active_learning.backends import get_backend
+
+    backend = get_backend('mace')
+    descriptor_dict, descriptor_arr, _ = backend.generate_descriptors(
+        database=database, model_path=model_path, settings={}
     )
-    descriptor_dict = {}
-    descriptor_list = []
-    for struct in database:
-        descriptor_dict[struct.info['aiida_uuid']] = {
-            'descriptors': [],
-            'latent_space': [],
-        }
-
-    for struct in database:
-        curr_struct_descriptors = calculator.get_descriptors(struct)
-        descriptor_list.append(curr_struct_descriptors)
-        descriptor_dict[struct.info['aiida_uuid']]['descriptors'].append(
-            curr_struct_descriptors
-        )
-
-    descriptor_arr = np.vstack(descriptor_list)
     return descriptor_dict, descriptor_arr
 
 

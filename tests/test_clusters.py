@@ -150,7 +150,7 @@ class TestMakeCleanDimer:
 
     def test_make_clean_dimer_unknown_element_raises(self):
         # Note: pymatgen.core.Element('Xx') will raise a ValueError natively,
-        # which is exactly what your test is expecting to catch!
+        # which is exactly what the test is expecting to catch!
         from pymatgen.core import Element
 
         mock_phase = Mock()

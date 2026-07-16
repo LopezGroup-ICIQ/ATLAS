@@ -171,8 +171,18 @@ def create_active_learning_builder(
     # MD filters
     builder.active_learning.md_filters = Dict(value=toml_dict['md'].get('filters'))
 
-    ## MACE training settings
-    builder.active_learning.mace_train = Dict(value=toml_dict['mace_train'])
+    ## MLIP training settings: use backend-specific section or fall back to mace_train
+    mlip_backend = toml_dict.get('mlip', {}).get('training_backend', 'mace')
+    train_section_key = f'{mlip_backend}_train'
+    if train_section_key in toml_dict:
+        builder.active_learning.mlip_train = Dict(value=toml_dict[train_section_key])
+    elif 'mace_train' in toml_dict:
+        builder.active_learning.mlip_train = Dict(value=toml_dict['mace_train'])
+    else:
+        raise ValueError(
+            f"No training section found: expected '[{train_section_key}]'"
+            f" or '[mace_train]' in TOML config."
+        )
 
     ## Committee Evaluation Settings
     builder.active_learning.committee_eval = Dict(value=toml_dict['committee_eval'])

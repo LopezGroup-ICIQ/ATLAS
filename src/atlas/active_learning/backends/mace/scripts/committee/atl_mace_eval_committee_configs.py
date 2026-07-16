@@ -87,7 +87,7 @@ def run_mace_evals(args):
             '--model',
             str(model),
             '--output',
-            f"{model.name.split('.')[0]}_output.out",
+            f'{model.name.split(".")[0]}_output.out',
         ]
         execute_line_list.extend(formatted_params_list)
 

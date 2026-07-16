@@ -106,6 +106,62 @@ This section is optional.
   - **Default**: `'None'`.
   - Possible values are: `validation`, `testing`.
 
+### Debug / Mock - `[debug]`
+
+Developer debugging options for the active learning loop.
+
+:::{attention}
+This section is optional.
+:::
+
+
+#### Mock - `[debug.mock]`
+
+Replace remote calcjobs (training, descriptors, MD, DFT) with instant local surrogates. For debugging loop logic only; results are physically meaningless.
+
+
+- {alt}`enable`:
+  - **Description**: Whether to enable mock mode.
+  - **Type**: `(optional, bool)`
+  - **Default**: `False`.
+
+- {alt}`stages`:
+  - **Description**: Stages to mock. If omitted or empty, all stages are mocked. Mocking 'training' implies its model-consuming stages (md, descriptors, test_db) are mocked too, since a placeholder model cannot feed a real remote job.
+  - **Type**: `(optional, list[str])`
+  - **Default**: `[]`.
+  - Possible values are: `md`, `dft`, `training`, `descriptors`, `test_db`.
+
+- {alt}`dft_potential`:
+  - **Description**: Classical potential used for mock DFT energies/forces. 'emt' uses ASE EMT (falls back to Lennard-Jones for unsupported elements); 'lj' always uses Lennard-Jones.
+  - **Type**: `(optional, str)`
+  - **Default**: `'emt'`.
+  - Possible values are: `emt`, `lj`.
+
+- {alt}`md_rattle_stdev`:
+  - **Description**: Standard deviation (Å) of the random perturbation applied to the seed frame in mock MD.
+  - **Type**: `(optional, float)`
+  - **Default**: `0.1`.
+
+- {alt}`md_n_frames`:
+  - **Description**: Number of perturbed frames produced per seed structure in mock MD.
+  - **Type**: `(optional, int)`
+  - **Default**: `1`.
+
+- {alt}`train_rmse_e_start`:
+  - **Description**: Mock committee/test-DB energy RMSE (meV/atom) at iteration 0; decays geometrically over iterations.
+  - **Type**: `(optional, float)`
+  - **Default**: `90.0`.
+
+- {alt}`train_rmse_f_start`:
+  - **Description**: Mock committee/test-DB forces RMSE (meV/A) at iteration 0; decays geometrically over iterations.
+  - **Type**: `(optional, float)`
+  - **Default**: `275.0`.
+
+- {alt}`train_rmse_decay`:
+  - **Description**: Per-iteration geometric decay factor for mock RMSE curves (0-1).
+  - **Type**: `(optional, float)`
+  - **Default**: `0.7`.
+
 ### Test Set Settings - `[test_db]`
 
 Settings for the test database used to evaluate model performance during active learning. The test database is defined at the start of the active learning run, and is kept constant throughout the entire process. It can either be generated at random from the initial database, or loaded from a file. The test set is only used for evaluation and is not included in the training data.
@@ -433,7 +489,7 @@ Settings for extrapolation checks.
 
 
 - {alt}`check_extrapolation_type`:
-  - **Description**: Method for extrapolation check. With `min-max` or `basic`, check for extrapolation using the range of the MACE descriptors. With `alpha-shape` or `advanced`, check for extrapolation using the concave hull of the MACE descriptors. With `disabled` or `none`, disable the extrapolation check, only leaving committee disagreement for EF for the domain.
+  - **Description**: Method for extrapolation check. With `min-max` or `basic`, check for extrapolation using the range of the model descriptors. With `alpha-shape` or `advanced`, check for extrapolation using the concave hull of the model descriptors. With `disabled` or `none`, disable the extrapolation check, only leaving committee disagreement for EF for the domain.
   - **Type**: `(optional, str)`
   - **Default**: `'none'`.
   - Possible values are: `disabled`, `none`, `basic`, `min-max`, `alpha-shape`, `advanced`.
@@ -491,6 +547,27 @@ This section is optional.
   - **Description**: Scaling factor for the concave hull to be used when checking for extrapolation. For example, 0.1 results in a 10% size increase of the hull. A value of 0.0 means no scaling.
   - **Type**: `(optional, float)`
   - **Default**: `0.0`.
+
+- {alt}`boundary_method`:
+  - **Description**: Algorithm for boundary determination during the extrapolation check. With `concave_hull`, the boundary is the alpha shape of the latent space (per quadtree cluster). With `morphological_closing`, the boundary is obtained by rasterising the latent space and applying a morphological closing operation.
+  - **Type**: `(optional, str)`
+  - **Default**: `'concave_hull'`.
+  - Possible values are: `concave_hull`, `morphological_closing`.
+
+- {alt}`morph_disk_size`:
+  - **Description**: Disk size for the morphological closing structuring element. Larger values bridge wider gaps between points. Only used when `boundary_method` is `morphological_closing`.
+  - **Type**: `(optional, int)`
+  - **Default**: `10`.
+
+- {alt}`morph_threshold`:
+  - **Description**: Grayscale intensity threshold (0-255) for point detection in morphological closing. Only used when `boundary_method` is `morphological_closing`.
+  - **Type**: `(optional, int)`
+  - **Default**: `250`.
+
+- {alt}`morph_dpi`:
+  - **Description**: DPI of the internal rasterisation used by morphological closing. Higher values give finer boundaries. Only used when `boundary_method` is `morphological_closing`.
+  - **Type**: `(optional, int)`
+  - **Default**: `100`.
 
 ### Active Learning Safeguard Settings - `[safeguard]`
 
@@ -1074,9 +1151,28 @@ Container settings for code execution.
   - **Example**: `'module load singularity
 export PATH=$PATH:.'`.
 
+### MLIP Backend Settings - `[mlip]`
+
+Configuration for the MLIP backend used in the active learning workflow. Supports a modular backend system with a plugin interface for adding new models. If this section is absent, the workflow defaults to MACE for all stages.
+
+
+- {alt}`training_backend`:
+  - **Description**: Which MLIP backend to use for model training, committee evaluation, and calculator creation. Available backends are registered in the atlas.active_learning.backends registry.
+  - **Type**: `(optional, str)`
+  - **Default**: `'mace'`.
+
+- {alt}`md_backend`:
+  - **Description**: Which MLIP backend to use for MD simulations. Defaults to the training_backend value if not specified.
+  - **Type**: `(optional, str)`
+  - **Example**: `'mace'`.
+
 ### MLIP Training Settings - `[mace_train]`
 
-Settings for MACE model training.
+Settings for MACE model training. Used when mlip.training_backend is 'mace' (default).
+
+:::{attention}
+This section is optional.
+:::
 
 
 - {alt}`result_force_weight`:
@@ -1090,13 +1186,13 @@ Settings for MACE model training.
   - **Default**: `0.1`.
 
 - {alt}`code`:
-  - **Description**: AiiDA code name for MACE training.
-  - **Type**: `(str)`
+  - **Description**: AiiDA code name for MLIP training. Optional when using PortableCode (omit to use the bundled training script).
+  - **Type**: `(optional, str)`
   - **Example**: `'mace_train@cluster'`.
 
 - {alt}`computer`:
-  - **Description**: AiiDA computer name for MACE training.
-  - **Type**: `(str)`
+  - **Description**: AiiDA computer name for MLIP training. Required when 'code' is not set (PortableCode mode).
+  - **Type**: `(optional, str)`
   - **Example**: `'my_cluster'`.
 
 - {alt}`ignore_container`:
@@ -1115,6 +1211,53 @@ Settings for MACE model training.
 
 - {alt}`train_settings`:
   - **Description**: MACE training parameters and hyperparameters.
+  - **Type**: `(optional, dict)`
+
+### Allegro Training Settings - `[allegro_train]`
+
+Settings for Allegro model training. Used when mlip.training_backend is 'allegro'.
+
+:::{attention}
+This section is optional.
+:::
+
+
+- {alt}`result_force_weight`:
+  - **Description**: Weight of the force when considering model performance in weighted sum calculation.
+  - **Type**: `(optional, float)`
+  - **Default**: `0.1`.
+
+- {alt}`code`:
+  - **Description**: AiiDA code name for Allegro training. Optional when using PortableCode.
+  - **Type**: `(optional, str)`
+  - **Example**: `'nequip-train@cluster'`.
+
+- {alt}`computer`:
+  - **Description**: AiiDA computer name for Allegro training. Required when 'code' is not set.
+  - **Type**: `(optional, str)`
+  - **Example**: `'my_cluster'`.
+
+- {alt}`ignore_container`:
+  - **Description**: Whether to ignore container settings for Allegro training.
+  - **Type**: `(optional, bool)`
+  - **Default**: `False`.
+
+- {alt}`metadata`:
+  - **Description**: AiiDA metadata and scheduler options for Allegro training.
+  - **Type**: `(optional, dict)`
+
+- {alt}`num_workers`:
+  - **Description**: Number of DataLoader workers for Allegro training.
+  - **Type**: `(optional, int)`
+  - **Default**: `4`.
+
+- {alt}`batch_size`:
+  - **Description**: Batch size for Allegro training.
+  - **Type**: `(optional, int)`
+  - **Default**: `1`.
+
+- {alt}`train_settings`:
+  - **Description**: Allegro/NequIP training parameters and hyperparameters.
   - **Type**: `(optional, dict)`
 
 ### Committee Evaluation Settings - `[committee_eval]`
@@ -1145,25 +1288,60 @@ Settings for committee evaluation using multiple MLIP models.
   - **Description**: AiiDA metadata and scheduler options for committee evaluation.
   - **Type**: `(optional, dict)`
 
-#### Commitee Evaluation - MACE Settings - `[committee_eval.mace]`
+#### Committee Evaluation - MACE Settings - `[committee_eval.mace]`
 
-Settings for MACE evaluator.
+Settings for MACE evaluator. Used when training_backend is 'mace'.
+
+:::{attention}
+This section is optional.
+:::
 
 
 - {alt}`device`:
-  - **Description**: Device for MACE evaluation.
+  - **Description**: Device for MLIP evaluation.
   - **Type**: `(optional, str)`
   - **Default**: `'cpu'`.
   - Possible values are: `cpu`, `cuda`.
 
 - {alt}`default_dtype`:
-  - **Description**: Default data type for MACE evaluation.
+  - **Description**: Default data type for MLIP evaluation.
   - **Type**: `(optional, str)`
   - **Default**: `'float32'`.
   - Possible values are: `float32`, `float64`.
 
 - {alt}`batch_size`:
-  - **Description**: Batch size for MACE evaluation.
+  - **Description**: Batch size for MLIP evaluation.
+  - **Type**: `(optional, int)`
+  - **Default**: `32`.
+
+- {alt}`compute_stress`:
+  - **Description**: Whether to compute stress during evaluation.
+  - **Type**: `(optional, bool)`
+  - **Default**: `False`.
+
+#### Committee Evaluation - Allegro Settings - `[committee_eval.allegro]`
+
+Settings for Allegro evaluator. Used when training_backend is 'allegro'.
+
+:::{attention}
+This section is optional.
+:::
+
+
+- {alt}`device`:
+  - **Description**: Device for MLIP evaluation.
+  - **Type**: `(optional, str)`
+  - **Default**: `'cpu'`.
+  - Possible values are: `cpu`, `cuda`.
+
+- {alt}`default_dtype`:
+  - **Description**: Default data type for MLIP evaluation.
+  - **Type**: `(optional, str)`
+  - **Default**: `'float32'`.
+  - Possible values are: `float32`, `float64`.
+
+- {alt}`batch_size`:
+  - **Description**: Batch size for MLIP evaluation.
   - **Type**: `(optional, int)`
   - **Default**: `32`.
 
@@ -1184,7 +1362,7 @@ Settings for descriptor computation and dimensionality reduction.
   - Possible values are: `mace`, `soap`.
 
 - {alt}`dimensionality_reduction_method`:
-  - **Description**: Dimensionality reduction method for MACE descriptors.
+  - **Description**: Dimensionality reduction method for model descriptors.
   - **Type**: `(optional, str)`
   - **Default**: `'none'`.
   - Possible values are: `autoencoder`, `pca`, `none`.
@@ -1222,13 +1400,13 @@ Training settings for the autoencoder.
 
 - {alt}`device`:
   - **Description**: Device for autoencoder training.
-  - **Type**: `(str)`
+  - **Type**: `(optional, str)`
   - **Default**: `'cuda'`.
   - Possible values are: `cpu`, `cuda`.
 
 - {alt}`dtype`:
   - **Description**: Data type for autoencoder training.
-  - **Type**: `(str)`
+  - **Type**: `(optional, str)`
   - **Default**: `'float32'`.
   - Possible values are: `float32`, `float64`.
 
@@ -1278,7 +1456,7 @@ Training settings for the autoencoder.
   - **Default**: `2048`.
 
 - {alt}`patience`:
-  - **Description**: Patience for early stopping.
+  - **Description**: Early stopping patience (epochs without val loss improvement). Also controls LR reduction schedule.
   - **Type**: `(optional, int)`
   - **Default**: `5`.
 

@@ -36,4 +36,6 @@ input_database_generation.md
 input_dft.md
 input_active_learning.md
 input_mlip_benchmarks.md
+input_dft_benchmark.md
+input_latent_space_analysis.md
 ```

@@ -94,9 +94,11 @@ def run_train_autoencoder():
         '--batch_size', type=int, default=1024 * 4, help='Batch size for training'
     )
 
-    # Patience for early stopping
     parser.add_argument(
-        '--patience', type=int, default=5, help='Patience for early stopping'
+        '--patience',
+        type=int,
+        default=5,
+        help='Early stopping patience (epochs without val loss improvement)',
     )
 
     # Learning rate

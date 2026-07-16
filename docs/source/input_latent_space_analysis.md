@@ -32,7 +32,7 @@ Settings for extrapolation checks.
 
 
 - {alt}`check_extrapolation_type`:
-  - **Description**: Method for extrapolation check. With `min-max` or `basic`, check for extrapolation using the range of the MACE descriptors. With `alpha-shape` or `advanced`, check for extrapolation using the concave hull of the MACE descriptors. With `disabled` or `none`, disable the extrapolation check, only leaving committee disagreement for EF for the domain.
+  - **Description**: Method for extrapolation check. With `min-max` or `basic`, check for extrapolation using the range of the model descriptors. With `alpha-shape` or `advanced`, check for extrapolation using the concave hull of the model descriptors. With `disabled` or `none`, disable the extrapolation check, only leaving committee disagreement for EF for the domain.
   - **Type**: `(optional, str)`
   - **Default**: `'none'`.
   - Possible values are: `disabled`, `none`, `basic`, `min-max`, `alpha-shape`, `advanced`.
@@ -91,6 +91,27 @@ This section is optional.
   - **Type**: `(optional, float)`
   - **Default**: `0.0`.
 
+- {alt}`boundary_method`:
+  - **Description**: Algorithm for boundary determination during the extrapolation check. With `concave_hull`, the boundary is the alpha shape of the latent space (per quadtree cluster). With `morphological_closing`, the boundary is obtained by rasterising the latent space and applying a morphological closing operation.
+  - **Type**: `(optional, str)`
+  - **Default**: `'concave_hull'`.
+  - Possible values are: `concave_hull`, `morphological_closing`.
+
+- {alt}`morph_disk_size`:
+  - **Description**: Disk size for the morphological closing structuring element. Larger values bridge wider gaps between points. Only used when `boundary_method` is `morphological_closing`.
+  - **Type**: `(optional, int)`
+  - **Default**: `10`.
+
+- {alt}`morph_threshold`:
+  - **Description**: Grayscale intensity threshold (0-255) for point detection in morphological closing. Only used when `boundary_method` is `morphological_closing`.
+  - **Type**: `(optional, int)`
+  - **Default**: `250`.
+
+- {alt}`morph_dpi`:
+  - **Description**: DPI of the internal rasterisation used by morphological closing. Higher values give finer boundaries. Only used when `boundary_method` is `morphological_closing`.
+  - **Type**: `(optional, int)`
+  - **Default**: `100`.
+
 ### Descriptor Computation Settings - `[descriptors]`
 
 Settings for descriptor computation and dimensionality reduction.
@@ -103,7 +124,7 @@ Settings for descriptor computation and dimensionality reduction.
   - Possible values are: `mace`, `soap`.
 
 - {alt}`dimensionality_reduction_method`:
-  - **Description**: Dimensionality reduction method for MACE descriptors.
+  - **Description**: Dimensionality reduction method for model descriptors.
   - **Type**: `(optional, str)`
   - **Default**: `'none'`.
   - Possible values are: `autoencoder`, `pca`, `none`.
@@ -141,13 +162,13 @@ Training settings for the autoencoder.
 
 - {alt}`device`:
   - **Description**: Device for autoencoder training.
-  - **Type**: `(str)`
+  - **Type**: `(optional, str)`
   - **Default**: `'cuda'`.
   - Possible values are: `cpu`, `cuda`.
 
 - {alt}`dtype`:
   - **Description**: Data type for autoencoder training.
-  - **Type**: `(str)`
+  - **Type**: `(optional, str)`
   - **Default**: `'float32'`.
   - Possible values are: `float32`, `float64`.
 
@@ -197,7 +218,7 @@ Training settings for the autoencoder.
   - **Default**: `2048`.
 
 - {alt}`patience`:
-  - **Description**: Patience for early stopping.
+  - **Description**: Early stopping patience (epochs without val loss improvement). Also controls LR reduction schedule.
   - **Type**: `(optional, int)`
   - **Default**: `5`.
 

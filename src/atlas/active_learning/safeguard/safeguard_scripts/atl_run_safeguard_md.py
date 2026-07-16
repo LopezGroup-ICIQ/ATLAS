@@ -18,7 +18,6 @@ import torch
 from ase.io import read as ase_read
 from ase.io import write as ase_write
 from ase.io.trajectory import TrajectoryReader, TrajectoryWriter
-from mace.calculators import MACECalculator
 from shapely.affinity import scale
 from shapely.geometry import MultiPolygon, Point, Polygon
 
@@ -265,6 +264,18 @@ if __name__ == '__main__':
     if safe_md_params is None:
         safe_md_params = settings.get('safeguard', {}).get('md_parameters')
 
+    # The MD runs through the MLIP backend's ASE calculator; select the backend
+    # from the training backend so the MD matches the trained model (Allegro
+    # loads 'sampler_model.nequip.zip', not 'sampler_model.model'). An explicit
+    # '[safeguard.md.parameters].md_type' still wins.
+    from atlas.active_learning.backends import get_backend as _get_backend
+
+    md_backend_name = settings.get('mlip', {}).get('training_backend', 'mace')
+    safe_md_params.setdefault('md_type', md_backend_name)
+    sampler_model_name = (
+        f'sampler_model{_get_backend(md_backend_name).model_file_extension}'
+    )
+
     # Adding key explicitly to display it in the log
     if not safe_md_params.get('sample_frames_during_md'):
         safe_md_params['sample_frames_during_md'] = False
@@ -346,7 +357,7 @@ if __name__ == '__main__':
             filename=traj_filename,
             mode='w',
             atoms=init_conf,
-            properties=['energy', 'forces', 'REF_energy', 'REF_forces', 'MACE_energy'],
+            properties=['energy', 'forces', 'REF_energy', 'REF_forces', 'MLIP_energy'],
         )
         print()
         atl_cut.custom_print(
@@ -360,7 +371,7 @@ if __name__ == '__main__':
             prepend_path=prepend_path,
             explode_filter_dict=md_filters.get('exploding_structures', {}),
             enable_cueq=enable_cueq,
-            model_name='sampler_model.model',
+            model_name=sampler_model_name,
         )
         atl_cut.custom_print('MD simulation completed!', 'done', logger=logger)
 
@@ -565,17 +576,18 @@ if __name__ == '__main__':
         # for model in model_file_list:
         # comm_results[model.stem] = {'REF_energy': [], 'REF_forces': []}
 
-        # Use torch.load with map_location to ensure model loads
-        # on the correct device
+        from atlas.active_learning.backends import find_inference_model, get_backend
+
+        backend_name = settings.get('mlip', {}).get('training_backend', 'mace')
+        backend = get_backend(backend_name)
+        model_ext = backend.model_file_extension
+
         device_str = safe_md_params.get('device', 'cpu')
 
-        model_path = pl.Path(prepend_path) / 'sampler_model.model'
-        model_loaded = torch.load(model_path, map_location=torch.device(device_str))
-
-        calculator = MACECalculator(
-            models=[model_loaded],
+        calculator = backend.create_calculator(
+            model_path=find_inference_model(prepend_path, 'sampler_model', backend),
             device=device_str,
-            default_dtype=safe_md_params.get('default_dtype', 'float32'),
+            dtype=safe_md_params.get('default_dtype', 'float32'),
         )
 
         atl_cut.custom_print(
@@ -597,13 +609,13 @@ if __name__ == '__main__':
                     )
                 )
             else:
-                descriptor_dict, descriptor_arr, uuids = (
-                    atl_al_ut.generate_descriptors_mace(
-                        model_path=prepend_path / 'sampler_model.model',
-                        database=md_traj_short,
-                        descriptor_settings=settings['descriptors'],
-                        verbose=True,
-                    )
+                descriptor_type = settings['descriptors'].get('descriptor_type', 'mace')
+                descriptor_dict, descriptor_arr, uuids = atl_al_ut.generate_descriptors(
+                    database=md_traj_short,
+                    descriptor_type=descriptor_type,
+                    descriptor_settings=settings['descriptors'],
+                    model_path=prepend_path / f'sampler_model{model_ext}',
+                    verbose=True,
                 )
 
             # Add is_extrapolating list which contains boolean values showing
@@ -657,13 +669,13 @@ if __name__ == '__main__':
 
                 if (prepend_path / 'autoencoder_model.pth').exists():
                     model_path = prepend_path / 'autoencoder_model.pth'
-                    model = torch.load(model_path)
+                    model = atl_ae.load_autoencoder_model(model_path)
                     atl_cut.custom_print(
                         f"Model loaded from:'{model_path}'", logger=logger
                     )
                 else:
                     model_path = prepend_path / aut_t_params.get('model_path')
-                    model = torch.load(model_path)
+                    model = atl_ae.load_autoencoder_model(model_path)
                     atl_cut.custom_print(
                         f"Model loaded from:'{model_path}'", logger=logger
                     )

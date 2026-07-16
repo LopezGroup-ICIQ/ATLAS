@@ -666,7 +666,7 @@ def validate_section_recursive(
             config_data_removal.pop(param_key, None)
 
         # Check for mandatory parameters for job submission
-        if param_key == 'computer':
+        if param_key == 'computer' and value is not None:
             try:
                 from aiida import load_profile, orm
                 from aiida.schedulers.plugins.sge import SgeScheduler

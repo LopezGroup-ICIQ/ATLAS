@@ -8,7 +8,9 @@ Subpackages
    :maxdepth: 4
 
    atlas.active_learning
+   atlas.benchmarks
    atlas.core
+   atlas.training
    atlas.workflows
 
 Module contents
