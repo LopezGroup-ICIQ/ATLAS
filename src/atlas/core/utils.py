@@ -385,6 +385,8 @@ def apply_replacement_no_db(
     if not rng:
         rng = np.random.default_rng()
 
+    is_ase = False
+
     if isinstance(structure, ATL_STRUCT_TYPES):
         structure = structure.structure
 

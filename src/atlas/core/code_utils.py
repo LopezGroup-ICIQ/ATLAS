@@ -423,7 +423,7 @@ def init_config_dir(config_dir, config_file: str):
 def get_cache_path() -> pl.Path:
     """Get the path to ATLAS's the cacheuration directory."""
     # Try to get XDG_cache_HOME, if it doesn't exist, return None
-    cache_path = os.environ.get('$XDG_CACHE_HOME', None)
+    cache_path = os.environ.get('XDG_CACHE_HOME', None)
 
     # Check if $HOME/.cache exists and if it does, return the path
     if not cache_path:

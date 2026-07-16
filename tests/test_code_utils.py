@@ -113,15 +113,11 @@ class TestGetCachePath:
         path = get_cache_path()
         assert isinstance(path, pathlib.Path)
 
-    def test_uses_literal_dollar_prefix_bug(self, monkeypatch):
-        """Known bug: uses '$XDG_CACHE_HOME' instead of 'XDG_CACHE_HOME'.
-        This means the env var is never picked up. This test verifies the bug exists.
-        """
+    def test_uses_xdg_cache_home_env_var(self, monkeypatch):
+        """XDG_CACHE_HOME, when set, must be honored as the cache path."""
         monkeypatch.setenv('XDG_CACHE_HOME', '/custom/cache')
         path = get_cache_path()
-        # If the bug is present, the env var with the literal '$' is not found
-        # and it falls through to the home/.cache check
-        assert str(path) != '/custom/cache'
+        assert str(path) == '/custom/cache'
 
 
 class TestInitConfigDir:

@@ -31,7 +31,7 @@ def get_feature_matrix_with_custom_features(dataset, feature_matrix_X):
     species_frac = np.zeros((len(dataset), len(species)))
     species_numbers = []
     for i, struct in enumerate(dataset):
-        species_frac[i] = [struct.symbols.count(s) / len(s) for s in species]
+        species_frac[i] = [struct.symbols.count(s) / len(struct) for s in species]
         species_numbers.append(
             [atomic_numbers[s] if struct.symbols.count(s) > 0 else 0 for s in species]
         )
@@ -114,7 +114,7 @@ def get_vendi_score_db_rbf(
 
     custom_print(f'Feature matrix shape: {feature_matrix_X.shape}')
 
-    get_vendi_score(feature_matrix_X=feature_matrix_X, sigma=sigma, k=k)
+    return get_vendi_score(feature_matrix_X=feature_matrix_X, sigma=sigma, k=k)
 
 
 def get_vendi_score(
@@ -318,7 +318,7 @@ def tanimoto_distance(struct_1_descriptors, struct_2_descriptors):
     Also known as Jaccard distance.
     """
     tanimoto = 1 - np.sum(struct_1_descriptors * struct_2_descriptors) / (
-        np.sum(np.max(struct_1_descriptors, struct_2_descriptors))
+        np.sum(np.maximum(struct_1_descriptors, struct_2_descriptors))
     )
     return tanimoto
 
