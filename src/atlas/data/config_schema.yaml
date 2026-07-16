@@ -1046,6 +1046,55 @@ active_learning:
             type: str
             choices: ["validation", "testing"]
             default: None
+    debug:
+        name: "debug"
+        name_pretty: "Debug / Mock"
+        mandatory: false
+        description: "Developer debugging options for the active learning loop."
+        mock:
+            description: "Replace remote calcjobs (training, descriptors, MD, DFT) with instant local surrogates. For debugging loop logic only; results are physically meaningless."
+            enable:
+                description: "Whether to enable mock mode."
+                type: bool
+                mandatory: false
+                default: false
+            stages:
+                description: "Stages to mock. If omitted or empty, all stages are mocked. Mocking 'training' implies its model-consuming stages (md, descriptors, test_db) are mocked too, since a placeholder model cannot feed a real remote job."
+                type: list[str]
+                mandatory: false
+                default: []
+                choices: ["md", "dft", "training", "descriptors", "test_db"]
+            dft_potential:
+                description: "Classical potential used for mock DFT energies/forces. 'emt' uses ASE EMT (falls back to Lennard-Jones for unsupported elements); 'lj' always uses Lennard-Jones."
+                type: str
+                mandatory: false
+                default: "emt"
+                choices: ["emt", "lj"]
+            md_rattle_stdev:
+                description: "Standard deviation (Å) of the random perturbation applied to the seed frame in mock MD."
+                type: float
+                mandatory: false
+                default: 0.1
+            md_n_frames:
+                description: "Number of perturbed frames produced per seed structure in mock MD."
+                type: int
+                mandatory: false
+                default: 1
+            train_rmse_e_start:
+                description: "Mock committee/test-DB energy RMSE (meV/atom) at iteration 0; decays geometrically over iterations."
+                type: float
+                mandatory: false
+                default: 90.0
+            train_rmse_f_start:
+                description: "Mock committee/test-DB forces RMSE (meV/A) at iteration 0; decays geometrically over iterations."
+                type: float
+                mandatory: false
+                default: 275.0
+            train_rmse_decay:
+                description: "Per-iteration geometric decay factor for mock RMSE curves (0-1)."
+                type: float
+                mandatory: false
+                default: 0.7
     test_db:
         name: "test_db"
         name_pretty: "Test Set Settings"

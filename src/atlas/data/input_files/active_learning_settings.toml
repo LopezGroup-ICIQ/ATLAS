@@ -43,6 +43,35 @@ al_mode = "data_reduction"
 
 ###############################################
 
+# Debug / mock settings (developers only)
+# When enabled, the listed stages are replaced by instant, in-process surrogates
+# instead of being submitted to remote machines: MD returns a random perturbation
+# of the seed frame, DFT returns a cheap classical-potential energy/force, and
+# training/descriptors return tiny placeholders. This lets you exercise the whole
+# active-learning loop locally in seconds. Results are physically meaningless and
+# must never be used for science.
+# Mocking 'training' implies its model-consuming stages (md, descriptors, test_db)
+# are mocked too, since a placeholder model cannot feed a real remote job.
+# [debug.mock]
+# (bool) Master switch for mock mode.
+# enable = false
+# (list[str]) Stages to mock. Omit or leave empty to mock all stages.
+# stages = ['md', 'dft', 'training', 'descriptors', 'test_db']
+# (str) Classical potential for mock DFT: 'emt' (ASE EMT, LJ fallback) or 'lj'.
+# dft_potential = 'emt'
+# (float) Std. dev. (Å) of the random perturbation applied in mock MD.
+# md_rattle_stdev = 0.1
+# (int) Number of perturbed frames produced per seed structure in mock MD.
+# md_n_frames = 1
+# (float) Mock energy RMSE (meV/atom) at iteration 0; decays over iterations.
+# train_rmse_e_start = 90.0
+# (float) Mock forces RMSE (meV/A) at iteration 0; decays over iterations.
+# train_rmse_f_start = 275.0
+# (float) Per-iteration geometric decay factor for mock RMSE curves (0-1).
+# train_rmse_decay = 0.7
+
+###############################################
+
 # Data reduction settings
 # Only used when al_mode = "data_reduction"
 [data_reduction]

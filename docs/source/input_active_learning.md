@@ -106,6 +106,62 @@ This section is optional.
   - **Default**: `'None'`.
   - Possible values are: `validation`, `testing`.
 
+### Debug / Mock - `[debug]`
+
+Developer debugging options for the active learning loop.
+
+:::{attention}
+This section is optional.
+:::
+
+
+#### Mock - `[debug.mock]`
+
+Replace remote calcjobs (training, descriptors, MD, DFT) with instant local surrogates. For debugging loop logic only; results are physically meaningless.
+
+
+- {alt}`enable`:
+  - **Description**: Whether to enable mock mode.
+  - **Type**: `(optional, bool)`
+  - **Default**: `False`.
+
+- {alt}`stages`:
+  - **Description**: Stages to mock. If omitted or empty, all stages are mocked. Mocking 'training' implies its model-consuming stages (md, descriptors, test_db) are mocked too, since a placeholder model cannot feed a real remote job.
+  - **Type**: `(optional, list[str])`
+  - **Default**: `[]`.
+  - Possible values are: `md`, `dft`, `training`, `descriptors`, `test_db`.
+
+- {alt}`dft_potential`:
+  - **Description**: Classical potential used for mock DFT energies/forces. 'emt' uses ASE EMT (falls back to Lennard-Jones for unsupported elements); 'lj' always uses Lennard-Jones.
+  - **Type**: `(optional, str)`
+  - **Default**: `'emt'`.
+  - Possible values are: `emt`, `lj`.
+
+- {alt}`md_rattle_stdev`:
+  - **Description**: Standard deviation (Å) of the random perturbation applied to the seed frame in mock MD.
+  - **Type**: `(optional, float)`
+  - **Default**: `0.1`.
+
+- {alt}`md_n_frames`:
+  - **Description**: Number of perturbed frames produced per seed structure in mock MD.
+  - **Type**: `(optional, int)`
+  - **Default**: `1`.
+
+- {alt}`train_rmse_e_start`:
+  - **Description**: Mock committee/test-DB energy RMSE (meV/atom) at iteration 0; decays geometrically over iterations.
+  - **Type**: `(optional, float)`
+  - **Default**: `90.0`.
+
+- {alt}`train_rmse_f_start`:
+  - **Description**: Mock committee/test-DB forces RMSE (meV/A) at iteration 0; decays geometrically over iterations.
+  - **Type**: `(optional, float)`
+  - **Default**: `275.0`.
+
+- {alt}`train_rmse_decay`:
+  - **Description**: Per-iteration geometric decay factor for mock RMSE curves (0-1).
+  - **Type**: `(optional, float)`
+  - **Default**: `0.7`.
+
 ### Test Set Settings - `[test_db]`
 
 Settings for the test database used to evaluate model performance during active learning. The test database is defined at the start of the active learning run, and is kept constant throughout the entire process. It can either be generated at random from the initial database, or loaded from a file. The test set is only used for evaluation and is not included in the training data.

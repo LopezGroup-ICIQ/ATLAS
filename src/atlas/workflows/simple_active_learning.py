@@ -31,6 +31,15 @@ from rich.pretty import Pretty
 from atlas import ATL_ROOT_DIR
 from atlas.active_learning import active_learning_utils as atl_al_ut
 from atlas.active_learning.backends import get_backend
+from atlas.active_learning.mock import (
+    MOCK_STAGES,
+    mock_descriptors,
+    mock_dft_label,
+    mock_md_process,
+    mock_test_db_eval,
+    mock_train_model,
+)
+from atlas.active_learning.mock import stage_is_mocked as mock_stage_is_mocked
 from atlas.core.code_utils import (
     ATL_THEME,
     ATLHighlighter,
@@ -490,6 +499,39 @@ class SimpleActiveLearningWorkChain(WorkChain):
         )
         self.report(f'Using MLIP backend: {backend_name}')
 
+        # Load the [debug.mock] section (empty when absent) so stages can be
+        # swapped for instant local surrogates. See atlas.active_learning.mock.
+        if toml_path.exists():
+            self.ctx.mock_cfg = toml_settings.get('debug', {}).get('mock', {})
+        else:
+            self.ctx.mock_cfg = {}
+        if mock_stage_is_mocked(self.ctx.mock_cfg, 'md') or self.ctx.mock_cfg.get(
+            'enable', False
+        ):
+            mocked = [
+                s for s in MOCK_STAGES if mock_stage_is_mocked(self.ctx.mock_cfg, s)
+            ]
+            self.report(
+                'DEBUG MOCK MODE ENABLED - stages mocked with instant local '
+                f'surrogates: {mocked}. Results are physically meaningless.'
+            )
+
+    def _is_mocked(self, stage: str) -> bool:
+        """Whether ``stage`` runs as an instant local mock (``[debug.mock]``).
+
+        A stage is mocked if it is configured directly, or if it consumes the
+        trained model (``md``/``descriptors``/``test_db``) and ``training`` is
+        mocked -- a placeholder (mock-trained) model cannot feed a real remote job,
+        so its consumers must be mocked too.
+        """
+        cfg = getattr(self.ctx, 'mock_cfg', {})
+        if mock_stage_is_mocked(cfg, stage):
+            return True
+        return bool(
+            stage in ('md', 'descriptors', 'test_db')
+            and mock_stage_is_mocked(cfg, 'training')
+        )
+
     def should_select_data_reduction_structures(self):
         """Check if we should select additional structures for data reduction mode."""
         return self.inputs.al_mode.value == 'data_reduction'
@@ -664,8 +706,30 @@ class SimpleActiveLearningWorkChain(WorkChain):
             node=self.node,
         )
 
-        for _ in range(self.inputs.committee_num_models.value):
+        for model_index in range(self.inputs.committee_num_models.value):
             model_name = atl_al_ut.generate_model_name()
+
+            # Mock mode: skip remote training, emit a placeholder model node with
+            # realistic per-member RMSE that decays over iterations. Calcfunctions
+            # run synchronously, so store the sealed node directly in the context
+            # list rather than awaiting it.
+            if self._is_mocked('training'):
+                mock_out = mock_train_model(
+                    orm.Str(model_name),
+                    orm.Int(self.inputs.al_loop_iteration.value),
+                    orm.Int(model_index),
+                    orm.Dict(dict(self.ctx.mock_cfg)),
+                )
+                mock_node = mock_out['model_file'].creator
+                if not hasattr(self.ctx, 'mlip_training_results'):
+                    self.ctx.mlip_training_results = []
+                self.ctx.mlip_training_results.append(mock_node)
+                self.report(
+                    f'[MOCK] Placeholder training model {model_name} '
+                    f'(RMSE E: {mock_out["m_rmse_e"].value:.1f} meV/at, '
+                    f'F: {mock_out["m_rmse_f"].value:.1f} meV/Å).'
+                )
+                continue
 
             if use_portable_code:
                 train_calcjob = CalculationFactory('atl-train-mlip')
@@ -962,6 +1026,16 @@ class SimpleActiveLearningWorkChain(WorkChain):
         self.ctx.compiled_models = {}
         self.ctx.compile_target_map = {}
 
+        # Mock mode: the training model is a placeholder that cannot be compiled;
+        # skip so no compile CalcJob is submitted (would fail). Consumers fall back
+        # to the raw model node via _inference_model_for (unused when they too are
+        # mocked).
+        if self._is_mocked('training'):
+            self.report(
+                '[MOCK] Skipping model compilation (mock training placeholder).'
+            )
+            return
+
         backend = self.ctx.mlip_backend
         if not isinstance(backend, MLIPModelCompiler):
             self.report(
@@ -1069,6 +1143,26 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
     def perform_test_db_evaluation(self):
         self.report('Preparing test database evaluation...')
+
+        # Mock mode: skip the remote eval (would fail on a placeholder model) and
+        # emit synthetic decaying error metrics + a placeholder plot. The
+        # calcfunction node is stored directly in the context; get_test_db_results
+        # consumes it unchanged.
+        if self._is_mocked('test_db'):
+            mock_out = mock_test_db_eval(
+                orm.Int(self.inputs.al_loop_iteration.value),
+                orm.Dict(dict(self.ctx.mock_cfg)),
+            )
+            mock_node = mock_out['rmse_e'].creator
+            if not hasattr(self.ctx, 'test_db_results'):
+                self.ctx.test_db_results = []
+            self.ctx.test_db_results.append(mock_node)
+            self.report(
+                '[MOCK] Synthetic test-DB evaluation '
+                f'(RMSE E: {mock_out["rmse_e"].value:.1f} meV/at, '
+                f'F: {mock_out["rmse_f"].value:.1f} meV/Å).'
+            )
+            return
 
         # Get builder for evaluation calculation
         eval_calc = CalculationFactory('atl-eval-test')
@@ -1202,6 +1296,17 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
     def gen_descriptors_and_concave_hull(self):
         self.report('Preparing descriptors calculation...')
+
+        # Mock mode: skip remote descriptor calc, emit trivial min/max arrays.
+        # The synchronous calcfunction node is stored directly in the context.
+        if self._is_mocked('descriptors'):
+            mock_out = mock_descriptors(self.ctx.best_model_file)
+            mock_node = mock_out['descriptor_max'].creator
+            if not hasattr(self.ctx, 'descrptor_results'):
+                self.ctx.descrptor_results = []
+            self.ctx.descrptor_results.append(mock_node)
+            self.report('[MOCK] Placeholder descriptors (trivial min/max arrays).')
+            return
 
         # Stop the calculation if descriptor calc must be loaded
         if (
@@ -1492,6 +1597,33 @@ class SimpleActiveLearningWorkChain(WorkChain):
                 filename='md_db.xyz',
             )
             md_xyz_file.store()
+
+            # Mock mode: skip remote MD, return a random perturbation of the seed
+            # frame as the "extrapolating" structure(s).
+            if self._is_mocked('md'):
+                mock_cfg = self.ctx.mock_cfg
+                mock_out = mock_md_process(
+                    md_xyz_file,
+                    orm.Float(mock_cfg.get('md_rattle_stdev', 0.1)),
+                    orm.Int(mock_cfg.get('md_n_frames', 1)),
+                )
+                mock_node = mock_out['extrapolating_structures'].creator
+                if curr_structure.info.get('aiida_uuid'):
+                    mock_node.base.extras.set(
+                        'unique_id_old', curr_structure.info['aiida_uuid']
+                    )
+                if curr_structure.info.get('atl_id'):
+                    mock_node.base.extras.set(
+                        'unique_id', curr_structure.info['atl_id']
+                    )
+                mock_node.base.extras.set(
+                    'atl_db_index', curr_structure.info['atl_db_index']
+                )
+                if not hasattr(self.ctx, 'process_committee_results'):
+                    self.ctx.process_committee_results = []
+                self.ctx.process_committee_results.append(mock_node)
+                self.report(f'[MOCK] Perturbed seed structure (node {mock_node.pk}).')
+                continue
 
             # Add inputs to builder
             proc_seed_builder.md_structure = md_xyz_file
@@ -1808,8 +1940,31 @@ class SimpleActiveLearningWorkChain(WorkChain):
             # Setting error to stop the active learning loop
             self.ctx.stop_al_loop_error = orm.Bool(True)
 
+        # Mock mode: label the selected structures with a cheap classical
+        # potential locally instead of submitting DFT. The resulting node feeds
+        # the same context list the real DFT calcs use; return_seed_dft_and_model
+        # gathers it via a matching mock branch.
+        if self._is_mocked('dft') and len(calcs_to_submit) > 0:
+            f = io.StringIO()
+            with redirect_stdout(f):
+                ase_write(filename='-', format='extxyz', images=calcs_to_submit)
+            structs_file = orm.SinglefileData(
+                file=io.BytesIO(f.getvalue().encode()),
+                filename='mock_dft_input.xyz',
+            )
+            potential = self.ctx.mock_cfg.get('dft_potential', 'emt')
+            mock_out = mock_dft_label(structs_file, orm.Str(potential))
+            mock_node = mock_out['labeled_structures'].creator
+            if not hasattr(self.ctx, 'dft_struct_seed_calcs'):
+                self.ctx.dft_struct_seed_calcs = []
+            self.ctx.dft_struct_seed_calcs.append(mock_node)
+            self.report(
+                f'[MOCK] Labelled {len(calcs_to_submit)} structures with '
+                f"'{potential}' classical potential (node {mock_node.pk})."
+            )
+
         # Validate kspacing coverage before submitting any DFT calculations.
-        if self.inputs.dft_method == 'vasp' and len(calcs_to_submit) > 0:
+        elif self.inputs.dft_method == 'vasp' and len(calcs_to_submit) > 0:
             dft_settings = self.inputs.dft_settings.get_dict()
             kspacing_dict = dft_settings.get('kspacing', {})
             phases = sorted(
@@ -1819,7 +1974,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
         # Submitting calcs
         calc_count = 0
-        for struct in calcs_to_submit:
+        for struct in calcs_to_submit if not self._is_mocked('dft') else []:
             # Get row and index
             struct_uuid = struct.info.get('atl_id')
             if not struct_uuid:
@@ -2010,8 +2165,23 @@ class SimpleActiveLearningWorkChain(WorkChain):
                 node=self.node,
             )
 
+        # Mock mode: gather the classically-labelled structures produced in
+        # send_calc_or_remove_structures (no VASP/mlip nodes exist).
+        if self._is_mocked('dft'):
+            dft_calc_list = []
+            for node in getattr(self.ctx, 'dft_struct_seed_calcs', []):
+                if not node.is_finished_ok:
+                    continue
+                with node.outputs.labeled_structures.as_path() as path:
+                    dft_calc_list.extend(
+                        ase_read(filename=path, format='extxyz', index=':')
+                    )
+            self.report(
+                f'[MOCK] Gathered {len(dft_calc_list)} classically-labelled structures.'
+            )
+
         # Running VASP calulations if its the selected method
-        if self.inputs.dft_method == 'vasp':
+        elif self.inputs.dft_method == 'vasp':
             try:
                 dft_calcs = len(self.ctx.dft_struct_seed_calcs)
 
@@ -2081,7 +2251,12 @@ class SimpleActiveLearningWorkChain(WorkChain):
             # Run filtering step based on NN vs DFT difference threshold
             # for both E and F
             filter_settings = self.inputs.dft_settings.get('filter', {})
-            if filter_settings.get('filter_dft_calcs', False):
+            # DFT threshold filtering compares NN-model vs DFT predictions; this
+            # is meaningless for mock data (classical potential, placeholder
+            # model), so it is skipped entirely when DFT is mocked.
+            if filter_settings.get('filter_dft_calcs', False) and not self._is_mocked(
+                'dft'
+            ):
                 threshold_E_meV = filter_settings.get('threshold_E_meV', 1e3)
                 threshold_F_meV = filter_settings.get('threshold_F_meV', 1e4)
 
@@ -3342,12 +3517,28 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
 
         self.ctx.safeguard_compiled_model = None
 
-        if getattr(self.ctx, 'stop_al_loop_error', False) is True:
+        # ``stop_al_loop_error`` is an ``orm.Bool`` node when set; use truthiness
+        # (not ``is True``, which never matches a node) so a failed previous step
+        # correctly short-circuits the safeguard compile.
+        if getattr(self.ctx, 'stop_al_loop_error', False):
             return
 
         current_settings = atl_al_ut.read_toml_settings(
             settings_file=self.ctx.inputs.toml_file.value
         )
+
+        # Mock mode: the sampler model is a placeholder that cannot be compiled,
+        # and the safeguard MD is skipped anyway, so skip the compile calc (would
+        # fail with exit 421). Same trigger as safeguard_check_md.
+        mock_cfg = current_settings.get('debug', {}).get('mock', {})
+        if mock_stage_is_mocked(mock_cfg, 'md') or mock_stage_is_mocked(
+            mock_cfg, 'training'
+        ):
+            self.report(
+                '[MOCK] Skipping safeguard model compilation (mock md/training).'
+            )
+            return
+
         backend_name = current_settings.get('mlip', {}).get('training_backend', 'mace')
         try:
             backend = get_backend(backend_name)
@@ -3397,11 +3588,10 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
     def run_safeguard_check(self):
         self.report('Running safeguard checks...')
 
-        # Skipping safeguard if there was an error in the previous step
-        if (
-            hasattr(self.ctx, 'stop_al_loop_error')
-            and self.ctx.stop_al_loop_error is True
-        ):
+        # Skipping safeguard if there was an error in the previous step.
+        # ``stop_al_loop_error`` is an ``orm.Bool`` node; use truthiness rather
+        # than ``is True`` (which never matches a node).
+        if hasattr(self.ctx, 'stop_al_loop_error') and self.ctx.stop_al_loop_error:
             self.report(
                 f'Last step ({self.ctx.last_workchain_completed.pk}) '
                 'did not finish correctly. '
@@ -3415,6 +3605,23 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
 
     def safeguard_check_md(self):
         self.report('Running MD for safeguard check...')
+
+        # Mock mode: skip the remote safeguard MD entirely. Without any
+        # process_safeguard_results, parse_safeguard_check_results proceeds
+        # without safeguard (loop continues) instead of submitting a real MD job.
+        toml_path = Path(self.ctx.inputs.toml_file.value)
+        mock_cfg = (
+            atl_al_ut.read_toml_settings(self.ctx.inputs.toml_file.value)
+            .get('debug', {})
+            .get('mock', {})
+            if toml_path.exists()
+            else {}
+        )
+        if mock_stage_is_mocked(mock_cfg, 'md') or mock_stage_is_mocked(
+            mock_cfg, 'training'
+        ):
+            self.report('[MOCK] Skipping remote safeguard MD (mock md/training).')
+            return
 
         # Load sampler model (prefer a pre-compiled artifact for this node).
         last_wk = self.ctx.last_workchain_completed
@@ -4194,10 +4401,11 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
                 f"'stop_al_loop_error' could not be found in last iteration. "
                 f"Most likely, workchain '{self.node.pk}' crashed..."
             )
-        elif (
-            hasattr(self.ctx, 'stop_al_loop_error')
-            and self.ctx.stop_al_loop_error is False
-        ):
+        # ``stop_al_loop_error`` is an ``orm.Bool`` node, so use truthiness (as in
+        # ``check_al_loop_conditions``) rather than ``is False`` -- the latter never
+        # matches a node, which would skip the required ``final_model_file`` output
+        # and fail the workchain on every clean termination.
+        elif not self.ctx.stop_al_loop_error:
             # Returning final model as orm.SinglefileData object
             final_model_singlefile = self.ctx.last_workchain_completed.outputs[
                 'm0_model_file'
