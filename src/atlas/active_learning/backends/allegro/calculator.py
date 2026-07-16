@@ -46,7 +46,12 @@ def create_allegro_calculator(
 
     _patch_torch_load_if_needed()
 
-    from nequip.ase import NequIPCalculator
+    # nequip >= 0.7 moved the calculator to ``nequip.integrations.ase``; the old
+    # ``nequip.ase`` path still works but warns that it will be removed.
+    try:
+        from nequip.integrations.ase import NequIPCalculator
+    except ImportError:  # nequip < 0.7
+        from nequip.ase import NequIPCalculator
 
     model_path = Path(model_path)
 
