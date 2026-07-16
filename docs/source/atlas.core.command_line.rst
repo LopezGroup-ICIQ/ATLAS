@@ -1,6 +1,14 @@
 atlas.core.command\_line package
 ================================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   atlas.core.command_line.setup
+
 Submodules
 ----------
 

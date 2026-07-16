@@ -1,7 +1,7 @@
 # ATLAS
 
 > [!WARNING]
-> **Under Development:** This library is still under active development and may contain bugs or undergo breaking changes. Use with caution in production or critical research workflows. Please report any bugs or issues using the [Issues tab](https://github.com/pol-sb/ATLAS/issues).
+> **Under Development:** This library is still under active development and may contain bugs or undergo breaking changes. Use with caution in production or critical research workflows. Please report any bugs or issues using the [Issues tab](https://github.com/LopezGroup-ICIQ/ATLAS/issues).
 
 <p align="center">
   <picture>
@@ -13,15 +13,17 @@
 
 [![DOI](https://img.shields.io/badge/DOI-10.26434%2Fchemrxiv.15003942%2Fv1-blue)](https://doi.org/10.26434/chemrxiv.15003942/v1) 
 
-![GitHub Tag](https://img.shields.io/github/v/tag/pol-sb/ATLAS?label=current%20version)  ![GitHub last commit](https://img.shields.io/github/last-commit/LopezGroup-ICIQ/ATLAS) [![documentation](https://github.com/pol-sb/ATLAS/actions/workflows/documentation.yml/badge.svg)](https://lopezgroup-iciq.github.io/ATLAS/master/index.html)
+![GitHub Tag](https://img.shields.io/github/v/tag/LopezGroup-ICIQ/ATLAS?label=current%20version)  ![GitHub last commit](https://img.shields.io/github/last-commit/LopezGroup-ICIQ/ATLAS) [![documentation](https://github.com/LopezGroup-ICIQ/ATLAS/actions/workflows/documentation.yml/badge.svg)](https://lopezgroup-iciq.github.io/ATLAS/master/index.html)
 
 ![Python Version](https://img.shields.io/badge/python-3.11-blue.svg)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 ![GitHub License](https://img.shields.io/github/license/LopezGroup-ICIQ/ATLAS)
 
-ATLAS (Automated Training with Latent-space Aware Sampling) is a unified Python framework for building robust machine learning interatomic potentials (MLIPs). It combines a diversity-aware database generator with a manifold-aware active learning workflow to produce compact, high-quality training datasets. Its latent-space awareness enables applicability checking during application. ATLAS supports structure generation for bulk, surface, cluster, and isolated atom configurations across single-, binary-, and ternary (WIP) phase diagrams, as well as user-defined element space, with perturbations, vacancies, deformations, and adsorbates. 
+**ATLAS (Automated Training with Latent-space Aware Sampling)** is a unified Python framework for building robust machine learning interatomic potentials (MLIPs). It combines a diversity-aware database generator with a manifold-aware active learning workflow to produce compact, high-quality training datasets. Its latent-space awareness enables applicability checking during application. ATLAS supports structure generation for bulk, surface, cluster, and isolated atom configurations across single-, binary-, and ternary (WIP) phase diagrams, as well as user-defined element space, with perturbations, vacancies, deformations, and adsorbates.
 
-The active learning engine iteratively trains MACE models, runs molecular dynamics simulations, detects extrapolating structures via descriptor-based or latent-space methods (autoencoder + concave hull), and submits them for DFT labelling, all orchestrated through AiiDA. Additional capabilities include data reduction mode, safeguard checks to prevent premature termination during dataset generation, test database evaluation, diversity metrics (Vendi Score, Circles Metric), an interactive monitoring dashboard, a desktop GUI (in development), MLIP benchmarking, and comprehensive reporting of model performance and resource usage. 
+The active learning engine uses a **modular backend architecture** for training MLIPs. It currently supports a growing list of models, including [MACE](https://mace-docs.readthedocs.io/), [Allegro](https://github.com/mir-group/allegro), and [NequIP](https://github.com/mir-group/nequip), and any model can be added through the generic backend plugin interface. It runs molecular dynamics simulations, detects extrapolating structures via descriptor-based latent-space methods (autoencoder + concave hull or morphological shape), and submits them for DFT labelling, all orchestrated through [AiiDA](https://aiida.readthedocs.io/).
+
+Additional capabilities include data reduction mode, safeguard checks to prevent premature termination during dataset generation, test database evaluation, diversity metrics (Vendi Score), an interactive monitoring dashboard, a desktop GUI (in development), MLIP benchmarking, and comprehensive reporting of model performance and resource usage. 
 
 Validated on metals, alloys, and metal oxides, ATLAS produces datasets that exceed foundation model training chemical spaces by orders of magnitude while using up to x300 fewer structures.
 
@@ -79,7 +81,7 @@ First, install the `uv` tool. Either as shown below using the standalone install
 wget -qO- https://astral.sh/uv/install.sh | sh
 ```
 
-Once `uv` is isntalled, create an environment named atlas specifically with Python 3.11:
+Once `uv` is installed, create an environment named atlas specifically with Python 3.11:
 
 ```bash
 # Create the virtual environment
@@ -98,7 +100,7 @@ With the environment now activated, the library can be installed.
 ### 2. Getting the ATLAS code
 
 ```bash
-# Clone the reposittory
+# Clone the repository
 git clone https://github.com/LopezGroup-ICIQ/ATLAS.git
 ```
 
@@ -106,8 +108,11 @@ git clone https://github.com/LopezGroup-ICIQ/ATLAS.git
 
 There are several installation mechanisms, and several optional dependencies depending on what packages you want to use. Check the list and details of optional dependencies in the [pyproject.toml](pyproject.toml). Currently, the following are available:
 
-- `mace`
-- `dev`
+- `mace` — MACE model training and evaluation
+- `allegro` — Allegro model support
+- `nequip` — NequIP model support
+- `dev` — Development dependencies (pytest, pre-commit, commitizen)
+- `gui` — Desktop GUI (PySide6)
 
 Optional dependencies are installed using the following syntax:
 
@@ -120,6 +125,9 @@ python3 -m pip install "./ATLAS[OPTIONAL_DEPENDENCY_NAME]"
 ```
 
 Some installation examples follow:
+
+> [!WARNING]
+> **MACE and Allegro/NequIP cannot be installed in the same environment.** Both `mace-torch` and `nequip` depend on `e3nn` but pin incompatible versions. You must choose one backend per environment, or use separate virtual environments if you need to switch between them.
 
 #### Using `pip`
 
@@ -153,7 +161,7 @@ atl_init_setup
 
 ### 5. Setup steps specific to active learning
 
-- The **active learning (AL)** loop uses the [AiiDA](https://github.com/aiidateam/aiida-core) library for managing the workflow. In order to run the AL loop in compute clusters, codes and computers must be conifigured in AiiDA. See the [AiiDA installation guide](https://aiida.readthedocs.io/projects/aiida-core/en/stable/installation/guide_quick.html) for installation instructions.
+- The **active learning (AL)** loop uses the [AiiDA](https://github.com/aiidateam/aiida-core) library for managing the workflow. In order to run the AL loop in compute clusters, codes and computers must be configured in AiiDA. See the [AiiDA installation guide](https://aiida.readthedocs.io/projects/aiida-core/en/stable/installation/guide_quick.html) for installation instructions.
 - DFT calculations with VASP use the [aiida-vasp](https://aiida-vasp.readthedocs.io/en/latest/) plugin, which needs additional configuration. Please, follow the [instructions on their website](https://aiida-vasp.readthedocs.io/en/latest/getting_started/general.html).
 
 - The steps required to set up the active learning loop with the simplest AiiDA configuration are the following:

@@ -12,6 +12,7 @@ from aiida.common.extendeddicts import AttributeDict
 from ase.io import read
 
 from atlas.active_learning import active_learning_utils as atl_al_ut
+from atlas.active_learning.extrapolation import morphological_closing as atl_morph
 from atlas.active_learning.extrapolation import train_autoencoder as atl_train_ae
 from atlas.active_learning.extrapolation.concave_hull import (
     check_traj_in_domain,
@@ -86,6 +87,12 @@ def run_latent_space_analysis():
     concave_hull_scale_factor = concave_hull_settings.get(
         'concave_hull_scale_factor', 0.0
     )
+
+    # Boundary determination algorithm and morphological closing settings
+    boundary_method = concave_hull_settings.get('boundary_method', 'concave_hull')
+    morph_disk_size = concave_hull_settings.get('morph_disk_size', 10)
+    morph_threshold = concave_hull_settings.get('morph_threshold', 250)
+    morph_dpi = concave_hull_settings.get('morph_dpi', 100)
 
     extrap_type = extrap_settings.get('check_extrapolation_type', 'none')
 
@@ -380,7 +387,24 @@ def run_latent_space_analysis():
             if len(latent_space.shape) == 3 and latent_space.shape[1] == 1:
                 latent_space = latent_space.reshape(latent_space.shape[0], -1)
 
-            concave_hull, _ = get_optimized_concave_hull(latent_space=latent_space)
+            if boundary_method == 'morphological_closing':
+                atl_cut.custom_print(
+                    'Using morphological closing for boundary determination.',
+                    'info',
+                    logger=logger,
+                )
+                morph_results = atl_morph.process_morphological_closing(
+                    latent_space[:, 0],
+                    latent_space[:, 1],
+                    disk_size=morph_disk_size,
+                    threshold=morph_threshold,
+                    dpi=morph_dpi,
+                )
+                # data_boundaries is already a list of (N, 2) coordinate arrays,
+                # the format check_traj_in_domain / plot_concave_hull consume.
+                concave_hull = morph_results['data_boundaries']
+            else:
+                concave_hull, _ = get_optimized_concave_hull(latent_space=latent_space)
 
         # Add a timestamp
         timestamp = time.strftime('%Y%m%d-%H%M%S')

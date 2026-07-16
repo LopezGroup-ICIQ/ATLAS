@@ -10,7 +10,6 @@ import pathlib
 import pathlib as pl
 import pickle
 import time
-import uuid
 import warnings
 from collections import Counter
 from io import BytesIO, TextIOWrapper
@@ -946,10 +945,12 @@ class InitialDatabase:
 
     def standardize_struct_ids(self, atoms_list: list[Atoms]) -> list[Atoms]:
         """
-        Ensure every ASE structure has a unique `atl_id` field in its .info dict.
+        Ensure every ASE structure has standardized ``atl_*`` info keys.
 
-        This function checks each structure for an existing UUID in the `atl_id`,
-        `aiida_uuid`, or `unique_id` fields, and generates one if none are present.
+        Delegates to
+        :func:`atlas.active_learning.active_learning_utils.standardize_atoms_info`,
+        which migrates legacy ``mdb_*`` keys to ``atl_*`` and ensures every
+        structure has an ``atl_id`` UUID.
 
         Parameters
         ----------
@@ -959,33 +960,13 @@ class InitialDatabase:
         Returns
         -------
         list of ase.Atoms
-            The updated list with standardized UUIDs in `info['atl_id']`.
+            The updated list with standardized keys in ``info``.
         """
-        for struct in atoms_list:
-            info = struct.info
+        from atlas.active_learning.active_learning_utils import (
+            standardize_atoms_info,
+        )
 
-            # Check existing identifiers
-            uuid_candidate = (
-                info.get('atl_id') or info.get('aiida_uuid') or info.get('unique_id')
-            )
-
-            if uuid_candidate:
-                struct.info['atl_id'] = str(uuid_candidate)
-            else:
-                # Generate and assign new ID
-                struct.info['atl_id'] = str(uuid.uuid4())
-
-            # After database generation, if aiida_uuid is used instead of atl_id,
-            # remove it and assign atl_id
-            if info.get('atl_al_step') == 0 and info.get('aiida_uuid'):
-                struct.info['atl_id'] = str(info['aiida_uuid'])
-                del struct.info['aiida_uuid']
-
-            # Clean up legacy keys
-            if 'unique_id' in info:
-                del struct.info['unique_id']
-
-        return atoms_list
+        return standardize_atoms_info(atoms_list)
 
     def find_repeat_structures(
         self,

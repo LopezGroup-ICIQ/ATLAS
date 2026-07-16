@@ -571,7 +571,7 @@ def get_optimized_concave_hull(
 
         # Handle the edge case of perfectly collinear points (area = 0)
         if hull.area < 1e-9:
-            # Buffer it slightly so it becomes a valid polygon for your later checks
+            # Buffer it slightly so it becomes a valid polygon for later checks
             hull = hull.buffer(0.01 * val_max)
 
         return np.array(hull.exterior.coords), 0.0

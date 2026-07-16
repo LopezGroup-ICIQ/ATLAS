@@ -478,7 +478,7 @@ def visualize_quadtree(
                     cx,
                     cy,
                     f'alpha = {alpha_val:.2f}\n'
-                    'In:{item["frac_inside_hull"] * 100:.1f}%',
+                    f'In:{item["frac_inside_hull"] * 100:.1f}%',
                     color='#cc241d',
                     fontsize=9,
                     ha='center',
@@ -487,7 +487,7 @@ def visualize_quadtree(
                     bbox=dict(facecolor='white', alpha=0.6, edgecolor='none', pad=1),
                 )
 
-    ax.set_title('Concave Hull Visualization')
+    ax.set_title('Latent-Space Boundary Visualization')
     ax.set_xlabel('Latent space x')
     ax.set_ylabel('Latent space y')
 

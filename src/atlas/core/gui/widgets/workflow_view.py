@@ -2,7 +2,7 @@
 
 ``WorkflowView`` renders a top-down flowchart of pipeline steps.  Each
 step box shows its name, an optional structure-count estimate, and is
-coloured by category.  Clicking a step emits :pyqt:`step_clicked` so
+coloured by category.  Clicking a step emits the ``step_clicked`` signal so
 the host can navigate to the relevant configuration fields.
 """
 

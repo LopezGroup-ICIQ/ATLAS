@@ -15,13 +15,12 @@ import tomllib as toml
 import warnings
 from collections import Counter
 from contextlib import contextmanager, redirect_stdout, suppress
-from pathlib import Path, PosixPath
+from pathlib import Path
 from uuid import uuid4
 
 import matplotlib.pyplot as plt
 import numpy as np
 import slugify
-import torch
 import wonderwords as ww
 from aiida import orm
 from aiida.common.log import LOG_LEVEL_REPORT
@@ -43,14 +42,12 @@ from ase.md.velocitydistribution import (
     Stationary,
     ZeroRotation,
 )
-from e3nn.util import jit
 from pymatgen.io.ase import AseAtomsAdaptor
 from rich.pretty import pprint as rprint
 from shapely.geometry import Point, Polygon
 
 from atlas.active_learning import conversion as atl_conv
 from atlas.core import code_utils as atl_cut
-from atlas.core.exceptions import MissingMandatoryParameterError
 from atlas.core.filtering.structure_filters import (
     apply_filter_exploding_structures,
 )
@@ -320,14 +317,32 @@ def generate_descriptors(
             descriptor_settings=descriptor_settings,
             verbose=verbose,
         )
-    elif descriptor_type == 'mace':
-        return generate_descriptors_mace(
-            model_path=model_path,
-            database=database,
-            descriptor_settings=descriptor_settings,
-            outer_average=outer_average_mace,
-            verbose=verbose,
+
+    # Try to use a registered MLIP backend for descriptor generation
+    from atlas.active_learning.backends import get_backend
+    from atlas.active_learning.backends._base import MLIPDescriptorProvider
+
+    try:
+        backend = get_backend(descriptor_type)
+    except ValueError as err:
+        raise ValueError(
+            f"Unknown descriptor type '{descriptor_type}'. "
+            f"Available types: 'soap' and any registered MLIP backend."
+        ) from err
+
+    if not isinstance(backend, MLIPDescriptorProvider):
+        raise ValueError(
+            f"Backend '{descriptor_type}' does not support descriptor generation. "
+            f"Use 'soap' descriptors instead."
         )
+
+    return backend.generate_descriptors(
+        database=database,
+        model_path=model_path,
+        settings=descriptor_settings,
+        outer_average=outer_average_mace,
+        verbose=verbose,
+    )
 
 
 def save_descriptors(
@@ -483,7 +498,7 @@ def select_structures_fps(
 
     descriptor_type = descriptor_settings.get('descriptor_type', 'soap')
 
-    # (Add your MACE path checks here if needed)
+    # (Add MACE path checks here if needed)
 
     # Generate descriptors for the combined pool
     descr_dict, _, _ = generate_descriptors(
@@ -548,10 +563,12 @@ def select_structures_uncertainty(
     if n_structures >= len(database):
         return database.copy()
 
-    from mace.calculators import MACECalculator
+    from atlas.active_learning.backends import get_backend
 
     device = descriptor_settings.get('device', 'cpu')
     dtype = descriptor_settings.get('dtype', 'float32')
+    backend_name = descriptor_settings.get('mlip_backend', 'mace')
+    backend = get_backend(backend_name)
 
     # Calculate energies and forces for each structure using all models
     uncertainties = []
@@ -562,8 +579,8 @@ def select_structures_uncertainty(
 
         for model_file in model_files:
             try:
-                calculator = MACECalculator(
-                    models=[model_file], device=device, default_dtype=dtype
+                calculator = backend.create_calculator(
+                    model_path=model_file, device=device, dtype=dtype
                 )
                 struct.calc = calculator
 
@@ -734,123 +751,17 @@ def generate_descriptors_mace(
     outer_average: bool = False,
     verbose: bool = False,
 ) -> tuple[dict, np.ndarray, list[str]]:
-    from mace.calculators import MACECalculator
-
-    if model_path is None:
-        raise MissingMandatoryParameterError(
-            'Missing model path for MACE descriptor generation.'
-        )
-
-    device = descriptor_settings.get('device', 'cpu')
-    dtype = descriptor_settings.get('dtype', 'float32')
-
-    is_mp_foundation = False
-    is_off_foundation = False
-
-    if isinstance(model_path, PosixPath | Path):
-        model_path = str(model_path)
-
-    with suppress_stdout():
-        try:
-            # Use torch.load with map_location to ensure model
-            # loads on the correct device
-            model_loaded = torch.load(model_path, map_location=torch.device(device))
-        except RuntimeError:
-            model_loaded = torch.load(model_path, map_location=torch.device('cpu'))
-        except FileNotFoundError as e:
-            # Check if the model path indicates a MACE foundation model
-            if 'mace:mp-' in model_path:
-                model_variant = model_path.split('mace:mp-')[-1]
-                if model_variant in ['small', 'medium', 'large', 'medium-mpa-0']:
-                    is_mp_foundation = True
-                    model_loaded = model_variant
-            elif 'mace:off-' in model_path:
-                model_variant = model_path.split('mace:off-')[-1]
-                if model_variant in ['small', 'medium', 'large']:
-                    is_off_foundation = True
-                    model_loaded = model_variant
-            else:
-                raise FileNotFoundError(
-                    'Model file not found. Please provide a valid model path'
-                    'or a mace foundation model name, using the following syntax:'
-                    ' "mace:mp-small", "mace:off-medium", etc.'
-                ) from e
-
-        if is_mp_foundation:
-            from mace.calculators import mace_mp
-
-            calculator = mace_mp(
-                model=model_loaded,
-                device=device,
-                default_dtype=dtype,
-            )
-        elif is_off_foundation:
-            from mace.calculators import mace_off
-
-            calculator = mace_off(
-                model=model_loaded,
-                device=device,
-                default_dtype=dtype,
-            )
-        else:
-            calculator = MACECalculator(
-                models=[model_loaded], device=device, default_dtype=dtype
-            )
-
-    descriptor_dict = {}
-    descriptor_list = []
-    uuid_list = []
-
-    # Getting descriptors for every structure
-    tot_num_structures = len(database)
-
-    iterable = (
-        atl_cut.atl_show_progress(
-            enumerate(database),
-            total=tot_num_structures,
-            interval=100,
-            prepend='MACE:',
-        )
-        if verbose
-        else enumerate(database)
+    from atlas.active_learning.backends.mace.descriptors import (
+        generate_descriptors_mace as _impl,
     )
 
-    for _, struct in iterable:
-        if struct.info.get('atl_id'):
-            struct_key = struct.info.get('atl_id')
-        elif struct.info.get('aiida_uuid'):
-            struct_key = struct.info.get('aiida_uuid')
-        else:
-            struct_key = str(uuid4())
-            uuid_list.append(struct_key)
-            struct.info['atl_id'] = struct_key
-
-        # Creating empty lists to store the descriptors if not already present
-        if descriptor_dict.get(struct_key) is None:
-            descriptor_dict[struct_key] = {
-                'descriptors': [],
-                'latent_space': [],
-            }
-
-        # Getting the descriptors for the current structure
-        curr_struct_descriptors = calculator.get_descriptors(struct)
-
-        # By averaging all vectors we get a single vector for the whole structure
-        # Similar to SOAP's "outer average"
-        if outer_average:
-            curr_struct_descriptors = np.mean(
-                curr_struct_descriptors, axis=0, keepdims=True
-            )
-
-        descriptor_list.append(curr_struct_descriptors)
-
-        # Appending the descriptors to the dictionary
-        descriptor_dict[struct_key]['descriptors'].append(curr_struct_descriptors)
-
-    # Generating a numpy array from the list of all descriptors, stacked
-    # vertically.
-    descriptor_arr = np.vstack(descriptor_list)
-    return descriptor_dict, descriptor_arr, uuid_list
+    return _impl(
+        model_path=model_path,
+        database=database,
+        descriptor_settings=descriptor_settings,
+        outer_average=outer_average,
+        verbose=verbose,
+    )
 
 
 def get_species_from_database(database: list[Atoms] | Atoms) -> list[str]:
@@ -899,6 +810,21 @@ def generate_descriptors_soap(
     else:
         species = get_species_from_database(database)
 
+    # Forward only *extra* SOAP parameters (e.g. sigma, rbf, weighting,
+    # compression, sparse) from the settings, dropping workflow/routing keys
+    # that are not SOAP arguments (descriptor_type, device, dtype,
+    # ignore_container, metadata, dimensionality_reduction_method, ...). The
+    # ``[descriptors]`` TOML section mixes both, and splatting the non-SOAP keys
+    # into ``SOAP`` raises ``TypeError``. Filter by SOAP's real signature.
+    import inspect
+
+    soap_param_names = set(inspect.signature(SOAP.__init__).parameters) - {'self'}
+    extra_soap_kwargs = {
+        key: value
+        for key, value in descriptor_settings_copy.items()
+        if key in soap_param_names
+    }
+
     # Setting up the SOAP descriptor
     soap = SOAP(
         species=species,
@@ -907,7 +833,7 @@ def generate_descriptors_soap(
         n_max=n_max,
         average=average,
         l_max=l_max,
-        **descriptor_settings_copy,
+        **extra_soap_kwargs,
     )
 
     descriptor_dict = {}
@@ -997,8 +923,6 @@ def run_mace_md_ase(
     stage_name: str
         Name of the MD stage. Default is None.
     """
-    from mace.calculators import MACECalculator
-
     from atlas.active_learning.md.ase_calculators import ATLSafeCalculatorWrapper
 
     T_multiplier = md_params.get('max_temp_multiplier', 1.0)
@@ -1049,30 +973,38 @@ def run_mace_md_ase(
 
     T_list = []
 
-    if md_type == 'mace':
-        mace_foundation = md_params.get('mace_foundation')
+    # Create calculator via the backend registry
+    from atlas.active_learning.backends import (
+        find_inference_model,
+        get_backend,
+        model_file_stem,
+    )
 
-        if mace_foundation:
-            from mace.calculators import mace_mp
+    backend = get_backend(md_type)
 
-            nn_calculator = mace_mp(
-                device=md_params.get('device', 'cpu'),
-                default_dtype=md_params.get('default_dtype', 'float64'),
-            )
-        else:
-            # Load the trained model as an ASE calculator and attach it to the
-            # atoms object
-            if model_name:
-                model_path = Path(prepend_path) / model_name
-            else:
-                model_path = Path(prepend_path) / 'curr_model.model'
+    if md_type == 'mace' and md_params.get('mace_foundation'):
+        # Foundation model shortcut for MACE
+        from atlas.active_learning.backends.mace.calculator import (
+            create_mace_calculator,
+        )
 
-            nn_calculator = MACECalculator(
-                model_paths=model_path,
-                device=md_params.get('device', 'cpu'),
-                default_dtype=md_params.get('default_dtype', 'float64'),
-                enable_cueq=enable_cueq,
-            )
+        nn_calculator = create_mace_calculator(
+            model_path=f'mace:mp-{md_params.get("mace_foundation", "medium")}',
+            device=md_params.get('device', 'cpu'),
+            dtype=md_params.get('default_dtype', 'float64'),
+        )
+    else:
+        # Prefer a pre-compiled inference artifact (compile-once step) over the
+        # raw model when present; unchanged for backends without compilation.
+        stem = model_file_stem(model_name) if model_name else 'curr_model'
+        model_path = find_inference_model(prepend_path, stem, backend)
+
+        nn_calculator = backend.create_calculator(
+            model_path=model_path,
+            device=md_params.get('device', 'cpu'),
+            dtype=md_params.get('default_dtype', 'float64'),
+            enable_cueq=enable_cueq,
+        )
 
         # Wrap the calculator in a custom calculator to check for
         # unphysical states
@@ -1202,8 +1134,6 @@ def run_mace_md_ase(
             interval=int(
                 num_steps * explode_filter_dict.get('explode_check_interval_perc', 0.1)
             ),
-            cov_rad_multiplier_max=explode_filter_dict.get('cov_rad_multiplier_max'),
-            cov_rad_multiplier_min=explode_filter_dict.get('cov_rad_multiplier_min'),
             max_T=T_end,
             max_T_multiplier=explode_filter_dict.get('max_T_multiplier', 10),
             T_list=T_list,
@@ -1249,8 +1179,6 @@ def run_mace_md_ase(
 
 def md_stop_explode_filter(
     dyn,
-    cov_rad_multiplier_min,
-    cov_rad_multiplier_max,
     max_T,
     max_T_multiplier,
     T_list,
@@ -1258,8 +1186,6 @@ def md_stop_explode_filter(
 ):
     has_exploded = apply_filter_exploding_structures(
         dyn,
-        cov_rad_multiplier_min=cov_rad_multiplier_min,
-        cov_rad_multiplier_max=cov_rad_multiplier_max,
         max_T=max_T,
         max_T_multiplier=max_T_multiplier,
         T_list=T_list,
@@ -1392,14 +1318,90 @@ def get_model_energies_std(energies_dict: dict) -> np.ndarray:
     return energies_std
 
 
+# Mapping of legacy ``mdb_*`` info keys to their current ``atl_*`` names.
+_MDB_KEY_MIGRATION = {
+    'mdb_struct_type': 'atl_struct_type',
+    'mdb_id': 'atl_id',
+    'mdb_db_index': 'atl_db_index',
+    'mdb_al_step': 'atl_al_step',
+}
+
+
+def standardize_atoms_info(atoms_list: list[Atoms]) -> list[Atoms]:
+    """Ensure every ASE structure has standardized ``atl_*`` info keys.
+
+    Migrates legacy ``mdb_*`` keys to their ``atl_*`` equivalents and ensures
+    every structure carries an ``atl_id`` UUID. Legacy keys are removed after
+    migration. Called automatically by :func:`load_database` so that databases
+    generated by older versions of the codebase are transparently upgraded.
+
+    Parameters
+    ----------
+    atoms_list : list of ase.Atoms
+        The list of ASE atoms objects to process.
+
+    Returns
+    -------
+    list of ase.Atoms
+        The updated list with standardized keys in ``info``.
+    """
+    migrated_count = 0
+
+    for struct in atoms_list:
+        info = struct.info
+
+        # --- mdb_* -> atl_* migration -----------------------------------
+        for old_key, new_key in _MDB_KEY_MIGRATION.items():
+            if old_key in info and new_key not in info:
+                info[new_key] = info[old_key]
+                del info[old_key]
+                migrated_count += 1
+            elif old_key in info and new_key in info:
+                # Both present, so remove the legacy duplicate.
+                del info[old_key]
+
+        # --- UUID standardization (same logic as
+        # InitialDatabase.standardize_struct_ids) -------------------------
+        uuid_candidate = (
+            info.get('atl_id') or info.get('aiida_uuid') or info.get('unique_id')
+        )
+
+        if uuid_candidate:
+            struct.info['atl_id'] = str(uuid_candidate)
+        else:
+            import uuid as _uuid
+
+            struct.info['atl_id'] = str(_uuid.uuid4())
+
+        if info.get('atl_al_step') == 0 and info.get('aiida_uuid'):
+            struct.info['atl_id'] = str(info['aiida_uuid'])
+            del info['aiida_uuid']
+
+        if 'unique_id' in info:
+            del info['unique_id']
+
+    if migrated_count > 0:
+        atl_cut.custom_print(
+            f'Migrated {migrated_count} legacy mdb_* info keys to atl_* '
+            f'across {len(atoms_list)} structures.',
+            'warn',
+        )
+
+    return atoms_list
+
+
 def load_database(path: str) -> list[Atoms]:
-    """Load an extended xyz file (database) from a given path as a list of ASE Atoms."""
+    """Load an extended xyz file (database) from a given path as a list of ASE Atoms.
+
+    Automatically standardizes legacy ``mdb_*`` info keys to ``atl_*`` and
+    ensures every structure has an ``atl_id`` UUID.
+    """
     database = ase_read(
         filename=path,
         format='extxyz',
         index=':',
     )
-    return database
+    return standardize_atoms_info(database)
 
 
 def convert_database_to_ase_atoms(
@@ -1428,7 +1430,20 @@ def return_code_from_settings(
     code_path: str,
     portable_code_label: str,
     builder,
-) -> orm.Code:
+) -> tuple[orm.Code, str]:
+    """Return a (code, prepend_text) pair for the given settings.
+
+    The code is cached via ``get_or_create_portable_code`` or
+    ``get_or_create_containerized_code`` so it is reused across calls with
+    identical parameters. ``prepend_text`` is returned separately so the
+    caller can pass it dynamically via
+    ``builder.metadata.options.prepend_text``.
+    """
+    from atlas.workflows.aiida_utils import (
+        get_or_create_containerized_code,
+        get_or_create_portable_code,
+    )
+
     # Getting container settings
     ignore_container = code_settings.get('ignore_container', False)
     containerized = False
@@ -1451,12 +1466,12 @@ def return_code_from_settings(
             + container_dict.get('prepend_text', '')
             + f'\nexport OMP_NUM_THREADS={num_threads}'
         )
-        code = orm.ContainerizedCode(
+        code = get_or_create_containerized_code(
+            label=portable_code_label,
             computer=builder.metadata.computer,
             image_name=image_name,
-            filepath_executable=executable_name,
-            prepend_text=prepend_text,
             engine_command=engine_command,
+            filepath_executable=executable_name,
         )
     else:
         prepend_text = (
@@ -1464,13 +1479,12 @@ def return_code_from_settings(
             + '\nexport PATH=$PATH:.'
             + f'\nexport OMP_NUM_THREADS={num_threads}'
         )
-        code = orm.PortableCode(
+        code = get_or_create_portable_code(
             label=portable_code_label,
             filepath_files=code_path,
             filepath_executable=executable_name,
-            prepend_text=prepend_text,
         )
-    return code
+    return code, prepend_text
 
 
 def select_dft_structures(struct_arr, frame_interval):
@@ -1602,16 +1616,19 @@ def _clean_stress_info_for_mace(atoms: Atoms) -> None:
 def sampler_populate_E_and_F_list(
     structure_list: list[Atoms],
     model_file: orm.SinglefileData,
+    backend_name: str = 'mace',
 ):
-    from io import BytesIO
+    import tempfile
 
-    from mace.calculators import MACECalculator
+    from atlas.active_learning.backends import get_backend
 
-    # Load model from SinglefileData and pass it to MACE
+    backend = get_backend(backend_name)
     model_file_content = model_file.get_content(mode='rb')
-    model_file_io = BytesIO(model_file_content)
-    mace_model = torch.load(model_file_io)
-    calc = MACECalculator(models=[mace_model])
+
+    with tempfile.NamedTemporaryFile(suffix=backend.model_file_extension) as tmp:
+        tmp.write(model_file_content)
+        tmp.flush()
+        calc = backend.create_calculator(model_path=tmp.name)
 
     updated_struct_list = []
 
@@ -1640,12 +1657,12 @@ def sampler_populate_E_and_F_list(
     return updated_struct_list
 
 
-def get_dft_calc_builder_mace_list(
+def get_dft_calc_builder_mlip_list(
     struct_list: list,
     dft_settings: dict,
     container_settings: dict,
 ):
-    """Get a MACE calculation builder for a given structure list and row."""
+    """Get an MLIP evaluation builder for a given structure list."""
     updated_struct_list = []
 
     # Whether to use a containerized version of the evaluator
@@ -1699,6 +1716,8 @@ def get_dft_calc_builder_mace_list(
     if containerized:
         import os
 
+        from atlas.workflows.aiida_utils import get_or_create_containerized_code
+
         image_name = container_settings.get('image_name', '')
         engine_command = container_settings.get('engine_command', '')
 
@@ -1715,23 +1734,26 @@ def get_dft_calc_builder_mace_list(
             + f'\nexport OMP_NUM_THREADS={num_threads}'
         )
         computer = orm.load_computer(metadata_dict.get('computer', None))
-        code = orm.ContainerizedCode(
+        code = get_or_create_containerized_code(
+            label='mace-eval-configs',
             computer=computer,
             image_name=image_name,
-            filepath_executable='mace_eval_configs',
-            prepend_text=prepend_text,
             engine_command=engine_command,
+            filepath_executable='mace_eval_configs',
         )
         mace_builder.code = code
     else:
         # Get code and remove from settings dict
         mace_builder.code = orm.load_code(dft_settings['options']['code_string'])
+        prepend_text = ''
 
     dft_settings['options'].pop('code_string', None)
 
     # Load scheduler and resources options
     mace_builder.metadata.options = dft_settings['options']
     mace_builder.metadata.options.parser_name = 'mace-eval-parser'
+    if containerized:
+        mace_builder.metadata.options.prepend_text = prepend_text
 
     struct_name = curr_material_name
     mace_builder.metadata.label = struct_name
@@ -1849,47 +1871,18 @@ def update_mace_train_settings_dict(
     containerized: orm.Bool = False,
 ):
     """Update the MACE training settings dictionary with the new database path."""
-    if isinstance(settings_dict, orm.Dict):
-        settings_dict: dict = settings_dict.get_dict()
-
-    # Update training file path in mace train settings
-    # to include the new database.
-    if isinstance(train_data_path, orm.Str):
-        train_data_path: Path = Path(train_data_path.value)
-    elif isinstance(train_data_path, str):
-        train_data_path: Path = Path(train_data_path)
-
-    if containerized.value is True:
-        # When using containerized code, the training file
-        # is expected to be in the /atl_data folder inside the container
-        train_data_path = Path('/atl_data') / train_data_path.name
-        settings_dict['train_file'] = str(train_data_path)
-        settings_dict['results_dir'] = str(Path('/atl_data') / 'results')
-        settings_dict['checkpoints_dir'] = str(Path('/atl_data') / 'checkpoints')
-        settings_dict['model_dir'] = str(Path('/atl_data'))
-        settings_dict['log_dir'] = str(Path('/atl_data') / 'logs')
-    else:
-        settings_dict['train_file'] = str(train_data_path.name)
-
-    # Updating name to include model and iteration number
-    curr_name = settings_dict['name']
-
-    # For very small datasets (testing), the batch size must be lower than the
-    # database size
-    if db_size < settings_dict.get('batch_size', 0):
-        settings_dict['batch_size'] = db_size // 2
-
-    if isinstance(curr_model, orm.Str):
-        curr_model = curr_model.value
-
-    if isinstance(curr_iter, orm.Int):
-        curr_iter = curr_iter.value
-
-    settings_dict['name'] = (
-        str(curr_model) + '_' + curr_name + '_al-iteration_' + str(curr_iter)
+    from atlas.active_learning.backends.mace.training import (
+        update_mace_train_settings_dict as _impl,
     )
 
-    return orm.Dict(settings_dict)
+    return _impl(
+        settings_dict=settings_dict,
+        train_data_path=train_data_path,
+        curr_model=curr_model,
+        curr_iter=curr_iter,
+        db_size=db_size,
+        containerized=containerized,
+    )
 
 
 @calcfunction
@@ -1907,22 +1900,11 @@ def create_mace_lammps_model(model_file: orm.SinglefileData):
     orm.SinglefileData
         A LAMMPS potential file generated from the MACE model.
     """
-    from mace.calculators import LAMMPS_MACE
+    from atlas.active_learning.backends.mace.training import (
+        create_mace_lammps_model_impl,
+    )
 
-    with model_file.as_path() as model_path:
-        # Loading model
-        model = torch.load(model_path, map_location=torch.device('cpu'))
-        model = model.double().to('cpu')
-        lammps_model = LAMMPS_MACE(model)
-        lammps_model_compiled = jit.compile(lammps_model)
-
-        # Creating new path
-        new_model_path = str(model_path) + '-lammps.pt'
-
-        # Saving LAMMPS model
-        lammps_model_compiled.save(new_model_path)
-
-        return orm.SinglefileData(file=new_model_path)
+    return create_mace_lammps_model_impl(model_file=model_file)
 
 
 @calcfunction
@@ -2425,10 +2407,10 @@ def get_outliers_from_calc_list(curr_struct_res, result_list, outlier_list):
 
 
 @calcfunction
-def gather_dft_calcs_mace(
+def gather_dft_calcs_mlip(
     dft_calc_list: list, results_dir: str, workchain=None
 ) -> orm.List:
-    """Collect and preprocess MACE DFT calculation results for active learning input."""
+    """Collect and preprocess MLIP evaluation results for active learning input."""
     result_list = []
     outlier_list = []
 
@@ -2486,15 +2468,15 @@ def gather_dft_calcs_mace(
                 structure.info[key] = val
 
             # Renaming temporary energy key
-            if 'atl_mace_eval_energy' in structure.info:
+            if 'atl_mlip_eval_energy' in structure.info:
                 structure.info['REF_energy'] = structure.info.pop(
-                    'atl_mace_eval_energy'
+                    'atl_mlip_eval_energy'
                 )
 
             # Renaming forces dict
-            if 'atl_mace_eval_forces' in structure.arrays:
+            if 'atl_mlip_eval_forces' in structure.arrays:
                 structure.arrays['REF_forces'] = structure.arrays.pop(
-                    'atl_mace_eval_forces'
+                    'atl_mlip_eval_forces'
                 )
 
             if 'forces' in structure.arrays:
@@ -2512,7 +2494,7 @@ def gather_dft_calcs_mace(
         node = orm.load_node(workchain.value)
         node.logger.log(
             level=LOG_LEVEL_REPORT,
-            msg=f'[{node.pk}|{node.process_label}|gather_dft_calcs_mace]:'
+            msg=f'[{node.pk}|{node.process_label}|gather_dft_calcs_mlip]:'
             f' Removed {len(outlier_list)} outliers.',
         )
 

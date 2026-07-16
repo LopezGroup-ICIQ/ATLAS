@@ -1,4 +1,5 @@
 """Utility functions for unit conversion and to convert data to MACE and N2P2."""
+
 from __future__ import annotations
 
 import pathlib

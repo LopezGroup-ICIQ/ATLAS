@@ -2,15 +2,17 @@
 
 Layout
 ------
-``<parent>/<name>.atlasproj``    SQLite file (index, settings history, summaries)
-``<parent>/<name>.atlas/``       canonical artifact directory
-    database_generation_settings.toml
-    active_learning_settings.toml
-    dft_settings.toml
-    databases/<database_name>.xz
-    models/<al_run_id>/...
-    reports/<al_run_id>/...
-    logs/<command>.<ts>.log
+The project bundle consists of an SQLite file and a canonical artifact directory:
+
+* ``<parent>/<name>.atlasproj`` - SQLite file with index, settings history, summaries
+* ``<parent>/<name>.atlas/`` - artifact directory containing:
+  - ``database_generation_settings.toml``
+  - ``active_learning_settings.toml``
+  - ``dft_settings.toml``
+  - ``databases/<database_name>.xz``
+  - ``models/<al_run_id>/...``
+  - ``reports/<al_run_id>/...``
+  - ``logs/<command>.<ts>.log``
 
 Configs live at the top of the ``.atlas/`` directory so that CLI tools
 invoked with that directory as CWD find them via their existing default

@@ -12,7 +12,6 @@ import tomllib
 import matplotlib.pyplot as plt
 import numpy as np
 from ase.io import read as ase_read
-from mace.calculators import MACECalculator
 from matplotlib.ticker import MultipleLocator
 
 from atlas.core import code_utils as atl_cut
@@ -57,11 +56,18 @@ if __name__ == '__main__':
     true_energies = np.array([struc.info['REF_energy'] for struc in test_db])
     true_forces = [struc.arrays['REF_forces'] for struc in test_db]
 
-    # Initialize MACECalculator
-    mace_calc = MACECalculator(
-        model_paths=prepend_path / 'curr_iter_best.model',
+    # Initialize calculator using the MLIP backend
+    from atlas.active_learning.backends import find_inference_model, get_backend
+
+    backend_name = settings.get('mlip', {}).get('training_backend', 'mace')
+    backend = get_backend(backend_name)
+
+    # Prefer a pre-compiled inference artifact if the compile-once step shipped
+    # one; otherwise fall back to the raw model (unchanged for MACE).
+    mace_calc = backend.create_calculator(
+        model_path=find_inference_model(prepend_path, 'curr_iter_best', backend),
         device=model_settings.get('device', 'cpu'),
-        default_dtype=model_settings.get('default_dtype', 'float32'),
+        dtype=model_settings.get('default_dtype', 'float32'),
     )
 
     # Evaluate test database

@@ -1046,6 +1046,55 @@ active_learning:
             type: str
             choices: ["validation", "testing"]
             default: None
+    debug:
+        name: "debug"
+        name_pretty: "Debug / Mock"
+        mandatory: false
+        description: "Developer debugging options for the active learning loop."
+        mock:
+            description: "Replace remote calcjobs (training, descriptors, MD, DFT) with instant local surrogates. For debugging loop logic only; results are physically meaningless."
+            enable:
+                description: "Whether to enable mock mode."
+                type: bool
+                mandatory: false
+                default: false
+            stages:
+                description: "Stages to mock. If omitted or empty, all stages are mocked. Mocking 'training' implies its model-consuming stages (md, descriptors, test_db) are mocked too, since a placeholder model cannot feed a real remote job."
+                type: list[str]
+                mandatory: false
+                default: []
+                choices: ["md", "dft", "training", "descriptors", "test_db"]
+            dft_potential:
+                description: "Classical potential used for mock DFT energies/forces. 'emt' uses ASE EMT (falls back to Lennard-Jones for unsupported elements); 'lj' always uses Lennard-Jones."
+                type: str
+                mandatory: false
+                default: "emt"
+                choices: ["emt", "lj"]
+            md_rattle_stdev:
+                description: "Standard deviation (Å) of the random perturbation applied to the seed frame in mock MD."
+                type: float
+                mandatory: false
+                default: 0.1
+            md_n_frames:
+                description: "Number of perturbed frames produced per seed structure in mock MD."
+                type: int
+                mandatory: false
+                default: 1
+            train_rmse_e_start:
+                description: "Mock committee/test-DB energy RMSE (meV/atom) at iteration 0; decays geometrically over iterations."
+                type: float
+                mandatory: false
+                default: 90.0
+            train_rmse_f_start:
+                description: "Mock committee/test-DB forces RMSE (meV/A) at iteration 0; decays geometrically over iterations."
+                type: float
+                mandatory: false
+                default: 275.0
+            train_rmse_decay:
+                description: "Per-iteration geometric decay factor for mock RMSE curves (0-1)."
+                type: float
+                mandatory: false
+                default: 0.7
     test_db:
         name: "test_db"
         name_pretty: "Test Set Settings"
@@ -1377,7 +1426,7 @@ active_learning:
         name_pretty: "Extrapolation Check Settings"
         description: "Settings for extrapolation checks."
         check_extrapolation_type:
-            description: "Method for extrapolation check. With `min-max` or `basic`, check for extrapolation using the range of the MACE descriptors. With `alpha-shape` or `advanced`, check for extrapolation using the concave hull of the MACE descriptors. With `disabled` or `none`, disable the extrapolation check, only leaving committee disagreement for EF for the domain."
+            description: "Method for extrapolation check. With `min-max` or `basic`, check for extrapolation using the range of the model descriptors. With `alpha-shape` or `advanced`, check for extrapolation using the concave hull of the model descriptors. With `disabled` or `none`, disable the extrapolation check, only leaving committee disagreement for EF for the domain."
             type: str
             mandatory: false
             default: "none"
@@ -1438,6 +1487,27 @@ active_learning:
                 default: 0.0
                 mandatory: false
                 description: "Scaling factor for the concave hull to be used when checking for extrapolation. For example, 0.1 results in a 10% size increase of the hull. A value of 0.0 means no scaling."
+            boundary_method:
+                type: str
+                default: "concave_hull"
+                mandatory: false
+                choices: ["concave_hull", "morphological_closing"]
+                description: "Algorithm for boundary determination during the extrapolation check. With `concave_hull`, the boundary is the alpha shape of the latent space (per quadtree cluster). With `morphological_closing`, the boundary is obtained by rasterising the latent space and applying a morphological closing operation."
+            morph_disk_size:
+                type: int
+                default: 10
+                mandatory: false
+                description: "Disk size for the morphological closing structuring element. Larger values bridge wider gaps between points. Only used when `boundary_method` is `morphological_closing`."
+            morph_threshold:
+                type: int
+                default: 250
+                mandatory: false
+                description: "Grayscale intensity threshold (0-255) for point detection in morphological closing. Only used when `boundary_method` is `morphological_closing`."
+            morph_dpi:
+                type: int
+                default: 100
+                mandatory: false
+                description: "DPI of the internal rasterisation used by morphological closing. Higher values give finer boundaries. Only used when `boundary_method` is `morphological_closing`."
     safeguard:
         name: "safeguard"
         name_pretty: "Active Learning Safeguard Settings"
@@ -1777,10 +1847,27 @@ active_learning:
                 type: str
                 mandatory: false
                 example: "module load singularity\nexport PATH=$PATH:."
+    mlip:
+        name: "mlip"
+        name_pretty: "MLIP Backend Settings"
+        description: "Configuration for the MLIP backend used in the active learning workflow. Supports a modular backend system with a plugin interface for adding new models. If this section is absent, the workflow defaults to MACE for all stages."
+        training_backend:
+            description: "Which MLIP backend to use for model training, committee evaluation, and calculator creation. Available backends are registered in the atlas.active_learning.backends registry."
+            type: str
+            mandatory: false
+            default: "mace"
+            example: "mace"
+        md_backend:
+            description: "Which MLIP backend to use for MD simulations. Defaults to the training_backend value if not specified."
+            type: str
+            mandatory: false
+            default: null
+            example: "mace"
     mace_train:
         name: "mace_train"
         name_pretty: "MLIP Training Settings"
-        description: "Settings for MACE model training."
+        description: "Settings for MACE model training. Used when mlip.training_backend is 'mace' (default)."
+        mandatory: false
         result_force_weight:
             description: "Weight of the force when considering model performance in weighted sum calculation."
             type: float
@@ -1794,15 +1881,15 @@ active_learning:
             min: 0.0
             max: 1.0
         code:
-            description: "AiiDA code name for MACE training."
+            description: "AiiDA code name for MLIP training. Optional when using PortableCode (omit to use the bundled training script)."
             type: str
-            mandatory: true
+            mandatory: false
             example: "mace_train@cluster"
             suggestions: "aiida_codes"
         computer:
-            description: "AiiDA computer name for MACE training."
+            description: "AiiDA computer name for MLIP training. Required when 'code' is not set (PortableCode mode)."
             type: str
-            mandatory: true
+            mandatory: false
             example: "my_cluster"
             suggestions: "aiida_computers"
         ignore_container:
@@ -1821,6 +1908,51 @@ active_learning:
             mandatory: false
         train_settings:
             description: "MACE training parameters and hyperparameters."
+            type: dict
+            mandatory: false
+    allegro_train:
+        name: "allegro_train"
+        name_pretty: "Allegro Training Settings"
+        description: "Settings for Allegro model training. Used when mlip.training_backend is 'allegro'."
+        mandatory: false
+        result_force_weight:
+            description: "Weight of the force when considering model performance in weighted sum calculation."
+            type: float
+            mandatory: false
+            default: 0.1
+        code:
+            description: "AiiDA code name for Allegro training. Optional when using PortableCode."
+            type: str
+            mandatory: false
+            example: "nequip-train@cluster"
+            suggestions: "aiida_codes"
+        computer:
+            description: "AiiDA computer name for Allegro training. Required when 'code' is not set."
+            type: str
+            mandatory: false
+            example: "my_cluster"
+            suggestions: "aiida_computers"
+        ignore_container:
+            description: "Whether to ignore container settings for Allegro training."
+            type: bool
+            mandatory: false
+            default: false
+        metadata:
+            description: "AiiDA metadata and scheduler options for Allegro training."
+            type: dict
+            mandatory: false
+        num_workers:
+            description: "Number of DataLoader workers for Allegro training."
+            type: int
+            mandatory: false
+            default: 4
+        batch_size:
+            description: "Batch size for Allegro training."
+            type: int
+            mandatory: false
+            default: 1
+        train_settings:
+            description: "Allegro/NequIP training parameters and hyperparameters."
             type: dict
             mandatory: false
     committee_eval:
@@ -1848,22 +1980,50 @@ active_learning:
             mandatory: false
         mace:
             name: "mace"
-            name_pretty: "Commitee Evaluation - MACE Settings"
-            description: "Settings for MACE evaluator."
+            name_pretty: "Committee Evaluation - MACE Settings"
+            description: "Settings for MACE evaluator. Used when training_backend is 'mace'."
+            mandatory: false
             device:
-                description: "Device for MACE evaluation."
+                description: "Device for MLIP evaluation."
                 type: str
                 mandatory: false
                 default: "cpu"
                 choices: ["cpu", "cuda"]
             default_dtype:
-                description: "Default data type for MACE evaluation."
+                description: "Default data type for MLIP evaluation."
                 type: str
                 mandatory: false
                 default: "float32"
                 choices: ["float32", "float64"]
             batch_size:
-                description: "Batch size for MACE evaluation."
+                description: "Batch size for MLIP evaluation."
+                type: int
+                mandatory: false
+                default: 32
+            compute_stress:
+                description: "Whether to compute stress during evaluation."
+                type: bool
+                mandatory: false
+                default: false
+        allegro:
+            name: "allegro"
+            name_pretty: "Committee Evaluation - Allegro Settings"
+            description: "Settings for Allegro evaluator. Used when training_backend is 'allegro'."
+            mandatory: false
+            device:
+                description: "Device for MLIP evaluation."
+                type: str
+                mandatory: false
+                default: "cpu"
+                choices: ["cpu", "cuda"]
+            default_dtype:
+                description: "Default data type for MLIP evaluation."
+                type: str
+                mandatory: false
+                default: "float32"
+                choices: ["float32", "float64"]
+            batch_size:
+                description: "Batch size for MLIP evaluation."
                 type: int
                 mandatory: false
                 default: 32
@@ -1887,7 +2047,7 @@ active_learning:
             default: "mace"
             choices: ["mace", "soap"]
         dimensionality_reduction_method:
-            description: "Dimensionality reduction method for MACE descriptors."
+            description: "Dimensionality reduction method for model descriptors."
             type: str
             mandatory: false
             default: "none"
@@ -1933,13 +2093,13 @@ active_learning:
                 device:
                     description: "Device for autoencoder training."
                     type: str
-                    mandatory: true
+                    mandatory: false
                     default: "cuda"
                     choices: ["cpu", "cuda"]
                 dtype:
                     description: "Data type for autoencoder training."
                     type: str
-                    mandatory: true
+                    mandatory: false
                     default: "float32"
                     choices: ["float32", "float64"]
                 model_path:
@@ -1988,7 +2148,7 @@ active_learning:
                     mandatory: false
                     default: 2048
                 patience:
-                    description: "Patience for early stopping."
+                    description: "Early stopping patience (epochs without val loss improvement). Also controls LR reduction schedule."
                     type: int
                     mandatory: false
                     default: 5
@@ -2684,7 +2844,7 @@ latent_space_analysis:
         name_pretty: "Extrapolation Check Settings"
         description: "Settings for extrapolation checks."
         check_extrapolation_type:
-            description: "Method for extrapolation check. With `min-max` or `basic`, check for extrapolation using the range of the MACE descriptors. With `alpha-shape` or `advanced`, check for extrapolation using the concave hull of the MACE descriptors. With `disabled` or `none`, disable the extrapolation check, only leaving committee disagreement for EF for the domain."
+            description: "Method for extrapolation check. With `min-max` or `basic`, check for extrapolation using the range of the model descriptors. With `alpha-shape` or `advanced`, check for extrapolation using the concave hull of the model descriptors. With `disabled` or `none`, disable the extrapolation check, only leaving committee disagreement for EF for the domain."
             type: str
             mandatory: false
             default: "none"
@@ -2745,6 +2905,27 @@ latent_space_analysis:
                 default: 0.0
                 mandatory: false
                 description: "Scaling factor for the concave hull to be used when checking for extrapolation. For example, 0.1 results in a 10% size increase of the hull. A value of 0.0 means no scaling."
+            boundary_method:
+                type: str
+                default: "concave_hull"
+                mandatory: false
+                choices: ["concave_hull", "morphological_closing"]
+                description: "Algorithm for boundary determination during the extrapolation check. With `concave_hull`, the boundary is the alpha shape of the latent space (per quadtree cluster). With `morphological_closing`, the boundary is obtained by rasterising the latent space and applying a morphological closing operation."
+            morph_disk_size:
+                type: int
+                default: 10
+                mandatory: false
+                description: "Disk size for the morphological closing structuring element. Larger values bridge wider gaps between points. Only used when `boundary_method` is `morphological_closing`."
+            morph_threshold:
+                type: int
+                default: 250
+                mandatory: false
+                description: "Grayscale intensity threshold (0-255) for point detection in morphological closing. Only used when `boundary_method` is `morphological_closing`."
+            morph_dpi:
+                type: int
+                default: 100
+                mandatory: false
+                description: "DPI of the internal rasterisation used by morphological closing. Higher values give finer boundaries. Only used when `boundary_method` is `morphological_closing`."
 
     descriptors:
         name: "descriptors"
@@ -2757,7 +2938,7 @@ latent_space_analysis:
             default: "mace"
             choices: ["mace", "soap"]
         dimensionality_reduction_method:
-            description: "Dimensionality reduction method for MACE descriptors."
+            description: "Dimensionality reduction method for model descriptors."
             type: str
             mandatory: false
             default: "none"
@@ -2799,13 +2980,13 @@ latent_space_analysis:
                 device:
                     description: "Device for autoencoder training."
                     type: str
-                    mandatory: true
+                    mandatory: false
                     default: "cuda"
                     choices: ["cpu", "cuda"]
                 dtype:
                     description: "Data type for autoencoder training."
                     type: str
-                    mandatory: true
+                    mandatory: false
                     default: "float32"
                     choices: ["float32", "float64"]
                 model_path:
@@ -2854,7 +3035,7 @@ latent_space_analysis:
                     mandatory: false
                     default: 2048
                 patience:
-                    description: "Patience for early stopping."
+                    description: "Early stopping patience (epochs without val loss improvement). Also controls LR reduction schedule."
                     type: int
                     mandatory: false
                     default: 5

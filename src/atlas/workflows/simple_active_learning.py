@@ -30,7 +30,16 @@ from rich.pretty import Pretty
 
 from atlas import ATL_ROOT_DIR
 from atlas.active_learning import active_learning_utils as atl_al_ut
-from atlas.active_learning import conversion as atl_conv
+from atlas.active_learning.backends import get_backend
+from atlas.active_learning.mock import (
+    MOCK_STAGES,
+    mock_descriptors,
+    mock_dft_label,
+    mock_md_process,
+    mock_test_db_eval,
+    mock_train_model,
+)
+from atlas.active_learning.mock import stage_is_mocked as mock_stage_is_mocked
 from atlas.core.code_utils import (
     ATL_THEME,
     ATLHighlighter,
@@ -38,7 +47,52 @@ from atlas.core.code_utils import (
     LevelNameFilter,
     get_atl_version_info,
 )
-from atlas.workflows.aiida_utils import get_or_create_portable_code
+from atlas.workflows.aiida_utils import (
+    get_or_create_containerized_code,
+    get_or_create_portable_code,
+    validate_kspacing,
+)
+
+
+def _build_compile_model_builder(
+    workchain, model_node, code_settings, current_settings, device, backend_name
+):
+    """Build a ``CompileModelCalculation`` builder for one inference target.
+
+    Shared by the child workchain (eval/seed-MD/committee) and the base
+    workchain (safeguard). The compile runs on ``code_settings``' computer so
+    the artifact matches the node where inference will happen.
+    """
+    builder = CalculationFactory('atl-compile-model').get_builder()
+    builder.model = model_node
+    builder.compile_settings = orm.Dict(
+        dict={
+            'backend': backend_name,
+            'device': device,
+            'mode': 'aotinductor',
+            'target': 'ase',
+        }
+    )
+    builder.metadata.computer = orm.load_computer(code_settings['metadata']['computer'])
+
+    resources = code_settings['metadata']['options'].get('resources', {})
+    num_threads = resources.get('num_cores_per_mpiproc', 2)
+
+    code, prepend_text = atl_al_ut.return_code_from_settings(
+        current_settings=current_settings,
+        code_settings=code_settings,
+        workchain=workchain,
+        num_threads=num_threads,
+        executable_name='atl_compile_model.py',
+        code_path=Path(f'{ATL_ROOT_DIR}/active_learning/scripts'),
+        portable_code_label='atl-compile-model',
+        builder=builder,
+    )
+    builder.code = code
+    builder.metadata.options = code_settings['metadata']['options']
+    builder.metadata.options.parser_name = 'atl-compile-model-parser'
+    builder.metadata.options.prepend_text = prepend_text
+    return builder
 
 
 class SimpleActiveLearningWorkChain(WorkChain):
@@ -188,6 +242,15 @@ class SimpleActiveLearningWorkChain(WorkChain):
             'mace_train',
             valid_type=orm.Dict,
             serializer=orm.to_aiida_type,
+            required=False,
+            default=None,
+        )
+        spec.input(
+            'mlip_train',
+            valid_type=orm.Dict,
+            serializer=orm.to_aiida_type,
+            required=False,
+            default=None,
         )
         spec.input('md_parameters', valid_type=orm.Dict)
         spec.input('dft_method', valid_type=orm.Str, serializer=orm.to_aiida_type)
@@ -238,11 +301,12 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
         spec.outline(
             cls.step_setup,
-            # Training the main mace model (M0) and the committee models
-            # using the training database (Dt).
-            cls.train_mace_model,
-            # Gathering results from mace training.
-            cls.get_mace_train_output,
+            cls.train_mlip_model,
+            cls.get_mlip_train_output,
+            # Optionally pre-compile the model(s) once per inference target
+            # (no-op for backends that need no compilation, e.g. MACE).
+            cls.compile_models_for_inference,
+            cls.gather_compiled_models,
             # If enabled, run evaluation of test database using M0 model.
             if_(cls.is_test_db_evaluation_enabled)(
                 cls.perform_test_db_evaluation,
@@ -293,7 +357,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
         spec.output('stop_al_loop_error', valid_type=orm.Bool)
 
         spec.exit_code(
-            420, 'ERROR_SCHEDULER_MACE', 'error when submitting a MACE calculation.'
+            420, 'ERROR_SCHEDULER_MLIP', 'error when submitting a MLIP calculation.'
         )
         spec.exit_code(
             421,
@@ -418,6 +482,56 @@ class SimpleActiveLearningWorkChain(WorkChain):
             self.logger.warning('Unable to import torch package. Assuming CPU only.')
             self.ctx.cuda_available = False
 
+        # Initialize MLIP backend from TOML settings (defaults to 'mace')
+        toml_path = Path(self.inputs.toml_file.value)
+        if toml_path.exists():
+            toml_settings = atl_al_ut.read_toml_settings(self.inputs.toml_file.value)
+            backend_name = toml_settings.get('mlip', {}).get('training_backend', 'mace')
+        else:
+            backend_name = 'mace'
+
+        self.ctx.mlip_backend_name = backend_name
+        self.ctx.mlip_backend = get_backend(backend_name)
+        self.ctx.mlip_train_settings = (
+            self.inputs.mlip_train
+            if self.inputs.mlip_train is not None
+            else self.inputs.mace_train
+        )
+        self.report(f'Using MLIP backend: {backend_name}')
+
+        # Load the [debug.mock] section (empty when absent) so stages can be
+        # swapped for instant local surrogates. See atlas.active_learning.mock.
+        if toml_path.exists():
+            self.ctx.mock_cfg = toml_settings.get('debug', {}).get('mock', {})
+        else:
+            self.ctx.mock_cfg = {}
+        if mock_stage_is_mocked(self.ctx.mock_cfg, 'md') or self.ctx.mock_cfg.get(
+            'enable', False
+        ):
+            mocked = [
+                s for s in MOCK_STAGES if mock_stage_is_mocked(self.ctx.mock_cfg, s)
+            ]
+            self.report(
+                'DEBUG MOCK MODE ENABLED - stages mocked with instant local '
+                f'surrogates: {mocked}. Results are physically meaningless.'
+            )
+
+    def _is_mocked(self, stage: str) -> bool:
+        """Whether ``stage`` runs as an instant local mock (``[debug.mock]``).
+
+        A stage is mocked if it is configured directly, or if it consumes the
+        trained model (``md``/``descriptors``/``test_db``) and ``training`` is
+        mocked -- a placeholder (mock-trained) model cannot feed a real remote job,
+        so its consumers must be mocked too.
+        """
+        cfg = getattr(self.ctx, 'mock_cfg', {})
+        if mock_stage_is_mocked(cfg, stage):
+            return True
+        return bool(
+            stage in ('md', 'descriptors', 'test_db')
+            and mock_stage_is_mocked(cfg, 'training')
+        )
+
     def should_select_data_reduction_structures(self):
         """Check if we should select additional structures for data reduction mode."""
         return self.inputs.al_mode.value == 'data_reduction'
@@ -530,27 +644,16 @@ class SimpleActiveLearningWorkChain(WorkChain):
         )
         self.report(msg)
 
-    def train_mace_model(self):
-        """
-        Setup and submit TrainMACEModelCalculation for MACE model training.
+    def train_mlip_model(self):
+        """Submit MLIP training calculations using the active backend.
 
-        This function generates a new training database file by appending the
-        workchain UUID to the original database file name. It then proceeds to train
-        a specified number of MACE models using settings defined in the workflow
-        inputs. The function updates the workchain context with the futures of the
-        submitted calculation jobs, allowing for the tracking of these jobs. The most
-        accurate model from these trainings is selected in a later step to drive MD
-        simulations, while the others serve as committee models for energy evaluation.
-
-        Returns
-        -------
-        None
-            The function does not return a value but updates the workchain context with
-            futures of the submitted TrainMACEModelCalculation jobs for later reference.
+        Generates a training database, then submits N training calculations
+        (one per committee model). Uses PortableCode by default; falls back
+        to a registered AiiDA Code if the ``code`` key is present in the
+        training settings.
         """
         self.report('Generating new training database file.')
 
-        # Adding workchain uuid input.data filename to path
         updated_path, _ = atl_al_ut.get_final_db_path(
             result_dir_path=self.inputs.results_dir.value,
             final_db_name=self.inputs.final_db_name.value,
@@ -559,21 +662,13 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
         database_training = atl_al_ut.load_database(self.inputs.training_db_path.value)
 
-        # Generate new training data file
-        atl_conv.gen_mace_train_structure_list(
+        self.ctx.mlip_backend.prepare_training_data(
             path=updated_path,
             structure_list=database_training,
         )
 
-        # Determining if resume mode is activated
         self.ctx.resume_mode = self.inputs.al_start_mode.value == 'resume'
 
-        # Train n models (M0-Mn)
-        # The most accurate model (during validation) will be chosen as the main model,
-        # and used to drive the MD simulations. The remaining models will act as
-        # committee models and will only be used to evaluate energies.
-
-        # Stop the calculation if initial models must be loaded
         if (
             self.inputs.load_init_models and self.inputs.al_loop_iteration.value == 0
         ) or (
@@ -586,7 +681,6 @@ class SimpleActiveLearningWorkChain(WorkChain):
                 f"'{self.inputs.load_init_models.get_list()}'."
             )
             return
-        # Run the training
         else:
             self.report(
                 f'Training {self.inputs.committee_num_models.value} models using '
@@ -594,136 +688,185 @@ class SimpleActiveLearningWorkChain(WorkChain):
             )
 
         calc_count = 0
+        train_settings_dict = self.ctx.mlip_train_settings.get_dict()
 
-        # Getting container settings
         containerized = False
         container_dict = self.inputs.container_settings.get_dict()
         if container_dict.get('use_container'):
             containerized = container_dict.get('use_container', False)
-        if self.inputs.mace_train.get('ignore_container') is True:
+        if self.ctx.mlip_train_settings.get('ignore_container') is True:
             containerized = False
 
-        for _ in range(self.inputs.committee_num_models.value):
+        use_portable_code = 'code' not in train_settings_dict
+        sched_options = train_settings_dict['metadata'].get('options')
+
+        train_file_path, _ = atl_al_ut.get_final_db_path(
+            result_dir_path=self.inputs.results_dir.value,
+            final_db_name=self.inputs.final_db_name.value,
+            node=self.node,
+        )
+
+        for model_index in range(self.inputs.committee_num_models.value):
             model_name = atl_al_ut.generate_model_name()
 
-            # Load training settings from inputs and update path and model names.
-            mace_train_settings: orm.Dict = atl_al_ut.update_mace_train_settings_dict(
-                settings_dict=self.inputs.mace_train.get('train_settings'),
-                train_data_path=str(updated_path),
-                curr_model=model_name,
-                curr_iter=self.inputs.al_loop_iteration.value,
-                db_size=len(database_training),
-                containerized=containerized,
-            )
+            # Mock mode: skip remote training, emit a placeholder model node with
+            # realistic per-member RMSE that decays over iterations. Calcfunctions
+            # run synchronously, so store the sealed node directly in the context
+            # list rather than awaiting it.
+            if self._is_mocked('training'):
+                mock_out = mock_train_model(
+                    orm.Str(model_name),
+                    orm.Int(self.inputs.al_loop_iteration.value),
+                    orm.Int(model_index),
+                    orm.Dict(dict(self.ctx.mock_cfg)),
+                )
+                mock_node = mock_out['model_file'].creator
+                if not hasattr(self.ctx, 'mlip_training_results'):
+                    self.ctx.mlip_training_results = []
+                self.ctx.mlip_training_results.append(mock_node)
+                self.report(
+                    f'[MOCK] Placeholder training model {model_name} '
+                    f'(RMSE E: {mock_out["m_rmse_e"].value:.1f} meV/at, '
+                    f'F: {mock_out["m_rmse_f"].value:.1f} meV/Å).'
+                )
+                continue
 
-            # Run training and save new model file
-            mace_train = CalculationFactory('mace-train')
-            mace_builder = mace_train.get_builder()
+            if use_portable_code:
+                train_calcjob = CalculationFactory('atl-train-mlip')
+                builder = train_calcjob.get_builder()
 
-            mace_builder.multihead_finetuning = self.inputs.mace_train.get(
-                'multihead_finetuning', False
-            )
-            mace_builder.model_name = model_name
-            mace_builder.mace_settings_dict = orm.Dict(mace_train_settings)
+                self.ctx.mlip_backend.prepare_builder(
+                    builder=builder,
+                    settings_dict=train_settings_dict.get('train_settings', {}),
+                    train_data_path=str(train_file_path),
+                    model_name=model_name,
+                    iteration=self.inputs.al_loop_iteration.value,
+                    db_size=len(database_training),
+                    containerized=containerized,
+                )
 
-            # Set the use container flag
-            mace_builder.use_container = orm.Bool(containerized)
+                train_cfg = train_settings_dict.get('train_settings', {})
+                if self.ctx.mlip_backend_name != 'mace':
+                    mace_only = []
+                    if train_cfg.get('foundation_model'):
+                        mace_only.append('foundation_model')
+                    if train_cfg.get('multihead_finetuning'):
+                        mace_only.append('multihead_finetuning')
+                    if mace_only:
+                        self.report(
+                            f'WARNING: {", ".join(mace_only)} '
+                            f'configured but backend is '
+                            f'"{self.ctx.mlip_backend_name}" '
+                            f'(MACE-only features, will be ignored)'
+                        )
 
-            mace_train_file_path, _ = atl_al_ut.get_final_db_path(
-                result_dir_path=self.inputs.results_dir.value,
-                final_db_name=self.inputs.final_db_name.value,
-                node=self.node,
-            )
-            mace_builder.mace_train_file_path = str(mace_train_file_path)
+                if containerized:
+                    image_name = container_dict.get('image_name', '')
+                    engine_command = container_dict.get('engine_command', '')
+                    computer = orm.load_computer(
+                        train_settings_dict.get('computer', None)
+                    )
+                    code = get_or_create_containerized_code(
+                        label='atl-train-mlip',
+                        computer=computer,
+                        image_name=image_name,
+                        engine_command=engine_command,
+                        filepath_executable='atl_train_mlip',
+                    )
+                    container_prepend = container_dict.get('prepend_text', '')
+                else:
+                    computer = orm.load_computer(
+                        train_settings_dict.get('computer', None)
+                    )
+                    code = get_or_create_portable_code(
+                        label='atl-train-mlip',
+                        filepath_files=Path(f'{ATL_ROOT_DIR}/active_learning/scripts'),
+                        filepath_executable='atl_train_mlip.py',
+                    )
+                    container_prepend = ''
 
-            mace_train_calc_sched_options = self.inputs.mace_train.get_dict()[
-                'metadata'
-            ].get('options')
-
-            if containerized:
-                image_name = container_dict.get('image_name', '')
-                engine_command = container_dict.get('engine_command', '')
-                num_threads = mace_train_calc_sched_options.get('resources', {}).get(
+                num_threads = sched_options.get('resources', {}).get(
                     'num_cores_per_mpiproc', os.cpu_count()
                 )
-                mace_train_prepend = (
-                    self.inputs.mace_train.get_dict()
-                    .get('metadata', {})
+
+                builder.code = code
+                builder.metadata.computer = computer
+                builder.metadata.options = sched_options
+                builder.metadata.options.parser_name = 'atl-train-mlip-parser'
+
+                # Pass environment setup dynamically so TOML changes take
+                # effect without recreating the code node.
+                builder.metadata.options.prepend_text = (
+                    train_settings_dict.get('metadata', {})
+                    .get('options', {})
                     .get('prepend_text', '')
-                )
-                prepend_text = (
-                    mace_train_prepend
                     + '\n'
-                    + container_dict.get('prepend_text', '')
+                    + container_prepend
                     + f'\nexport OMP_NUM_THREADS={num_threads}'
                 )
-                computer = orm.load_computer(
-                    self.inputs.mace_train.get_dict().get('computer', None)
-                )
-                code = orm.ContainerizedCode(
-                    computer=computer,
-                    image_name=image_name,
-                    filepath_executable='mace_run_train',
-                    prepend_text=prepend_text,
-                    engine_command=engine_command,
-                )
             else:
-                code_str = self.inputs.mace_train.get_dict()['code']
+                # Legacy path: backend-specific CalcJob + registered Code
+                mace_train_settings = atl_al_ut.update_mace_train_settings_dict(
+                    settings_dict=train_settings_dict.get('train_settings'),
+                    train_data_path=str(updated_path),
+                    curr_model=model_name,
+                    curr_iter=self.inputs.al_loop_iteration.value,
+                    db_size=len(database_training),
+                    containerized=containerized,
+                )
+
+                train_calcjob = CalculationFactory(
+                    self.ctx.mlip_backend.calcjob_entry_point
+                )
+                builder = train_calcjob.get_builder()
+                builder.multihead_finetuning = self.ctx.mlip_train_settings.get(
+                    'multihead_finetuning', False
+                )
+                builder.model_name = model_name
+                builder.mace_settings_dict = orm.Dict(mace_train_settings)
+                builder.use_container = orm.Bool(containerized)
+                builder.mace_train_file_path = str(train_file_path)
+
+                code_str = train_settings_dict['code']
                 code = orm.load_code(code_str)
                 computer = code.computer
 
-            mace_builder.code = code
+                builder.code = code
+                builder.metadata.options = sched_options
+                builder.metadata.options.parser_name = (
+                    self.ctx.mlip_backend.parser_entry_point
+                )
 
-            mace_builder.metadata.options = mace_train_calc_sched_options
-
-            # Manually setting parser. Default is 'mace-training-parser'
-            # It might be interesting to allow the user to override in the future?
-            mace_builder.metadata.options.parser_name = 'mace-training-parser'
-
-            mace_builder.metadata.options.output_filename = (
+            builder.metadata.options.output_filename = (
                 f'train_{model_name}_iter-{self.inputs.al_loop_iteration.value}'
             )
-            mace_builder.metadata.label = model_name
+            builder.metadata.label = model_name
 
-            if not hasattr(mace_builder.metadata.options, 'prepend_text'):
-                mace_builder.metadata.options.prepend_text = (
-                    self.inputs.mace_train.get_dict()
-                    .get('metadata', {})
+            if not hasattr(builder.metadata.options, 'prepend_text'):
+                builder.metadata.options.prepend_text = (
+                    train_settings_dict.get('metadata', {})
                     .get('options', {})
                     .get('prepend_text', '')
                 )
 
-            # future = self.submit(mace_builder)
-            # self.to_context(mace_training_results=append_(future))
             calc_limit = computer.metadata.get('atl_calc_limit', 0)
             if calc_limit != 0:
                 atl_al_ut.aiida_wait_submit(
-                    builder=mace_builder,
+                    builder=builder,
                     computer=computer,
                     calc_count=calc_count,
                 )
-            # Submit calculation
-            future = self.submit(mace_builder)
+
+            future = self.submit(builder)
             self.report(f'Submitted training calculation {future.pk}.')
-            self.to_context(mace_training_results=append_(future))
+            self.to_context(mlip_training_results=append_(future))
 
-    def get_mace_train_output(self):
-        """
-        Retrieve and process MACE training output for model selection.
+    def get_mlip_train_output(self):
+        """Retrieve and process MLIP training output for model selection.
 
-        This function evaluates MACE training results to identify the model with the
-        best performance based on a weighted sum of RMSE values for energy (E) and
-        forces (F). It selects the model with the lowest weighted E+F, considers
-        the importance of forces via a weighting factor, and processes the best model
-        to create a LAMMPS-compatible potential file. Information about the selected
-        model and committee models is updated in the context for further use.
-
-        Returns
-        -------
-        None
-            The function updates the workchain context with the best model's RMSE
-            values, the potential file, and the committee models' information
-            but does not return any value directly.
+        Evaluates training results to select the best model based on a
+        weighted sum of RMSE for energy and forces. Creates a
+        LAMMPS-compatible potential and updates context with model info.
         """
         # Get the current iteration and resume mode
         curr_iter = self.inputs.al_loop_iteration.value
@@ -733,21 +876,21 @@ class SimpleActiveLearningWorkChain(WorkChain):
             if curr_iter == 0 or (
                 self.ctx.resume_mode and not hasattr(self.ctx, 'loaded_init_models')
             ):
-                mace_training_results = [
+                mlip_training_results = [
                     orm.load_node(node) for node in self.inputs.load_init_models
                 ]
                 # Mark that models have been loaded
                 self.ctx.loaded_init_models = True
             else:
-                mace_training_results = self.ctx.mace_training_results
+                mlip_training_results = self.ctx.mlip_training_results
         else:
-            mace_training_results = self.ctx.mace_training_results
+            mlip_training_results = self.ctx.mlip_training_results
 
         model_name_list = []
         weighted_E_F_sum_list = []
 
         # Iterate over all models and get weighted sum of E and F
-        for calc in mace_training_results:
+        for calc in mlip_training_results:
             # Loading calculation node
             curr_calc: orm.CalcJobNode = orm.load_node(calc.uuid)
 
@@ -766,7 +909,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
             # Adding E + F multiplied by a weight value, in order to consider
             # forces when deciding which model to keep
-            force_weight = self.inputs.mace_train.get(
+            force_weight = self.ctx.mlip_train_settings.get(
                 'result_force_weight',
                 0.1,
             )
@@ -787,18 +930,18 @@ class SimpleActiveLearningWorkChain(WorkChain):
             raise ChildProcessError(
                 'No valid MLIP models were found after training! '
                 f'Check for issues in the training step. '
-                f'Calculation PKs: \n{mace_training_results}'
+                f'Calculation PKs: \n{mlip_training_results}'
             ) from e
 
         commitee_models_tupl_name_uuid = []
-        for calc in mace_training_results:
+        for calc in mlip_training_results:
             # Loading calculation node
             curr_calc: orm.CalcJobNode = orm.load_node(calc.uuid)
 
             # Skipping model if training hasn't finished correctly.
             if curr_calc.exit_status != 0:
                 self.report(
-                    f'Skipping MACE model that finished with errors (pk: {calc.pk}).'
+                    f'Skipping MLIP model that finished with errors (pk: {calc.pk}).'
                 )
                 continue
 
@@ -826,9 +969,11 @@ class SimpleActiveLearningWorkChain(WorkChain):
                 # Convert model to LAMMPS compatible format
                 # and return it to workchain context
                 if hasattr(self.ctx, 'cuda_available') and self.ctx.cuda_available:
-                    self.ctx.lammps_potential_file = atl_al_ut.create_mace_lammps_model(
+                    lammps_potential = self.ctx.mlip_backend.create_lammps_potential(
                         model_file
                     )
+                    if lammps_potential is not None:
+                        self.ctx.lammps_potential_file = lammps_potential
                 else:
                     self.logger.warning(
                         'CUDA not available, skipping LAMMPS potential file creation.'
@@ -866,8 +1011,158 @@ class SimpleActiveLearningWorkChain(WorkChain):
                 ),
             )
 
+    def compile_models_for_inference(self):
+        """Optionally pre-compile trained model(s) for each inference target.
+
+        No-op unless the MLIP backend implements ``MLIPModelCompiler`` (e.g.
+        Allegro). Otherwise, for each distinct ``(computer, device, model)`` an
+        enabled inference consumer will use, submit one compile CalcJob on that
+        computer so the artifact matches the node's device/toolchain. Results
+        are collected in :meth:`gather_compiled_models`. Purely an optimization:
+        consumers fall back to on-demand compilation if an artifact is missing.
+        """
+        from atlas.active_learning.backends._base import MLIPModelCompiler
+
+        self.ctx.compiled_models = {}
+        self.ctx.compile_target_map = {}
+
+        # Mock mode: the training model is a placeholder that cannot be compiled;
+        # skip so no compile CalcJob is submitted (would fail). Consumers fall back
+        # to the raw model node via _inference_model_for (unused when they too are
+        # mocked).
+        if self._is_mocked('training'):
+            self.report(
+                '[MOCK] Skipping model compilation (mock training placeholder).'
+            )
+            return
+
+        backend = self.ctx.mlip_backend
+        if not isinstance(backend, MLIPModelCompiler):
+            self.report(
+                f"Backend '{self.ctx.mlip_backend_name}' needs no model "
+                'compilation; skipping precompile step.'
+            )
+            return
+
+        current_settings = atl_al_ut.read_toml_settings(
+            settings_file=self.inputs.toml_file.value
+        )
+        if not current_settings.get('mlip', {}).get('precompile_for_inference', True):
+            self.report('precompile_for_inference disabled; skipping.')
+            return
+
+        targets = self._enumerate_inference_targets(current_settings)
+
+        submitted_keys = set()
+        for model_node, code_settings, device in targets:
+            computer_label = code_settings['metadata']['computer']
+            key = (computer_label, device, model_node.uuid)
+            if key in submitted_keys:
+                continue
+            submitted_keys.add(key)
+            future = self._submit_compile_calc(
+                model_node=model_node,
+                code_settings=code_settings,
+                current_settings=current_settings,
+                device=device,
+            )
+            self.ctx.compile_target_map[future.uuid] = key
+            self.to_context(compile_calcs=append_(future))
+            self.report(
+                f'Submitted model-compile calc ({future.pk}) for '
+                f'{computer_label} / device={device}.'
+            )
+
+    def gather_compiled_models(self):
+        """Collect compiled artifacts from the compile calcs into the cache."""
+        for calc in getattr(self.ctx, 'compile_calcs', []):
+            key = self.ctx.compile_target_map.get(calc.uuid)
+            if key is None:
+                continue
+            if calc.is_finished_ok and 'compiled_model' in calc.outputs:
+                self.ctx.compiled_models[key] = calc.outputs.compiled_model
+                self.report(
+                    f'Compiled model ready for {key[0]} / device={key[1]} '
+                    f'(calc {calc.pk}).'
+                )
+            else:
+                self.report(
+                    f'WARNING: model compile for {key[0]} / device={key[1]} did '
+                    f'not succeed (calc {calc.pk}); inference will compile '
+                    'on demand as a fallback.'
+                )
+
+    def _enumerate_inference_targets(self, current_settings):
+        """Return ``(model_node, code_settings, device)`` tuples to precompile.
+
+        One entry per (enabled consumer, model) pair; deduplicated by
+        ``(computer, device, model_uuid)`` in the caller.
+        """
+        targets = []
+
+        # Test-DB eval — uses the best model (M0) on the [test_db] computer.
+        if self.is_test_db_evaluation_enabled():
+            if current_settings.get('test_db'):
+                test_db_settings = current_settings['test_db']
+            else:
+                test_db_settings = self.inputs.eval_test_db_settings.get_dict()
+            device = test_db_settings.get('model_settings', {}).get('device', 'cpu')
+            targets.append((self.ctx.best_model_file, test_db_settings, device))
+
+        # Seed MD — the md node runs MD with M0 and the committee E/F check with
+        # every committee model, so all committee members are used there.
+        md_settings = current_settings.get('md', {})
+        if md_settings.get('metadata', {}).get('computer'):
+            md_device = md_settings.get('parameters', {}).get('device', 'cpu')
+            md_models = [self.ctx.best_model_file]
+            for _name, uuid_str in getattr(
+                self.ctx, 'commitee_models_tupl_name_uuid', []
+            ):
+                md_models.append(orm.load_node(uuid_str))
+            for model_node in md_models:
+                targets.append((model_node, md_settings, md_device))
+
+        return targets
+
+    def _submit_compile_calc(self, model_node, code_settings, current_settings, device):
+        """Build and submit a CompileModelCalculation on the target computer."""
+        builder = _build_compile_model_builder(
+            workchain=self,
+            model_node=model_node,
+            code_settings=code_settings,
+            current_settings=current_settings,
+            device=device,
+            backend_name=self.ctx.mlip_backend_name,
+        )
+        return self.submit(builder)
+
+    def _inference_model_for(self, model_node, computer_label, device):
+        """Return the compiled artifact for a target if cached, else the raw model."""
+        key = (computer_label, device, model_node.uuid)
+        return getattr(self.ctx, 'compiled_models', {}).get(key, model_node)
+
     def perform_test_db_evaluation(self):
         self.report('Preparing test database evaluation...')
+
+        # Mock mode: skip the remote eval (would fail on a placeholder model) and
+        # emit synthetic decaying error metrics + a placeholder plot. The
+        # calcfunction node is stored directly in the context; get_test_db_results
+        # consumes it unchanged.
+        if self._is_mocked('test_db'):
+            mock_out = mock_test_db_eval(
+                orm.Int(self.inputs.al_loop_iteration.value),
+                orm.Dict(dict(self.ctx.mock_cfg)),
+            )
+            mock_node = mock_out['rmse_e'].creator
+            if not hasattr(self.ctx, 'test_db_results'):
+                self.ctx.test_db_results = []
+            self.ctx.test_db_results.append(mock_node)
+            self.report(
+                '[MOCK] Synthetic test-DB evaluation '
+                f'(RMSE E: {mock_out["rmse_e"].value:.1f} meV/at, '
+                f'F: {mock_out["rmse_f"].value:.1f} meV/Å).'
+            )
+            return
 
         # Get builder for evaluation calculation
         eval_calc = CalculationFactory('atl-eval-test')
@@ -876,7 +1171,6 @@ class SimpleActiveLearningWorkChain(WorkChain):
         # Passing inputs and metadata
         eval_calc_builder.test_database = self.inputs.test_db_file
         eval_calc_builder.settings_file_path = self.inputs.toml_file
-        eval_calc_builder.sampler_model = self.ctx.best_model_file
         eval_calc_builder.test_db_eval_results = self.inputs.test_db_eval_results
         eval_calc_builder.current_iteration = orm.Int(self.inputs.al_loop_iteration)
 
@@ -897,6 +1191,17 @@ class SimpleActiveLearningWorkChain(WorkChain):
         else:
             eval_test_db_settings = self.inputs.eval_test_db_settings.get_dict()
 
+        # Ship a pre-compiled artifact for this target if the compile step
+        # produced one, else the raw best model (unchanged for MACE).
+        eval_device = eval_test_db_settings.get('model_settings', {}).get(
+            'device', 'cpu'
+        )
+        eval_calc_builder.sampler_model = self._inference_model_for(
+            self.ctx.best_model_file,
+            eval_test_db_settings['metadata']['computer'],
+            eval_device,
+        )
+
         # Loading metadata settings
         computer = orm.load_computer(eval_test_db_settings['metadata']['computer'])
         eval_calc_builder.metadata.computer = computer
@@ -907,7 +1212,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
         # Prepare and return correct code
         test_db_eval_code_path = Path(f'{ATL_ROOT_DIR}/active_learning/eval_test_db')
-        code = atl_al_ut.return_code_from_settings(
+        code, prepend_text = atl_al_ut.return_code_from_settings(
             current_settings=current_settings,
             code_settings=eval_test_db_settings,
             workchain=self,
@@ -920,11 +1225,12 @@ class SimpleActiveLearningWorkChain(WorkChain):
         eval_calc_builder.code = code
 
         # Loading AiiDA settings
-        mace_eval_aiida_settings_dict = eval_test_db_settings['metadata']['options']
+        mlip_eval_settings_dict = eval_test_db_settings['metadata']['options']
 
         # Load scheduler and resources options
-        eval_calc_builder.metadata.options = mace_eval_aiida_settings_dict
+        eval_calc_builder.metadata.options = mlip_eval_settings_dict
         eval_calc_builder.metadata.options.parser_name = 'atl-eval-test-parser'
+        eval_calc_builder.metadata.options.prepend_text = prepend_text
 
         # Submit evaluation calculation
         future = self.submit(eval_calc_builder)
@@ -990,6 +1296,17 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
     def gen_descriptors_and_concave_hull(self):
         self.report('Preparing descriptors calculation...')
+
+        # Mock mode: skip remote descriptor calc, emit trivial min/max arrays.
+        # The synchronous calcfunction node is stored directly in the context.
+        if self._is_mocked('descriptors'):
+            mock_out = mock_descriptors(self.ctx.best_model_file)
+            mock_node = mock_out['descriptor_max'].creator
+            if not hasattr(self.ctx, 'descrptor_results'):
+                self.ctx.descrptor_results = []
+            self.ctx.descrptor_results.append(mock_node)
+            self.report('[MOCK] Placeholder descriptors (trivial min/max arrays).')
+            return
 
         # Stop the calculation if descriptor calc must be loaded
         if (
@@ -1073,7 +1390,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
         # Get portable code
         descriptor_code_path = Path(
-            f'{ATL_ROOT_DIR}/active_learning/mace_code/combined'
+            f'{ATL_ROOT_DIR}/active_learning/backends/mace/scripts/combined'
         )
 
         # Loading metadata settings
@@ -1085,7 +1402,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
         num_threads = resources_dict.get('num_cores_per_mpiproc', 2)
 
         # Prepare and return correct code
-        code = atl_al_ut.return_code_from_settings(
+        code, prepend_text = atl_al_ut.return_code_from_settings(
             current_settings=current_settings,
             code_settings=descriptor_settings,
             workchain=self,
@@ -1098,11 +1415,12 @@ class SimpleActiveLearningWorkChain(WorkChain):
         desc_builder.code = code
 
         # Loading AiiDA settings
-        mace_eval_aiida_settings_dict = descriptor_settings['metadata']['options']
+        mlip_eval_settings_dict = descriptor_settings['metadata']['options']
 
         # Load scheduler and resources options
-        desc_builder.metadata.options = mace_eval_aiida_settings_dict
+        desc_builder.metadata.options = mlip_eval_settings_dict
         desc_builder.metadata.options.parser_name = 'atl-descriptors-combined-parser'
+        desc_builder.metadata.options.prepend_text = prepend_text
 
         # Get the calculation limit, from the computer metadata set to 0
         # if not present.
@@ -1119,8 +1437,15 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
         future = self.submit(desc_builder)
         if check_extrapolation_type in ['advanced', 'alpha-shape']:
+            boundary_method = (
+                current_settings.get('extrapolation', {})
+                .get('concave_hull', {})
+                .get('boundary_method', 'concave_hull')
+            )
+            boundary_label = boundary_method.replace('_', ' ')
             self.report(
-                f'Submitted calculation ({future.pk}) for descriptors + concave hull.'
+                f'Submitted calculation ({future.pk}) for descriptors + '
+                f'{boundary_label} boundary.'
             )
         else:
             self.report(f'Submitted calculation ({future.pk}) for descriptors.')
@@ -1160,6 +1485,20 @@ class SimpleActiveLearningWorkChain(WorkChain):
         if curr_calc.exit_status != 0:
             return self.exit_codes.ERROR_DESCRIPTOR_CALCULATION.format(
                 node_id=curr_calc.pk,
+            )
+
+        # Surface the extrapolation outcome in the run log (fills the gap
+        # between the descriptor submission and the next MD step).
+        if hasattr(curr_calc.outputs, 'extrapolation_metrics'):
+            metrics = curr_calc.outputs.extrapolation_metrics.get_dict()
+            boundary_method = metrics.get('boundary_method', 'unknown')
+            boundary_label = boundary_method.replace('_', ' ')
+            self.report(
+                f'Extrapolation check ({boundary_label}): '
+                f'{metrics["frac_outside"] * 100:.2f}% of '
+                f'{metrics["n_structures"]} structures outside boundary '
+                f'({metrics["n_boundaries"]} region(s), '
+                f'area {metrics["total_boundary_area"]:.3e}).'
             )
 
         # Loading descriptor min and max into context as numpy arrays
@@ -1226,13 +1565,13 @@ class SimpleActiveLearningWorkChain(WorkChain):
                 'positions',
                 'forces',
                 'REF_forces',
-                'MACE_forces',
+                'MLIP_forces',
                 'momenta',
                 'initial_magmoms',
                 'bulk_equivalent',
                 'bulk_wyckoff',
                 'spacegroup_kinds',
-                'atl_mace_eval_forces',
+                'atl_mlip_eval_forces',
                 'curr_model_forces',
             ]:
                 if curr_structure.get(key):
@@ -1258,6 +1597,33 @@ class SimpleActiveLearningWorkChain(WorkChain):
                 filename='md_db.xyz',
             )
             md_xyz_file.store()
+
+            # Mock mode: skip remote MD, return a random perturbation of the seed
+            # frame as the "extrapolating" structure(s).
+            if self._is_mocked('md'):
+                mock_cfg = self.ctx.mock_cfg
+                mock_out = mock_md_process(
+                    md_xyz_file,
+                    orm.Float(mock_cfg.get('md_rattle_stdev', 0.1)),
+                    orm.Int(mock_cfg.get('md_n_frames', 1)),
+                )
+                mock_node = mock_out['extrapolating_structures'].creator
+                if curr_structure.info.get('aiida_uuid'):
+                    mock_node.base.extras.set(
+                        'unique_id_old', curr_structure.info['aiida_uuid']
+                    )
+                if curr_structure.info.get('atl_id'):
+                    mock_node.base.extras.set(
+                        'unique_id', curr_structure.info['atl_id']
+                    )
+                mock_node.base.extras.set(
+                    'atl_db_index', curr_structure.info['atl_db_index']
+                )
+                if not hasattr(self.ctx, 'process_committee_results'):
+                    self.ctx.process_committee_results = []
+                self.ctx.process_committee_results.append(mock_node)
+                self.report(f'[MOCK] Perturbed seed structure (node {mock_node.pk}).')
+                continue
 
             # Add inputs to builder
             proc_seed_builder.md_structure = md_xyz_file
@@ -1323,6 +1689,21 @@ class SimpleActiveLearningWorkChain(WorkChain):
             best_model_name_clean = self.ctx.best_model_name.replace('-', '_')
             commitee_dict[best_model_name_clean] = self.ctx.best_model_file
 
+            # Swap in pre-compiled artifacts for the md computer/device when the
+            # compile-once step produced them (no-op for MACE / when absent).
+            md_meta = current_settings.get('md', {}).get('metadata', {})
+            md_computer_label = md_meta.get('computer')
+            if md_computer_label:
+                md_device = (
+                    current_settings.get('md', {})
+                    .get('parameters', {})
+                    .get('device', 'cpu')
+                )
+                commitee_dict = {
+                    name: self._inference_model_for(model, md_computer_label, md_device)
+                    for name, model in commitee_dict.items()
+                }
+
             proc_seed_builder.commitee_models = commitee_dict
 
             # Loading computer and removing it from the input dictionary
@@ -1371,31 +1752,19 @@ class SimpleActiveLearningWorkChain(WorkChain):
                 if containerized:
                     image_name = container_dict.get('image_name', '')
                     engine_command = container_dict.get('engine_command', '')
-                    prepend_text = (
-                        prepend_text_conf
-                        + '\n'
-                        + container_dict.get('prepend_text', '')
-                        + f'\nexport OMP_NUM_THREADS={num_threads}'
-                    )
-                    self.ctx._md_seed_code = orm.ContainerizedCode(
+                    self.ctx._md_seed_code = get_or_create_containerized_code(
+                        label='atl_process_md_seed_struct',
                         computer=computer,
                         image_name=image_name,
-                        filepath_executable='atl_process_structure.py',
-                        prepend_text=prepend_text,
                         engine_command=engine_command,
+                        filepath_executable='atl_process_structure.py',
                     )
                 else:
                     code_path = Path(f'{ATL_ROOT_DIR}/active_learning/md')
-                    prepend_text = (
-                        prepend_text_conf
-                        + '\nexport PATH=$PATH:.'
-                        + f'\nexport OMP_NUM_THREADS={num_threads}'
-                    )
                     self.ctx._md_seed_code = get_or_create_portable_code(
                         label='atl_process_md_seed_struct',
                         filepath_files=code_path,
                         filepath_executable='atl_process_structure.py',
-                        prepend_text=prepend_text,
                     )
             proc_seed_builder.code = self.ctx._md_seed_code
 
@@ -1405,6 +1774,19 @@ class SimpleActiveLearningWorkChain(WorkChain):
             proc_seed_builder.metadata.options = options_dict
             proc_seed_builder.metadata.options.parser_name = (
                 'atl-process-md-seed-struct-parser'
+            )
+
+            # Pass environment setup dynamically so TOML changes take effect
+            # without recreating the code node.
+            container_prepend = (
+                container_dict.get('prepend_text', '') if containerized else ''
+            )
+            proc_seed_builder.metadata.options.prepend_text = (
+                prepend_text_conf
+                + '\n'
+                + container_prepend
+                + '\nexport PATH=$PATH:.'
+                + f'\nexport OMP_NUM_THREADS={num_threads}'
             )
 
             # Get the calculation limit, from the computer metadata set to 0
@@ -1489,8 +1871,8 @@ class SimpleActiveLearningWorkChain(WorkChain):
                 ),
             )
 
-        mace_calcs_struct_list = []
-        mace_calcs_idx_list = []
+        mlip_calcs_struct_list = []
+        mlip_calcs_idx_list = []
         calcs_to_submit = []
         delete_indices = []
 
@@ -1558,9 +1940,41 @@ class SimpleActiveLearningWorkChain(WorkChain):
             # Setting error to stop the active learning loop
             self.ctx.stop_al_loop_error = orm.Bool(True)
 
+        # Mock mode: label the selected structures with a cheap classical
+        # potential locally instead of submitting DFT. The resulting node feeds
+        # the same context list the real DFT calcs use; return_seed_dft_and_model
+        # gathers it via a matching mock branch.
+        if self._is_mocked('dft') and len(calcs_to_submit) > 0:
+            f = io.StringIO()
+            with redirect_stdout(f):
+                ase_write(filename='-', format='extxyz', images=calcs_to_submit)
+            structs_file = orm.SinglefileData(
+                file=io.BytesIO(f.getvalue().encode()),
+                filename='mock_dft_input.xyz',
+            )
+            potential = self.ctx.mock_cfg.get('dft_potential', 'emt')
+            mock_out = mock_dft_label(structs_file, orm.Str(potential))
+            mock_node = mock_out['labeled_structures'].creator
+            if not hasattr(self.ctx, 'dft_struct_seed_calcs'):
+                self.ctx.dft_struct_seed_calcs = []
+            self.ctx.dft_struct_seed_calcs.append(mock_node)
+            self.report(
+                f'[MOCK] Labelled {len(calcs_to_submit)} structures with '
+                f"'{potential}' classical potential (node {mock_node.pk})."
+            )
+
+        # Validate kspacing coverage before submitting any DFT calculations.
+        elif self.inputs.dft_method == 'vasp' and len(calcs_to_submit) > 0:
+            dft_settings = self.inputs.dft_settings.get_dict()
+            kspacing_dict = dft_settings.get('kspacing', {})
+            phases = sorted(
+                set(s.info.get('phase', 'unknown') for s in calcs_to_submit)
+            )
+            validate_kspacing(kspacing_dict, phases)
+
         # Submitting calcs
         calc_count = 0
-        for struct in calcs_to_submit:
+        for struct in calcs_to_submit if not self._is_mocked('dft') else []:
             # Get row and index
             struct_uuid = struct.info.get('atl_id')
             if not struct_uuid:
@@ -1652,13 +2066,14 @@ class SimpleActiveLearningWorkChain(WorkChain):
                     group = orm.load_group(self.inputs.train_seed_group.value)
                     group.add_nodes(future)
 
-            elif self.inputs.dft_method == 'mace':
-                mace_calcs_struct_list.append(struct)
-                mace_calcs_idx_list.append(calc_idx)
+            elif self.inputs.dft_method in ('mace', 'mlip'):
+                mlip_calcs_struct_list.append(struct)
+                mlip_calcs_idx_list.append(calc_idx)
 
-        if self.inputs.dft_method == 'mace' and len(mace_calcs_struct_list) > 0:
-            builder = atl_al_ut.get_dft_calc_builder_mace_list(
-                struct_list=mace_calcs_struct_list,
+        is_mlip = self.inputs.dft_method in ('mace', 'mlip')
+        if is_mlip and len(mlip_calcs_struct_list) > 0:
+            builder = atl_al_ut.get_dft_calc_builder_mlip_list(
+                struct_list=mlip_calcs_struct_list,
                 dft_settings=self.inputs.dft_settings.get_dict(),
                 container_settings=self.inputs.container_settings.get_dict(),
             )
@@ -1750,8 +2165,23 @@ class SimpleActiveLearningWorkChain(WorkChain):
                 node=self.node,
             )
 
+        # Mock mode: gather the classically-labelled structures produced in
+        # send_calc_or_remove_structures (no VASP/mlip nodes exist).
+        if self._is_mocked('dft'):
+            dft_calc_list = []
+            for node in getattr(self.ctx, 'dft_struct_seed_calcs', []):
+                if not node.is_finished_ok:
+                    continue
+                with node.outputs.labeled_structures.as_path() as path:
+                    dft_calc_list.extend(
+                        ase_read(filename=path, format='extxyz', index=':')
+                    )
+            self.report(
+                f'[MOCK] Gathered {len(dft_calc_list)} classically-labelled structures.'
+            )
+
         # Running VASP calulations if its the selected method
-        if self.inputs.dft_method == 'vasp':
+        elif self.inputs.dft_method == 'vasp':
             try:
                 dft_calcs = len(self.ctx.dft_struct_seed_calcs)
 
@@ -1781,7 +2211,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
             except AttributeError:
                 dft_calc_list = ''
 
-        elif self.inputs.dft_method == 'mace':
+        elif self.inputs.dft_method in ('mace', 'mlip'):
             if hasattr(self.ctx, 'dft_struct_seed_calcs'):
                 dft_calcs = self.ctx.dft_struct_seed_calcs
             else:
@@ -1792,45 +2222,51 @@ class SimpleActiveLearningWorkChain(WorkChain):
                 dft_calcs_ok = [node.uuid for node in dft_calcs if node.is_finished_ok]
 
                 if len(dft_calcs_ok) == 0 and dft_calcs_len > 0:
-                    self.report('No MACE evaluations finished correctly.')
+                    self.report('No MLIP evaluations finished correctly.')
                     dft_calc_list = ''
                     self.ctx.stop_al_loop_error = orm.Bool(True)
                 elif len(dft_calcs_ok) == 0 and dft_calcs_len == 0:
-                    self.report('No MACE evaluation jobs performed.')
+                    self.report('No MLIP evaluation jobs performed.')
                     dft_calc_list = ''
                 else:
                     # Gather all MACE evaluations, storing results into a file,
                     # stored in `result_list_path`.
                     # Results are filtered to remove outliers. Outliers are
                     # stored in a separate file in the same folder.
-                    dft_calc_list: orm.List = atl_al_ut.gather_dft_calcs_mace(
+                    dft_calc_list: orm.List = atl_al_ut.gather_dft_calcs_mlip(
                         dft_calc_list=dft_calcs_ok,
                         results_dir=str(self.ctx.results_dir),
                         workchain=self.node.uuid,
                     )
                     self.report(
-                        f'Gathered {len(dft_calcs)} MACE evaluation calculation jobs.'
+                        f'Gathered {len(dft_calcs)} MLIP evaluation calculation jobs.'
                     )
             except AttributeError:
                 dft_calc_list = ''
                 self.report(
-                    'Exception raised when gathering MACE evaluation calculation jobs.'
+                    'Exception raised when gathering MLIP evaluation calculation jobs.'
                 )
 
         if len(dft_calc_list) > 0:
             # Run filtering step based on NN vs DFT difference threshold
             # for both E and F
             filter_settings = self.inputs.dft_settings.get('filter', {})
-            if filter_settings.get('filter_dft_calcs', False):
+            # DFT threshold filtering compares NN-model vs DFT predictions; this
+            # is meaningless for mock data (classical potential, placeholder
+            # model), so it is skipped entirely when DFT is mocked.
+            if filter_settings.get('filter_dft_calcs', False) and not self._is_mocked(
+                'dft'
+            ):
                 threshold_E_meV = filter_settings.get('threshold_E_meV', 1e3)
                 threshold_F_meV = filter_settings.get('threshold_F_meV', 1e4)
 
                 # For non MLIP cases (DFT), the model predictions are not readily
                 # accessible, so they must be generated on the fly.
-                if self.inputs.dft_method != 'mace':
+                if self.inputs.dft_method not in ('mace', 'mlip'):
                     dft_calc_list = atl_al_ut.sampler_populate_E_and_F_list(
                         structure_list=dft_calc_list,
                         model_file=self.ctx.best_model_file,
+                        backend_name=self.ctx.mlip_backend_name,
                     )
 
                 self.report(
@@ -2006,6 +2442,10 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
                     cls.get_al_loop_break_conditions,
                 ),
                 if_(cls.should_run_safeguard)(
+                    # Optionally pre-compile the sampler model on the safeguard
+                    # computer (no-op for backends without compilation).
+                    cls.compile_safeguard_model,
+                    cls.gather_safeguard_compiled,
                     # Run safeguard check
                     cls.run_safeguard_check,
                     cls.parse_safeguard_check_results,
@@ -3055,7 +3495,7 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
                     and self.ctx.loop_continue_condition
                 )
                 self.report(
-                    f'Safeguard check decision on whether to continue'
+                    f'Safeguard check decision on whether to continue '
                     f'the loop: {should_run}.'
                 )
 
@@ -3065,14 +3505,93 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
 
         return should_run
 
+    def compile_safeguard_model(self):
+        """Optionally pre-compile the sampler model for the safeguard node.
+
+        No-op unless the backend implements ``MLIPModelCompiler``. Result is
+        collected in :meth:`gather_safeguard_compiled` and used by the safeguard
+        MD calc; inference falls back to on-demand compilation otherwise.
+        """
+        from atlas.active_learning.backends import get_backend
+        from atlas.active_learning.backends._base import MLIPModelCompiler
+
+        self.ctx.safeguard_compiled_model = None
+
+        # ``stop_al_loop_error`` is an ``orm.Bool`` node when set; use truthiness
+        # (not ``is True``, which never matches a node) so a failed previous step
+        # correctly short-circuits the safeguard compile.
+        if getattr(self.ctx, 'stop_al_loop_error', False):
+            return
+
+        current_settings = atl_al_ut.read_toml_settings(
+            settings_file=self.ctx.inputs.toml_file.value
+        )
+
+        # Mock mode: the sampler model is a placeholder that cannot be compiled,
+        # and the safeguard MD is skipped anyway, so skip the compile calc (would
+        # fail with exit 421). Same trigger as safeguard_check_md.
+        mock_cfg = current_settings.get('debug', {}).get('mock', {})
+        if mock_stage_is_mocked(mock_cfg, 'md') or mock_stage_is_mocked(
+            mock_cfg, 'training'
+        ):
+            self.report(
+                '[MOCK] Skipping safeguard model compilation (mock md/training).'
+            )
+            return
+
+        backend_name = current_settings.get('mlip', {}).get('training_backend', 'mace')
+        try:
+            backend = get_backend(backend_name)
+        except ValueError:
+            return
+        if not isinstance(backend, MLIPModelCompiler):
+            return
+        if not current_settings.get('mlip', {}).get('precompile_for_inference', True):
+            return
+
+        safeguard_settings = current_settings.get('safeguard', {})
+        if not safeguard_settings.get('metadata', {}).get('computer'):
+            return
+
+        sampler_model = self.ctx.last_workchain_completed.outputs['m0_model_file']
+        device = (
+            safeguard_settings.get('md', {}).get('parameters', {}).get('device', 'cpu')
+        )
+        builder = _build_compile_model_builder(
+            workchain=self,
+            model_node=sampler_model,
+            code_settings=safeguard_settings,
+            current_settings=current_settings,
+            device=device,
+            backend_name=backend_name,
+        )
+        future = self.submit(builder)
+        self.to_context(safeguard_compile_calc=future)
+        self.report(f'Submitted safeguard model-compile calc ({future.pk}).')
+
+    def gather_safeguard_compiled(self):
+        """Store the compiled safeguard model if its compile calc succeeded."""
+        calc = getattr(self.ctx, 'safeguard_compile_calc', None)
+        if (
+            calc is not None
+            and calc.is_finished_ok
+            and 'compiled_model' in calc.outputs
+        ):
+            self.ctx.safeguard_compiled_model = calc.outputs.compiled_model
+            self.report(f'Safeguard model compiled (calc {calc.pk}).')
+        elif calc is not None:
+            self.report(
+                f'WARNING: safeguard model compile did not succeed '
+                f'(calc {calc.pk}); safeguard will compile on demand.'
+            )
+
     def run_safeguard_check(self):
         self.report('Running safeguard checks...')
 
-        # Skipping safeguard if there was an error in the previous step
-        if (
-            hasattr(self.ctx, 'stop_al_loop_error')
-            and self.ctx.stop_al_loop_error is True
-        ):
+        # Skipping safeguard if there was an error in the previous step.
+        # ``stop_al_loop_error`` is an ``orm.Bool`` node; use truthiness rather
+        # than ``is True`` (which never matches a node).
+        if hasattr(self.ctx, 'stop_al_loop_error') and self.ctx.stop_al_loop_error:
             self.report(
                 f'Last step ({self.ctx.last_workchain_completed.pk}) '
                 'did not finish correctly. '
@@ -3087,9 +3606,28 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
     def safeguard_check_md(self):
         self.report('Running MD for safeguard check...')
 
-        # Load sampler model
+        # Mock mode: skip the remote safeguard MD entirely. Without any
+        # process_safeguard_results, parse_safeguard_check_results proceeds
+        # without safeguard (loop continues) instead of submitting a real MD job.
+        toml_path = Path(self.ctx.inputs.toml_file.value)
+        mock_cfg = (
+            atl_al_ut.read_toml_settings(self.ctx.inputs.toml_file.value)
+            .get('debug', {})
+            .get('mock', {})
+            if toml_path.exists()
+            else {}
+        )
+        if mock_stage_is_mocked(mock_cfg, 'md') or mock_stage_is_mocked(
+            mock_cfg, 'training'
+        ):
+            self.report('[MOCK] Skipping remote safeguard MD (mock md/training).')
+            return
+
+        # Load sampler model (prefer a pre-compiled artifact for this node).
         last_wk = self.ctx.last_workchain_completed
         sampler_model: orm.SinglefileData = last_wk.outputs['m0_model_file']
+        if getattr(self.ctx, 'safeguard_compiled_model', None) is not None:
+            sampler_model = self.ctx.safeguard_compiled_model
 
         # Get types of all called calculations
         called_types = [nod.process_label for nod in last_wk.called]
@@ -3184,18 +3722,12 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
         if containerized:
             image_name = container_dict.get('image_name', '')
             engine_command = container_dict.get('engine_command', '')
-            prepend_text = (
-                prepend_text_conf
-                + '\n'
-                + container_dict.get('prepend_text', '')
-                + f'\nexport OMP_NUM_THREADS={num_threads}'
-            )
-            code = orm.ContainerizedCode(
+            code = get_or_create_containerized_code(
+                label='atl_run_safeguard_md',
                 computer=computer,
                 image_name=image_name,
-                filepath_executable='atl_run_safeguard_md.py',
-                prepend_text=prepend_text,
                 engine_command=engine_command,
+                filepath_executable='atl_run_safeguard_md.py',
             )
         else:
             # Get portable code
@@ -3203,16 +3735,10 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
                 f'{ATL_ROOT_DIR}/active_learning/safeguard/safeguard_scripts'
             )
 
-            prepend_text = (
-                prepend_text_conf
-                + '\nexport PATH=$PATH:.'
-                + f'\nexport OMP_NUM_THREADS={num_threads}'
-            )
             code = get_or_create_portable_code(
                 label='atl_run_safeguard_md',
                 filepath_files=code_path,
                 filepath_executable='atl_run_safeguard_md.py',
-                prepend_text=prepend_text,
             )
 
         # Select and generate structures for safeguard
@@ -3292,6 +3818,19 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
 
             sg_builder.metadata.options = options_dict
             sg_builder.metadata.options.parser_name = 'atl-safeguard-md-parser'
+
+            # Pass environment setup dynamically so TOML changes take effect
+            # without recreating the code node.
+            container_prepend = (
+                container_dict.get('prepend_text', '') if containerized else ''
+            )
+            sg_builder.metadata.options.prepend_text = (
+                prepend_text_conf
+                + '\n'
+                + container_prepend
+                + '\nexport PATH=$PATH:.'
+                + f'\nexport OMP_NUM_THREADS={num_threads}'
+            )
 
             sg_builder.settings_file_pth = self.ctx.inputs.toml_file
 
@@ -3841,13 +4380,12 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
         """
         Finalize the results at the end of the workchain.
 
-        This method is responsible for preparing and returning the final training
-        database at the conclusion of the workchain. It serializes the structures
-        within the training database to a format compatible with AiiDA storage and
-        subsequent processing. The serialized structures are then used to prepare
-        the final training database, which is outputted from the workchain. This
-        signifies the completion of the workchain and the availability of the
-        processed training data for further use.
+        This method prepares and returns the final training database at the
+        conclusion of the workchain. It serializes the structures within the training
+        database to a format compatible with AiiDA storage and subsequent processing.
+        The serialized structures are then used to prepare the final training database,
+        which is outputted from the workchain. This signifies the completion of the
+        workchain and the availability of the processed training data for further use.
         """
         self.report('Returning final results...')
 
@@ -3863,10 +4401,11 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
                 f"'stop_al_loop_error' could not be found in last iteration. "
                 f"Most likely, workchain '{self.node.pk}' crashed..."
             )
-        elif (
-            hasattr(self.ctx, 'stop_al_loop_error')
-            and self.ctx.stop_al_loop_error is False
-        ):
+        # ``stop_al_loop_error`` is an ``orm.Bool`` node, so use truthiness (as in
+        # ``check_al_loop_conditions``) rather than ``is False`` -- the latter never
+        # matches a node, which would skip the required ``final_model_file`` output
+        # and fail the workchain on every clean termination.
+        elif not self.ctx.stop_al_loop_error:
             # Returning final model as orm.SinglefileData object
             final_model_singlefile = self.ctx.last_workchain_completed.outputs[
                 'm0_model_file'

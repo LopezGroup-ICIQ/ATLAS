@@ -17,7 +17,8 @@ def output_monitor(node: CalcJobNode, transport: Transport) -> str:
 
     :param node: The node representing the calculation job.
     :param transport: The transport that can be used to retrieve files from remote
-    working directory.
+        working directory.
+
     :returns: A string if the job should be killed, `None` otherwise.
     """
     output_monitor.__version__ = '0.1'

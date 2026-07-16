@@ -92,7 +92,7 @@ class ATLRichHandler(RichHandler):
     would affect file logs and other libraries).
     """
 
-    # Mapping standard level names/numbers to your custom icons
+    # Mapping standard level names/numbers to custom icons
     _LEVEL_MAP = {
         'DEBUG': '[...]',
         'INFO': '[ i ]',
