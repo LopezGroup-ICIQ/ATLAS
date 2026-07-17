@@ -87,6 +87,7 @@ def _build_compile_model_builder(
         code_path=Path(f'{ATL_ROOT_DIR}/active_learning/scripts'),
         portable_code_label='atl-compile-model',
         builder=builder,
+        backend_name=backend_name,
     )
     builder.code = code
     builder.metadata.options = code_settings['metadata']['options']
@@ -691,7 +692,10 @@ class SimpleActiveLearningWorkChain(WorkChain):
         train_settings_dict = self.ctx.mlip_train_settings.get_dict()
 
         containerized = False
-        container_dict = self.inputs.container_settings.get_dict()
+        container_dict = atl_al_ut.resolve_container_settings(
+            self.inputs.container_settings.get_dict(),
+            self.ctx.mlip_backend_name,
+        )
         if container_dict.get('use_container'):
             containerized = container_dict.get('use_container', False)
         if self.ctx.mlip_train_settings.get('ignore_container') is True:
@@ -1221,6 +1225,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
             code_path=test_db_eval_code_path,
             portable_code_label='atl-eval-test',
             builder=eval_calc_builder,
+            backend_name=self.ctx.mlip_backend_name,
         )
         eval_calc_builder.code = code
 
@@ -1366,6 +1371,12 @@ class SimpleActiveLearningWorkChain(WorkChain):
         else:
             descriptor_settings = self.inputs.descriptor_settings
 
+        # The descriptors script picks its backend from `descriptor_type`
+        # (atl_check_descr_combined.py), so that is what selects the container
+        # image. 'soap' needs no MLIP framework, hence no per-backend override.
+        descriptor_type = descriptor_settings.get('descriptor_type', 'mace')
+        descriptor_backend_name = None if descriptor_type == 'soap' else descriptor_type
+
         if current_settings.get('check_extrapolation_type'):
             check_extrapolation_type = current_settings.get('check_extrapolation_type')
         else:
@@ -1411,6 +1422,7 @@ class SimpleActiveLearningWorkChain(WorkChain):
             code_path=descriptor_code_path,
             portable_code_label='atl-descriptors-combined',
             builder=desc_builder,
+            backend_name=descriptor_backend_name,
         )
         desc_builder.code = code
 
@@ -1740,9 +1752,14 @@ class SimpleActiveLearningWorkChain(WorkChain):
             )
             proc_seed_builder.metadata.description = 'Processing structure using MD.'
 
-            # Getting container settings
+            # Getting container settings. The MD CalcJob also runs the committee
+            # evaluation, which loads the trained models, so the image is
+            # selected by the training backend.
             containerized = False
-            container_dict = self.inputs.container_settings.get_dict()
+            container_dict = atl_al_ut.resolve_container_settings(
+                self.inputs.container_settings.get_dict(),
+                self.ctx.mlip_backend_name,
+            )
             if container_dict.get('use_container'):
                 containerized = container_dict.get('use_container', False)
             if ignore_container is True:
@@ -2072,10 +2089,16 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
         is_mlip = self.inputs.dft_method in ('mace', 'mlip')
         if is_mlip and len(mlip_calcs_struct_list) > 0:
+            # `get_dft_calc_builder_mlip_list` submits the `mace-eval` CalcJob
+            # with the `mace-eval-parser`, so the code that runs here is MACE
+            # regardless of the configured backend. Resolve its container
+            # against 'mace' until that CalcJob is made backend-agnostic.
             builder = atl_al_ut.get_dft_calc_builder_mlip_list(
                 struct_list=mlip_calcs_struct_list,
                 dft_settings=self.inputs.dft_settings.get_dict(),
-                container_settings=self.inputs.container_settings.get_dict(),
+                container_settings=atl_al_ut.resolve_container_settings(
+                    self.inputs.container_settings.get_dict(), 'mace'
+                ),
             )
 
             # Get the calculation limit, from the computer metadata set to 0
@@ -3711,9 +3734,17 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
         options_dict = metadata_dict['options']
         computer = orm.load_computer(metadata_dict.get('computer'))
 
-        # Getting container settings
+        # Getting container settings. The base workchain does not hold the
+        # backend in its context, so derive it locally from the TOML, as
+        # `compile_safeguard_model` already does.
+        safeguard_backend_name = current_settings.get('mlip', {}).get(
+            'training_backend', 'mace'
+        )
         containerized = False
-        container_dict = self.inputs.active_learning.container_settings.get_dict()
+        container_dict = atl_al_ut.resolve_container_settings(
+            self.inputs.active_learning.container_settings.get_dict(),
+            safeguard_backend_name,
+        )
         if container_dict.get('use_container'):
             containerized = container_dict.get('use_container', False)
         if ignore_container is True:

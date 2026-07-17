@@ -1847,6 +1847,27 @@ active_learning:
                 type: str
                 mandatory: false
                 example: "module load singularity\nexport PATH=$PATH:."
+            per_backend:
+                description: "Optional per-MLIP-backend container overrides. Each key is an MLIP backend name registered in the atlas.active_learning.backends registry (e.g. mace, allegro); its subkeys override the values set directly under 'container' for calculations running that backend. MLIP frameworks have mutually incompatible dependency stacks (MACE pins e3nn==0.4.4 while NequIP/Allegro need e3nn>=0.6), so each backend generally requires its own image. Keys left unset fall back to the global container settings. Omit this section entirely to use a single image for the whole run."
+                type: dict
+                mandatory: false
+                dynamic_keys: true
+                schema_under_dynamic_keys:
+                    image_name:
+                        description: "Path to this backend's container image on the calculation nodes."
+                        type: str
+                        mandatory: false
+                        example: "/path/to/atlas_allegro.sif"
+                    engine_command:
+                        description: "Command template for the container engine for this backend. Defaults to the global engine_command."
+                        type: str
+                        mandatory: false
+                        example: "singularity exec --bind .:/atl_data --nv --contain --writable-tmpfs {image_name}"
+                    prepend_text:
+                        description: "Text to prepend to job scripts for this backend's container setup. Defaults to the global prepend_text."
+                        type: str
+                        mandatory: false
+                        example: "module load singularity\nexport PATH=$PATH:."
     mlip:
         name: "mlip"
         name_pretty: "MLIP Backend Settings"

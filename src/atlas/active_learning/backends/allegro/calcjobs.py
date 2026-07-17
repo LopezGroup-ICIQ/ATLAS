@@ -1,6 +1,5 @@
 """Allegro-specific AiiDA CalcJob and Parser classes."""
 
-import json
 from pathlib import Path
 
 import numpy as np
@@ -40,7 +39,7 @@ class TrainAllegroModelCalculationParser(Parser):
                 if len(lines) > 1:
                     header = lines[0].split(',')
                     last_row = lines[-1].split(',')
-                    metrics = dict(zip(header, last_row))
+                    metrics = dict(zip(header, last_row, strict=False))
 
                     e_key = next(
                         (

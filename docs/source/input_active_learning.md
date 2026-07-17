@@ -1151,6 +1151,10 @@ Container settings for code execution.
   - **Example**: `'module load singularity
 export PATH=$PATH:.'`.
 
+- {alt}`per_backend`:
+  - **Description**: Optional per-MLIP-backend container overrides. Each key is an MLIP backend name registered in the atlas.active_learning.backends registry (e.g. mace, allegro); its subkeys override the values set directly under 'container' for calculations running that backend. MLIP frameworks have mutually incompatible dependency stacks (MACE pins e3nn==0.4.4 while NequIP/Allegro need e3nn>=0.6), so each backend generally requires its own image. Keys left unset fall back to the global container settings. Omit this section entirely to use a single image for the whole run.
+  - **Type**: `(optional, dict)`
+
 ### MLIP Backend Settings - `[mlip]`
 
 Configuration for the MLIP backend used in the active learning workflow. Supports a modular backend system with a plugin interface for adding new models. If this section is absent, the workflow defaults to MACE for all stages.
