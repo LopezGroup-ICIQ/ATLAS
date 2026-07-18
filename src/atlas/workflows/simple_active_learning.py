@@ -30,7 +30,8 @@ from rich.pretty import Pretty
 
 from atlas import ATL_ROOT_DIR
 from atlas.active_learning import active_learning_utils as atl_al_ut
-from atlas.active_learning.backends import get_backend
+from atlas.active_learning.backends import get_backend, trainable_backends
+from atlas.active_learning.backends._base import MLIPTrainer
 from atlas.active_learning.mock import (
     MOCK_STAGES,
     mock_descriptors,
@@ -365,6 +366,12 @@ class SimpleActiveLearningWorkChain(WorkChain):
             'ERROR_DESCRIPTOR_CALCULATION',
             'Descriptor calculation ({node_id}) could not finish successfully.',
         )
+        spec.exit_code(
+            422,
+            'ERROR_BACKEND_NOT_TRAINABLE',
+            "MLIP backend '{backend}' provides pretrained models only and cannot "
+            'train. Set mlip.training_backend to a trainable backend ({trainable}).',
+        )
 
     def set_step_logger(self):
         self.report('Performing secondary logger setup...')
@@ -493,6 +500,14 @@ class SimpleActiveLearningWorkChain(WorkChain):
 
         self.ctx.mlip_backend_name = backend_name
         self.ctx.mlip_backend = get_backend(backend_name)
+
+        # Fail here, at config time, rather than with an AttributeError on a
+        # compute node once the training CalcJob is already running.
+        if not isinstance(self.ctx.mlip_backend, MLIPTrainer):
+            return self.exit_codes.ERROR_BACKEND_NOT_TRAINABLE.format(
+                backend=backend_name,
+                trainable=', '.join(trainable_backends()),
+            )
         self.ctx.mlip_train_settings = (
             self.inputs.mlip_train
             if self.inputs.mlip_train is not None

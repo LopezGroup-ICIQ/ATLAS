@@ -58,13 +58,25 @@ def main():
     """Run MLIP training and write standardized results."""
     _patch_torch_load_if_needed()
 
-    from atlas.active_learning.backends import get_backend
+    from atlas.active_learning.backends import (
+        get_backend,
+        trainable_backends,
+    )
+    from atlas.active_learning.backends._base import MLIPTrainer
 
     with open('settings.toml', 'rb') as f:
         settings = tomllib.load(f)
 
     backend_name = settings.get('mlip', {}).get('training_backend', 'mace')
     backend = get_backend(backend_name)
+
+    if not isinstance(backend, MLIPTrainer):
+        raise TypeError(
+            f"MLIP backend '{backend_name}' provides pretrained models only and "
+            f'cannot train. Set mlip.training_backend to a trainable backend '
+            f'({", ".join(trainable_backends())}), or use this backend for MD '
+            f'only via [md.parameters].md_type = "{backend_name}:<variant>".'
+        )
 
     backend.run_training(config_path='train_config.yaml')
 
