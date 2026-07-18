@@ -265,15 +265,20 @@ if __name__ == '__main__':
         safe_md_params = settings.get('safeguard', {}).get('md_parameters')
 
     # The MD runs through the MLIP backend's ASE calculator; select the backend
-    # from the training backend so the MD matches the trained model (Allegro
-    # loads 'sampler_model.nequip.zip', not 'sampler_model.model'). An explicit
+    # from 'mlip.md_backend', falling back to the training backend. An explicit
     # '[safeguard.md.parameters].md_type' still wins.
     from atlas.active_learning.backends import get_backend as _get_backend
 
-    md_backend_name = settings.get('mlip', {}).get('training_backend', 'mace')
-    safe_md_params.setdefault('md_type', md_backend_name)
+    mlip_settings = settings.get('mlip', {})
+    training_backend_name = mlip_settings.get('training_backend', 'mace')
+    safe_md_params.setdefault(
+        'md_type', mlip_settings.get('md_backend') or training_backend_name
+    )
+    # The sampler model file was written by the *training* backend, so its
+    # extension comes from there even when the MD runs on another backend
+    # (Allegro writes 'sampler_model.nequip.zip', not 'sampler_model.model').
     sampler_model_name = (
-        f'sampler_model{_get_backend(md_backend_name).model_file_extension}'
+        f'sampler_model{_get_backend(training_backend_name).model_file_extension}'
     )
 
     # Adding key explicitly to display it in the log

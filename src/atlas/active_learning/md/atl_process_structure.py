@@ -324,11 +324,14 @@ if __name__ == '__main__':
     md_params = settings.get('md', {}).get('parameters')
 
     # The MD runs through the MLIP backend's ASE calculator; select the backend
-    # from the training backend so the MD matches the trained model (e.g. Allegro
-    # loads 'curr_model.nequip.zip', not 'curr_model.model'). An explicit
-    # '[md.parameters].md_type' still wins.
+    # from 'mlip.md_backend', falling back to the training backend so the MD
+    # matches the trained model (e.g. Allegro loads 'curr_model.nequip.zip',
+    # not 'curr_model.model'). An explicit '[md.parameters].md_type' still wins.
+    mlip_settings = settings.get('mlip', {})
     md_params.setdefault(
-        'md_type', settings.get('mlip', {}).get('training_backend', 'mace')
+        'md_type',
+        mlip_settings.get('md_backend')
+        or mlip_settings.get('training_backend', 'mace'),
     )
 
     # Adding key explicitly to display it in the log

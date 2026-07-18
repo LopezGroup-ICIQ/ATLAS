@@ -967,7 +967,7 @@ def run_mace_md_ase(
     else:
         log_interval = 1
 
-    md_type = md_params.get('md_type', 'mace')
+    md_spec = md_params.get('md_type', 'mace')
 
     T_list = []
 
@@ -976,43 +976,54 @@ def run_mace_md_ase(
         find_inference_model,
         get_backend,
         model_file_stem,
+        parse_model_spec,
+        resolve_model_spec,
     )
 
+    # Deprecated: 'mace_foundation' predates the backend registry and only ever
+    # reached the 'mace:mp-' family. `md_type` now carries the full spec.
+    mace_foundation = md_params.get('mace_foundation')
+    if mace_foundation and parse_model_spec(md_spec) == ('mace', None):
+        warnings.warn(
+            "'[md.parameters].mace_foundation' is deprecated; use "
+            f'md_type = "mace:mp-{mace_foundation}" instead.',
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        md_spec = f'mace:mp-{mace_foundation}'
+
+    # `md_type` accepts a backend ('mace', 'allegro') or a pretrained model
+    # spec ('mace:mp-small', 'orb:orb-v2').
+    md_type, pretrained_model = resolve_model_spec(md_spec)
     backend = get_backend(md_type)
 
-    if md_type == 'mace' and md_params.get('mace_foundation'):
-        # Foundation model shortcut for MACE
-        from atlas.active_learning.backends.mace.calculator import (
-            create_mace_calculator,
-        )
+    # Prefer a pre-compiled inference artifact (compile-once step) over the
+    # raw model when present; unchanged for backends without compilation. A
+    # configured pretrained model wins over both.
+    stem = model_file_stem(model_name) if model_name else 'curr_model'
+    model_path = find_inference_model(
+        prepend_path, stem, backend, pretrained_model=pretrained_model
+    )
 
-        nn_calculator = create_mace_calculator(
-            model_path=f'mace:mp-{md_params.get("mace_foundation", "medium")}',
-            device=md_params.get('device', 'cpu'),
-            dtype=md_params.get('default_dtype', 'float64'),
-        )
-    else:
-        # Prefer a pre-compiled inference artifact (compile-once step) over the
-        # raw model when present; unchanged for backends without compilation.
-        stem = model_file_stem(model_name) if model_name else 'curr_model'
-        model_path = find_inference_model(prepend_path, stem, backend)
+    # `enable_cueq` is MACE-specific; other backends must not be asked to
+    # absorb and ignore it.
+    calc_kwargs = {'enable_cueq': enable_cueq} if md_type == 'mace' else {}
+    nn_calculator = backend.create_calculator(
+        model_path=model_path,
+        device=md_params.get('device', 'cpu'),
+        dtype=md_params.get('default_dtype', 'float64'),
+        **calc_kwargs,
+    )
 
-        nn_calculator = backend.create_calculator(
-            model_path=model_path,
-            device=md_params.get('device', 'cpu'),
-            dtype=md_params.get('default_dtype', 'float64'),
-            enable_cueq=enable_cueq,
-        )
-
-        # Wrap the calculator in a custom calculator to check for
-        # unphysical states
-        wrapped_calc = ATLSafeCalculatorWrapper(
-            calculator=nn_calculator,
-            max_energy_threshold_per_atom=md_params.get(
-                'max_energy_threshold_per_atom', 1000
-            ),
-        )
-        init_conf.calc = wrapped_calc
+    # Wrap the calculator in a custom calculator to check for
+    # unphysical states
+    wrapped_calc = ATLSafeCalculatorWrapper(
+        calculator=nn_calculator,
+        max_energy_threshold_per_atom=md_params.get(
+            'max_energy_threshold_per_atom', 1000
+        ),
+    )
+    init_conf.calc = wrapped_calc
 
     # Set the momenta corresponding to the initial temperature
     MaxwellBoltzmannDistribution(init_conf, temperature_K=T_start)
