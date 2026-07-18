@@ -12,7 +12,6 @@ from pathlib import Path, PosixPath
 from uuid import uuid4
 
 import numpy as np
-import torch
 from ase import Atoms
 
 from atlas.core import code_utils as atl_cut
@@ -59,8 +58,6 @@ def generate_descriptors_mace(
     uuid_list : list[str]
         UUIDs assigned to structures that lacked an ``atl_id``.
     """
-    from mace.calculators import MACECalculator
-
     if model_path is None:
         raise MissingMandatoryParameterError(
             'Missing model path for MACE descriptor generation.'
@@ -69,55 +66,20 @@ def generate_descriptors_mace(
     device = descriptor_settings.get('device', 'cpu')
     dtype = descriptor_settings.get('dtype', 'float32')
 
-    is_mp_foundation = False
-    is_off_foundation = False
-
     if isinstance(model_path, PosixPath | Path):
         model_path = str(model_path)
 
+    # ``create_mace_calculator`` already dispatches a 'mace:mp-*'/'mace:off-*'
+    # foundation id to ``mace_mp``/``mace_off`` and anything else to a trained
+    # model file, so the foundation handling lives in one place.
+    from atlas.active_learning.backends.mace.calculator import (
+        create_mace_calculator,
+    )
+
     with _suppress_stdout():
-        try:
-            model_loaded = torch.load(model_path, map_location=torch.device(device))
-        except RuntimeError:
-            model_loaded = torch.load(model_path, map_location=torch.device('cpu'))
-        except FileNotFoundError as e:
-            if 'mace:mp-' in model_path:
-                model_variant = model_path.split('mace:mp-')[-1]
-                if model_variant in ['small', 'medium', 'large', 'medium-mpa-0']:
-                    is_mp_foundation = True
-                    model_loaded = model_variant
-            elif 'mace:off-' in model_path:
-                model_variant = model_path.split('mace:off-')[-1]
-                if model_variant in ['small', 'medium', 'large']:
-                    is_off_foundation = True
-                    model_loaded = model_variant
-            else:
-                raise FileNotFoundError(
-                    'Model file not found. Please provide a valid model path'
-                    'or a mace foundation model name, using the following syntax:'
-                    ' "mace:mp-small", "mace:off-medium", etc.'
-                ) from e
-
-        if is_mp_foundation:
-            from mace.calculators import mace_mp
-
-            calculator = mace_mp(
-                model=model_loaded,
-                device=device,
-                default_dtype=dtype,
-            )
-        elif is_off_foundation:
-            from mace.calculators import mace_off
-
-            calculator = mace_off(
-                model=model_loaded,
-                device=device,
-                default_dtype=dtype,
-            )
-        else:
-            calculator = MACECalculator(
-                models=[model_loaded], device=device, default_dtype=dtype
-            )
+        calculator = create_mace_calculator(
+            model_path=model_path, device=device, dtype=dtype
+        )
 
     descriptor_dict = {}
     descriptor_list = []
