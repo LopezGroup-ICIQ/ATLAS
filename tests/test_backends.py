@@ -9,14 +9,19 @@ import pytest
 
 from atlas.active_learning.backends import (
     _BACKEND_REGISTRY,
+    find_inference_model,
     get_backend,
     list_backends,
+    parse_model_spec,
     register_backend,
+    resolve_model_spec,
+    trainable_backends,
 )
 from atlas.active_learning.backends._base import (
     MLIPCalculatorFactory,
     MLIPCommitteeEvaluator,
     MLIPDescriptorProvider,
+    MLIPPretrainedModel,
     MLIPTrainer,
 )
 
@@ -418,3 +423,138 @@ class TestBackendDifferences:
         allegro = get_backend('allegro')
         assert hasattr(mace, 'prepare_training_data')
         assert hasattr(allegro, 'prepare_training_data')
+
+
+class TestPretrainedProtocolConformance:
+    """Which backends serve published pretrained models."""
+
+    def test_mace_is_pretrained_provider(self):
+        assert isinstance(get_backend('mace'), MLIPPretrainedModel)
+
+    def test_allegro_is_not_pretrained_provider(self):
+        # Allegro serves no published foundation models; omitting the protocol
+        # is how a backend says so.
+        assert not isinstance(get_backend('allegro'), MLIPPretrainedModel)
+
+    def test_trainable_backends(self):
+        assert trainable_backends() == ['allegro', 'mace']
+
+
+class TestParseModelSpec:
+    """Splitting a '<backend>:<variant>' spec from a path or plain name."""
+
+    def test_bare_backend(self):
+        assert parse_model_spec('mace') == ('mace', None)
+
+    def test_backend_with_variant(self):
+        assert parse_model_spec('mace:mp-small') == ('mace', 'mp-small')
+
+    def test_unregistered_prefix_is_not_a_spec(self):
+        assert parse_model_spec('orb:orb-v2') is None
+
+    def test_posix_path_is_not_a_spec(self):
+        assert parse_model_spec('/models/curr_model.model') is None
+
+    def test_windows_path_is_not_a_spec(self):
+        # The guard is 'prefix is a registered backend', not 'contains a colon'.
+        assert parse_model_spec('C:\\models\\curr_model.model') is None
+
+    def test_soap_is_not_a_spec(self):
+        assert parse_model_spec('soap') is None
+
+    def test_non_string(self):
+        assert parse_model_spec(None) is None
+
+
+class TestResolveModelSpec:
+    """Resolving a spec into a (backend, pretrained id) pair."""
+
+    def test_bare_trainable_backend_resolves_from_disk(self):
+        # A bare trainable backend must keep meaning "the model the AL loop
+        # trained", never a foundation model.
+        assert resolve_model_spec('mace') == ('mace', None)
+
+    def test_variant_resolves_through_the_backend(self):
+        assert resolve_model_spec('mace:mp-small') == ('mace', 'mace:mp-small')
+
+    def test_benchmark_bare_variant_keeps_working(self):
+        # The benchmark config's historical 'mace:small' means the mp family.
+        assert resolve_model_spec('mace:small') == ('mace', 'mace:mp-small')
+
+    def test_unparseable_spec_falls_back_to_default_backend(self):
+        assert resolve_model_spec(None, 'mace') == ('mace', None)
+
+    def test_variant_on_backend_without_pretrained_models_raises(self):
+        with pytest.raises(ValueError, match='does not provide pretrained'):
+            resolve_model_spec('allegro:something')
+
+
+class TestMaceResolvePretrainedModel:
+    """MACE foundation-model variant normalisation."""
+
+    def test_bare_variant_defaults_to_mp_family(self):
+        assert get_backend('mace').resolve_pretrained_model('small') == 'mace:mp-small'
+
+    def test_explicit_mp_family(self):
+        assert (
+            get_backend('mace').resolve_pretrained_model('mp-small') == 'mace:mp-small'
+        )
+
+    def test_off_family_is_reachable(self):
+        assert (
+            get_backend('mace').resolve_pretrained_model('off-medium')
+            == 'mace:off-medium'
+        )
+
+    def test_off23_alias_maps_to_off_family(self):
+        # The benchmark config spells the off family 'off23-*'.
+        assert (
+            get_backend('mace').resolve_pretrained_model('off23-small')
+            == 'mace:off-small'
+        )
+
+    def test_hyphenated_variant_is_not_split_as_a_family(self):
+        assert (
+            get_backend('mace').resolve_pretrained_model('medium-mpa-0')
+            == 'mace:mp-medium-mpa-0'
+        )
+
+    def test_none_returns_default(self):
+        assert get_backend('mace').resolve_pretrained_model(None) == 'mace:mp-medium'
+
+    def test_unknown_variant_passes_through(self):
+        # The accepted set depends on the installed mace-torch, so an unknown
+        # variant warns and is passed to the framework rather than rejected.
+        assert (
+            get_backend('mace').resolve_pretrained_model('some-future-model')
+            == 'mace:mp-some-future-model'
+        )
+
+
+class TestFindInferenceModel:
+    """Choosing the model reference handed to create_calculator."""
+
+    def test_explicit_pretrained_id_wins(self, tmp_path):
+        (tmp_path / 'curr_model.model').write_text('x')
+        result = find_inference_model(
+            tmp_path,
+            'curr_model',
+            get_backend('mace'),
+            pretrained_model='mace:mp-small',
+        )
+        assert result == 'mace:mp-small'
+
+    def test_resolves_trained_model_path(self, tmp_path):
+        (tmp_path / 'curr_model.model').write_text('x')
+        result = find_inference_model(tmp_path, 'curr_model', get_backend('mace'))
+        assert result == tmp_path / 'curr_model.model'
+
+    def test_missing_trained_model_does_not_fall_back_to_foundation(self, tmp_path):
+        """A missing trained model must surface as a missing path.
+
+        Substituting the backend's default foundation model would run the MD on
+        a different potential and produce plausible but wrong results.
+        """
+        result = find_inference_model(tmp_path, 'curr_model', get_backend('mace'))
+        assert result == tmp_path / 'curr_model.model'
+        assert not isinstance(result, str)
