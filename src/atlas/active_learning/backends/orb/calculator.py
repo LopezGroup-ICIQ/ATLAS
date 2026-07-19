@@ -43,9 +43,27 @@ def create_orb_calculator(
     Calculator
         An ASE-compatible ``ORBCalculator``.
     """
+    orbff = build_orb_forcefield(
+        model_path, device=device, compile_model=kwargs.get('compile', False)
+    )
+    from orb_models.forcefield.calculator import ORBCalculator
+
+    return ORBCalculator(orbff, device=device)
+
+
+def build_orb_forcefield(
+    model_path: str | Path | None = None,
+    device: str = 'cpu',
+    compile_model: bool = False,
+):
+    """Build the Orb forcefield model behind the calculator.
+
+    Shared by :func:`create_orb_calculator` and the descriptor provider, which
+    needs the model itself to hook its encoder. ``compile_model`` (torch.compile)
+    is opt-in: faster on GPU but needs a working C++ toolchain (torch inductor).
+    """
     try:
         from orb_models.forcefield import pretrained
-        from orb_models.forcefield.calculator import ORBCalculator
     except ImportError as exc:
         raise ImportError(
             "The 'orb' MLIP backend requires the 'orb-models' package, which is "
@@ -55,21 +73,14 @@ def create_orb_calculator(
             f'image. Original error: {exc}'
         ) from exc
 
-    # torch.compile is opt-in: it is faster on GPU but needs a working C++
-    # toolchain (torch inductor), which is not guaranteed on every host.
-    compile_model = kwargs.get('compile', False)
-
     if model_path is None:
-        orbff = pretrained.orb_v2(device=device, compile=compile_model)
-    elif _is_pretrained_name(model_path):
+        return pretrained.orb_v2(device=device, compile=compile_model)
+    if _is_pretrained_name(model_path):
         factory = _resolve_pretrained_factory(str(model_path))
-        orbff = factory(device=device, compile=compile_model)
-    else:
-        orbff = pretrained.orb_v2(
-            weights_path=str(model_path), device=device, compile=compile_model
-        )
-
-    return ORBCalculator(orbff, device=device)
+        return factory(device=device, compile=compile_model)
+    return pretrained.orb_v2(
+        weights_path=str(model_path), device=device, compile=compile_model
+    )
 
 
 def _is_pretrained_name(model_path: str | Path) -> bool:
