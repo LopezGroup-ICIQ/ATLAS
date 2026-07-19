@@ -160,6 +160,8 @@ Finally, initialize configuration files by running the **initial configuration c
 atl_init_setup
 ```
 
+The wizard also offers to store a **Hugging Face token** (`atl_init_setup hftoken`), which is only needed to download gated pretrained models such as fairchem/UMA or the EquiformerV2 OMat24 checkpoints. It is saved alongside the MP key in `secrets.json` and picked up automatically by those backends (you can also set the `HF_TOKEN` environment variable instead). Run `atl_init_setup status` to review what is configured.
+
 > [!NOTE]
 > If the user is only interested in database generation, the setup can be completed only up until this point, skipping the following AiiDA setup.
 

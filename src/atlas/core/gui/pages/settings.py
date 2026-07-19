@@ -140,6 +140,38 @@ class SettingsPage(WorkflowPage):
         mp_form.addRow('', key_buttons)
         outer.addWidget(mp_group)
 
+        # ── Hugging Face ────────────────────────────────────────────
+        hf_group = QGroupBox('Hugging Face')
+        hf_form = QFormLayout(hf_group)
+
+        self._hf_token_edit = QLineEdit()
+        self._hf_token_edit.setEchoMode(QLineEdit.Password)
+        self._hf_token_edit.setPlaceholderText(
+            'Token for gated models (fairchem/UMA, EquiformerV2)'
+        )
+        self._hf_token_edit.setMinimumWidth(350)
+        hf_form.addRow('Token', self._hf_token_edit)
+
+        hf_buttons = QHBoxLayout()
+        self._toggle_hf_vis_btn = QPushButton('Show')
+        self._toggle_hf_vis_btn.setFixedWidth(60)
+        self._toggle_hf_vis_btn.clicked.connect(self._toggle_hf_visibility)
+        hf_buttons.addWidget(self._toggle_hf_vis_btn)
+
+        save_hf_btn = QPushButton('Save')
+        save_hf_btn.setFixedWidth(60)
+        save_hf_btn.clicked.connect(self._save_hf_token)
+        hf_buttons.addWidget(save_hf_btn)
+
+        hf_buttons.addStretch()
+
+        self._hf_token_source = QLabel()
+        self._hf_token_source.setStyleSheet('color: palette(mid);')
+        hf_buttons.addWidget(self._hf_token_source)
+
+        hf_form.addRow('', hf_buttons)
+        outer.addWidget(hf_group)
+
         # ── Setup Status ───────────────────────────────────────────
         from atlas.core.gui.widgets.setup_wizard import SetupStatusPanel
 
@@ -152,6 +184,8 @@ class SettingsPage(WorkflowPage):
     def on_shown(self) -> None:
         self._load_api_key()
         self._update_key_source_label()
+        self._load_hf_token()
+        self._update_hf_token_source_label()
         self._populate_aiida_profiles()
         if not _current_aiida_profile():
             profiles, default = _list_aiida_profiles()
@@ -263,6 +297,44 @@ class SettingsPage(WorkflowPage):
         else:
             self._api_key_source.setText('')
 
+    # ── Hugging Face token ──────────────────────────────────────────
+
+    def _load_hf_token(self) -> None:
+        token = _read_hf_token()
+        if token:
+            self._hf_token_edit.setText(token)
+
+    def _toggle_hf_visibility(self) -> None:
+        if self._hf_token_edit.echoMode() == QLineEdit.Password:
+            self._hf_token_edit.setEchoMode(QLineEdit.Normal)
+            self._toggle_hf_vis_btn.setText('Hide')
+        else:
+            self._hf_token_edit.setEchoMode(QLineEdit.Password)
+            self._toggle_hf_vis_btn.setText('Show')
+
+    def _save_hf_token(self) -> None:
+        token = self._hf_token_edit.text().strip()
+        if not token:
+            QMessageBox.warning(
+                self, 'Hugging Face Token', 'Enter a token before saving.'
+            )
+            return
+        try:
+            _write_hf_token(token)
+            self._update_hf_token_source_label()
+            self._log('Hugging Face token saved.')
+        except Exception as exc:
+            QMessageBox.critical(
+                self, 'Hugging Face Token', f'Failed to save token: {exc}'
+            )
+
+    def _update_hf_token_source_label(self) -> None:
+        source = _hf_token_source()
+        if source:
+            self._hf_token_source.setText(f'Source: {source}')
+        else:
+            self._hf_token_source.setText('')
+
 
 # ── helpers ─────────────────────────────────────────────────────────
 
@@ -337,4 +409,59 @@ def _mp_key_source() -> str | None:
         return str(config_path)
     if os.environ.get('MP_API_KEY'):
         return 'MP_API_KEY environment variable'
+    return None
+
+
+def _read_hf_token() -> str | None:
+    """Read the Hugging Face token from secrets.json or env var."""
+    for path in [
+        pathlib.Path('secrets.json'),
+        _mp_config_dir() / 'secrets.json',
+    ]:
+        if path.exists():
+            try:
+                with open(path) as f:
+                    token = json.load(f).get('HF_TOKEN')
+                if token:
+                    return token
+            except Exception:
+                pass
+    return os.environ.get('HF_TOKEN') or os.environ.get('HUGGING_FACE_HUB_TOKEN')
+
+
+def _write_hf_token(token: str) -> None:
+    """Write the Hugging Face token to the ATLAS config directory."""
+    config_dir = _mp_config_dir()
+    config_dir.mkdir(parents=True, exist_ok=True)
+    secrets_path = config_dir / 'secrets.json'
+    data = {}
+    if secrets_path.exists():
+        try:
+            with open(secrets_path) as f:
+                data = json.load(f)
+        except Exception:
+            pass
+    data['HF_TOKEN'] = token
+    with open(secrets_path, 'w') as f:
+        json.dump(data, f, indent=2)
+    os.chmod(secrets_path, 0o600)
+
+
+def _hf_token_source() -> str | None:
+    """Return a description of where the HF token is coming from."""
+    if pathlib.Path('secrets.json').exists():
+        try:
+            if json.loads(pathlib.Path('secrets.json').read_text()).get('HF_TOKEN'):
+                return 'secrets.json (current directory)'
+        except Exception:
+            pass
+    config_path = _mp_config_dir() / 'secrets.json'
+    if config_path.exists():
+        try:
+            if json.loads(config_path.read_text()).get('HF_TOKEN'):
+                return str(config_path)
+        except Exception:
+            pass
+    if os.environ.get('HF_TOKEN') or os.environ.get('HUGGING_FACE_HUB_TOKEN'):
+        return 'HF_TOKEN environment variable'
     return None

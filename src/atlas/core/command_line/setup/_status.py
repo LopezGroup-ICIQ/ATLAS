@@ -18,15 +18,49 @@ def show_status() -> None:
         'ATLAS Setup Status',
         'Overview of your current ATLAS and AiiDA configuration.\n'
         'Run individual subcommands to set up missing components:\n'
-        '  atl_init_setup mpkey | profile | computer | code',
+        '  atl_init_setup mpkey | hftoken | profile | computer | code',
     )
 
     # MP API key
     _show_mp_status()
     rprint()
 
+    # Hugging Face token
+    _show_hf_status()
+    rprint()
+
     # AiiDA
     _show_aiida_status()
+
+
+def _show_hf_status() -> None:
+    config_dir = atl_cut.get_config_path() / 'atl'
+    secrets_path = config_dir / 'secrets.json'
+
+    table = Table(title='Hugging Face', show_lines=False)
+    table.add_column('Item', style='cyan')
+    table.add_column('Status')
+
+    token = None
+    if secrets_path.exists():
+        try:
+            token = json.loads(secrets_path.read_text()).get('HF_TOKEN')
+        except Exception:
+            token = None
+
+    if token:
+        masked = token[:4] + '...' + token[-4:] if len(token) > 8 else '***'
+        table.add_row('Token', f'[green]Configured[/green] ({masked})')
+        table.add_row('Path', str(secrets_path))
+    elif os.environ.get('HF_TOKEN') or os.environ.get('HUGGING_FACE_HUB_TOKEN'):
+        table.add_row('Token', '[green]Set via environment variable[/green]')
+    else:
+        table.add_row(
+            'Token',
+            '[yellow]Not configured[/yellow] (only needed for gated models)',
+        )
+
+    rprint(table)
 
 
 def _show_mp_status() -> None:

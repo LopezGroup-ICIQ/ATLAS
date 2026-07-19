@@ -78,6 +78,10 @@ def create_fairchem_calculator(
 
 def _load_pretrained(pretrained_mlip, model_name: str, device: str):
     """Resolve a published model, turning failures into actionable errors."""
+    # Authenticate gated downloads with the ATLAS-managed HF token, if any.
+    from atlas.core.code_utils import apply_hf_token
+
+    apply_hf_token()
     try:
         return pretrained_mlip.get_predict_unit(model_name, device=device)
     except Exception as exc:  # noqa: BLE001 - re-raised with guidance below
