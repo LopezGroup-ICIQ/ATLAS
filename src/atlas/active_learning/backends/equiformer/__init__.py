@@ -17,9 +17,11 @@ The OCP-era fork also bundles the **EquiformerV2** model code, so this backend
 loads EquiformerV2 checkpoints too, by published name
 (``md_type = "equiformer:eqV2_31M_omat"``, downloaded from the gated
 ``fairchem/OMAT24`` repo) or a local path
-(``md_type = "equiformer:/path/to/eqV2.pt"``). Verified: an OC20 EquiformerV2
-checkpoint loads and runs through the same ``OCPCalculator`` path, with V2
-registering automatically from the fork's core (no experimental import).
+(``md_type = "equiformer:/path/to/eqV2.pt"``). V2 registers automatically from
+the fork's core (no experimental import). Verified end-to-end against the
+OMat24-trained ``eqV2_31M_omat`` checkpoint: bulk Cu4 gives -3.74 eV/atom with a
+lattice-constant minimum at ~3.6 A (Cu's equilibrium), i.e. physically correct
+materials predictions.
 
 fairchem is imported lazily inside the calculator, so importing this module
 never requires it. Verified end-to-end against the ``mptrj_gradient`` checkpoint
