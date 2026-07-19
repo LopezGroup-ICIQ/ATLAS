@@ -450,7 +450,7 @@ class TestParseModelSpec:
         assert parse_model_spec('mace:mp-small') == ('mace', 'mp-small')
 
     def test_unregistered_prefix_is_not_a_spec(self):
-        assert parse_model_spec('orb:orb-v2') is None
+        assert parse_model_spec('notabackend:some-model') is None
 
     def test_posix_path_is_not_a_spec(self):
         assert parse_model_spec('/models/curr_model.model') is None
@@ -558,3 +558,82 @@ class TestFindInferenceModel:
         result = find_inference_model(tmp_path, 'curr_model', get_backend('mace'))
         assert result == tmp_path / 'curr_model.model'
         assert not isinstance(result, str)
+
+
+class TestOrbBackend:
+    """Orb: an inference-only, pretrained-model backend."""
+
+    def test_registered(self):
+        assert 'orb' in list_backends()
+
+    def test_protocol_profile(self):
+        # Calculator + pretrained model only; explicitly not trainable, not a
+        # committee, not a compiler, not a descriptor provider.
+        orb = get_backend('orb')
+        assert isinstance(orb, MLIPCalculatorFactory)
+        assert isinstance(orb, MLIPPretrainedModel)
+        assert not isinstance(orb, MLIPTrainer)
+        assert not isinstance(orb, MLIPCommitteeEvaluator)
+        assert not isinstance(orb, MLIPDescriptorProvider)
+
+    def test_not_in_trainable_backends(self):
+        assert 'orb' not in trainable_backends()
+
+    def test_model_file_extension(self):
+        assert get_backend('orb').model_file_extension == '.orb'
+
+    def test_default_pretrained_model(self):
+        assert get_backend('orb').default_pretrained_model == 'orb-v2'
+
+    def test_resolve_pretrained_passes_variant_through(self):
+        assert get_backend('orb').resolve_pretrained_model('orb-d3-xs-v2') == (
+            'orb-d3-xs-v2'
+        )
+
+    def test_resolve_pretrained_none_is_default(self):
+        assert get_backend('orb').resolve_pretrained_model(None) == 'orb-v2'
+
+    def test_spec_resolves_to_pretrained_id(self):
+        assert resolve_model_spec('orb:orb-v2') == ('orb', 'orb-v2')
+
+    def test_bare_orb_uses_default(self):
+        # A bare 'orb' is inference-only, so it resolves to the default model
+        # rather than a (nonexistent) trained-model path.
+        assert resolve_model_spec('orb') == ('orb', 'orb-v2')
+
+    def test_absent_framework_raises_actionable_error(self):
+        # When orb-models is not installed, building a calculator must name the
+        # package and the fix, not fail with an opaque deep import error.
+        import importlib.util
+
+        if importlib.util.find_spec('orb_models') is not None:
+            pytest.skip('orb-models is installed; covered by the live test')
+        with pytest.raises(ImportError, match='orb-models'):
+            get_backend('orb').create_calculator('orb-v2', device='cpu')
+
+
+class TestOrbLive:
+    """Live Orb single-point, skipped unless orb-models is installed."""
+
+    def test_single_point_on_bulk_cu(self):
+        pytest.importorskip('orb_models')
+        from ase.build import bulk
+
+        calc = get_backend('orb').create_calculator(
+            'orb-d3-xs-v2', device='cpu', compile=False
+        )
+        atoms = bulk('Cu', 'fcc', a=3.6, cubic=True)
+        atoms.calc = calc
+        energy = atoms.get_potential_energy()
+        forces = atoms.get_forces()
+        assert np.isfinite(energy)
+        assert forces.shape == (len(atoms), 3)
+
+    def test_ignores_unknown_kwargs(self):
+        # The shared MD call site passes enable_cueq unconditionally; Orb must
+        # accept and ignore it rather than forwarding it into ORBCalculator.
+        pytest.importorskip('orb_models')
+        calc = get_backend('orb').create_calculator(
+            'orb-d3-xs-v2', device='cpu', enable_cueq=True, compile=False
+        )
+        assert calc is not None

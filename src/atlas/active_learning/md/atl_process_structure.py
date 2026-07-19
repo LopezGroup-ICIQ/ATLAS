@@ -750,9 +750,23 @@ if __name__ == '__main__':
             get_backend,
             list_inference_models,
         )
+        from atlas.active_learning.backends._base import MLIPCommitteeEvaluator
 
         backend_name = settings.get('mlip', {}).get('training_backend', 'mace')
         backend = get_backend(backend_name)
+
+        # Committee uncertainty needs several trained models. A pretrained-only
+        # backend (e.g. Orb) has a single published potential and omits
+        # MLIPCommitteeEvaluator, so fail clearly rather than deep inside the
+        # evaluator when it tries to treat one model as a committee.
+        if not isinstance(backend, MLIPCommitteeEvaluator) or (
+            not backend.supports_committee_training
+        ):
+            raise ValueError(
+                f"MLIP backend '{backend_name}' does not support committee "
+                'evaluation. Use a trainable backend, or a committee-free '
+                'uncertainty criterion.'
+            )
 
         # Prefer pre-compiled artifacts (compile-once step) over raw models.
         model_file_list = list_inference_models(prepend_path, backend)

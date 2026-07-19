@@ -272,6 +272,7 @@ import importlib as _importlib  # noqa: E402
 for _backend_module in (
     'atlas.active_learning.backends.allegro',
     'atlas.active_learning.backends.mace',
+    'atlas.active_learning.backends.orb',
 ):
     with _contextlib.suppress(ImportError):
         _importlib.import_module(_backend_module)
