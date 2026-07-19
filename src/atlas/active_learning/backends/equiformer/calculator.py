@@ -89,36 +89,39 @@ def create_equiformer_calculator(
     )
 
 
-def _register_equiformer_model() -> None:
-    """Import the EquiformerV3 model module so it registers with fairchem.
+def _register_equiformer_model() -> bool:
+    """Best-effort import of the EquiformerV3 model module to register it.
 
     ``OCPCalculator`` rebuilds the model named in the checkpoint config from the
-    fairchem model registry. The EquiformerV3 class is not part of the installed
-    ``fairchem-core``; it lives in the equiformer_v3 repo's ``experimental``
-    tree and only registers when imported.
+    fairchem model registry. EquiformerV2 is part of the fork's ``fairchem-core``
+    and registers automatically, but EquiformerV3 lives in the repo's
+    ``experimental`` tree and only registers when imported.
+
+    This is best-effort and never raises: a V2 checkpoint needs no experimental
+    import, and if a V3 checkpoint is used without the module, ``OCPCalculator``
+    raises its own clear "model not registered" error at load time.
+
+    Returns
+    -------
+    bool
+        True if the EquiformerV3 module was imported (V3 checkpoints usable).
     """
     import importlib
 
     for module_name in _MODEL_REGISTER_MODULES:
         try:
             importlib.import_module(module_name)
-            return
+            return True
         except ImportError:
             continue
-
-    raise ImportError(
-        'Could not import the EquiformerV3 model module to register it with '
-        'fairchem. The equiformer_v3 repository (atomicarchitects/equiformer_v3) '
-        'must be installed and importable so that its '
-        "'experimental.models.equiformer_v3' module is on the path. Tried: "
-        f'{", ".join(_MODEL_REGISTER_MODULES)}.'
-    )
+    return False
 
 
 def _resolve_checkpoint(model_path: str | Path | None) -> str:
     """Return a local checkpoint path, downloading a published name if needed."""
     from atlas.active_learning.backends.equiformer import (
         DEFAULT_CHECKPOINT,
+        PUBLISHED_CHECKPOINTS,
         published_checkpoint_filename,
     )
 
@@ -126,13 +129,45 @@ def _resolve_checkpoint(model_path: str | Path | None) -> str:
         return str(model_path)
 
     name = str(model_path) if model_path else DEFAULT_CHECKPOINT
+    if name in PUBLISHED_CHECKPOINTS:
+        repo, filename = PUBLISHED_CHECKPOINTS[name]
+    else:
+        # Unknown name: assume the EquiformerV3 mirror-repo layout.
+        repo, filename = _HF_REPO, published_checkpoint_filename(name)
+
     try:
         from huggingface_hub import hf_hub_download
     except ImportError as exc:
         raise ImportError(
-            "Downloading a published EquiformerV3 checkpoint needs 'huggingface_hub'. "
+            "Downloading a published Equiformer checkpoint needs 'huggingface_hub'. "
             'Install it, or pass a local checkpoint path instead. '
             f'Original error: {exc}'
         ) from exc
 
-    return hf_hub_download(_HF_REPO, published_checkpoint_filename(name))
+    # Authenticate gated downloads (EquiformerV2 OMat24) with the ATLAS-managed
+    # HF token, if any.
+    from atlas.core.code_utils import apply_hf_token
+
+    apply_hf_token()
+    try:
+        return hf_hub_download(repo, filename)
+    except Exception as exc:  # noqa: BLE001 - re-raised with guidance below
+        # The EquiformerV2 OMat24 checkpoints live in a gated repo.
+        if _looks_like_hf_auth_error(exc):
+            raise RuntimeError(
+                f"Cannot download the gated checkpoint '{name}' from the "
+                f"'{repo}' Hugging Face repo. Request access at "
+                f'https://huggingface.co/{repo} (granted by manual review) and '
+                'authenticate (huggingface-cli login or HF_TOKEN). '
+                f'Original error: {exc}'
+            ) from exc
+        raise
+
+
+def _looks_like_hf_auth_error(exc: Exception) -> bool:
+    """Best-effort detection of a Hugging Face gated/auth error."""
+    text = f'{type(exc).__name__}: {exc}'.lower()
+    return any(
+        token in text
+        for token in ('401', '403', 'gated', 'unauthorized', 'authentication')
+    )

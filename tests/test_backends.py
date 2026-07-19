@@ -914,3 +914,57 @@ class TestEquiformerDescriptorsLive:
             pytest.skip(f'equiformer_v3 model module not importable: {exc}')
         assert arr.shape == (8, 128)  # 2 x 4 atoms, 128-dim invariant features
         assert np.isfinite(arr).all()
+
+
+class TestEquiformerV2Support:
+    """The equiformer backend also loads EquiformerV2 checkpoints.
+
+    EquiformerV2 registers automatically from the OCP-era fork's core, so the
+    model-registration helper must not hard-fail when the (V3-only) experimental
+    module is absent -- otherwise it would wrongly block V2 checkpoints.
+    """
+
+    def test_register_helper_is_best_effort(self):
+        # In the main envs the equiformer_v3 experimental module is not
+        # importable; the helper must return False, not raise.
+        from atlas.active_learning.backends.equiformer.calculator import (
+            _register_equiformer_model,
+        )
+
+        assert _register_equiformer_model() is False
+
+    def test_eqv2_checkpoints_available(self):
+        available = get_backend('equiformer').available_pretrained_models
+        assert 'eqV2_31M_omat' in available
+        assert 'mptrj_gradient' in available  # V3 still there
+
+    def test_registry_routes_v2_and_v3_to_their_repos(self):
+        from atlas.active_learning.backends.equiformer import PUBLISHED_CHECKPOINTS
+
+        # EquiformerV2 -> gated OMAT24 repo, at the repo root.
+        assert PUBLISHED_CHECKPOINTS['eqV2_31M_omat'] == (
+            'fairchem/OMAT24',
+            'eqV2_31M_omat.pt',
+        )
+        # EquiformerV3 -> ungated mirror repo, under checkpoint/.
+        assert PUBLISHED_CHECKPOINTS['mptrj_gradient'] == (
+            'mirror-physics/equiformer_v3',
+            'checkpoint/mptrj_gradient.pt',
+        )
+
+    def test_gated_checkpoint_download_raises_actionable_error(self, monkeypatch):
+        # A 403 on the gated OMAT24 repo must surface as a clear RuntimeError
+        # naming the repo and the fix, not an opaque huggingface_hub error.
+        pytest.importorskip('huggingface_hub')
+        import huggingface_hub
+
+        from atlas.active_learning.backends.equiformer.calculator import (
+            _resolve_checkpoint,
+        )
+
+        def fake_download(*_a, **_k):
+            raise RuntimeError('403 Client Error. Cannot access gated repo')
+
+        monkeypatch.setattr(huggingface_hub, 'hf_hub_download', fake_download)
+        with pytest.raises(RuntimeError, match='fairchem/OMAT24'):
+            _resolve_checkpoint('eqV2_31M_omat')

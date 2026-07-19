@@ -13,6 +13,14 @@ backend from ``fairchem`` because it needs the OCP-era fairchem fork
 (``OCPCalculator``), not fairchem-core 2.x -- a separate, conflicting
 dependency stack that must run from its own container image.
 
+The OCP-era fork also bundles the **EquiformerV2** model code, so this backend
+loads EquiformerV2 checkpoints too, by published name
+(``md_type = "equiformer:eqV2_31M_omat"``, downloaded from the gated
+``fairchem/OMAT24`` repo) or a local path
+(``md_type = "equiformer:/path/to/eqV2.pt"``). Verified: an OC20 EquiformerV2
+checkpoint loads and runs through the same ``OCPCalculator`` path, with V2
+registering automatically from the fork's core (no experimental import).
+
 fairchem is imported lazily inside the calculator, so importing this module
 never requires it. Verified end-to-end against the ``mptrj_gradient`` checkpoint
 (bulk Cu4 fcc -> E = -16.39 eV, forces ~ 0).
@@ -29,24 +37,44 @@ if TYPE_CHECKING:
 
     from ase.calculators.calculator import Calculator
 
-#: Default published checkpoint: the MPtrj-fine-tuned gradient model (materials,
-#: conservative forces).
+#: Default published checkpoint: the MPtrj-fine-tuned EquiformerV3 gradient model
+#: (materials, conservative forces). Ungated.
 DEFAULT_CHECKPOINT = 'mptrj_gradient'
 
-#: Published checkpoints on the Hugging Face repo (all under ``checkpoint/``).
-_KNOWN_CHECKPOINTS = (
-    'mptrj_gradient',
-    'omat24_direct',
-    'omat24_gradient',
-    'omat24-mptrj-salex_gradient',
-)
+#: Hugging Face repo hosting the ungated EquiformerV3 checkpoints.
+_EQV3_REPO = 'mirror-physics/equiformer_v3'
+#: Hugging Face repo hosting the EquiformerV2 OMat24 checkpoints. Gated by manual
+#: review: request access at https://huggingface.co/fairchem/OMAT24.
+_EQV2_REPO = 'fairchem/OMAT24'
+
+#: Published checkpoints, mapping a name to ``(hf_repo, filename_in_repo)``.
+#: EquiformerV3 checkpoints (ungated) sit under ``checkpoint/`` in the mirror
+#: repo; EquiformerV2 OMat24 checkpoints (gated) sit at the root of fairchem/OMAT24.
+PUBLISHED_CHECKPOINTS = {
+    # EquiformerV3 (ungated)
+    'mptrj_gradient': (_EQV3_REPO, 'checkpoint/mptrj_gradient.pt'),
+    'omat24_direct': (_EQV3_REPO, 'checkpoint/omat24_direct.pt'),
+    'omat24_gradient': (_EQV3_REPO, 'checkpoint/omat24_gradient.pt'),
+    'omat24-mptrj-salex_gradient': (
+        _EQV3_REPO,
+        'checkpoint/omat24-mptrj-salex_gradient.pt',
+    ),
+    # EquiformerV2 on OMat24 (gated repo; sizes 31M/86M/153M).
+    'eqV2_31M_mp': (_EQV2_REPO, 'eqV2_31M_mp.pt'),
+    'eqV2_31M_omat': (_EQV2_REPO, 'eqV2_31M_omat.pt'),
+    'eqV2_31M_omat_mp_salex': (_EQV2_REPO, 'eqV2_31M_omat_mp_salex.pt'),
+    'eqV2_86M_omat': (_EQV2_REPO, 'eqV2_86M_omat.pt'),
+    'eqV2_153M_omat': (_EQV2_REPO, 'eqV2_153M_omat.pt'),
+    'eqV2_153M_omat_mp_salex': (_EQV2_REPO, 'eqV2_153M_omat_mp_salex.pt'),
+}
 
 
 def published_checkpoint_filename(name: str) -> str:
-    """Return the Hugging Face path for a published checkpoint name.
+    """Return the EquiformerV3 mirror-repo path for a checkpoint name.
 
-    Accepts a bare name (``'mptrj_gradient'``) or one already carrying the
-    ``checkpoint/`` prefix and/or ``.pt`` suffix.
+    Used for names not in :data:`PUBLISHED_CHECKPOINTS` (assumed to follow the
+    V3 mirror layout). Accepts a bare name (``'mptrj_gradient'``) or one already
+    carrying the ``checkpoint/`` prefix and/or ``.pt`` suffix.
     """
     stem = name.removeprefix('checkpoint/').removesuffix('.pt')
     return f'checkpoint/{stem}.pt'
@@ -92,7 +120,7 @@ class EquiformerBackend:
 
     @property
     def available_pretrained_models(self) -> tuple[str, ...]:
-        return _KNOWN_CHECKPOINTS
+        return tuple(PUBLISHED_CHECKPOINTS)
 
     def resolve_pretrained_model(self, variant: str | None) -> str:
         """Return the checkpoint name for a variant.
