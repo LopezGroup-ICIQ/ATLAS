@@ -121,7 +121,7 @@ Settings for descriptor computation and dimensionality reduction.
   - **Description**: Type of descriptor to compute.
   - **Type**: `(str)`
   - **Default**: `'mace'`.
-  - Possible values are: `mace`, `soap`.
+  - Possible values are: `mace`, `soap`, `orb`, `equiformer`.
 
 - {alt}`dimensionality_reduction_method`:
   - **Description**: Dimensionality reduction method for model descriptors.

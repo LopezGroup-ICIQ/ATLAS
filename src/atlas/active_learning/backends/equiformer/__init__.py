@@ -104,3 +104,26 @@ class EquiformerBackend:
         if variant is None:
             return self.default_pretrained_model
         return variant
+
+    # -- MLIPDescriptorProvider ---------------------------------------------
+
+    def generate_descriptors(
+        self,
+        database,
+        model_path,
+        settings: dict,
+        outer_average: bool = False,
+        verbose: bool = False,
+        **kwargs,
+    ):
+        from atlas.active_learning.backends.equiformer.descriptors import (
+            generate_descriptors_equiformer,
+        )
+
+        return generate_descriptors_equiformer(
+            model_path=model_path,
+            database=database,
+            descriptor_settings=settings,
+            outer_average=outer_average,
+            verbose=verbose,
+        )

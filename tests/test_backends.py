@@ -572,9 +572,9 @@ class TestOrbBackend:
         orb = get_backend('orb')
         assert isinstance(orb, MLIPCalculatorFactory)
         assert isinstance(orb, MLIPPretrainedModel)
+        assert isinstance(orb, MLIPDescriptorProvider)
         assert not isinstance(orb, MLIPTrainer)
         assert not isinstance(orb, MLIPCommitteeEvaluator)
-        assert not isinstance(orb, MLIPDescriptorProvider)
 
     def test_not_in_trainable_backends(self):
         assert 'orb' not in trainable_backends()
@@ -751,9 +751,9 @@ class TestEquiformerBackend:
         eq = get_backend('equiformer')
         assert isinstance(eq, MLIPCalculatorFactory)
         assert isinstance(eq, MLIPPretrainedModel)
+        assert isinstance(eq, MLIPDescriptorProvider)
         assert not isinstance(eq, MLIPTrainer)
         assert not isinstance(eq, MLIPCommitteeEvaluator)
-        assert not isinstance(eq, MLIPDescriptorProvider)
 
     def test_not_in_trainable_backends(self):
         assert 'equiformer' not in trainable_backends()
@@ -815,3 +815,102 @@ class TestEquiformerLive:
         forces = atoms.get_forces()
         assert np.isfinite(energy)
         assert forces.shape == (len(atoms), 3)
+
+
+class TestDescriptorAssembly:
+    """The shared per-structure descriptor bookkeeping helper."""
+
+    def _database(self):
+        from ase.build import bulk
+
+        a = bulk('Cu', 'fcc', a=3.6, cubic=True)  # 4 atoms
+        a.info['atl_id'] = 'id-a'
+        b = bulk('Cu', 'fcc', a=3.6, cubic=True)
+        b.info['atl_id'] = 'id-b'
+        return [a, b]
+
+    def test_stacks_per_atom_descriptors(self):
+        from atlas.active_learning.backends.descriptor_utils import (
+            assemble_structure_descriptors,
+        )
+
+        db = self._database()
+
+        def extract(struct):
+            return np.ones((len(struct), 8))
+
+        dd, arr, uuids = assemble_structure_descriptors(db, extract)
+        assert arr.shape == (8, 8)  # 2 structures x 4 atoms, 8-dim
+        assert set(dd) == {'id-a', 'id-b'}
+        assert uuids == []
+
+    def test_outer_average_gives_one_row_per_structure(self):
+        from atlas.active_learning.backends.descriptor_utils import (
+            assemble_structure_descriptors,
+        )
+
+        db = self._database()
+
+        def extract(struct):
+            return np.arange(len(struct) * 8).reshape(len(struct), 8).astype(float)
+
+        _, arr, _ = assemble_structure_descriptors(db, extract, outer_average=True)
+        assert arr.shape == (2, 8)  # one averaged row per structure
+
+    def test_assigns_uuid_when_atl_id_missing(self):
+        from ase.build import bulk
+
+        from atlas.active_learning.backends.descriptor_utils import (
+            assemble_structure_descriptors,
+        )
+
+        s = bulk('Cu', 'fcc', a=3.6, cubic=True)
+        s.info.pop('atl_id', None)
+        dd, _, uuids = assemble_structure_descriptors(
+            [s], lambda st: np.ones((len(st), 4))
+        )
+        assert len(uuids) == 1
+        assert s.info['atl_id'] == uuids[0]
+        assert uuids[0] in dd
+
+
+class TestOrbDescriptorsLive:
+    """Live Orb descriptor extraction, skipped unless orb-models is installed."""
+
+    def test_generate_descriptors(self):
+        pytest.importorskip('orb_models')
+        from ase.build import bulk
+
+        db = [bulk('Cu', 'fcc', a=3.6, cubic=True) for _ in range(2)]
+        dd, arr, _ = get_backend('orb').generate_descriptors(
+            database=db,
+            model_path='orb-d3-xs-v2',
+            settings={'device': 'cpu'},
+        )
+        assert arr.shape == (8, 256)  # 2 x 4 atoms, 256-dim node features
+        assert np.isfinite(arr).all()
+
+
+class TestEquiformerDescriptorsLive:
+    """Live EquiformerV3 descriptor extraction.
+
+    Skipped unless the OCP-era fork (and the equiformer_v3 model module) is
+    importable.
+    """
+
+    def test_generate_descriptors(self):
+        if not _ocp_calculator_available():
+            pytest.skip('OCP-era fairchem fork (OCPCalculator) not installed')
+        from ase.build import bulk
+
+        db = [bulk('Cu', 'fcc', a=3.6, cubic=True) for _ in range(2)]
+        try:
+            dd, arr, _ = get_backend('equiformer').generate_descriptors(
+                database=db,
+                model_path='mptrj_gradient',
+                settings={'device': 'cpu'},
+            )
+        except ImportError as exc:
+            pytest.skip(f'equiformer_v3 model module not importable: {exc}')
+        assert arr.shape == (8, 128)  # 2 x 4 atoms, 128-dim invariant features
+        assert np.isfinite(arr).all()

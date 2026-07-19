@@ -393,7 +393,7 @@ Farthest Point Sampling (FPS) ranking.
   - **Description**: What descriptors to use for the seed selection process.
   - **Type**: `(optional, str)`
   - **Default**: `'soap'`.
-  - Possible values are: `soap`, `mace`.
+  - Possible values are: `soap`, `mace`, `orb`, `equiformer`.
 
 - {alt}`initial_structure`:
   - **Description**: Whether to gather a structure at random or select the one with the lowest energy available.
@@ -1391,7 +1391,7 @@ Settings for descriptor computation and dimensionality reduction.
   - **Description**: Type of descriptor to compute.
   - **Type**: `(str)`
   - **Default**: `'mace'`.
-  - Possible values are: `mace`, `soap`.
+  - Possible values are: `mace`, `soap`, `orb`, `equiformer`.
 
 - {alt}`dimensionality_reduction_method`:
   - **Description**: Dimensionality reduction method for model descriptors.

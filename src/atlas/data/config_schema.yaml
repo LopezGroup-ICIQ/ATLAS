@@ -1309,7 +1309,7 @@ active_learning:
                     type: str
                     mandatory: false
                     default: "soap"
-                    choices: ["soap", "mace"]
+                    choices: ["soap", "mace", "orb", "equiformer"]
                 initial_structure:
                     description: "Whether to gather a structure at random or select the one with the lowest energy available."
                     type: str
@@ -2074,7 +2074,7 @@ active_learning:
             type: str
             mandatory: true
             default: "mace"
-            choices: ["mace", "soap"]
+            choices: ["mace", "soap", "orb", "equiformer"]
         dimensionality_reduction_method:
             description: "Dimensionality reduction method for model descriptors."
             type: str
@@ -2965,7 +2965,7 @@ latent_space_analysis:
             type: str
             mandatory: true
             default: "mace"
-            choices: ["mace", "soap"]
+            choices: ["mace", "soap", "orb", "equiformer"]
         dimensionality_reduction_method:
             description: "Dimensionality reduction method for model descriptors."
             type: str
