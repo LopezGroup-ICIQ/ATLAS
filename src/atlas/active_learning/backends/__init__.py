@@ -271,6 +271,8 @@ import importlib as _importlib  # noqa: E402
 
 for _backend_module in (
     'atlas.active_learning.backends.allegro',
+    'atlas.active_learning.backends.equiformer',
+    'atlas.active_learning.backends.fairchem',
     'atlas.active_learning.backends.mace',
     'atlas.active_learning.backends.orb',
 ):

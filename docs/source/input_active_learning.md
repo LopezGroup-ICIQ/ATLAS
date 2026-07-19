@@ -708,6 +708,16 @@ MD simulation parameters for safeguard. These settings will override the general
   - Possible values are: `cpu`, `cuda`.
 
 
+- {alt}`md_type`:
+  - **Description**: MLIP backend (or pretrained model) driving the MD simulation. Accepts a registered backend name (e.g. `mace`, `allegro`, `orb`) or a `backend:variant` pretrained-model spec (e.g. `mace:mp-small`, `orb:orb-v2`, `fairchem:uma-s-1p2`, `equiformer:mptrj_gradient`). If omitted, defaults to `mlip.md_backend`, then to `mlip.training_backend`, then to `mace`. An inference-only backend (Orb, fairchem, EquiformerV3) can drive MD while a trainable backend (MACE/Allegro) does the training.
+  - **Type**: `(optional, str)`
+
+
+- {alt}`fairchem_task`:
+  - **Description**: Task (training domain) for a multi-task fairchem model such as UMA, selecting which output head and energy reference to use: `omat` (bulk inorganic materials), `omol` (organic molecules), `oc20`/`oc25` (catalysis/adsorption), `odac` (metal-organic frameworks), or `omc` (molecular crystals). Only used when `md_type` selects the `fairchem` backend; ignored by single-task models (eSEN) and other backends. If omitted, defaults to `omat` when the model provides it. See the fairchem UMA documentation for the full task list.
+  - **Type**: `(optional, str)`
+
+
 - {alt}`enable_cueq`:
   - **Description**: Enable CUEQ for MACE.
   - **Type**: `(optional, bool)`
@@ -851,6 +861,14 @@ MD simulation parameters.
   - **Default**: `'cuda'`.
   - Possible values are: `cpu`, `cuda`.
 
+- {alt}`md_type`:
+  - **Description**: MLIP backend (or pretrained model) driving the MD simulation. Accepts a registered backend name (e.g. `mace`, `allegro`, `orb`) or a `backend:variant` pretrained-model spec (e.g. `mace:mp-small`, `orb:orb-v2`, `fairchem:uma-s-1p2`, `equiformer:mptrj_gradient`). If omitted, defaults to `mlip.md_backend`, then to `mlip.training_backend`, then to `mace`. An inference-only backend (Orb, fairchem, EquiformerV3) can drive MD while a trainable backend (MACE/Allegro) does the training.
+  - **Type**: `(optional, str)`
+
+- {alt}`fairchem_task`:
+  - **Description**: Task (training domain) for a multi-task fairchem model such as UMA, selecting which output head and energy reference to use: `omat` (bulk inorganic materials), `omol` (organic molecules), `oc20`/`oc25` (catalysis/adsorption), `odac` (metal-organic frameworks), or `omc` (molecular crystals). Only used when `md_type` selects the `fairchem` backend; ignored by single-task models (eSEN) and other backends. If omitted, defaults to `omat` when the model provides it. See the fairchem UMA documentation for the full task list.
+  - **Type**: `(optional, str)`
+
 - {alt}`enable_cueq`:
   - **Description**: Enable CUEQ for MACE.
   - **Type**: `(optional, bool)`
@@ -993,6 +1011,16 @@ Accepted parameters for each entry:
   - **Type**: `(str)`
   - **Default**: `'cuda'`.
   - Possible values are: `cpu`, `cuda`.
+
+
+- {alt}`md_type`:
+  - **Description**: MLIP backend (or pretrained model) driving the MD simulation. Accepts a registered backend name (e.g. `mace`, `allegro`, `orb`) or a `backend:variant` pretrained-model spec (e.g. `mace:mp-small`, `orb:orb-v2`, `fairchem:uma-s-1p2`, `equiformer:mptrj_gradient`). If omitted, defaults to `mlip.md_backend`, then to `mlip.training_backend`, then to `mace`. An inference-only backend (Orb, fairchem, EquiformerV3) can drive MD while a trainable backend (MACE/Allegro) does the training.
+  - **Type**: `(optional, str)`
+
+
+- {alt}`fairchem_task`:
+  - **Description**: Task (training domain) for a multi-task fairchem model such as UMA, selecting which output head and energy reference to use: `omat` (bulk inorganic materials), `omol` (organic molecules), `oc20`/`oc25` (catalysis/adsorption), `odac` (metal-organic frameworks), or `omc` (molecular crystals). Only used when `md_type` selects the `fairchem` backend; ignored by single-task models (eSEN) and other backends. If omitted, defaults to `omat` when the model provides it. See the fairchem UMA documentation for the full task list.
+  - **Type**: `(optional, str)`
 
 
 - {alt}`enable_cueq`:
@@ -1161,12 +1189,12 @@ Configuration for the MLIP backend used in the active learning workflow. Support
 
 
 - {alt}`training_backend`:
-  - **Description**: Which MLIP backend to use for model training, committee evaluation, and calculator creation. Available backends are registered in the atlas.active_learning.backends registry.
+  - **Description**: Which MLIP backend to use for model training, committee evaluation, and calculator creation. Must be a trainable backend: `mace` or `allegro` (the pretrained-only backends `orb`, `fairchem` and `equiformer` are inference-only and cannot train). Backends are registered in the atlas.active_learning.backends registry.
   - **Type**: `(optional, str)`
   - **Default**: `'mace'`.
 
 - {alt}`md_backend`:
-  - **Description**: Which MLIP backend to use for MD simulations. Defaults to the training_backend value if not specified.
+  - **Description**: Which MLIP backend to use for MD simulations. Accepts any registered backend, including inference-only ones (`orb`, `fairchem`, `equiformer`), so MD can be driven by a foundation potential while training uses MACE/Allegro. A `backend:variant` spec can also be given directly via `md.parameters.md_type`, which takes precedence. Defaults to the training_backend value if not specified.
   - **Type**: `(optional, str)`
   - **Example**: `'mace'`.
 

@@ -69,8 +69,13 @@ There are several installation mechanisms, and several optional dependencies dep
 - `mace` — MACE model training and evaluation
 - `allegro` — Allegro model support (via nequip-allegro)
 - `nequip` — NequIP model support
+- `orb` — Orb pretrained foundation potentials (inference only, via orb-models)
+- `fairchem` — fairchem UMA/eSEN pretrained potentials (inference only, via fairchem-core)
 - `dev` — Development dependencies (pytest, pre-commit, commitizen)
 - `gui` — Desktop GUI (PySide6)
+
+> [!NOTE]
+> EquiformerV3 is inference-only and is **not** a pip extra: it requires the OCP-era `fairchem` fork bundled with [atomicarchitects/equiformer_v3](https://github.com/atomicarchitects/equiformer_v3) (it provides the `OCPCalculator` API removed from `fairchem-core` 2.x). Follow that repository's environment setup, then select it in ATLAS with `md_type = "equiformer:mptrj_gradient"`.
 
 Optional dependencies are installed using the following syntax:
 
@@ -81,7 +86,7 @@ python3 -m pip install ./ATLAS['OPTIONAL_DEPENDENCY_NAME']
 Some installation examples follow:
 
 > [!WARNING]
-> **MACE and Allegro/NequIP cannot be installed in the same environment.** Both `mace-torch` and `nequip` depend on `e3nn` but pin incompatible versions. You must choose one backend per environment, or use separate virtual environments if you need to switch between them.
+> **Each MLIP framework needs its own environment.** The backends have mutually incompatible dependency stacks — for example MACE (`mace-torch`) pins `e3nn==0.4.4` while Allegro/NequIP need `e3nn>=0.6`, and fairchem/Orb pull `numpy>=2` against ATLAS's `numpy<2`. Install one framework per virtual environment. For a single active-learning run that mixes backends (e.g. training with MACE, MD sampling with Orb), run each backend from its own container image via the per-backend `container_settings`.
 
 #### Using `pip`
 

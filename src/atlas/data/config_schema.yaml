@@ -1690,6 +1690,14 @@ active_learning:
                 mandatory: true
                 default: "cuda"
                 choices: ["cpu", "cuda"]
+            md_type:
+                description: "MLIP backend (or pretrained model) driving the MD simulation. Accepts a registered backend name (e.g. `mace`, `allegro`, `orb`) or a `backend:variant` pretrained-model spec (e.g. `mace:mp-small`, `orb:orb-v2`, `fairchem:uma-s-1p2`, `equiformer:mptrj_gradient`). If omitted, defaults to `mlip.md_backend`, then to `mlip.training_backend`, then to `mace`. An inference-only backend (Orb, fairchem, EquiformerV3) can drive MD while a trainable backend (MACE/Allegro) does the training."
+                type: str
+                mandatory: false
+            fairchem_task:
+                description: "Task (training domain) for a multi-task fairchem model such as UMA, selecting which output head and energy reference to use: `omat` (bulk inorganic materials), `omol` (organic molecules), `oc20`/`oc25` (catalysis/adsorption), `odac` (metal-organic frameworks), or `omc` (molecular crystals). Only used when `md_type` selects the `fairchem` backend; ignored by single-task models (eSEN) and other backends. If omitted, defaults to `omat` when the model provides it. See the fairchem UMA documentation for the full task list."
+                type: str
+                mandatory: false
             enable_cueq:
                 description: "Enable CUEQ for MACE."
                 type: bool
@@ -1873,13 +1881,13 @@ active_learning:
         name_pretty: "MLIP Backend Settings"
         description: "Configuration for the MLIP backend used in the active learning workflow. Supports a modular backend system with a plugin interface for adding new models. If this section is absent, the workflow defaults to MACE for all stages."
         training_backend:
-            description: "Which MLIP backend to use for model training, committee evaluation, and calculator creation. Available backends are registered in the atlas.active_learning.backends registry."
+            description: "Which MLIP backend to use for model training, committee evaluation, and calculator creation. Must be a trainable backend: `mace` or `allegro` (the pretrained-only backends `orb`, `fairchem` and `equiformer` are inference-only and cannot train). Backends are registered in the atlas.active_learning.backends registry."
             type: str
             mandatory: false
             default: "mace"
             example: "mace"
         md_backend:
-            description: "Which MLIP backend to use for MD simulations. Defaults to the training_backend value if not specified."
+            description: "Which MLIP backend to use for MD simulations. Accepts any registered backend, including inference-only ones (`orb`, `fairchem`, `equiformer`), so MD can be driven by a foundation potential while training uses MACE/Allegro. A `backend:variant` spec can also be given directly via `md.parameters.md_type`, which takes precedence. Defaults to the training_backend value if not specified."
             type: str
             mandatory: false
             default: null

@@ -61,6 +61,12 @@ nequip = [
 allegro = [
     "nequip-allegro>=0.8.3",
 ]
+orb = [
+    "orb-models>=0.5.5",
+]
+fairchem = [
+    "fairchem-core>=2.21",
+]
 
 [project.urls]
 Homepage = "https://github.com/LopezGroup-ICIQ/ATLAS"

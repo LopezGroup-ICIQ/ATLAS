@@ -1005,9 +1005,16 @@ def run_mace_md_ase(
         prepend_path, stem, backend, pretrained_model=pretrained_model
     )
 
-    # `enable_cueq` is MACE-specific; other backends must not be asked to
-    # absorb and ignore it.
-    calc_kwargs = {'enable_cueq': enable_cueq} if md_type == 'mace' else {}
+    # Backend-specific calculator options, kept explicit so a backend is never
+    # handed an option meant for another (e.g. `enable_cueq` is MACE-only).
+    calc_kwargs = {}
+    if md_type == 'mace':
+        calc_kwargs['enable_cueq'] = enable_cueq
+    elif md_type == 'fairchem' and md_params.get('fairchem_task') is not None:
+        # UMA is multi-task; pick which domain's head to use. Left unset, the
+        # backend defaults to 'omat' (bulk materials) when the model offers it.
+        calc_kwargs['task_name'] = md_params['fairchem_task']
+
     nn_calculator = backend.create_calculator(
         model_path=model_path,
         device=md_params.get('device', 'cpu'),
