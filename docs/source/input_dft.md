@@ -154,8 +154,8 @@ Scheduler resource options.
   - **Default**: `24`.
 
 - {alt}`parallel_env`:
-  - **Description**: Parallel environment to be used.
-  - **Type**: `(str)`
+  - **Description**: (SGE) Parallel environment to be used. Ignored by SLURM schedulers.
+  - **Type**: `(optional, str)`
   - **Default**: `' '`.
 
 ### Aiida_Vasp - `[aiida_vasp]`

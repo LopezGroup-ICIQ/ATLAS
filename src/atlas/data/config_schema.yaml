@@ -757,9 +757,9 @@ dft:
                 mandatory: true
                 default: 24
             parallel_env:
-                description: "Parallel environment to be used."
+                description: "(SGE) Parallel environment to be used. Ignored by SLURM schedulers."
                 type: str
-                mandatory: true
+                mandatory: false
                 default: " "
     aiida_vasp:
         description: "Settings for the AiiDA-VASP plugin."
@@ -922,9 +922,9 @@ dft_benchmark:
                 mandatory: true
                 default: 24
             parallel_env:
-                description: "Parallel environment."
+                description: "(SGE) Parallel environment. Ignored by SLURM schedulers."
                 type: str
-                mandatory: true
+                mandatory: false
                 default: " "
     incar:
         description: "Base INCAR settings (only bulk needed for benchmarks)."

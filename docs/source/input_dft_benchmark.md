@@ -145,8 +145,8 @@ Scheduler resource options.
   - **Default**: `24`.
 
 - {alt}`parallel_env`:
-  - **Description**: Parallel environment.
-  - **Type**: `(str)`
+  - **Description**: (SGE) Parallel environment. Ignored by SLURM schedulers.
+  - **Type**: `(optional, str)`
   - **Default**: `' '`.
 
 ### Incar - `[incar]`
