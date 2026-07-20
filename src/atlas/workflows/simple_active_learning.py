@@ -986,8 +986,15 @@ class SimpleActiveLearningWorkChain(WorkChain):
                 )
 
                 # Convert model to LAMMPS compatible format
-                # and return it to workchain context
-                if hasattr(self.ctx, 'cuda_available') and self.ctx.cuda_available:
+                # and return it to workchain context. The mock training model is
+                # a placeholder that cannot be loaded/converted, and mock MD does
+                # not use a LAMMPS potential, so skip when training is mocked.
+                if self._is_mocked('training'):
+                    self.report(
+                        '[MOCK] Skipping LAMMPS potential creation '
+                        '(mock training placeholder).'
+                    )
+                elif hasattr(self.ctx, 'cuda_available') and self.ctx.cuda_available:
                     lammps_potential = self.ctx.mlip_backend.create_lammps_potential(
                         model_file
                     )
