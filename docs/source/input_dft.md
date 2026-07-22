@@ -143,6 +143,10 @@ Queue settings for HPC schedulers (e.g., SLURM).
   - **Description**: Custom scheduler commands.
   - **Type**: `(optional, str)`
 
+- {alt}`prepend_text`:
+  - **Description**: Text to prepend to the scheduler script.
+  - **Type**: `(optional, str)`
+
 #### Options_Resources - `[queue.options_resources]`
 
 Scheduler resource options.

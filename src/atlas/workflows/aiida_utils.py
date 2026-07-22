@@ -466,6 +466,7 @@ def choose_queue_from_struct(queue_data: dict, computer: orm.Computer):
     options['max_wallclock_seconds'] = queue_data.get('max_wallclock_seconds')
     options['max_memory_kb'] = queue_data.get('max_memory_kb')
     options['custom_scheduler_commands'] = queue_data.get('custom_scheduler_commands')
+    options['prepend_text'] = queue_data.get('prepend_text')
 
     # Getting code string
     code_string = queue_data['code_string']
@@ -669,6 +670,7 @@ def submit_aiida_vasp_calculation(
 
     # Setting code
     code_string = queue_dict['code_string']
+
     code = orm.load_code(code_string)
 
     # Getting comptuer from code
@@ -1102,27 +1104,46 @@ def update_db_with_dft_results(sel_struct_db, queue):
         # Getting the unique_id of the calculation
         unique_id = node.base.extras.all.get('atl_calc_uuid')
 
+        # Getting the calcjob node(s) from the workchain descendants
+        calcjob_nodes = [
+            chld
+            for chld in node.called_descendants
+            if isinstance(chld, orm.CalcJobNode)
+        ]
+
         # Skipping if the calculation is not finished
         if not node.is_finished_ok:
             if node.is_terminated:
                 status = node.exit_status or node.process_state.value
-                atl_cut.custom_print(
-                    f"Skipping calc. {node.pk} ('struct_id: {unique_id}')"
-                    f" with status '{status}'.",
-                    'warning',
-                )
+                if calcjob_nodes:
+                    last_calcjob = calcjob_nodes[-1]
+                    atl_cut.custom_print(
+                        f"Skipping calc. {node.process_label}<{node.pk}> "
+                        f"{node.process_state.value} [{status}]\n"
+                        f"    └── {last_calcjob.process_label}<{last_calcjob.pk}> "
+                        f"{last_calcjob.process_state.value} "
+                        f"[{last_calcjob.exit_status}]"
+                        f" ('struct_id: {unique_id}')",
+                        'warning',
+                    )
+                else:
+                    atl_cut.custom_print(
+                        f"Skipping calc. {node.process_label}<{node.pk}> "
+                        f"{node.process_state.value} [{status}]"
+                        f" ('struct_id: {unique_id}')",
+                        'warning',
+                    )
                 num_error += 1
             else:
-                atl_cut.custom_print(f"Calculation '{node.pk}' running...", 'debug')
+                atl_cut.custom_print(
+                    f"Calculation {node.process_label}<{node.pk}> running...",
+                    'debug',
+                )
                 running_calcs.append(node.pk)
             continue
 
         # Getting the index of the calculation in the database
-        last_calcjob = [
-            chld.pk
-            for chld in node.called_descendants
-            if isinstance(chld, orm.CalcJobNode)
-        ][-1]
+        last_calcjob = calcjob_nodes[-1].pk
 
         # Getting index of the matching structure
         # There should be only one.
@@ -1161,7 +1182,10 @@ def update_db_with_dft_results(sel_struct_db, queue):
 
         sel_struct_db[idx] = new_struct
 
-        atl_cut.custom_print(f"Calculation '{node.pk}' completed!", 'done')
+        atl_cut.custom_print(
+            f"Calculation {node.process_label}<{node.pk}> completed!",
+            'done',
+        )
         num_correct += 1
 
     if len(running_calcs) > 0:

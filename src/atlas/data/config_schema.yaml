@@ -749,6 +749,10 @@ dft:
             description: "Custom scheduler commands."
             type: str
             mandatory: false
+        prepend_text:
+            description: "Text to prepend to the scheduler script."
+            type: str
+            mandatory: false
         options_resources:
             description: "Scheduler resource options."
             tot_num_mpiprocs:
@@ -1406,11 +1410,16 @@ active_learning:
             mandatory: true
             default: 10.0
         disagreement_check_type:
-            description: "Approach for energy and force (E&F) committee disagreement check. With `training`, compare E&F with a threshold obtained from the training RMSE values multiplied by a threshold. With `md_threshold`, compare E&F with a threshold obtained from the standard deviaiton of the MD frames."
+            description: "Approach for the energy/force uncertainty check that selects frames for DFT. With `training`, compare committee E&F spread against a threshold from the training RMSE times a multiplier. With `md_threshold`, compare committee E&F spread against a threshold from the MD-frame standard deviation. With `confidence`, use the MD backend's own single-model confidence head instead of a committee (committee-free), so a foundation model such as Orb v3 can drive selection without training an MLIP; the MD backend must expose a confidence head (see `md.parameters.md_type`)."
             type: str
             mandatory: true
             default: "training"
-            choices: ["training", "md_threshold"]
+            choices: ["training", "md_threshold", "confidence"]
+        confidence_sigma:
+            description: "Only used when `disagreement_check_type = confidence`. A frame is flagged for DFT when its predicted uncertainty exceeds mean + confidence_sigma * std across the MD frames. Higher values select fewer, more uncertain frames."
+            type: float
+            mandatory: false
+            default: 3.0
         target_accuracy_e_meV_per_at:
             description: "Target accuracy for energy per atom in meV/atom. This should roughly correspond to the noise floor of your reference method, e.g., 1-2 meV/atom for DFT. By default, a relatively large value of 43 meV/atom is selected, since it correponds with a typical measure of chemical accuracy. However, this might be too high for some properties, such as long term diffusion or phase transitions."
             type: float
