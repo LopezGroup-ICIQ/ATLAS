@@ -122,3 +122,24 @@ class OrbBackend:
             outer_average=outer_average,
             verbose=verbose,
         )
+
+    # -- MLIPConfidenceEstimator --------------------------------------------
+
+    def estimate_uncertainty(
+        self,
+        structures,
+        model=None,
+        *,
+        device: str = 'cpu',
+        **kwargs,
+    ) -> list[float]:
+        from atlas.active_learning.backends.orb.confidence import (
+            estimate_uncertainty_orb,
+        )
+
+        return estimate_uncertainty_orb(
+            structures,
+            model=model,
+            device=device,
+            reduction=kwargs.get('reduction', 'max'),
+        )
