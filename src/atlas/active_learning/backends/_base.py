@@ -388,7 +388,7 @@ class MLIPConfidenceEstimator(Protocol):
     """Protocol for backends whose model gives its own per-structure uncertainty.
 
     Some models (e.g. Orb v3) carry a confidence head that estimates their own
-    force-prediction error, providing a **committee-free** uncertainty signal.
+    force-prediction error, providing a committee-free uncertainty signal.
     This lets a single pretrained foundation model drive active-learning
     selection (``interpolation.disagreement_check_type = "confidence"``), where
     otherwise only cross-model committee disagreement is available.
