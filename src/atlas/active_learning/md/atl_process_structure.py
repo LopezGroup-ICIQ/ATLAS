@@ -743,45 +743,60 @@ if __name__ == '__main__':
                 for idx in short_mask:
                     f.write(f'{idx}\n')
 
-        # Running evaluation of the energies and forces using each commitee model
-        atl_cut.custom_print('Running committee evaluation...', 'info', logger=logger)
         from atlas.active_learning.backends import (
             find_inference_model,
             get_backend,
             list_inference_models,
+            resolve_model_spec,
         )
-        from atlas.active_learning.backends._base import MLIPCommitteeEvaluator
+        from atlas.active_learning.backends._base import (
+            MLIPCommitteeEvaluator,
+            MLIPConfidenceEstimator,
+        )
 
         backend_name = settings.get('mlip', {}).get('training_backend', 'mace')
         backend = get_backend(backend_name)
 
-        # Committee uncertainty needs several trained models. A pretrained-only
-        # backend (e.g. Orb) has a single published potential and omits
-        # MLIPCommitteeEvaluator, so fail clearly rather than deep inside the
-        # evaluator when it tries to treat one model as a committee.
-        if not isinstance(backend, MLIPCommitteeEvaluator) or (
-            not backend.supports_committee_training
-        ):
-            raise ValueError(
-                f"MLIP backend '{backend_name}' does not support committee "
-                'evaluation. Use a trainable backend, or a committee-free '
-                'uncertainty criterion.'
-            )
-
-        # Prefer pre-compiled artifacts (compile-once step) over raw models.
-        model_file_list = list_inference_models(prepend_path, backend)
-        comm_settings = settings.get('committee_eval', {})
-        backend_comm_settings = comm_settings.get(backend_name, comm_settings)
-        device_str = backend_comm_settings.get('device', 'cpu')
-        dtype_str = backend_comm_settings.get('default_dtype', 'float32')
-
-        comm_results = backend.evaluate_committee(
-            structures=md_traj_short,
-            model_files=model_file_list,
-            device=device_str,
-            dtype=dtype_str,
-            batch_size=backend_comm_settings.get('batch_size', 12),
+        confidence_sigma = settings.get('interpolation', {}).get(
+            'confidence_sigma', 3.0
         )
+
+        # Committee disagreement needs several trained models; the 'confidence'
+        # check instead uses a single model's own uncertainty head, so it skips
+        # the committee evaluation entirely.
+        if ef_disagreement_type != 'confidence':
+            # Running evaluation of the energies and forces using each
+            # committee model.
+            atl_cut.custom_print(
+                'Running committee evaluation...', 'info', logger=logger
+            )
+            # A pretrained-only backend omits MLIPCommitteeEvaluator; point the
+            # user at the committee-free 'confidence' check instead of failing
+            # deep inside the evaluator.
+            if not isinstance(backend, MLIPCommitteeEvaluator) or (
+                not backend.supports_committee_training
+            ):
+                raise ValueError(
+                    f"MLIP backend '{backend_name}' does not support committee "
+                    'evaluation. Use a trainable backend, or set '
+                    "interpolation.disagreement_check_type = 'confidence' with a "
+                    'foundation model that has a confidence head (e.g. orb-v3).'
+                )
+
+            # Prefer pre-compiled artifacts (compile-once step) over raw models.
+            model_file_list = list_inference_models(prepend_path, backend)
+            comm_settings = settings.get('committee_eval', {})
+            backend_comm_settings = comm_settings.get(backend_name, comm_settings)
+            device_str = backend_comm_settings.get('device', 'cpu')
+            dtype_str = backend_comm_settings.get('default_dtype', 'float32')
+
+            comm_results = backend.evaluate_committee(
+                structures=md_traj_short,
+                model_files=model_file_list,
+                device=device_str,
+                dtype=dtype_str,
+                batch_size=backend_comm_settings.get('batch_size', 12),
+            )
 
         ## Apply E/F commitee extrapolation filter
         model_acc_multiplier = settings.get('interpolation', {}).get(
@@ -1089,8 +1104,53 @@ if __name__ == '__main__':
             num_interpolating_frames = len(set(e_f_interpolation))
             out_of_domain_frame_idx.extend(set(e_f_interpolation))
 
+        elif ef_disagreement_type == 'confidence':
+            # Committee-free: use the MD backend's own confidence head as the
+            # per-frame uncertainty, so a single foundation model can drive
+            # selection without a trained committee.
+            md_backend_name, md_pretrained = resolve_model_spec(
+                md_params.get('md_type', backend_name)
+            )
+            md_backend = get_backend(md_backend_name)
+            if not isinstance(md_backend, MLIPConfidenceEstimator):
+                raise ValueError(
+                    "interpolation.disagreement_check_type = 'confidence' needs "
+                    f"an MD backend with a confidence head, but '{md_backend_name}' "
+                    'has none. Use e.g. md_type = "orb:orb-v3-conservative-inf-omat".'
+                )
+
+            uncertainties = np.asarray(
+                md_backend.estimate_uncertainty(
+                    md_traj_short,
+                    model=md_pretrained,
+                    device=md_params.get('device', 'cpu'),
+                )
+            )
+
+            # Flag outlier frames (mean + confidence_sigma * std), mirroring the
+            # md_threshold outlier logic.
+            unc_threshold = (
+                uncertainties.mean() + confidence_sigma * uncertainties.std()
+            )
+            atl_cut.custom_print(
+                f'Confidence uncertainties: {uncertainties}', 'none', logger=logger
+            )
+            atl_cut.custom_print(
+                f'Confidence threshold (mean + {confidence_sigma} std): '
+                f'{unc_threshold}',
+                'none',
+                logger=logger,
+            )
+            conf_interpolation = [
+                short_mask[i]
+                for i, u in enumerate(uncertainties)
+                if u >= unc_threshold
+            ]
+            num_interpolating_frames = len(set(conf_interpolation))
+            out_of_domain_frame_idx.extend(set(conf_interpolation))
+
         atl_cut.custom_print(
-            'Frames with committee disagreement found by committee check: '
+            'Frames flagged by the disagreement/confidence check: '
             f'{num_interpolating_frames}',
             'info',
             logger=logger,
