@@ -20,6 +20,7 @@ from atlas.active_learning.backends import (
 from atlas.active_learning.backends._base import (
     MLIPCalculatorFactory,
     MLIPCommitteeEvaluator,
+    MLIPConfidenceEstimator,
     MLIPDescriptorProvider,
     MLIPPretrainedModel,
     MLIPTrainer,
@@ -968,3 +969,46 @@ class TestEquiformerV2Support:
         monkeypatch.setattr(huggingface_hub, 'hf_hub_download', fake_download)
         with pytest.raises(RuntimeError, match='fairchem/OMAT24'):
             _resolve_checkpoint('eqV2_31M_omat')
+
+
+class TestConfidenceEstimatorConformance:
+    """Only backends with a confidence head are MLIPConfidenceEstimators."""
+
+    def test_orb_is_confidence_estimator(self):
+        assert isinstance(get_backend('orb'), MLIPConfidenceEstimator)
+
+    def test_others_are_not(self):
+        for name in ('mace', 'allegro', 'fairchem', 'equiformer'):
+            assert not isinstance(get_backend(name), MLIPConfidenceEstimator)
+
+
+class TestOrbConfidenceLive:
+    """Live Orb v3 confidence, skipped unless orb-models is installed."""
+
+    def test_uncertainty_increases_with_disorder(self):
+        pytest.importorskip('orb_models')
+        from ase.build import bulk
+
+        orb = get_backend('orb')
+        perfect = bulk('Cu', 'fcc', a=3.6, cubic=True) * (2, 2, 2)
+        rattled = perfect.copy()
+        rattled.rattle(0.3, seed=1)
+
+        scores = orb.estimate_uncertainty(
+            [perfect, rattled], model='orb-v3-conservative-inf-omat', device='cpu'
+        )
+        assert len(scores) == 2
+        assert all(np.isfinite(s) and s >= 0 for s in scores)
+        # The rattled structure must be flagged as more uncertain.
+        assert scores[1] > scores[0]
+
+    def test_v2_model_without_head_raises(self):
+        pytest.importorskip('orb_models')
+        from ase.build import bulk
+
+        with pytest.raises(ValueError, match='confidence head|orb-v3'):
+            get_backend('orb').estimate_uncertainty(
+                [bulk('Cu', 'fcc', a=3.6, cubic=True)],
+                model='orb-v2',
+                device='cpu',
+            )
