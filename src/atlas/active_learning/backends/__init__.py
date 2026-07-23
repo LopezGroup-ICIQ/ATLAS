@@ -17,6 +17,7 @@ from __future__ import annotations
 from atlas.active_learning.backends._base import (
     MLIPCalculatorFactory,
     MLIPCommitteeEvaluator,
+    MLIPConfidenceEstimator,
     MLIPDescriptorProvider,
     MLIPModelCompiler,
     MLIPPretrainedModel,
@@ -282,6 +283,7 @@ for _backend_module in (
 __all__ = [
     'MLIPCalculatorFactory',
     'MLIPCommitteeEvaluator',
+    'MLIPConfidenceEstimator',
     'MLIPDescriptorProvider',
     'MLIPModelCompiler',
     'MLIPPretrainedModel',

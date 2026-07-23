@@ -381,3 +381,45 @@ class MLIPPretrainedModel(Protocol):
             If the variant cannot be resolved by this backend.
         """
         ...
+
+
+@runtime_checkable
+class MLIPConfidenceEstimator(Protocol):
+    """Protocol for backends whose model gives its own per-structure uncertainty.
+
+    Some models (e.g. Orb v3) carry a confidence head that estimates their own
+    force-prediction error, providing a **committee-free** uncertainty signal.
+    This lets a single pretrained foundation model drive active-learning
+    selection (``interpolation.disagreement_check_type = "confidence"``), where
+    otherwise only cross-model committee disagreement is available.
+
+    Backends without such a head simply omit this protocol; the ``confidence``
+    selection path then raises a clear error naming the backend.
+    """
+
+    def estimate_uncertainty(
+        self,
+        structures,
+        model=None,
+        *,
+        device: str = 'cpu',
+        **kwargs,
+    ) -> list[float]:
+        """Return one scalar uncertainty per structure (higher = more uncertain).
+
+        Parameters
+        ----------
+        structures : list[Atoms]
+            Structures to score.
+        model : str | Path | None
+            A published model identifier or checkpoint path; None for the
+            backend default. Must be a model that exposes the confidence signal.
+        device : str
+            Inference device.
+
+        Returns
+        -------
+        list[float]
+            One non-negative uncertainty per input structure, same order.
+        """
+        ...
