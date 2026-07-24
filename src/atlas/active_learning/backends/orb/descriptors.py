@@ -55,24 +55,25 @@ def generate_descriptors_orb(
     from atlas.active_learning.backends.descriptor_utils import (
         assemble_structure_descriptors,
     )
-    from atlas.active_learning.backends.orb.calculator import build_orb_forcefield
+    from atlas.active_learning.backends.orb.calculator import (
+        build_orb_calculator_and_model,
+    )
 
     device = descriptor_settings.get('device', 'cpu')
 
     # Orb produces no trained-model file, so the descriptor model is a pretrained
     # potential: an explicit ``pretrained_model`` setting, else a real checkpoint
-    # path if one was passed, else Orb's default (via build_orb_forcefield(None)).
-    # The trained-file path convention (e.g. 'curr_model.orb') never exists here.
+    # path if one was passed, else Orb's default (via
+    # build_orb_calculator_and_model(None)). The trained-file path convention
+    # (e.g. 'curr_model.orb') never exists here.
     model_ref = descriptor_settings.get('pretrained_model')
     if model_ref is None and model_path is not None and Path(str(model_path)).exists():
         model_ref = model_path
 
-    orbff = build_orb_forcefield(model_ref, device=device, compile_model=False)
-
-    from orb_models.forcefield.calculator import ORBCalculator
-
-    calculator = ORBCalculator(orbff, device=device)
-    encoder = dict(orbff.named_modules())['model._encoder']
+    calculator, model = build_orb_calculator_and_model(
+        model_ref, device=device, compile_model=False
+    )
+    encoder = dict(model.named_modules())['model._encoder']
 
     captured: dict = {}
     handle = encoder.register_forward_hook(

@@ -47,11 +47,15 @@ def estimate_uncertainty_orb(
     list[float]
         One non-negative uncertainty per structure, in input order.
     """
-    from atlas.active_learning.backends.orb.calculator import build_orb_forcefield
+    from atlas.active_learning.backends.orb.calculator import (
+        build_orb_calculator_and_model,
+    )
 
-    orbff = build_orb_forcefield(model, device=device, compile_model=False)
+    calculator, orb_model = build_orb_calculator_and_model(
+        model, device=device, compile_model=False
+    )
 
-    heads = getattr(orbff, 'heads', {})
+    heads = getattr(orb_model, 'heads', {})
     if 'confidence' not in heads:
         raise ValueError(
             f"The Orb model '{model or 'default'}' has no confidence head, so it "
@@ -59,9 +63,6 @@ def estimate_uncertainty_orb(
             "(e.g. 'orb-v3-conservative-inf-omat')."
         )
 
-    from orb_models.forcefield.calculator import ORBCalculator
-
-    calculator = ORBCalculator(orbff, device=device)
     # Bin centres of the confidence head's force-error histogram (eV/A).
     edges = heads['confidence'].bin_edges.detach().cpu().numpy()
     centers = 0.5 * (edges[:-1] + edges[1:])
