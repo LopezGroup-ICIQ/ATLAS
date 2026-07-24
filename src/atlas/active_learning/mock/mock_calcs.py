@@ -84,13 +84,18 @@ def _read_extxyz_singlefile(node: orm.SinglefileData) -> list[Atoms]:
 # --------------------------------------------------------------------------- #
 def mock_md_process_core(
     seed_frames: list[Atoms], rattle_stdev: float, n_frames: int
-) -> list[Atoms]:
+) -> tuple[list[Atoms], dict]:
     """Return random perturbations of the seed frame(s), preserving ``info``.
 
     Each output frame is a copy of a seed frame with positions rattled by a
     Gaussian of std ``rattle_stdev`` (Å). ``atoms.info``/``atoms.arrays`` are kept
     so downstream keys (``atl_id``, ``atl_db_index``, ``atl_struct_type``, ...)
     survive, mimicking a "structure that extrapolated during MD".
+
+    Returns the perturbed frames and a UQ statistics dict mirroring the real
+    ``ProcessMDSeedStructCalculation`` output. Mock rattle marks every produced
+    frame as out-of-domain (extrapolating), matching the contract that all
+    returned frames are sent to DFT.
     """
     out: list[Atoms] = []
     for frame_idx, seed in enumerate(seed_frames):
@@ -100,7 +105,24 @@ def mock_md_process_core(
             perturbed.info = dict(seed.info)
             perturbed.rattle(stdev=rattle_stdev, seed=frame_idx * 1000 + copy_idx)
             out.append(perturbed)
-    return out
+
+    n_total = len(out)
+    stats = {
+        'seed_atl_id': (
+            seed_frames[0].info.get('atl_id')
+            or seed_frames[0].info.get('aiida_uuid')
+            or 'unknown'
+        )
+        if seed_frames
+        else 'unknown',
+        'total_frames': n_total,
+        'frames_after_filters': n_total,
+        'extrapolation_error_frames': n_total,
+        'interpolation_error_frames': 0,
+        'out_of_domain_frames': n_total,
+        'per_temperature': [],
+    }
+    return out, stats
 
 
 @calcfunction
@@ -109,10 +131,13 @@ def mock_md_process(md_structure, rattle_stdev, n_frames):
 
     Outputs ``extrapolating_structures`` (extxyz ``SinglefileData``) exactly like
     the real MD calcjob, so the workchain treats the perturbed frames as the
-    structures that left the training domain.
+    structures that left the training domain. Also outputs
+    ``extrapolation_statistics`` (``orm.Dict``) mirroring the real CalcJob's
+    aggregated UQ stats, so the workchain's reader code is uniform across
+    real/mock runs.
     """
     seed_frames = _read_extxyz_singlefile(md_structure)
-    perturbed = mock_md_process_core(
+    perturbed, stats = mock_md_process_core(
         seed_frames=seed_frames,
         rattle_stdev=rattle_stdev.value,
         n_frames=n_frames.value,
@@ -120,7 +145,8 @@ def mock_md_process(md_structure, rattle_stdev, n_frames):
     return {
         'extrapolating_structures': _atoms_to_extxyz_singlefile(
             perturbed, 'extrapolating_structures.xyz'
-        )
+        ),
+        'extrapolation_statistics': orm.Dict(dict=stats),
     }
 
 
