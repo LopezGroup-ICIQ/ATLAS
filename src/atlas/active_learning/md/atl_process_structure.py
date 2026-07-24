@@ -390,6 +390,13 @@ if __name__ == '__main__':
     # Read the initial structure
     init_conf_orig = ase_read(prepend_path / 'curr_structure.xyz', format='extxyz')
 
+    # Seed structure identifier, for provenance in the aggregated UQ stats.
+    seed_atl_id = init_conf_orig.info.get('atl_id') or init_conf_orig.info.get(
+        'aiida_uuid'
+    )
+    if seed_atl_id is None:
+        seed_atl_id = 'unknown'
+
     # Read the settings related to MD stages
     md_stages = md_params.get('stages', {})
     current_al_step = settings.get('active_learning', {}).get('current_iteration', 0)
@@ -506,6 +513,20 @@ if __name__ == '__main__':
 
     # Read MD-generated trajectories for given temperatures
     traj_files = res_folder.glob('*final_temp-*.traj')
+
+    # Aggregated UQ statistics across all temperatures for this seed. Per-temp
+    # counts are set-deduped within each trajectory (frame indices are unique
+    # per file), so summing them gives the correct per-CalcJob totals. The
+    # aggregated dict is written to 'uq_stats.json' once, after the loop.
+    agg_uq_stats: dict = {
+        'seed_atl_id': seed_atl_id,
+        'total_frames': 0,
+        'frames_after_filters': 0,
+        'extrapolation_error_frames': 0,
+        'interpolation_error_frames': 0,
+        'out_of_domain_frames': 0,
+        'per_temperature': [],
+    }
 
     for curr_traj in traj_files:
         print()
@@ -693,6 +714,20 @@ if __name__ == '__main__':
                     images=[],
                     append=True,
                 )
+
+                # Record per-temperature stats for the empty case so the
+                # aggregate remains consistent (all frames were filtered out,
+                # none reached the extrapolation/interpolation checks).
+                empty_uq_stats = {
+                    'temperature_K': curr_temp,
+                    'total_frames': orig_md_size,
+                    'frames_after_filters': 0,
+                    'extrapolation_error_frames': 0,
+                    'interpolation_error_frames': 0,
+                    'out_of_domain_frames': 0,
+                }
+                agg_uq_stats['per_temperature'].append(empty_uq_stats)
+                agg_uq_stats['total_frames'] += orig_md_size
 
                 # Skip the rest of the process for the current T.
                 continue
@@ -1356,6 +1391,7 @@ if __name__ == '__main__':
             plot_path.touch()
 
         uq_stats_dict: dict = {
+            'temperature_K': curr_temp,
             'total_frames': orig_md_size,
             'frames_after_filters': len(md_traj_filtered),
             'extrapolation_error_frames': len(set(extrapolating_frames)),
@@ -1365,11 +1401,25 @@ if __name__ == '__main__':
 
         atl_cut.custom_print(f'UQ statistics: {uq_stats_dict}', 'info', logger=logger)
 
-        with open(res_folder / 'uq_stats.json', 'w+') as f:
-            json.dump(
-                obj=uq_stats_dict,
-                fp=f,
-                indent=4,
-            )
+        # Accumulate into the per-CalcJob aggregate. Per-temperature counts are
+        # set-deduped within this trajectory, and trajectories are disjoint, so
+        # summing is correct without further deduplication.
+        agg_uq_stats['per_temperature'].append(uq_stats_dict)
+        for key in (
+            'total_frames',
+            'frames_after_filters',
+            'extrapolation_error_frames',
+            'interpolation_error_frames',
+            'out_of_domain_frames',
+        ):
+            agg_uq_stats[key] += uq_stats_dict[key]
+
+    # Write the aggregated UQ statistics once per CalcJob (not per temperature,
+    # which previously overwrote the file and only retained the last temp).
+    atl_cut.custom_print(
+        f'UQ statistics (aggregated): {agg_uq_stats}', 'info', logger=logger
+    )
+    with open(res_folder / 'uq_stats.json', 'w') as f:
+        json.dump(obj=agg_uq_stats, fp=f, indent=4)
 
     atl_cut.custom_print('Structure processed!', 'done', logger=logger)
