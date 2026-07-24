@@ -2,6 +2,7 @@
 
 import copy
 import pathlib as pl
+from contextlib import nullcontext
 
 import numpy as np
 import torch
@@ -15,11 +16,25 @@ import atlas.core.code_utils as atl_cut
 from atlas.core.code_utils import custom_print
 
 
-def train_loop(data_loader, model, loss_fn, optimizer, device):
+def _autocast_ctx(device, amp_dtype):
+    """Autocast context for mixed-precision training, or a no-op if disabled."""
+    if amp_dtype is None:
+        return nullcontext()
+    dev_type = 'cuda' if 'cuda' in str(device) else 'cpu'
+    return torch.autocast(device_type=dev_type, dtype=amp_dtype)
+
+
+def train_loop(
+    data_loader, model, loss_fn, optimizer, device, amp_dtype=None, scaler=None
+):
     # Set the model to training mode, important for batch normalization
     # and dropout layers
     # Unnecessary in this situation (since no nn.Dropout, ... etc) in the
     # Autoencoder, but added for best practices.
+    #
+    # ``amp_dtype`` (torch.bfloat16 / torch.float16 / None) enables autocast
+    # mixed-precision training; ``scaler`` is a torch.amp.GradScaler required for
+    # float16 (bfloat16 does not need one). Both default off → fp32 behaviour.
     model.train()
     total_loss = 0
 
@@ -29,13 +44,19 @@ def train_loop(data_loader, model, loss_fn, optimizer, device):
         inputs = batch[0].to(device)
 
         # Forward pass (Autoencoder targets its own input)
-        outputs = model(inputs)
-        loss = loss_fn(outputs, inputs)
-
-        # Backward pass
         optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+        with _autocast_ctx(device, amp_dtype):
+            outputs = model(inputs)
+            loss = loss_fn(outputs, inputs)
+
+        # Backward pass (gradient scaling for float16)
+        if scaler is not None:
+            scaler.scale(loss).backward()
+            scaler.step(optimizer)
+            scaler.update()
+        else:
+            loss.backward()
+            optimizer.step()
 
         total_loss += loss.item()
 
@@ -45,7 +66,7 @@ def train_loop(data_loader, model, loss_fn, optimizer, device):
     return total_loss, avg_loss
 
 
-def val_loop(data_loader, model, loss_fn, device):
+def val_loop(data_loader, model, loss_fn, device, amp_dtype=None):
     # Set the model to evaluation mode - important for batch
     # normalization and dropout layers
     # Unnecessary in this situation but added for best practices
@@ -61,11 +82,12 @@ def val_loop(data_loader, model, loss_fn, device):
             # Unpack the tuple and move data to the correct device
             inputs = batch[0].to(device)
 
-            # Forward pass: compute the reconstruction
-            reconstruction = model(inputs)
+            # Forward pass: compute the reconstruction (autocast if enabled)
+            with _autocast_ctx(device, amp_dtype):
+                reconstruction = model(inputs)
 
-            # Compute loss: reconstruction error
-            loss = loss_fn(reconstruction, inputs)
+                # Compute loss: reconstruction error
+                loss = loss_fn(reconstruction, inputs)
 
             # Track loss
             total_loss += loss.item()
@@ -328,6 +350,30 @@ def run_training(args):
                 args.dtype = torch.float32
     atl_cut.custom_print(f"Using dtype: '{args.dtype}'", 'info')
 
+    # Optional mixed-precision compute for training (storage stays args.dtype).
+    # amp_dtype: None/'float32' (default) · 'tf32' · 'bfloat16' · 'float16'.
+    amp_dtype = None
+    grad_scaler = None
+
+    # Saved TF32 backend flags, set just before the training loop and restored
+    # in a finally so this global state never leaks out of run_training.
+    _tf32_saved = None
+    _amp = getattr(args, 'amp_dtype', None)
+    match _amp:
+        case 'tf32':
+            pass  # flags set (and restored) around the training loop below
+        case 'bfloat16':
+            amp_dtype = torch.bfloat16
+        case 'float16':
+            amp_dtype = torch.float16
+            grad_scaler = torch.amp.GradScaler(
+                'cuda' if 'cuda' in str(device) else 'cpu'
+            )
+        case _:
+            pass
+    if _amp:
+        atl_cut.custom_print(f"Training compute precision: '{_amp}'", 'info')
+
     # If no seed is given, generate a random seed
     if not hasattr(args, 'rng_seed'):
         args.rng_seed = np.random.randint(1, int(1e15))
@@ -489,94 +535,115 @@ def run_training(args):
         'info',
     )
 
-    for epoch in range(args.num_epochs):
-        _, train_avg_loss = train_loop(
-            data_loader=train_data,
-            model=model,
-            loss_fn=criterion,
-            optimizer=optimizer,
-            device=device,
+    if _amp == 'tf32':
+        # fp32 tensors, tensor-core TF32 matmul (no autocast needed). Saved so
+        # the global flags are restored in the finally below.
+        _tf32_saved = (
+            torch.backends.cuda.matmul.allow_tf32,
+            torch.backends.cudnn.allow_tf32,
         )
+        torch.backends.cuda.matmul.allow_tf32 = True
+        torch.backends.cudnn.allow_tf32 = True
 
-        val_loss = val_loop(
-            data_loader=valid_data,
-            model=model,
-            loss_fn=criterion,
-            device=device,
-        )
+    try:
+        for epoch in range(args.num_epochs):
+            _, train_avg_loss = train_loop(
+                data_loader=train_data,
+                model=model,
+                loss_fn=criterion,
+                optimizer=optimizer,
+                device=device,
+                amp_dtype=amp_dtype,
+                scaler=grad_scaler,
+            )
 
-        # Perform test evaluation every 5 epochs
-        if epoch % 5 == 0:
-            test_loss = val_loop(
-                data_loader=test_data,
+            val_loss = val_loop(
+                data_loader=valid_data,
                 model=model,
                 loss_fn=criterion,
                 device=device,
+                amp_dtype=amp_dtype,
             )
-            if args.verbose:
-                atl_cut.custom_print(
-                    str(
+
+            # Perform test evaluation every 5 epochs
+            if epoch % 5 == 0:
+                test_loss = val_loop(
+                    data_loader=test_data,
+                    model=model,
+                    loss_fn=criterion,
+                    device=device,
+                    amp_dtype=amp_dtype,
+                )
+                if args.verbose:
+                    atl_cut.custom_print(
+                        str(
+                            {
+                                'Epoch': epoch,
+                                'Train Avg. MSE': train_avg_loss,
+                                'Validation Avg. MSE': val_loss,
+                                'Test Avg. MSE': test_loss,
+                                'lr': scheduler.get_last_lr()[0],
+                            }
+                        ),
+                        'none',
+                    )
+                # log metrics to wandb
+                if hasattr(args, 'wandb') and args.wandb:
+                    wandb.log(
+                        {
+                            'epoch': epoch,
+                            'train_loss': train_avg_loss,
+                            'val_loss': val_loss,
+                            'test_loss': test_loss,
+                            'lr': scheduler.get_last_lr()[0],
+                        }
+                    )
+            # Log metrics for normal epoch
+            else:
+                if args.verbose:
+                    atl_cut.custom_print(
                         {
                             'Epoch': epoch,
                             'Train Avg. MSE': train_avg_loss,
                             'Validation Avg. MSE': val_loss,
-                            'Test Avg. MSE': test_loss,
+                            'lr': scheduler.get_last_lr()[0],
+                        },
+                        'none',
+                    )
+                # log metrics to wandb
+                if hasattr(args, 'wandb') and args.wandb:
+                    wandb.log(
+                        {
+                            'epoch': epoch,
+                            'train_loss': train_avg_loss,
+                            'val_loss': val_loss,
                             'lr': scheduler.get_last_lr()[0],
                         }
-                    ),
-                    'none',
-                )
-            # log metrics to wandb
-            if hasattr(args, 'wandb') and args.wandb:
-                wandb.log(
-                    {
-                        'epoch': epoch,
-                        'train_loss': train_avg_loss,
-                        'val_loss': val_loss,
-                        'test_loss': test_loss,
-                        'lr': scheduler.get_last_lr()[0],
-                    }
-                )
-        # Log metrics for normal epoch
-        else:
-            if args.verbose:
+                    )
+
+            scheduler.step(metrics=val_loss)
+
+            if val_loss < best_val_loss:
+                best_val_loss = val_loss
+                best_model_state = copy.deepcopy(model.state_dict())
+                epochs_without_improvement = 0
+            else:
+                epochs_without_improvement += 1
+
+            if epochs_without_improvement >= args.patience:
                 atl_cut.custom_print(
-                    {
-                        'Epoch': epoch,
-                        'Train Avg. MSE': train_avg_loss,
-                        'Validation Avg. MSE': val_loss,
-                        'lr': scheduler.get_last_lr()[0],
-                    },
-                    'none',
+                    f'Early stopping at epoch {epoch} '
+                    f'(no improvement for {args.patience} epochs). '
+                    f'Best val loss: {best_val_loss:.6f}',
+                    'info',
                 )
-            # log metrics to wandb
-            if hasattr(args, 'wandb') and args.wandb:
-                wandb.log(
-                    {
-                        'epoch': epoch,
-                        'train_loss': train_avg_loss,
-                        'val_loss': val_loss,
-                        'lr': scheduler.get_last_lr()[0],
-                    }
-                )
-
-        scheduler.step(metrics=val_loss)
-
-        if val_loss < best_val_loss:
-            best_val_loss = val_loss
-            best_model_state = copy.deepcopy(model.state_dict())
-            epochs_without_improvement = 0
-        else:
-            epochs_without_improvement += 1
-
-        if epochs_without_improvement >= args.patience:
-            atl_cut.custom_print(
-                f'Early stopping at epoch {epoch} '
-                f'(no improvement for {args.patience} epochs). '
-                f'Best val loss: {best_val_loss:.6f}',
-                'info',
-            )
-            break
+                break
+    finally:
+        if _tf32_saved is not None:
+            (
+                torch.backends.cuda.matmul.allow_tf32,
+                torch.backends.cudnn.allow_tf32,
+            ) = _tf32_saved
 
     if best_model_state is not None:
         model.load_state_dict(best_model_state)
