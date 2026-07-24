@@ -357,6 +357,18 @@ class SimpleActiveLearningWorkChain(WorkChain):
         spec.output('test_db_eval_results', valid_type=orm.Dict)
         spec.output('test_db_eval_plot', valid_type=orm.SinglefileData)
         spec.output('stop_al_loop_error', valid_type=orm.Bool)
+        spec.output(
+            'extrapolation_statistics',
+            valid_type=orm.Dict,
+            help=(
+                'Per-iteration aggregated counts of interpolating (committee '
+                'E/F disagreement) and extrapolating (descriptor boundary) MD '
+                'frames across all seed structures of this step. Includes a '
+                'nested seed_atl_id -> {md_calcjob_uuid -> stats} mapping under '
+                '"per_calculation".'
+            ),
+            required=False,
+        )
 
         spec.exit_code(
             420, 'ERROR_SCHEDULER_MLIP', 'error when submitting a MLIP calculation.'
@@ -1915,6 +1927,17 @@ class SimpleActiveLearningWorkChain(WorkChain):
         calcs_to_submit = []
         delete_indices = []
 
+        # Per-iteration aggregation of extrapolation statistics. The nested
+        # mapping is seed_atl_id -> {md_calcjob_uuid -> stats} so callers can
+        # trace each contribution back to both the seed and the MD CalcJob.
+        per_calc_stats: dict = {}
+        totals = {
+            'total_frames': 0,
+            'interpolating_frames': 0,
+            'extrapolating_frames': 0,
+            'out_of_domain_frames': 0,
+        }
+
         # Selecting which structures to send to DFT and
         # which to remove from the database.
         proc_calcjob: orm.CalcJobNode
@@ -1945,6 +1968,45 @@ class SimpleActiveLearningWorkChain(WorkChain):
                 struct.info['atl_db_index'] = proc_calcjob.base.extras.get(
                     'atl_db_index'
                 )
+
+            # Read the per-CalcJob extrapolation statistics when available.
+            # The output is optional (older nodes / MD-errored nodes lack it);
+            # fall back to a minimal dict with just the union count derived
+            # from the retrieved extrapolating_structures file.
+            if hasattr(proc_calcjob.outputs, 'extrapolation_statistics'):
+                calc_stats = (
+                    proc_calcjob.outputs.extrapolation_statistics.get_dict()
+                )
+            else:
+                calc_stats = {
+                    'seed_atl_id': orig_str_uuid or 'unknown',
+                    'total_frames': None,
+                    'frames_after_filters': None,
+                    'extrapolation_error_frames': None,
+                    'interpolation_error_frames': None,
+                    'out_of_domain_frames': len(extrap_structs),
+                }
+
+            # The stats dict uses the script-side naming; mirror it in the
+            # per-calc record and accumulate the totals.
+            per_calc_record = dict(calc_stats)
+            per_calc_record['md_calcjob_uuid'] = proc_calcjob.uuid
+            per_calc_record['md_calcjob_pk'] = proc_calcjob.pk
+            seed_id = per_calc_record.get('seed_atl_id') or orig_str_uuid or 'unknown'
+            per_calc_stats.setdefault(seed_id, {})[proc_calcjob.uuid] = per_calc_record
+
+            # out_of_domain_frames is the pre-dft_calc_limit-sampling count
+            # produced by the MD script. None (legacy nodes) contributes 0.
+            totals['out_of_domain_frames'] += (
+                per_calc_record.get('out_of_domain_frames') or 0
+            )
+            totals['interpolating_frames'] += (
+                per_calc_record.get('interpolation_error_frames') or 0
+            )
+            totals['extrapolating_frames'] += (
+                per_calc_record.get('extrapolation_error_frames') or 0
+            )
+            totals['total_frames'] += per_calc_record.get('total_frames') or 0
 
             # If no extrapolating structures, mark for removal from database
             # using orig_str_uuid
@@ -2182,6 +2244,37 @@ class SimpleActiveLearningWorkChain(WorkChain):
         else:
             self.report('Nothing removed from DB.')
 
+        # Aggregate the per-iteration extrapolation statistics into a single
+        # dict and stash it in the context for return_seed_dft_and_model to
+        # expose as a workchain output. Counts are pre-dft_calc_limit-sampling
+        # (the MD-side view of what was extrapolating); len(calcs_to_submit)
+        # above is the post-sampling DFT submission count.
+        n_total = totals['total_frames']
+        n_interp = totals['interpolating_frames']
+        n_extrap = totals['extrapolating_frames']
+        n_out = totals['out_of_domain_frames']
+        ratio_str = (
+            f'{n_out / n_total * 100:.2f}%' if n_total > 0 else 'n/a (0 frames)'
+        )
+        self.report(
+            f'Extrapolation statistics: {n_interp} interpolating '
+            f'(committee disagreement), {n_extrap} extrapolating '
+            f'(descriptor boundary), {n_out} out-of-domain (union), '
+            f'{n_total} total frames. Out-of-domain ratio: {ratio_str}.'
+        )
+
+        step_stats = {
+            'iteration': self.inputs.al_loop_iteration.value,
+            'total_frames': n_total,
+            'interpolating_frames': n_interp,
+            'extrapolating_frames': n_extrap,
+            'out_of_domain_frames': n_out,
+            'submitted_to_dft': len(calcs_to_submit),
+            'removed_from_seed_db': len(delete_indices),
+            'per_calculation': per_calc_stats,
+        }
+        self.ctx.extrapolation_statistics = step_stats
+
         # Notify about DFT and deletions if enabled
         if hasattr(self.inputs, 'enable_ntfysh'):
             requests.post(
@@ -2365,6 +2458,16 @@ class SimpleActiveLearningWorkChain(WorkChain):
         # Return error status as an output
         self.out('stop_al_loop_error', self.ctx.stop_al_loop_error)
 
+        # Expose the per-iteration extrapolation statistics aggregated in
+        # send_calc_or_remove_structures. May be absent when the MD step was
+        # fully mocked-and-skipped or when resuming an older run; guard with
+        # hasattr for backward compatibility.
+        if hasattr(self.ctx, 'extrapolation_statistics'):
+            self.out(
+                'extrapolation_statistics',
+                orm.Dict(dict=self.ctx.extrapolation_statistics),
+            )
+
         if hasattr(self.inputs, 'enable_ntfysh'):
             requests.post(
                 f'https://ntfy.sh/{self.inputs.ntfysh_topic.value}',
@@ -2504,6 +2607,18 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
         )
         spec.output('test_db_file', valid_type=orm.SinglefileData, required=False)
         spec.output('final_model_file', valid_type=orm.SinglefileData)
+        spec.output(
+            'extrapolation_statistics',
+            valid_type=orm.Dict,
+            help=(
+                'Cumulative counts of interpolating (committee E/F '
+                'disagreement) and extrapolating (descriptor boundary) MD '
+                'frames across all AL iterations, with a per-iteration '
+                'breakdown (and safeguard contributions folded in under a '
+                'separate "safeguard" sub-key to avoid double counting).'
+            ),
+            required=False,
+        )
 
     def setup_textfile_logging(self):
         # Get log path
@@ -3071,6 +3186,50 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
             self.ctx.stop_al_loop_error = node.outputs['stop_al_loop_error']
         else:
             self.ctx.stop_al_loop_error = orm.Bool(False)
+
+        # Accumulate extrapolation statistics across iterations (mirrors the
+        # test_db_eval_results aggregation above). Each child workchain exposes
+        # an optional extrapolation_statistics Dict with per-iteration totals
+        # and a per_calculation breakdown; we merge the totals into a single
+        # cumulative counter and keep the per-iteration record untouched.
+        if hasattr(node.outputs, 'extrapolation_statistics'):
+            step = node.outputs['extrapolation_statistics'].get_dict()
+            if not hasattr(self.ctx, 'cumulative_extrap_stats'):
+                self.ctx.cumulative_extrap_stats = {
+                    'total_frames': 0,
+                    'interpolating_frames': 0,
+                    'extrapolating_frames': 0,
+                    'out_of_domain_frames': 0,
+                    'per_iteration': {},
+                    'safeguard': {
+                        'total_frames': 0,
+                        'interpolating_frames': 0,
+                        'extrapolating_frames': 0,
+                        'out_of_domain_frames': 0,
+                        'per_iteration': {},
+                    },
+                }
+            c = self.ctx.cumulative_extrap_stats
+            for k in (
+                'total_frames',
+                'interpolating_frames',
+                'extrapolating_frames',
+                'out_of_domain_frames',
+            ):
+                c[k] += step.get(k, 0) or 0
+            c['per_iteration'][step.get('iteration', self.ctx.iteration)] = step
+
+            n_total = c['total_frames']
+            n_out = c['out_of_domain_frames']
+            ratio_str = (
+                f'{n_out / n_total * 100:.2f}%' if n_total > 0 else 'n/a'
+            )
+            self.report(
+                f'Cumulative extrap/interp: {c["interpolating_frames"]} interp, '
+                f'{c["extrapolating_frames"]} extrap, '
+                f'{c["out_of_domain_frames"]} out-of-domain, '
+                f'{n_total} total frames. Out-of-domain ratio: {ratio_str}.'
+            )
 
         # Resetting safeguard attempted flag
         # The reasoning behind this is that the safeguard must only be attempted
@@ -4029,6 +4188,49 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
             self.logger.debug(f'Failed structures count: {len(safeguard_failed_ids)}')
             self.logger.debug(f'Passed structures count: {len(safeguard_passed_ids)}')
 
+            # Fold the per-CalcJob safeguard extrapolation_statistics into the
+            # cumulative counter kept on the base workchain context. Safeguard
+            # uses a single sampler model (no committee), so its
+            # interpolation (committee disagreement) count is always 0; we keep
+            # the contributions under a separate "safeguard" sub-key so they
+            # are not double-counted with the main MD-seed totals.
+            if not hasattr(self.ctx, 'cumulative_extrap_stats'):
+                self.ctx.cumulative_extrap_stats = {
+                    'total_frames': 0,
+                    'interpolating_frames': 0,
+                    'extrapolating_frames': 0,
+                    'out_of_domain_frames': 0,
+                    'per_iteration': {},
+                    'safeguard': {
+                        'total_frames': 0,
+                        'interpolating_frames': 0,
+                        'extrapolating_frames': 0,
+                        'out_of_domain_frames': 0,
+                        'per_iteration': {},
+                    },
+                }
+            sg = self.ctx.cumulative_extrap_stats['safeguard']
+            it_key = self.inputs.al_loop_iteration.value
+            sg.setdefault('per_iteration', {})[it_key] = {}
+            for proc_calcjob in processed_structures:
+                if proc_calcjob.exit_status != 0:
+                    continue
+                if not hasattr(proc_calcjob.outputs, 'extrapolation_statistics'):
+                    continue
+                calc_stats = (
+                    proc_calcjob.outputs.extrapolation_statistics.get_dict()
+                )
+                sg['per_iteration'][it_key].setdefault(
+                    proc_calcjob.uuid, calc_stats
+                )
+                for k in (
+                    'total_frames',
+                    'interpolating_frames',
+                    'extrapolating_frames',
+                    'out_of_domain_frames',
+                ):
+                    sg[k] += calc_stats.get(k, 0) or 0
+
             self.ctx.safeguard_attempted = True
 
             # Set flags based on safeguard results
@@ -4441,6 +4643,26 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
         workchain and the availability of the processed training data for further use.
         """
         self.report('Returning final results...')
+
+        # Expose the cumulative extrapolation statistics accumulated across
+        # all AL iterations (and the safeguard sub-key). May be absent when
+        # the loop exited before any iteration completed; guard accordingly.
+        if hasattr(self.ctx, 'cumulative_extrap_stats'):
+            c = self.ctx.cumulative_extrap_stats
+            n_total = c.get('total_frames', 0)
+            n_out = c.get('out_of_domain_frames', 0)
+            ratio_str = (
+                f'{n_out / n_total * 100:.2f}%' if n_total > 0 else 'n/a'
+            )
+            self.report(
+                f'Final extrap/interp: {c["interpolating_frames"]} interp, '
+                f'{c["extrapolating_frames"]} extrap, '
+                f'{n_out} out-of-domain, {n_total} total frames. '
+                f'Out-of-domain ratio: {ratio_str}.'
+            )
+            self.out(
+                'extrapolation_statistics', orm.Dict(dict=c)
+            )
 
         # Storing final database as a orm.SinglefileData object
         train_db = atl_al_ut.prepare_output_final_training_db(
