@@ -517,11 +517,23 @@ def run_training(args):
         model.parameters(), lr=args.lr, weight_decay=args.weight_decay
     )
 
+    # The LR schedule must react strictly before early stopping, or it never
+    # fires: ReduceLROnPlateau reduces once bad epochs *exceed* its patience
+    # (i.e. at patience + 1), while the early-stopping test below triggers at
+    # exactly `args.patience`. Sharing a single value therefore stopped training
+    # one epoch before the first LR reduction could ever occur, so every run
+    # effectively trained at a constant learning rate. `lr_patience` defaults to
+    # a third of the early-stopping patience; callers passing only `patience`
+    # keep working unchanged.
+    lr_patience = getattr(args, 'lr_patience', None)
+    if lr_patience is None:
+        lr_patience = max(1, args.patience // 3)
+
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(
         optimizer=optimizer,
         mode='min',
         factor=0.5,
-        patience=args.patience,
+        patience=lr_patience,
         min_lr=1e-6,
     )
 
