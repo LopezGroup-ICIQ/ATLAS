@@ -331,3 +331,95 @@ class MLIPModelCompiler(Protocol):
     def compiled_model_extension(self) -> str:
         """File extension of the compiled artifact (e.g. '.nequip.pt2')."""
         ...
+
+
+@runtime_checkable
+class MLIPPretrainedModel(Protocol):
+    """Protocol for backends that can serve published pretrained models.
+
+    Foundation potentials (MACE-MP/OFF, Orb, fairchem) are not produced by the
+    ATLAS training loop: the "model" is a published identifier such as
+    ``'mace:mp-small'`` or ``'orb-v2'``, which the framework resolves itself
+    (usually a download plus a cache), rather than a file in the working
+    directory.
+
+    Users select one through ``[md.parameters].md_type`` as
+    ``'<backend>:<variant>'``. ``find_inference_model`` gates on this protocol
+    to decide whether to hand ``create_calculator`` an identifier or a path.
+
+    Backends whose models are always files (e.g. Allegro) simply omit this
+    protocol, and resolution falls back to the on-disk path as before.
+    """
+
+    @property
+    def default_pretrained_model(self) -> str | None:
+        """Identifier used when no variant is given, or None if there is none."""
+        ...
+
+    @property
+    def available_pretrained_models(self) -> tuple[str, ...]:
+        """Identifiers this backend can resolve. Empty when not enumerable."""
+        ...
+
+    def resolve_pretrained_model(self, variant: str | None) -> str:
+        """Normalise a user-supplied variant into a backend-native identifier.
+
+        Parameters
+        ----------
+        variant : str | None
+            The part after ``'<backend>:'`` in a model spec, or None to request
+            :attr:`default_pretrained_model`.
+
+        Returns
+        -------
+        str
+            An identifier this backend's ``create_calculator`` accepts.
+
+        Raises
+        ------
+        ValueError
+            If the variant cannot be resolved by this backend.
+        """
+        ...
+
+
+@runtime_checkable
+class MLIPConfidenceEstimator(Protocol):
+    """Protocol for backends whose model gives its own per-structure uncertainty.
+
+    Some models (e.g. Orb v3) carry a confidence head that estimates their own
+    force-prediction error, providing a committee-free uncertainty signal.
+    This lets a single pretrained foundation model drive active-learning
+    selection (``interpolation.disagreement_check_type = "confidence"``), where
+    otherwise only cross-model committee disagreement is available.
+
+    Backends without such a head simply omit this protocol; the ``confidence``
+    selection path then raises a clear error naming the backend.
+    """
+
+    def estimate_uncertainty(
+        self,
+        structures,
+        model=None,
+        *,
+        device: str = 'cpu',
+        **kwargs,
+    ) -> list[float]:
+        """Return one scalar uncertainty per structure (higher = more uncertain).
+
+        Parameters
+        ----------
+        structures : list[Atoms]
+            Structures to score.
+        model : str | Path | None
+            A published model identifier or checkpoint path; None for the
+            backend default. Must be a model that exposes the confidence signal.
+        device : str
+            Inference device.
+
+        Returns
+        -------
+        list[float]
+            One non-negative uncertainty per input structure, same order.
+        """
+        ...

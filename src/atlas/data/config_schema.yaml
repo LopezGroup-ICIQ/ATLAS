@@ -749,6 +749,10 @@ dft:
             description: "Custom scheduler commands."
             type: str
             mandatory: false
+        prepend_text:
+            description: "Text to prepend to the scheduler script."
+            type: str
+            mandatory: false
         options_resources:
             description: "Scheduler resource options."
             tot_num_mpiprocs:
@@ -757,9 +761,9 @@ dft:
                 mandatory: true
                 default: 24
             parallel_env:
-                description: "Parallel environment to be used."
+                description: "(SGE) Parallel environment to be used. Ignored by SLURM schedulers."
                 type: str
-                mandatory: true
+                mandatory: false
                 default: " "
     aiida_vasp:
         description: "Settings for the AiiDA-VASP plugin."
@@ -922,9 +926,9 @@ dft_benchmark:
                 mandatory: true
                 default: 24
             parallel_env:
-                description: "Parallel environment."
+                description: "(SGE) Parallel environment. Ignored by SLURM schedulers."
                 type: str
-                mandatory: true
+                mandatory: false
                 default: " "
     incar:
         description: "Base INCAR settings (only bulk needed for benchmarks)."
@@ -1309,7 +1313,7 @@ active_learning:
                     type: str
                     mandatory: false
                     default: "soap"
-                    choices: ["soap", "mace"]
+                    choices: ["soap", "mace", "orb", "equiformer"]
                 initial_structure:
                     description: "Whether to gather a structure at random or select the one with the lowest energy available."
                     type: str
@@ -1406,11 +1410,16 @@ active_learning:
             mandatory: true
             default: 10.0
         disagreement_check_type:
-            description: "Approach for energy and force (E&F) committee disagreement check. With `training`, compare E&F with a threshold obtained from the training RMSE values multiplied by a threshold. With `md_threshold`, compare E&F with a threshold obtained from the standard deviaiton of the MD frames."
+            description: "Approach for the energy/force uncertainty check that selects frames for DFT. With `training`, compare committee E&F spread against a threshold from the training RMSE times a multiplier. With `md_threshold`, compare committee E&F spread against a threshold from the MD-frame standard deviation. With `confidence`, use the MD backend's own single-model confidence head instead of a committee (committee-free), so a foundation model such as Orb v3 can drive selection without training an MLIP; the MD backend must expose a confidence head (see `md.parameters.md_type`)."
             type: str
             mandatory: true
             default: "training"
-            choices: ["training", "md_threshold"]
+            choices: ["training", "md_threshold", "confidence"]
+        confidence_sigma:
+            description: "Only used when `disagreement_check_type = confidence`. A frame is flagged for DFT when its predicted uncertainty exceeds mean + confidence_sigma * std across the MD frames. Higher values select fewer, more uncertain frames."
+            type: float
+            mandatory: false
+            default: 3.0
         target_accuracy_e_meV_per_at:
             description: "Target accuracy for energy per atom in meV/atom. This should roughly correspond to the noise floor of your reference method, e.g., 1-2 meV/atom for DFT. By default, a relatively large value of 43 meV/atom is selected, since it correponds with a typical measure of chemical accuracy. However, this might be too high for some properties, such as long term diffusion or phase transitions."
             type: float
@@ -1690,6 +1699,14 @@ active_learning:
                 mandatory: true
                 default: "cuda"
                 choices: ["cpu", "cuda"]
+            md_type:
+                description: "MLIP backend (or pretrained model) driving the MD simulation. Accepts a registered backend name (e.g. `mace`, `allegro`, `orb`) or a `backend:variant` pretrained-model spec (e.g. `mace:mp-small`, `orb:orb-v2`, `fairchem:uma-s-1p2`, `equiformer:mptrj_gradient`). If omitted, defaults to `mlip.md_backend`, then to `mlip.training_backend`, then to `mace`. An inference-only backend (Orb, fairchem, EquiformerV3) can drive MD while a trainable backend (MACE/Allegro) does the training."
+                type: str
+                mandatory: false
+            fairchem_task:
+                description: "Task (training domain) for a multi-task fairchem model such as UMA, selecting which output head and energy reference to use: `omat` (bulk inorganic materials), `omol` (organic molecules), `oc20`/`oc25` (catalysis/adsorption), `odac` (metal-organic frameworks), or `omc` (molecular crystals). Only used when `md_type` selects the `fairchem` backend; ignored by single-task models (eSEN) and other backends. If omitted, defaults to `omat` when the model provides it. See the fairchem UMA documentation for the full task list."
+                type: str
+                mandatory: false
             enable_cueq:
                 description: "Enable CUEQ for MACE."
                 type: bool
@@ -1847,18 +1864,39 @@ active_learning:
                 type: str
                 mandatory: false
                 example: "module load singularity\nexport PATH=$PATH:."
+            per_backend:
+                description: "Optional per-MLIP-backend container overrides. Each key is an MLIP backend name registered in the atlas.active_learning.backends registry (e.g. mace, allegro); its subkeys override the values set directly under 'container' for calculations running that backend. MLIP frameworks have mutually incompatible dependency stacks (MACE pins e3nn==0.4.4 while NequIP/Allegro need e3nn>=0.6), so each backend generally requires its own image. Keys left unset fall back to the global container settings. Omit this section entirely to use a single image for the whole run."
+                type: dict
+                mandatory: false
+                dynamic_keys: true
+                schema_under_dynamic_keys:
+                    image_name:
+                        description: "Path to this backend's container image on the calculation nodes."
+                        type: str
+                        mandatory: false
+                        example: "/path/to/atlas_allegro.sif"
+                    engine_command:
+                        description: "Command template for the container engine for this backend. Defaults to the global engine_command."
+                        type: str
+                        mandatory: false
+                        example: "singularity exec --bind .:/atl_data --nv --contain --writable-tmpfs {image_name}"
+                    prepend_text:
+                        description: "Text to prepend to job scripts for this backend's container setup. Defaults to the global prepend_text."
+                        type: str
+                        mandatory: false
+                        example: "module load singularity\nexport PATH=$PATH:."
     mlip:
         name: "mlip"
         name_pretty: "MLIP Backend Settings"
         description: "Configuration for the MLIP backend used in the active learning workflow. Supports a modular backend system with a plugin interface for adding new models. If this section is absent, the workflow defaults to MACE for all stages."
         training_backend:
-            description: "Which MLIP backend to use for model training, committee evaluation, and calculator creation. Available backends are registered in the atlas.active_learning.backends registry."
+            description: "Which MLIP backend to use for model training, committee evaluation, and calculator creation. Must be a trainable backend: `mace` or `allegro` (the pretrained-only backends `orb`, `fairchem` and `equiformer` are inference-only and cannot train). Backends are registered in the atlas.active_learning.backends registry."
             type: str
             mandatory: false
             default: "mace"
             example: "mace"
         md_backend:
-            description: "Which MLIP backend to use for MD simulations. Defaults to the training_backend value if not specified."
+            description: "Which MLIP backend to use for MD simulations. Accepts any registered backend, including inference-only ones (`orb`, `fairchem`, `equiformer`), so MD can be driven by a foundation potential while training uses MACE/Allegro. A `backend:variant` spec can also be given directly via `md.parameters.md_type`, which takes precedence. Defaults to the training_backend value if not specified."
             type: str
             mandatory: false
             default: null
@@ -2045,7 +2083,7 @@ active_learning:
             type: str
             mandatory: true
             default: "mace"
-            choices: ["mace", "soap"]
+            choices: ["mace", "soap", "orb", "equiformer"]
         dimensionality_reduction_method:
             description: "Dimensionality reduction method for model descriptors."
             type: str
@@ -2936,7 +2974,7 @@ latent_space_analysis:
             type: str
             mandatory: true
             default: "mace"
-            choices: ["mace", "soap"]
+            choices: ["mace", "soap", "orb", "equiformer"]
         dimensionality_reduction_method:
             description: "Dimensionality reduction method for model descriptors."
             type: str

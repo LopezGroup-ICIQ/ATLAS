@@ -356,6 +356,13 @@ def create_foundation_model_calculator(
     NotImplementedError
         If the specified MLIP library is not supported
     """
+    from atlas.active_learning.backends import (
+        MLIPPretrainedModel,
+        get_backend,
+        list_backends,
+        resolve_model_spec,
+    )
+
     if ':' not in foundation_model_spec:
         raise ValueError(
             f"Invalid foundation model specification: '{foundation_model_spec}'. "
@@ -364,35 +371,48 @@ def create_foundation_model_calculator(
 
     library, model_name = foundation_model_spec.split(':', 1)
 
-    if library.lower() == 'mace':
-        try:
-            from atlas.active_learning.backends import get_backend
-
-            custom_print(f'Loading MACE foundation model: {model_name}', 'info')
-            backend = get_backend('mace')
-            calculator = backend.create_calculator(
-                model_path=f'mace:mp-{model_name}',
-                device=device,
-                dtype=dtype,
-                **kwargs,
-            )
-            custom_print(f'Successfully loaded MACE model: {model_name}', 'done')
-            return calculator
-        except ImportError as e:
-            raise ImportError(
-                f'Failed to import mace_mp: {e}. '
-                'Make sure MACE is properly installed with foundation model support.'
-            ) from e
-        except Exception as e:
-            raise ValueError(
-                f"Failed to create MACE calculator with model '{model_name}': {e}. "
-                'This could be due to network issues or an invalid model name.'
-            ) from e
-    else:
+    if library.lower() not in list_backends():
         raise NotImplementedError(
-            f"Foundation models for '{library}' are not yet supported. "
-            'Currently supported libraries: mace'
+            f"Foundation models for '{library}' are not supported. "
+            f'Registered backends: {", ".join(list_backends())}.'
         )
+
+    # `resolve_model_spec` normalises the variant through the backend, so the
+    # historical 'mace:small' spelling still resolves to 'mace:mp-small'.
+    backend_name, pretrained_id = resolve_model_spec(foundation_model_spec)
+    backend = get_backend(backend_name)
+
+    if not isinstance(backend, MLIPPretrainedModel):
+        raise NotImplementedError(
+            f"Backend '{backend_name}' does not provide pretrained foundation "
+            'models.'
+        )
+
+    try:
+        custom_print(
+            f'Loading {backend_name} foundation model: {model_name}', 'info'
+        )
+        calculator = backend.create_calculator(
+            model_path=pretrained_id,
+            device=device,
+            dtype=dtype,
+            **kwargs,
+        )
+        custom_print(
+            f'Successfully loaded {backend_name} model: {model_name}', 'done'
+        )
+        return calculator
+    except ImportError as e:
+        raise ImportError(
+            f"Failed to import the '{backend_name}' framework: {e}. Make sure "
+            'it is installed with foundation model support.'
+        ) from e
+    except Exception as e:
+        raise ValueError(
+            f"Failed to create a {backend_name} calculator with model "
+            f"'{model_name}': {e}. This could be due to network issues or an "
+            'invalid model name.'
+        ) from e
 
 
 class FoundationModelPath:
@@ -435,6 +455,8 @@ def create_foundation_model_paths(foundation_model_specs):
     ValueError
         If any foundation model specification is invalid
     """
+    from atlas.active_learning.backends import list_backends, resolve_model_spec
+
     paths = []
     for spec in foundation_model_specs:
         # Validate the specification format
@@ -444,34 +466,18 @@ def create_foundation_model_paths(foundation_model_specs):
                 "Expected format: 'library:model_name'"
             )
 
-        library, model_name = spec.split(':', 1)
+        library, _model_name = spec.split(':', 1)
 
         # Validate supported libraries
-        if library.lower() not in ['mace']:
+        if library.lower() not in list_backends():
             raise ValueError(
                 f"Unsupported foundation model library: '{library}'. "
-                'Supported libraries: mace'
+                f'Registered backends: {", ".join(list_backends())}.'
             )
 
-        # For MACE, validate common model names
-        if library.lower() == 'mace':
-            valid_mace_models = [
-                'small',
-                'medium',
-                'large',
-                'medium-mpa-0',
-                'large-mpa-0',
-                'off23-small',
-                'off23-medium',
-                'off23-large',
-            ]
-            if model_name not in valid_mace_models:
-                custom_print(
-                    f"Warning: '{model_name}' is not a recognized MACE model. "
-                    f'Known models: {", ".join(valid_mace_models)}. '
-                    'Proceeding anyway - the model might still work.',
-                    'warn',
-                )
+        # Let the backend validate its own variant: it warns on an unrecognised
+        # one and raises when the backend serves no pretrained models at all.
+        resolve_model_spec(spec)
 
         paths.append(FoundationModelPath(spec))
 

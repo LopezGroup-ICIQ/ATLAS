@@ -21,7 +21,7 @@
 
 **ATLAS (Automated Training with Latent-space Aware Sampling)** is a unified Python framework for building robust machine learning interatomic potentials (MLIPs). It combines a diversity-aware database generator with a manifold-aware active learning workflow to produce compact, high-quality training datasets. Its latent-space awareness enables applicability checking during application. ATLAS supports structure generation for bulk, surface, cluster, and isolated atom configurations across single-, binary-, and ternary (WIP) phase diagrams, as well as user-defined element space, with perturbations, vacancies, deformations, and adsorbates.
 
-The active learning engine uses a **modular backend architecture** for training MLIPs. It currently supports a growing list of models, including [MACE](https://mace-docs.readthedocs.io/), [Allegro](https://github.com/mir-group/allegro), and [NequIP](https://github.com/mir-group/nequip), and any model can be added through the generic backend plugin interface. It runs molecular dynamics simulations, detects extrapolating structures via descriptor-based latent-space methods (autoencoder + concave hull or morphological shape), and submits them for DFT labelling, all orchestrated through [AiiDA](https://aiida.readthedocs.io/).
+The active learning engine uses a **modular backend architecture** for MLIPs. It currently supports a growing list of models: [MACE](https://mace-docs.readthedocs.io/), [Allegro](https://github.com/mir-group/allegro), and [NequIP](https://github.com/mir-group/nequip) for training, plus the pretrained foundation potentials [Orb](https://github.com/orbital-materials/orb-models), [fairchem](https://github.com/facebookresearch/fairchem) (UMA/eSEN), and [EquiformerV3](https://github.com/atomicarchitects/equiformer_v3) for inference (MD sampling and benchmarking). Any model can be added through the generic backend plugin interface. It runs molecular dynamics simulations, detects extrapolating structures via descriptor-based latent-space methods (autoencoder + concave hull or morphological shape), and submits them for DFT labelling, all orchestrated through [AiiDA](https://aiida.readthedocs.io/).
 
 Additional capabilities include data reduction mode, safeguard checks to prevent premature termination during dataset generation, test database evaluation, diversity metrics (Vendi Score), an interactive monitoring dashboard, a desktop GUI (in development), MLIP benchmarking, and comprehensive reporting of model performance and resource usage. 
 
@@ -111,8 +111,12 @@ There are several installation mechanisms, and several optional dependencies dep
 - `mace` — MACE model training and evaluation
 - `allegro` — Allegro model support
 - `nequip` — NequIP model support
+- `orb` — Orb pretrained foundation potentials (inference only)
+- `fairchem` — fairchem UMA/eSEN pretrained potentials (inference only)
 - `dev` — Development dependencies (pytest, pre-commit, commitizen)
 - `gui` — Desktop GUI (PySide6)
+
+> EquiformerV3 is inference-only and is **not** a pip extra: it requires the OCP-era `fairchem` fork bundled with [atomicarchitects/equiformer_v3](https://github.com/atomicarchitects/equiformer_v3). Follow that repository's environment setup, then select it in ATLAS with `md_type = "equiformer:mptrj_gradient"`.
 
 Optional dependencies are installed using the following syntax:
 
@@ -127,7 +131,7 @@ python3 -m pip install "./ATLAS[OPTIONAL_DEPENDENCY_NAME]"
 Some installation examples follow:
 
 > [!WARNING]
-> **MACE and Allegro/NequIP cannot be installed in the same environment.** Both `mace-torch` and `nequip` depend on `e3nn` but pin incompatible versions. You must choose one backend per environment, or use separate virtual environments if you need to switch between them.
+> **Each MLIP framework needs its own environment.** The backends have mutually incompatible dependency stacks — for example MACE (`mace-torch`) pins `e3nn==0.4.4` while Allegro/NequIP need `e3nn>=0.6`, and fairchem/Orb pull `numpy>=2` against ATLAS's `numpy<2`. Install one framework per virtual environment. For a single active-learning run that mixes backends (e.g. training with MACE, MD sampling with Orb), run each backend from its own container image via the per-backend `container_settings` (see the active learning configuration docs).
 
 #### Using `pip`
 
@@ -155,6 +159,8 @@ Finally, initialize configuration files by running the **initial configuration c
 # Run the last setup step - configuration initialization
 atl_init_setup
 ```
+
+The wizard also offers to store a **Hugging Face token** (`atl_init_setup hftoken`), which is only needed to download gated pretrained models such as fairchem/UMA or the EquiformerV2 OMat24 checkpoints. It is saved alongside the MP key in `secrets.json` and picked up automatically by those backends (you can also set the `HF_TOKEN` environment variable instead). Run `atl_init_setup status` to review what is configured.
 
 > [!NOTE]
 > If the user is only interested in database generation, the setup can be completed only up until this point, skipping the following AiiDA setup.

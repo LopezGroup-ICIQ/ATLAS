@@ -1,5 +1,6 @@
 """AiiDA plugin for MACE calculations."""
 
+import json
 import pickle
 import tempfile
 from pathlib import Path
@@ -49,6 +50,11 @@ class RunMDSafeguardCalculation(CalcJob):
     extrapolating_structures : orm.SinglefileData
         File containing all structures that were found to be extrapolating.
         Uses the extxyz format.
+    extrapolation_statistics : orm.Dict
+        Per-CalcJob counts of extrapolating (descriptor boundary) MD frames
+        for the safeguard check. Safeguard uses a single sampler model (no
+        committee), so the interpolation (committee disagreement) count is
+        always 0.
 
     Exit Codes
     ----------
@@ -151,6 +157,18 @@ class RunMDSafeguardCalculation(CalcJob):
             'extrapolation_plot',
             valid_type=(atl_img.ImagePNGData, None),
             help=('File containing a figure showing the extrapolation results.'),
+            required=False,
+        )
+        spec.output(
+            'extrapolation_statistics',
+            valid_type=orm.Dict,
+            help=(
+                'Per-CalcJob counts of extrapolating (descriptor boundary) MD '
+                'frames for the safeguard check, aggregated across all '
+                'temperatures, with a per-temperature breakdown. Safeguard uses '
+                'a single sampler model (no committee), so the interpolation '
+                '(committee disagreement) count is always 0.'
+            ),
             required=False,
         )
         spec.exit_code(
@@ -335,12 +353,16 @@ class RunMDSafeguardCalculationParser(Parser):
 
         extrapolating_structures = None
         extrapolation_plot = None
+        extrapolation_statistics = None
 
         for child_file in retrieved_temporary_folder.rglob('*'):
             if 'extrapolating_frames.xyz' in child_file.name:
                 extrapolating_structures = orm.SinglefileData(file=child_file)
             if '.png' in child_file.name:
                 extrapolation_plot = atl_img.ImagePNGData(filepath=child_file)
+            if 'uq_stats.json' in child_file.name:
+                with open(child_file) as f:
+                    extrapolation_statistics = orm.Dict(dict=json.load(f))
 
         # Return failed code
         if not extrapolating_structures:
@@ -362,3 +384,5 @@ class RunMDSafeguardCalculationParser(Parser):
 
         self.out('extrapolating_structures', extrapolating_structures)
         self.out('extrapolation_plot', extrapolation_plot)
+        if extrapolation_statistics:
+            self.out('extrapolation_statistics', extrapolation_statistics)

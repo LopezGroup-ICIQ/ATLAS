@@ -48,7 +48,7 @@ def _cu_frame():
 def test_mock_md_preserves_info_and_perturbs():
     seed = _cu_frame()
     orig = seed.get_positions().copy()
-    out = mock_md_process_core([seed], rattle_stdev=0.1, n_frames=2)
+    out, stats = mock_md_process_core([seed], rattle_stdev=0.1, n_frames=2)
 
     assert len(out) == 2
     for frame in out:
@@ -57,8 +57,28 @@ def test_mock_md_preserves_info_and_perturbs():
         assert frame.info['atl_db_index'] == 7
         assert frame.info['atl_struct_type'] == 'bulk'
         disp = np.linalg.norm(frame.get_positions() - orig, axis=1)
-        assert disp.max() > 0.0  # actually perturbed
+        assert disp.max() > 0  # actually perturbed
         assert disp.max() < 1.0  # but within a sensible range of the stdev
+
+    # The mock marks every produced frame as extrapolating (out-of-domain),
+    # matching the contract that all returned frames are sent to DFT.
+    assert stats['total_frames'] == 2
+    assert stats['frames_after_filters'] == 2
+    assert stats['extrapolation_error_frames'] == 2
+    assert stats['interpolation_error_frames'] == 0
+    assert stats['out_of_domain_frames'] == 2
+    assert stats['seed_atl_id'] == 'x1'
+    assert stats['per_temperature'] == []
+
+
+def test_mock_md_stats_empty_seed():
+    # No seed frames -> empty output and a stats dict with zero counts and an
+    # 'unknown' seed id (mirrors the real CalcJob's fallback).
+    out, stats = mock_md_process_core([], rattle_stdev=0.1, n_frames=2)
+    assert out == []
+    assert stats['total_frames'] == 0
+    assert stats['out_of_domain_frames'] == 0
+    assert stats['seed_atl_id'] == 'unknown'
 
 
 def test_mock_dft_emt_labels_cu():

@@ -112,6 +112,20 @@ iterative_selection_method = "uncertainty"
 # Check your HPC system documentation for the commands required for container usage.
 # prepend_text = ''
 
+# (dict, optional) Per-MLIP-backend container overrides. Each subsection is named
+# after a registered MLIP backend and overrides the settings above for the
+# calculations that run that backend. MLIP frameworks have mutually incompatible
+# dependencies (MACE pins e3nn==0.4.4 while NequIP/Allegro need e3nn>=0.6), so
+# each backend generally needs its own image. Keys left unset fall back to the
+# global container settings above. Omit these sections entirely to use a single
+# image for the whole run.
+# [code.container.per_backend.mace]
+# image_name = '/path/to/atlas_mace.sif'
+
+# [code.container.per_backend.allegro]
+# image_name = '/path/to/atlas_allegro.sif'
+# engine_command = 'singularity exec --bind .:/atl_data --nv --contain --writable-tmpfs {image_name}'
+
 ###############################################
 
 # AL seed generation settings

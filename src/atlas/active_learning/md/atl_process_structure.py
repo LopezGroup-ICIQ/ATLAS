@@ -326,11 +326,14 @@ if __name__ == '__main__':
     md_params = settings.get('md', {}).get('parameters')
 
     # The MD runs through the MLIP backend's ASE calculator; select the backend
-    # from the training backend so the MD matches the trained model (e.g. Allegro
-    # loads 'curr_model.nequip.zip', not 'curr_model.model'). An explicit
-    # '[md.parameters].md_type' still wins.
+    # from 'mlip.md_backend', falling back to the training backend so the MD
+    # matches the trained model (e.g. Allegro loads 'curr_model.nequip.zip',
+    # not 'curr_model.model'). An explicit '[md.parameters].md_type' still wins.
+    mlip_settings = settings.get('mlip', {})
     md_params.setdefault(
-        'md_type', settings.get('mlip', {}).get('training_backend', 'mace')
+        'md_type',
+        mlip_settings.get('md_backend')
+        or mlip_settings.get('training_backend', 'mace'),
     )
 
     # Adding key explicitly to display it in the log
@@ -388,6 +391,13 @@ if __name__ == '__main__':
 
     # Read the initial structure
     init_conf_orig = ase_read(prepend_path / 'curr_structure.xyz', format='extxyz')
+
+    # Seed structure identifier, for provenance in the aggregated UQ stats.
+    seed_atl_id = init_conf_orig.info.get('atl_id') or init_conf_orig.info.get(
+        'aiida_uuid'
+    )
+    if seed_atl_id is None:
+        seed_atl_id = 'unknown'
 
     # Read the settings related to MD stages
     md_stages = md_params.get('stages', {})
@@ -505,6 +515,20 @@ if __name__ == '__main__':
 
     # Read MD-generated trajectories for given temperatures
     traj_files = res_folder.glob('*final_temp-*.traj')
+
+    # Aggregated UQ statistics across all temperatures for this seed. Per-temp
+    # counts are set-deduped within each trajectory (frame indices are unique
+    # per file), so summing them gives the correct per-CalcJob totals. The
+    # aggregated dict is written to 'uq_stats.json' once, after the loop.
+    agg_uq_stats: dict = {
+        'seed_atl_id': seed_atl_id,
+        'total_frames': 0,
+        'frames_after_filters': 0,
+        'extrapolation_error_frames': 0,
+        'interpolation_error_frames': 0,
+        'out_of_domain_frames': 0,
+        'per_temperature': [],
+    }
 
     for curr_traj in traj_files:
         print()
@@ -693,6 +717,20 @@ if __name__ == '__main__':
                     append=True,
                 )
 
+                # Record per-temperature stats for the empty case so the
+                # aggregate remains consistent (all frames were filtered out,
+                # none reached the extrapolation/interpolation checks).
+                empty_uq_stats = {
+                    'temperature_K': curr_temp,
+                    'total_frames': orig_md_size,
+                    'frames_after_filters': 0,
+                    'extrapolation_error_frames': 0,
+                    'interpolation_error_frames': 0,
+                    'out_of_domain_frames': 0,
+                }
+                agg_uq_stats['per_temperature'].append(empty_uq_stats)
+                agg_uq_stats['total_frames'] += orig_md_size
+
                 # Skip the rest of the process for the current T.
                 continue
 
@@ -742,31 +780,60 @@ if __name__ == '__main__':
                 for idx in short_mask:
                     f.write(f'{idx}\n')
 
-        # Running evaluation of the energies and forces using each commitee model
-        atl_cut.custom_print('Running committee evaluation...', 'info', logger=logger)
         from atlas.active_learning.backends import (
             find_inference_model,
             get_backend,
             list_inference_models,
+            resolve_model_spec,
+        )
+        from atlas.active_learning.backends._base import (
+            MLIPCommitteeEvaluator,
+            MLIPConfidenceEstimator,
         )
 
         backend_name = settings.get('mlip', {}).get('training_backend', 'mace')
         backend = get_backend(backend_name)
 
-        # Prefer pre-compiled artifacts (compile-once step) over raw models.
-        model_file_list = list_inference_models(prepend_path, backend)
-        comm_settings = settings.get('committee_eval', {})
-        backend_comm_settings = comm_settings.get(backend_name, comm_settings)
-        device_str = backend_comm_settings.get('device', 'cpu')
-        dtype_str = backend_comm_settings.get('default_dtype', 'float32')
-
-        comm_results = backend.evaluate_committee(
-            structures=md_traj_short,
-            model_files=model_file_list,
-            device=device_str,
-            dtype=dtype_str,
-            batch_size=backend_comm_settings.get('batch_size', 12),
+        confidence_sigma = settings.get('interpolation', {}).get(
+            'confidence_sigma', 3.0
         )
+
+        # Committee disagreement needs several trained models; the 'confidence'
+        # check instead uses a single model's own uncertainty head, so it skips
+        # the committee evaluation entirely.
+        if ef_disagreement_type != 'confidence':
+            # Running evaluation of the energies and forces using each
+            # committee model.
+            atl_cut.custom_print(
+                'Running committee evaluation...', 'info', logger=logger
+            )
+            # A pretrained-only backend omits MLIPCommitteeEvaluator; point the
+            # user at the committee-free 'confidence' check instead of failing
+            # deep inside the evaluator.
+            if not isinstance(backend, MLIPCommitteeEvaluator) or (
+                not backend.supports_committee_training
+            ):
+                raise ValueError(
+                    f"MLIP backend '{backend_name}' does not support committee "
+                    'evaluation. Use a trainable backend, or set '
+                    "interpolation.disagreement_check_type = 'confidence' with a "
+                    'foundation model that has a confidence head (e.g. orb-v3).'
+                )
+
+            # Prefer pre-compiled artifacts (compile-once step) over raw models.
+            model_file_list = list_inference_models(prepend_path, backend)
+            comm_settings = settings.get('committee_eval', {})
+            backend_comm_settings = comm_settings.get(backend_name, comm_settings)
+            device_str = backend_comm_settings.get('device', 'cpu')
+            dtype_str = backend_comm_settings.get('default_dtype', 'float32')
+
+            comm_results = backend.evaluate_committee(
+                structures=md_traj_short,
+                model_files=model_file_list,
+                device=device_str,
+                dtype=dtype_str,
+                batch_size=backend_comm_settings.get('batch_size', 12),
+            )
 
         ## Apply E/F commitee extrapolation filter
         model_acc_multiplier = settings.get('interpolation', {}).get(
@@ -1074,8 +1141,53 @@ if __name__ == '__main__':
             num_interpolating_frames = len(set(e_f_interpolation))
             out_of_domain_frame_idx.extend(set(e_f_interpolation))
 
+        elif ef_disagreement_type == 'confidence':
+            # Committee-free: use the MD backend's own confidence head as the
+            # per-frame uncertainty, so a single foundation model can drive
+            # selection without a trained committee.
+            md_backend_name, md_pretrained = resolve_model_spec(
+                md_params.get('md_type', backend_name)
+            )
+            md_backend = get_backend(md_backend_name)
+            if not isinstance(md_backend, MLIPConfidenceEstimator):
+                raise ValueError(
+                    "interpolation.disagreement_check_type = 'confidence' needs "
+                    f"an MD backend with a confidence head, but '{md_backend_name}' "
+                    'has none. Use e.g. md_type = "orb:orb-v3-conservative-inf-omat".'
+                )
+
+            uncertainties = np.asarray(
+                md_backend.estimate_uncertainty(
+                    md_traj_short,
+                    model=md_pretrained,
+                    device=md_params.get('device', 'cpu'),
+                )
+            )
+
+            # Flag outlier frames (mean + confidence_sigma * std), mirroring the
+            # md_threshold outlier logic.
+            unc_threshold = (
+                uncertainties.mean() + confidence_sigma * uncertainties.std()
+            )
+            atl_cut.custom_print(
+                f'Confidence uncertainties: {uncertainties}', 'none', logger=logger
+            )
+            atl_cut.custom_print(
+                f'Confidence threshold (mean + {confidence_sigma} std): '
+                f'{unc_threshold}',
+                'none',
+                logger=logger,
+            )
+            conf_interpolation = [
+                short_mask[i]
+                for i, u in enumerate(uncertainties)
+                if u >= unc_threshold
+            ]
+            num_interpolating_frames = len(set(conf_interpolation))
+            out_of_domain_frame_idx.extend(set(conf_interpolation))
+
         atl_cut.custom_print(
-            'Frames with committee disagreement found by committee check: '
+            'Frames flagged by the disagreement/confidence check: '
             f'{num_interpolating_frames}',
             'info',
             logger=logger,
@@ -1281,6 +1393,7 @@ if __name__ == '__main__':
             plot_path.touch()
 
         uq_stats_dict: dict = {
+            'temperature_K': curr_temp,
             'total_frames': orig_md_size,
             'frames_after_filters': len(md_traj_filtered),
             'extrapolation_error_frames': len(set(extrapolating_frames)),
@@ -1290,11 +1403,25 @@ if __name__ == '__main__':
 
         atl_cut.custom_print(f'UQ statistics: {uq_stats_dict}', 'info', logger=logger)
 
-        with open(res_folder / 'uq_stats.json', 'w+') as f:
-            json.dump(
-                obj=uq_stats_dict,
-                fp=f,
-                indent=4,
-            )
+        # Accumulate into the per-CalcJob aggregate. Per-temperature counts are
+        # set-deduped within this trajectory, and trajectories are disjoint, so
+        # summing is correct without further deduplication.
+        agg_uq_stats['per_temperature'].append(uq_stats_dict)
+        for key in (
+            'total_frames',
+            'frames_after_filters',
+            'extrapolation_error_frames',
+            'interpolation_error_frames',
+            'out_of_domain_frames',
+        ):
+            agg_uq_stats[key] += uq_stats_dict[key]
+
+    # Write the aggregated UQ statistics once per CalcJob (not per temperature,
+    # which previously overwrote the file and only retained the last temp).
+    atl_cut.custom_print(
+        f'UQ statistics (aggregated): {agg_uq_stats}', 'info', logger=logger
+    )
+    with open(res_folder / 'uq_stats.json', 'w') as f:
+        json.dump(obj=agg_uq_stats, fp=f, indent=4)
 
     atl_cut.custom_print('Structure processed!', 'done', logger=logger)

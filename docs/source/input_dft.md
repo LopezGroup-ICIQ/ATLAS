@@ -143,6 +143,10 @@ Queue settings for HPC schedulers (e.g., SLURM).
   - **Description**: Custom scheduler commands.
   - **Type**: `(optional, str)`
 
+- {alt}`prepend_text`:
+  - **Description**: Text to prepend to the scheduler script.
+  - **Type**: `(optional, str)`
+
 #### Options_Resources - `[queue.options_resources]`
 
 Scheduler resource options.
@@ -154,8 +158,8 @@ Scheduler resource options.
   - **Default**: `24`.
 
 - {alt}`parallel_env`:
-  - **Description**: Parallel environment to be used.
-  - **Type**: `(str)`
+  - **Description**: (SGE) Parallel environment to be used. Ignored by SLURM schedulers.
+  - **Type**: `(optional, str)`
   - **Default**: `' '`.
 
 ### Aiida_Vasp - `[aiida_vasp]`

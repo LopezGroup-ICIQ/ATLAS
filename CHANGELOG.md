@@ -1,5 +1,102 @@
 # Changelog
 
+## 0.56.0 (2026-07-26)
+
+### Docs
+
+- **mlip**: update EquiformerV2 docstring ([#9e72db9](https://github.com/pol-sb/ATLAS/commit/9e72db90262ed47f9899ba1480e3a01a94c58ddf))
+- **core**: update all docs to reflect new model-agnostic capabilities ([#0791ce4](https://github.com/pol-sb/ATLAS/commit/0791ce4930b87ac6c275155335e6755ded1ad750))
+- add autodoc rst files for new backend and benchmark modules ([#c3f9b48](https://github.com/pol-sb/ATLAS/commit/c3f9b4834debce773abd1710c9357e2e0b6096e5))
+- document modular MLIP backend architecture ([#5142ba4](https://github.com/pol-sb/ATLAS/commit/5142ba4ca56543c968cf50e1d3f8036827450c80))
+- **gui**: update mockup image ([#969b7ee](https://github.com/pol-sb/ATLAS/commit/969b7eeb2f211244e132fb011c3490f6e12f2b42))
+
+### Feature
+
+- **domain_validity**: add mixed-precision training to autoencoder ([#0d698a1](https://github.com/pol-sb/ATLAS/commit/0d698a19f2e169485872c11275cc6c9a9221cc3c))
+- **al_loop**: aggregate extrapolation statistics across AL iterations ([#813c0b8](https://github.com/pol-sb/ATLAS/commit/813c0b899792b016cd1faceaf951ea36f0d674e5))
+- **domain_validity**: aggregate and expose extrapolation statistics ([#784997d](https://github.com/pol-sb/ATLAS/commit/784997df594ecd453659d16790066a384b8ee3b5))
+- **al_loop**: make committee eval conditional and add confidence disagreement check ([#54e8d14](https://github.com/pol-sb/ATLAS/commit/54e8d14ec5f0170543d73a18dfd32a46c3296b37))
+- **mlip**: add Orb v3 confidence uncertainty estimation ([#11c3c9d](https://github.com/pol-sb/ATLAS/commit/11c3c9d379113d35b4a4fbe8f44e8fc366308f72))
+- **mlip**: add MLIPConfidenceEstimator protocol ([#d75a47e](https://github.com/pol-sb/ATLAS/commit/d75a47e268b935faa352c5ba7c61f760101fc91f))
+- **core**: add Hugging Face token configuration ([#9f78279](https://github.com/pol-sb/ATLAS/commit/9f78279a2938996f1cbc414563d104cf7ffb5aaa))
+- **mlip**: add descriptor extraction for Orb and EquiformerV3 backends ([#5aa76d1](https://github.com/pol-sb/ATLAS/commit/5aa76d1f7ad9f7d90a7ed4d583ad20d877cb85d0))
+- **mlip**: finish fairchem/equiformer backends, md_type and fairchem_task config ([#8247795](https://github.com/pol-sb/ATLAS/commit/8247795dd1d2057cf2a60efcfe2f52eafbeb80fe))
+- **mlip**: add EquiformerV3 backend for inference ([#cb7600c](https://github.com/pol-sb/ATLAS/commit/cb7600c4d2f17c3d56ddf3b967fb56aa362c6cd9))
+- **mlip**: add fairchem backend for UMA/eSEN pretrained potentials ([#dffa6f0](https://github.com/pol-sb/ATLAS/commit/dffa6f0e409b4a4ceab5a999a3748dd69416df9c))
+- **mlip**: add Orb backend for inference-only pretrained potentials ([#08bb0b7](https://github.com/pol-sb/ATLAS/commit/08bb0b71c0de715041b75c9e2049179ed6499331))
+- **mlip**: unify foundation model resolution across backends ([#fcc5605](https://github.com/pol-sb/ATLAS/commit/fcc5605b1ddde5687cd3d33f59be37bc634b6719))
+- **mlip**: add MLIPPretrainedModel protocol and MACE foundation model support ([#293ad92](https://github.com/pol-sb/ATLAS/commit/293ad926b3c9c15d2fbb5af96a35ed6fa6e3081a))
+- **core**: per-backend container images ([#94eb70b](https://github.com/pol-sb/ATLAS/commit/94eb70b8af6f0ee22bd1338b6cec2724addd4e8e))
+- **al_loop**: add debug mock mode for instant local AL loop testing ([#0809fca](https://github.com/pol-sb/ATLAS/commit/0809fcac23b8ebd9a23d11c9d76aace204211bde))
+- **al_loop**: add morphological closing as main boundary method ([#406f221](https://github.com/pol-sb/ATLAS/commit/406f221013f35635ebd83d7027e0e995a7021146))
+- **core**: implement model compilation and packaging ([#58846f4](https://github.com/pol-sb/ATLAS/commit/58846f45dfa37572c7be221fe9a0484d37bdba1c))
+- **al_loop**: add model compilation infrastructure for inference ([#7ae82ab](https://github.com/pol-sb/ATLAS/commit/7ae82ab56b1b2ce88fdeed9d0eb09029d60c0eee))
+- **core**: extend MLIP backend protocols with training and LAMMPS support ([#086054b](https://github.com/pol-sb/ATLAS/commit/086054b986d8ea08f6ac7796619ee829eacdb478))
+- **schema**: add MLIP backend configuration options ([#87a3403](https://github.com/pol-sb/ATLAS/commit/87a34039705998b6ae37fcbf533156e4b5752681))
+- **core**: add Allegro MLIP backend and generic training infrastructure ([#ba9c2fa](https://github.com/pol-sb/ATLAS/commit/ba9c2fa204c4e8f8cf0b3889e9013f2bcca04e7c))
+- **core**: enhance MACE backend with foundation model and LAMMPS support ([#3fbeda1](https://github.com/pol-sb/ATLAS/commit/3fbeda1ba87180a60b015b83c3d394c097c217fc))
+- **core**: register MLIP backend entry points and update utility functions ([#380bf1c](https://github.com/pol-sb/ATLAS/commit/380bf1c82c2bd4bbc71a66b2d99163a6bf846ed6))
+- **core**: enable modular MLIP usage ([#977d082](https://github.com/pol-sb/ATLAS/commit/977d082a7768cf2eaa00215dc44151fa072ed76f))
+
+### Fix
+
+- **domain_validity**: separate lr_patience from patience ([#1fb0d43](https://github.com/pol-sb/ATLAS/commit/1fb0d43d8bff8128b6902d28bc44b372896f04c9))
+- **mlip**: make orb compatible with new api ([#0d191cf](https://github.com/pol-sb/ATLAS/commit/0d191cfe77e7b79d9aaf96d6674cbe15c4f5823b))
+- **dft**: fix prints and enable prepend_text in dft calcs ([#5df6037](https://github.com/pol-sb/ATLAS/commit/5df6037a05113012cdb7470b3ae6fdafd145fb9d))
+- **dft**: make parallel_env optional ([#607ca11](https://github.com/pol-sb/ATLAS/commit/607ca1139d5202ba19ee8650d4aac64e3230ed44))
+- **al_loop**: skip LAMMPS potential creation in mock mode ([#70944f9](https://github.com/pol-sb/ATLAS/commit/70944f9bb0a9356d58ce16583b6c534621363a42))
+- **mlip**: support EquiformerV2 checkpoint ([#8ff42cf](https://github.com/pol-sb/ATLAS/commit/8ff42cfe3867d8052b3d0cac2f62df8875cdecc6))
+- **md**: register Orb backend and gate committee evaluation for inference-only backends ([#75fefa6](https://github.com/pol-sb/ATLAS/commit/75fefa6f2ea4c2aeac76ceabed1c399cf3b95498))
+- **mlip**: guard against inference-only backends in training path ([#1e01556](https://github.com/pol-sb/ATLAS/commit/1e015560a2c8a1fd322dea6597b6e78e389659cb))
+- **md**:  unify MD calculator path and wire mlip.md_backend ([#fd83a44](https://github.com/pol-sb/ATLAS/commit/fd83a444a9ea944a8b29f97a4073e77770c90ce6))
+- **mlip**: nequip import path fix ([#29326e0](https://github.com/pol-sb/ATLAS/commit/29326e0d7624a63e260e5f84b706b415d0db84e3))
+- **report**: src/atlas/active_learning/report_utils.py ([#df7997f](https://github.com/pol-sb/ATLAS/commit/df7997fcd6f0a1aecd98c558fe862aad6f9cd7f5))
+
+### Misc
+
+- **mlip**: bump python version and make mace optional install compatible with orb ([#9afe677](https://github.com/pol-sb/ATLAS/commit/9afe67760c332040240638a3395424a025226583))
+- **core**: update mlip commit scope ([#ef881d1](https://github.com/pol-sb/ATLAS/commit/ef881d16888ec6de892d54fef941650a771a527c))
+- **mlip**: remove legacy scripts directory ([#32a01ff](https://github.com/pol-sb/ATLAS/commit/32a01fff7b5b69866ba6f40bf7cb09dcca1ec80b))
+- **mlip**: add commit scope for mlips and backends ([#3f6df09](https://github.com/pol-sb/ATLAS/commit/3f6df093df12eab7967835e6a1bf399afecb8d59))
+- **core**: upgrade torch dependencies and remove duplicates ([#6d56a74](https://github.com/pol-sb/ATLAS/commit/6d56a74cac6a891e41c000217b88ad03bd25c04a))
+- **core**: update uv.lock ([#092175e](https://github.com/pol-sb/ATLAS/commit/092175eda84386c8a3222cfdf180a691b2d773cf))
+- **core**: update requirements.txt ([#68bc0e1](https://github.com/pol-sb/ATLAS/commit/68bc0e1bef54d0750f3934b6c5a269729b89edd6))
+- **deps**: bump gitpython from 3.1.44 to 3.1.50 ([#7aaaeee](https://github.com/pol-sb/ATLAS/commit/7aaaeeef43a91cbf199d5ba4b9b2d96d40fb2455))
+- **deps**: bump gitpython from 3.1.44 to 3.1.50 ([#46a3094](https://github.com/pol-sb/ATLAS/commit/46a3094e6647f713befa64f786432a4efff4c3d9))
+- **deps**: bump urllib3 from 2.3.0 to 2.7.0 ([#3892087](https://github.com/pol-sb/ATLAS/commit/3892087f3a07cd0a39fd036d5de261c6e84326a7))
+- **deps**: bump urllib3 from 2.3.0 to 2.7.0 ([#0375e77](https://github.com/pol-sb/ATLAS/commit/0375e775d5beddbb169fd7e2c0953759f2bdaf3e))
+- **deps**: bump pymysql from 0.9.3 to 1.1.1 ([#78640b0](https://github.com/pol-sb/ATLAS/commit/78640b0dab8078ac47611c67c4932977cb86caa8))
+- **deps**: bump pymysql from 0.9.3 to 1.1.1 ([#1bb5c01](https://github.com/pol-sb/ATLAS/commit/1bb5c01a9fea5c75f4e79a2e81f3cb339b85a23a))
+- **core**: address dependabot vulns. ([#2d35bc9](https://github.com/pol-sb/ATLAS/commit/2d35bc9aa2537cb7cb3749fa2ed347327e98ba36))
+
+### Refactor
+
+- **mlip**: extract build_orb_forcefield and add shared descriptor assembly helper ([#cb1918f](https://github.com/pol-sb/ATLAS/commit/cb1918f39b92ddb33ba700236280e41d92a664bf))
+- **benchmarks**: unify foundation model route via backend registry ([#2fa6f2e](https://github.com/pol-sb/ATLAS/commit/2fa6f2e45b358351fc3cd353461ffd8d721088df))
+- **mlip**: simplify MACE descriptors by routing through create_mace_calculator ([#b229eff](https://github.com/pol-sb/ATLAS/commit/b229effe90b7cd89e71eb91868ee7eb7a129fc64))
+- **core**: clean-up and reformat ([#ae6acd0](https://github.com/pol-sb/ATLAS/commit/ae6acd03128f063bb4212db4db6d1ea5dab57d5d))
+- **core**: consolidate structure ID standardization ([#4fd41fe](https://github.com/pol-sb/ATLAS/commit/4fd41fe63fef884ef888cc581621694bd4bf75fe))
+- **core**: preserve model file extensions in CalcJobs ([#fadcf4b](https://github.com/pol-sb/ATLAS/commit/fadcf4b2d2c85b4ef962fad9b7a409310ea0599c))
+- **mlip**: use inference model lookup across MD, eval, and safeguard ([#78f7ee3](https://github.com/pol-sb/ATLAS/commit/78f7ee379b76b5c3e003b9f245561ac0cd151cc9))
+- **core**: cache code nodes and decouple prepend_text and add model compilation step and safeguard compilation ([#f695d40](https://github.com/pol-sb/ATLAS/commit/f695d40cb8b3a7eacfa272e026cea08d850b299d))
+- **gui**: update GUI and CLI for multi-backend active learning ([#82783e4](https://github.com/pol-sb/ATLAS/commit/82783e4d2cfb3d2cf95d31297deb409230596bce))
+- **safeguard**: update safeguard and reports for multi-backend support ([#0987c77](https://github.com/pol-sb/ATLAS/commit/0987c77f7661a26a1d53486cd3b0c7eb601e1b3b))
+- **al_loop**: adapt active learning workflow to multi-backend support ([#a6c1090](https://github.com/pol-sb/ATLAS/commit/a6c109023c7c5fb7decba5dbd5d91bdc03077d8c))
+- **core**: linting ([#043bf8b](https://github.com/pol-sb/ATLAS/commit/043bf8ba71a85d74fe7aaa7dce72c6def1980cea))
+
+### Style
+
+- **mlip**: fix typo ([#dd13ec7](https://github.com/pol-sb/ATLAS/commit/dd13ec7bc126fc641a665013def022c2fcf0aa10))
+
+### Test
+
+- **core**: mirror extrapolation statistics in mock MD process ([#e7df46a](https://github.com/pol-sb/ATLAS/commit/e7df46ac81724f7daa797e164316813260d4d219))
+- **mlip**: add confidence estimator conformance and live Orb v3 tests ([#a99a0e8](https://github.com/pol-sb/ATLAS/commit/a99a0e8eb69934006b0af538d9fe5b17339c8bff))
+- **al_loop**: add portable mock AL-loop integration test ([#032d85a](https://github.com/pol-sb/ATLAS/commit/032d85a51f7ac8f90f4a6fcbf958a1ab8658ea32))
+- **core**: add fairchem/equiformer backend tests ([#ef1dd7e](https://github.com/pol-sb/ATLAS/commit/ef1dd7e4f96e3d3361319516d08af1665b02a5f9))
+- **core**: add tests for pretrained protocol, spec parsing, and trainer guards ([#3d34de4](https://github.com/pol-sb/ATLAS/commit/3d34de4e0bd691d06a3071fdf04f1e5bafb23eb5))
+- add backend protocol and integration tests ([#76afefa](https://github.com/pol-sb/ATLAS/commit/76afefa71800cf2a69732271ca8b079a00581511))
+
 ## 0.55.2 (2026-06-23)
 
 ### Docs

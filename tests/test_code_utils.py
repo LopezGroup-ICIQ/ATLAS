@@ -241,3 +241,85 @@ class TestCustomPrint:
 
         _ = custom_print('done message', 'done', logger=mock_logger)
         mock_logger.log.assert_called_once()
+
+
+class TestGatherHFToken:
+    """Reading the Hugging Face token from secrets.json / environment."""
+
+    def test_none_when_absent(self, monkeypatch, tmp_path):
+        from atlas.core import code_utils as atl_cut
+
+        monkeypatch.delenv('HF_TOKEN', raising=False)
+        monkeypatch.delenv('HUGGING_FACE_HUB_TOKEN', raising=False)
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.setattr(atl_cut, 'get_config_path', lambda: tmp_path)
+        assert atl_cut.gather_hf_token() is None
+
+    def test_read_from_cwd_secrets(self, monkeypatch, tmp_path):
+        import json
+
+        from atlas.core import code_utils as atl_cut
+
+        monkeypatch.delenv('HF_TOKEN', raising=False)
+        monkeypatch.chdir(tmp_path)
+        (tmp_path / 'secrets.json').write_text(json.dumps({'HF_TOKEN': 'hf_abc'}))
+        assert atl_cut.gather_hf_token() == 'hf_abc'
+
+    def test_read_from_config_dir(self, monkeypatch, tmp_path):
+        import json
+
+        from atlas.core import code_utils as atl_cut
+
+        monkeypatch.delenv('HF_TOKEN', raising=False)
+        monkeypatch.chdir(tmp_path)
+        cfg = tmp_path / 'cfg'
+        (cfg / 'atl').mkdir(parents=True)
+        (cfg / 'atl' / 'secrets.json').write_text(json.dumps({'HF_TOKEN': 'hf_cfg'}))
+        monkeypatch.setattr(atl_cut, 'get_config_path', lambda: cfg)
+        # no secrets.json in the (empty) cwd
+        assert atl_cut.gather_hf_token() == 'hf_cfg'
+
+    def test_env_fallback(self, monkeypatch, tmp_path):
+        from atlas.core import code_utils as atl_cut
+
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.setattr(atl_cut, 'get_config_path', lambda: tmp_path)
+        monkeypatch.setenv('HF_TOKEN', 'hf_env')
+        assert atl_cut.gather_hf_token() == 'hf_env'
+
+
+class TestApplyHFToken:
+    """Exporting the ATLAS-managed token to the environment."""
+
+    def test_sets_env_from_secrets(self, monkeypatch, tmp_path):
+        import json
+
+        from atlas.core import code_utils as atl_cut
+
+        monkeypatch.delenv('HF_TOKEN', raising=False)
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.setattr(atl_cut, 'get_config_path', lambda: tmp_path)
+        (tmp_path / 'secrets.json').write_text(json.dumps({'HF_TOKEN': 'hf_s'}))
+        assert atl_cut.apply_hf_token() == 'hf_s'
+        assert os.environ['HF_TOKEN'] == 'hf_s'
+
+    def test_existing_env_takes_precedence(self, monkeypatch, tmp_path):
+        import json
+
+        from atlas.core import code_utils as atl_cut
+
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.setattr(atl_cut, 'get_config_path', lambda: tmp_path)
+        (tmp_path / 'secrets.json').write_text(json.dumps({'HF_TOKEN': 'hf_s'}))
+        monkeypatch.setenv('HF_TOKEN', 'hf_pre')
+        assert atl_cut.apply_hf_token() == 'hf_pre'
+
+    def test_no_token_leaves_env_unset(self, monkeypatch, tmp_path):
+        from atlas.core import code_utils as atl_cut
+
+        monkeypatch.delenv('HF_TOKEN', raising=False)
+        monkeypatch.delenv('HUGGING_FACE_HUB_TOKEN', raising=False)
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.setattr(atl_cut, 'get_config_path', lambda: tmp_path)
+        assert atl_cut.apply_hf_token() is None
+        assert 'HF_TOKEN' not in os.environ

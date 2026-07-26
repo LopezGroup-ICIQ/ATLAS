@@ -397,6 +397,48 @@ def get_config_path() -> pl.Path:
     return pl.Path(config_path)
 
 
+def gather_hf_token() -> str | None:
+    """Return the Hugging Face token from ATLAS secrets or the environment.
+
+    Looked up in order: ``secrets.json`` (current directory, then the ATLAS
+    config directory) under the ``HF_TOKEN`` key; then the ``HF_TOKEN`` /
+    ``HUGGING_FACE_HUB_TOKEN`` environment variables. Returns None if none is
+    set -- the token is only needed for gated models (fairchem UMA, the
+    EquiformerV2 OMat24 checkpoints), so its absence is not an error.
+    """
+    import json
+
+    candidates = [
+        pl.Path('secrets.json'),
+        get_config_path() / 'atl' / 'secrets.json',
+    ]
+    for path in candidates:
+        if path.exists():
+            try:
+                token = json.loads(path.read_text()).get('HF_TOKEN')
+            except Exception:  # noqa: BLE001 - malformed file, try the next source
+                token = None
+            if token:
+                return token
+    return os.environ.get('HF_TOKEN') or os.environ.get('HUGGING_FACE_HUB_TOKEN')
+
+
+def apply_hf_token() -> str | None:
+    """Export the ATLAS-managed HF token to the environment if not already set.
+
+    ``huggingface_hub`` reads ``HF_TOKEN`` automatically, so exporting it here
+    makes every downstream download (fairchem, EquiformerV2/V3) authenticate
+    without threading a token through each call. An ``HF_TOKEN`` already present
+    in the environment takes precedence. Returns the effective token, or None.
+    """
+    if os.environ.get('HF_TOKEN'):
+        return os.environ['HF_TOKEN']
+    token = gather_hf_token()
+    if token:
+        os.environ['HF_TOKEN'] = token
+    return token
+
+
 def init_config_dir(config_dir, config_file: str):
     """Create the configuration directory and the secrets file template."""
     # Create a 'mdb' directory inside the config directory

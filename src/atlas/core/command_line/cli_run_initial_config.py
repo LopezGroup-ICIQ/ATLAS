@@ -17,13 +17,14 @@ def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog='atl_init_setup',
         description=(
-            'ATLAS setup wizard, configure MP API key, AiiDA profiles, '
-            'computers, and codes.'
+            'ATLAS setup wizard, configure MP API key, Hugging Face token, '
+            'AiiDA profiles, computers, and codes.'
         ),
     )
     sub = parser.add_subparsers(dest='command')
 
     sub.add_parser('mpkey', help='Set up the Materials Project API key')
+    sub.add_parser('hftoken', help='Set up the Hugging Face token (gated models)')
     sub.add_parser('profile', help='Create or select an AiiDA profile')
     sub.add_parser('computer', help='Set up an AiiDA computer')
     sub.add_parser('code', help='Set up an AiiDA code (VASP, LAMMPS, MACE, ...)')
@@ -38,6 +39,7 @@ def _run_full_wizard() -> None:
     from atlas.core.command_line.setup import (
         setup_code,
         setup_computer,
+        setup_hf_token,
         setup_mp_key,
         setup_potcar,
         setup_profile,
@@ -45,6 +47,13 @@ def _run_full_wizard() -> None:
     )
 
     setup_mp_key()
+
+    if rp.Confirm.ask(
+        '\nSet up a Hugging Face token for gated pretrained models '
+        '(fairchem/UMA, EquiformerV2)?',
+        default=False,
+    ):
+        setup_hf_token()
 
     if rp.Confirm.ask('\nSet up AiiDA for active learning?', default=False):
         setup_profile()
@@ -75,6 +84,7 @@ def run_initial_config() -> None:
     from atlas.core.command_line.setup import (
         setup_code,
         setup_computer,
+        setup_hf_token,
         setup_mp_key,
         setup_potcar,
         setup_profile,
@@ -83,6 +93,7 @@ def run_initial_config() -> None:
 
     dispatch = {
         'mpkey': setup_mp_key,
+        'hftoken': setup_hf_token,
         'profile': setup_profile,
         'computer': setup_computer,
         'code': setup_code,

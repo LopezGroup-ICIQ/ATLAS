@@ -89,8 +89,8 @@ max_wallclock_seconds = 16200
 # (int) Maximum memory per node in KB
 max_memory_kb = 96000000
 
-# (int) Whether to use multiple nodes
-multiple = 1
+# (bool) Whether to use multiple nodes
+multiple = false
 
 # (int) Custom scheduler commands
 custom_scheduler_commands = ""

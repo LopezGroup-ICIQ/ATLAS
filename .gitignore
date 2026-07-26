@@ -19,3 +19,6 @@ scripts/*
 
 # TODO files to ignore
 GUI_TODO.md
+*personal.md*
+.opencode
+.opencode/*

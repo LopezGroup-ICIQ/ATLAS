@@ -328,8 +328,9 @@ def deploy_allegro_model(
     """Compile a trained Allegro checkpoint for inference.
 
     Uses `nequip-compile` to turn a Lightning checkpoint into a
-    compiled model file usable by :class:`nequip.ase.NequIPCalculator`
-    (via `from_compiled_model`) and by `pair_allegro` in LAMMPS.
+    compiled model file usable by
+    :class:`nequip.integrations.ase.NequIPCalculator` (via
+    `from_compiled_model`) and by `pair_allegro` in LAMMPS.
 
     Parameters
     ----------

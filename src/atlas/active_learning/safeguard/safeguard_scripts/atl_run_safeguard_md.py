@@ -6,6 +6,7 @@ if the current iteration of the model is robust enough before early stopping.
 """
 
 import gc
+import json
 import logging
 import pathlib as pl
 import pickle
@@ -265,15 +266,20 @@ if __name__ == '__main__':
         safe_md_params = settings.get('safeguard', {}).get('md_parameters')
 
     # The MD runs through the MLIP backend's ASE calculator; select the backend
-    # from the training backend so the MD matches the trained model (Allegro
-    # loads 'sampler_model.nequip.zip', not 'sampler_model.model'). An explicit
+    # from 'mlip.md_backend', falling back to the training backend. An explicit
     # '[safeguard.md.parameters].md_type' still wins.
     from atlas.active_learning.backends import get_backend as _get_backend
 
-    md_backend_name = settings.get('mlip', {}).get('training_backend', 'mace')
-    safe_md_params.setdefault('md_type', md_backend_name)
+    mlip_settings = settings.get('mlip', {})
+    training_backend_name = mlip_settings.get('training_backend', 'mace')
+    safe_md_params.setdefault(
+        'md_type', mlip_settings.get('md_backend') or training_backend_name
+    )
+    # The sampler model file was written by the *training* backend, so its
+    # extension comes from there even when the MD runs on another backend
+    # (Allegro writes 'sampler_model.nequip.zip', not 'sampler_model.model').
     sampler_model_name = (
-        f'sampler_model{_get_backend(md_backend_name).model_file_extension}'
+        f'sampler_model{_get_backend(training_backend_name).model_file_extension}'
     )
 
     # Adding key explicitly to display it in the log
@@ -337,6 +343,17 @@ if __name__ == '__main__':
             f'Error reading initial structure: {e}', 'error', logger=logger
         )
 
+    # Seed structure identifier, for provenance in the aggregated UQ stats.
+    if init_conf_orig is not None:
+        seed_atl_id = (
+            init_conf_orig.info.get('atl_id')
+            or init_conf_orig.info.get('aiida_uuid')
+        )
+    else:
+        seed_atl_id = None
+    if seed_atl_id is None:
+        seed_atl_id = 'unknown'
+
     ## Running MD simulations for given temperatures
     for T_start in T_list:
         traj_filename = res_folder / f'md_traj_final_temp-{T_start}.traj'
@@ -377,6 +394,21 @@ if __name__ == '__main__':
 
     # Read MD-generated trajectories for given temperatures
     traj_files = res_folder.glob('*final_temp-*.traj')
+
+    # Aggregated UQ statistics across all temperatures for this safeguard
+    # CalcJob. Safeguard uses a single sampler model (no committee), so the
+    # interpolation (committee disagreement) count is always 0; only the
+    # descriptor-based extrapolation check can flag frames.
+    agg_uq_stats: dict = {
+        'seed_atl_id': seed_atl_id,
+        'safeguard': True,
+        'total_frames': 0,
+        'frames_after_filters': 0,
+        'extrapolation_error_frames': 0,
+        'interpolation_error_frames': 0,
+        'out_of_domain_frames': 0,
+        'per_temperature': [],
+    }
 
     for curr_traj in traj_files:
         print()
@@ -515,6 +547,19 @@ if __name__ == '__main__':
                 images=[],
                 append=True,
             )
+
+            # Record per-temperature stats for the empty case so the
+            # aggregate remains consistent.
+            empty_uq_stats = {
+                'temperature_K': curr_temp,
+                'total_frames': orig_md_size,
+                'frames_after_filters': 0,
+                'extrapolation_error_frames': 0,
+                'interpolation_error_frames': 0,
+                'out_of_domain_frames': 0,
+            }
+            agg_uq_stats['per_temperature'].append(empty_uq_stats)
+            agg_uq_stats['total_frames'] += orig_md_size
 
             # Skip the rest of the process for the current T.
             continue
@@ -784,5 +829,45 @@ if __name__ == '__main__':
             images=mod_extrap_frames,
             append=True,
         )
+
+        # Per-temperature UQ statistics. Safeguard uses a single sampler model
+        # (no committee), so interpolation_error_frames (committee disagreement)
+        # is always 0; only the descriptor-based extrapolation check can flag
+        # frames here. frames_after_filters reflects the post-filter trajectory
+        # length (frames_to_keep), and out_of_domain_frames is the count of
+        # frames written to extrapolating_frames.xyz for this temperature.
+        n_frames_after_filters = len(frames_to_keep)
+        n_out_of_domain = len(mod_extrap_frames)
+        n_extrapolation = (
+            len(extrapol_frames_final) if extrap_type != 'none' else 0
+        )
+
+        uq_stats_dict: dict = {
+            'temperature_K': curr_temp,
+            'total_frames': orig_md_size,
+            'frames_after_filters': n_frames_after_filters,
+            'extrapolation_error_frames': n_extrapolation,
+            'interpolation_error_frames': 0,
+            'out_of_domain_frames': n_out_of_domain,
+        }
+
+        atl_cut.custom_print(f'UQ statistics: {uq_stats_dict}', 'info', logger=logger)
+
+        agg_uq_stats['per_temperature'].append(uq_stats_dict)
+        for key in (
+            'total_frames',
+            'frames_after_filters',
+            'extrapolation_error_frames',
+            'interpolation_error_frames',
+            'out_of_domain_frames',
+        ):
+            agg_uq_stats[key] += uq_stats_dict[key]
+
+    # Write the aggregated UQ statistics once per CalcJob.
+    atl_cut.custom_print(
+        f'UQ statistics (aggregated): {agg_uq_stats}', 'info', logger=logger
+    )
+    with open(res_folder / 'uq_stats.json', 'w') as f:
+        json.dump(obj=agg_uq_stats, fp=f, indent=4)
 
     atl_cut.custom_print('Structure processed!', 'done', logger=logger)

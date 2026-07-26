@@ -6,11 +6,46 @@ os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 os.environ['QT_NO_DBUS'] = '1'
 os.environ['XDG_SESSION_TYPE'] = 'tty'
 
+# AiiDA's pytest fixtures (aiida_profile, aiida_localhost, ...) provide a
+# throwaway profile and computer, so integration tests never depend on a
+# developer's own AiiDA configuration. Loaded lazily: tests that use them are
+# skipped when aiida-core is unavailable.
+try:
+    import aiida.tools.pytest_fixtures  # noqa: F401
+
+    pytest_plugins = ['aiida.tools.pytest_fixtures']
+except ImportError:
+    pass
+
+import pathlib
 from unittest.mock import MagicMock
 
 import numpy as np
 import pytest
 from ase import Atoms
+
+_STABLE_CWD = pathlib.Path(__file__).resolve().parent
+
+
+@pytest.fixture(autouse=True)
+def _stable_cwd():
+    """Keep every test starting from a valid working directory.
+
+    Some tests ``chdir`` into a temporary directory that pytest later deletes;
+    a subsequent test that calls ``os.getcwd()`` (e.g. via ``monkeypatch.chdir``)
+    would then raise ``FileNotFoundError``. Restoring a stable cwd if the current
+    one has vanished avoids that cross-test contamination.
+    """
+
+    def _ensure_valid():
+        try:
+            os.getcwd()
+        except OSError:
+            os.chdir(_STABLE_CWD)
+
+    _ensure_valid()
+    yield
+    _ensure_valid()
 
 
 @pytest.fixture

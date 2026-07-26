@@ -969,7 +969,7 @@ def run_mace_md_ase(
     else:
         log_interval = 1
 
-    md_type = md_params.get('md_type', 'mace')
+    md_spec = md_params.get('md_type', 'mace')
 
     T_list = []
 
@@ -978,43 +978,61 @@ def run_mace_md_ase(
         find_inference_model,
         get_backend,
         model_file_stem,
+        parse_model_spec,
+        resolve_model_spec,
     )
 
+    # Deprecated: 'mace_foundation' predates the backend registry and only ever
+    # reached the 'mace:mp-' family. `md_type` now carries the full spec.
+    mace_foundation = md_params.get('mace_foundation')
+    if mace_foundation and parse_model_spec(md_spec) == ('mace', None):
+        warnings.warn(
+            "'[md.parameters].mace_foundation' is deprecated; use "
+            f'md_type = "mace:mp-{mace_foundation}" instead.',
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        md_spec = f'mace:mp-{mace_foundation}'
+
+    # `md_type` accepts a backend ('mace', 'allegro') or a pretrained model
+    # spec ('mace:mp-small', 'orb:orb-v2').
+    md_type, pretrained_model = resolve_model_spec(md_spec)
     backend = get_backend(md_type)
 
-    if md_type == 'mace' and md_params.get('mace_foundation'):
-        # Foundation model shortcut for MACE
-        from atlas.active_learning.backends.mace.calculator import (
-            create_mace_calculator,
-        )
+    # Prefer a pre-compiled inference artifact (compile-once step) over the
+    # raw model when present; unchanged for backends without compilation. A
+    # configured pretrained model wins over both.
+    stem = model_file_stem(model_name) if model_name else 'curr_model'
+    model_path = find_inference_model(
+        prepend_path, stem, backend, pretrained_model=pretrained_model
+    )
 
-        nn_calculator = create_mace_calculator(
-            model_path=f'mace:mp-{md_params.get("mace_foundation", "medium")}',
-            device=md_params.get('device', 'cpu'),
-            dtype=md_params.get('default_dtype', 'float64'),
-        )
-    else:
-        # Prefer a pre-compiled inference artifact (compile-once step) over the
-        # raw model when present; unchanged for backends without compilation.
-        stem = model_file_stem(model_name) if model_name else 'curr_model'
-        model_path = find_inference_model(prepend_path, stem, backend)
+    # Backend-specific calculator options, kept explicit so a backend is never
+    # handed an option meant for another (e.g. `enable_cueq` is MACE-only).
+    calc_kwargs = {}
+    if md_type == 'mace':
+        calc_kwargs['enable_cueq'] = enable_cueq
+    elif md_type == 'fairchem' and md_params.get('fairchem_task') is not None:
+        # UMA is multi-task; pick which domain's head to use. Left unset, the
+        # backend defaults to 'omat' (bulk materials) when the model offers it.
+        calc_kwargs['task_name'] = md_params['fairchem_task']
 
-        nn_calculator = backend.create_calculator(
-            model_path=model_path,
-            device=md_params.get('device', 'cpu'),
-            dtype=md_params.get('default_dtype', 'float64'),
-            enable_cueq=enable_cueq,
-        )
+    nn_calculator = backend.create_calculator(
+        model_path=model_path,
+        device=md_params.get('device', 'cpu'),
+        dtype=md_params.get('default_dtype', 'float64'),
+        **calc_kwargs,
+    )
 
-        # Wrap the calculator in a custom calculator to check for
-        # unphysical states
-        wrapped_calc = ATLSafeCalculatorWrapper(
-            calculator=nn_calculator,
-            max_energy_threshold_per_atom=md_params.get(
-                'max_energy_threshold_per_atom', 1000
-            ),
-        )
-        init_conf.calc = wrapped_calc
+    # Wrap the calculator in a custom calculator to check for
+    # unphysical states
+    wrapped_calc = ATLSafeCalculatorWrapper(
+        calculator=nn_calculator,
+        max_energy_threshold_per_atom=md_params.get(
+            'max_energy_threshold_per_atom', 1000
+        ),
+    )
+    init_conf.calc = wrapped_calc
 
     # Set the momenta corresponding to the initial temperature
     MaxwellBoltzmannDistribution(init_conf, temperature_K=T_start)
@@ -1421,6 +1439,88 @@ def convert_database_to_ase_atoms(
     return upd_database
 
 
+#: Keys a per-backend container override may set. The schema cannot validate
+#: them (``dynamic_keys`` sections are accepted without checking their
+#: contents), so ``resolve_container_settings`` warns on anything else.
+_CONTAINER_OVERRIDE_KEYS = frozenset(
+    {'image_name', 'engine_command', 'prepend_text'}
+)
+
+#: Override names already warned about. The resolver runs at every code-building
+#: site on every AL iteration, so warnings are emitted once per process to keep
+#: them out of the loop logs.
+_WARNED_CONTAINER_OVERRIDES: set[str] = set()
+
+
+def resolve_container_settings(
+    container_dict: dict | None, backend_name: str | None = None
+) -> dict:
+    """Merge a backend's container override over the global container settings.
+
+    MLIP frameworks have mutually incompatible dependency stacks (MACE pins
+    ``e3nn==0.4.4`` while nequip needs ``e3nn>=0.6``), so each backend generally
+    needs its own container image. Overrides live under
+    ``container_dict['per_backend'][backend_name]``.
+
+    Parameters
+    ----------
+    container_dict : dict | None
+        The ``code.container`` settings, optionally holding a ``per_backend``
+        mapping of per-backend overrides.
+    backend_name : str | None
+        MLIP backend whose override to apply. When None, or when no override
+        exists for it, the global settings are returned unchanged (minus
+        ``per_backend``), preserving the single-image behaviour.
+
+    Returns
+    -------
+    dict
+        A new settings dict. ``container_dict`` is never mutated.
+    """
+    settings = dict(container_dict or {})
+    overrides = settings.pop('per_backend', None) or {}
+
+    if not overrides:
+        return settings
+
+    # The schema accepts `per_backend` without validating it, so a typo would
+    # otherwise be silently ignored and the job would quietly run the global
+    # image. Warn rather than raise: a backend only registers when its package
+    # imports, so naming one that is absent from this environment is legitimate.
+    from atlas.active_learning.backends import list_backends
+
+    registered = list_backends()
+    for name in overrides:
+        if name not in registered and name not in _WARNED_CONTAINER_OVERRIDES:
+            _WARNED_CONTAINER_OVERRIDES.add(name)
+            atl_cut.custom_print(
+                f"Container override for unregistered MLIP backend '{name}'. "
+                f'Registered backends: {", ".join(registered)}. The override '
+                'will be ignored unless that backend is installed.',
+                'warning',
+            )
+
+    override = overrides.get(backend_name) if backend_name else None
+    if not override:
+        return settings
+
+    unknown = set(override) - _CONTAINER_OVERRIDE_KEYS
+    warn_key = f'{backend_name}:{sorted(unknown)}'
+    if unknown and warn_key not in _WARNED_CONTAINER_OVERRIDES:
+        _WARNED_CONTAINER_OVERRIDES.add(warn_key)
+        atl_cut.custom_print(
+            f"Ignoring unknown key(s) {sorted(unknown)} in the '{backend_name}' "
+            f'container override. Supported keys: '
+            f'{", ".join(sorted(_CONTAINER_OVERRIDE_KEYS))}.',
+            'warning',
+        )
+
+    settings.update(
+        {k: v for k, v in override.items() if k in _CONTAINER_OVERRIDE_KEYS}
+    )
+    return settings
+
+
 def return_code_from_settings(
     current_settings: dict,
     code_settings: dict,
@@ -1430,6 +1530,7 @@ def return_code_from_settings(
     code_path: str,
     portable_code_label: str,
     builder,
+    backend_name: str | None = None,
 ) -> tuple[orm.Code, str]:
     """Return a (code, prepend_text) pair for the given settings.
 
@@ -1438,6 +1539,13 @@ def return_code_from_settings(
     identical parameters. ``prepend_text`` is returned separately so the
     caller can pass it dynamically via
     ``builder.metadata.options.prepend_text``.
+
+    ``backend_name`` selects the MLIP backend whose per-backend container
+    override applies (see :func:`resolve_container_settings`). It is passed
+    explicitly rather than derived here because callers source it from
+    different config keys: training uses ``mlip.training_backend``, descriptors
+    use ``descriptors.mlip_backend``, and MD uses ``[md.parameters].md_type``.
+    When None, the global container settings are used unchanged.
     """
     from atlas.workflows.aiida_utils import (
         get_or_create_containerized_code,
@@ -1451,6 +1559,10 @@ def return_code_from_settings(
         container_dict = current_settings['code']['container']
     else:
         container_dict = workchain.inputs.container_settings.get_dict()
+
+    # Apply this backend's per-backend container override, if any. A no-op when
+    # `backend_name` is None or the config has no `per_backend` section.
+    container_dict = resolve_container_settings(container_dict, backend_name)
 
     if container_dict.get('use_container'):
         containerized = container_dict.get('use_container', False)

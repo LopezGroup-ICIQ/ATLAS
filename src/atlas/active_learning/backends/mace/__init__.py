@@ -17,6 +17,22 @@ if TYPE_CHECKING:
     from ase import Atoms
     from ase.calculators.calculator import Calculator
 
+#: Known foundation-model variants per family. Advisory, not exhaustive: the set
+#: ``mace_mp``/``mace_off`` accept varies by mace-torch version, so an unknown
+#: variant warns and is passed through rather than rejected.
+_FOUNDATION_VARIANTS = {
+    'mp': ('small', 'medium', 'large', 'medium-mpa-0', 'large-mpa-0'),
+    'off': ('small', 'medium', 'large'),
+}
+
+#: Family prefixes accepted in a variant string, mapped to the canonical family.
+#: 'off23' is the spelling used by the benchmark config.
+_FOUNDATION_FAMILY_ALIASES = {
+    'mp': 'mp',
+    'off': 'off',
+    'off23': 'off',
+}
+
 
 @register_backend('mace')
 class MACEBackend:
@@ -233,6 +249,52 @@ class MACEBackend:
             dtype=dtype,
             **kwargs,
         )
+
+    # -- MLIPPretrainedModel ------------------------------------------------
+
+    @property
+    def default_pretrained_model(self) -> str:
+        return 'mace:mp-medium'
+
+    @property
+    def available_pretrained_models(self) -> tuple[str, ...]:
+        return tuple(
+            f'mace:{family}-{variant}'
+            for family, variants in _FOUNDATION_VARIANTS.items()
+            for variant in variants
+        )
+
+    def resolve_pretrained_model(self, variant: str | None) -> str:
+        """Normalise a MACE foundation-model variant.
+
+        Accepts an explicit family prefix (``'mp-small'``, ``'off-medium'``,
+        ``'off23-small'``) and, for the benchmark config's ``'mace:small'``
+        convention, a bare variant, which is taken to mean the ``mp`` family.
+
+        An unrecognised variant warns and is passed through rather than
+        rejected: the set ``mace_mp``/``mace_off`` accept depends on the
+        installed mace-torch version, so the framework is the authority.
+        """
+        from atlas.core import code_utils as atl_cut
+
+        if variant is None:
+            return self.default_pretrained_model
+
+        variant = variant.removeprefix('mace:')
+        prefix, _, name = variant.partition('-')
+        family = _FOUNDATION_FAMILY_ALIASES.get(prefix)
+        if family is None:
+            # Bare variant, e.g. 'small' -> the Materials Project family.
+            family, name = 'mp', variant
+
+        if name not in _FOUNDATION_VARIANTS[family]:
+            atl_cut.custom_print(
+                f"'{name}' is not a recognised MACE {family} model. Known "
+                f'models: {", ".join(_FOUNDATION_VARIANTS[family])}. Proceeding '
+                'anyway - the model might still work.',
+                'warn',
+            )
+        return f'mace:{family}-{name}'
 
     # -- MLIPDescriptorProvider ---------------------------------------------
 

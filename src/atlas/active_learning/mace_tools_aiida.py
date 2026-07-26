@@ -76,6 +76,10 @@ class ProcessMDSeedStructCalculation(CalcJob):
     extrapolation_plot: atl_img.ImagePNGData
         File containing a visualization of the extrapolation check and latent
         space boundaries
+    extrapolation_statistics : orm.Dict
+        Per-CalcJob counts of interpolating (committee E/F disagreement) and
+        extrapolating (descriptor boundary) MD frames, aggregated across all
+        temperatures, with a per-temperature breakdown.
 
     Exit Codes
     ----------
@@ -181,6 +185,18 @@ class ProcessMDSeedStructCalculation(CalcJob):
             'extrapolation_plot',
             valid_type=(atl_img.ImagePNGData, None),
             help=('File containing a figure showing the extrapolation results.'),
+            required=False,
+        )
+        spec.output(
+            'extrapolation_statistics',
+            valid_type=orm.Dict,
+            help=(
+                'Per-CalcJob counts of interpolating (committee E/F disagreement) '
+                'and extrapolating (descriptor boundary) MD frames, aggregated '
+                'across all temperatures, with a per-temperature breakdown. The '
+                '"out_of_domain_frames" count is the union of both checks and '
+                'matches the number of frames written to extrapolating_structures.'
+            ),
             required=False,
         )
         spec.exit_code(
@@ -369,6 +385,7 @@ class ProcessMDSeedStructCalculation(CalcJob):
             # self.metadata.options.output_filename,
             './results/*.xyz',
             './results/*.png',
+            './results/uq_stats.json',
             './logs/*',
         ]
 
@@ -385,12 +402,16 @@ class ProcessMDSeedStructCalculationParser(Parser):
 
         extrapolating_structures = None
         extrapolation_plot = None
+        extrapolation_statistics = None
 
         for child_file in retrieved_temporary_folder.rglob('*'):
             if 'extrapolating_frames.xyz' in child_file.name:
                 extrapolating_structures = orm.SinglefileData(file=child_file)
             if '.png' in child_file.name:
                 extrapolation_plot = atl_img.ImagePNGData(filepath=child_file)
+            if 'uq_stats.json' in child_file.name:
+                with open(child_file) as f:
+                    extrapolation_statistics = orm.Dict(dict=json.load(f))
 
         # Return failed code
         if not extrapolating_structures:
@@ -412,6 +433,8 @@ class ProcessMDSeedStructCalculationParser(Parser):
 
         self.out('extrapolating_structures', extrapolating_structures)
         self.out('extrapolation_plot', extrapolation_plot)
+        if extrapolation_statistics:
+            self.out('extrapolation_statistics', extrapolation_statistics)
 
 
 # atl-descriptors-combined-parser
