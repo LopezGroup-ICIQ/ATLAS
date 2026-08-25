@@ -270,12 +270,12 @@ def simple_extrapolation_check(
         structure_uuid = curr_uuid
         descr_list = val['descriptors']
 
-    for frame_idx, frame_descriptors in enumerate(descr_list):
-        below_min = frame_descriptors < curr_it_db_min
-        above_max = frame_descriptors > curr_it_db_max
-        is_frame_extrapolating = np.any(np.logical_or(below_min, above_max))
-        if is_frame_extrapolating:
-            descriptor_dict[structure_uuid]['is_extrapolating'][frame_idx] = True
+        for frame_idx, frame_descriptors in enumerate(descr_list):
+            below_min = frame_descriptors < curr_it_db_min
+            above_max = frame_descriptors > curr_it_db_max
+            is_frame_extrapolating = np.any(np.logical_or(below_min, above_max))
+            if is_frame_extrapolating:
+                descriptor_dict[structure_uuid]['is_extrapolating'][frame_idx] = True
     return descriptor_dict
 
 
@@ -1177,9 +1177,7 @@ if __name__ == '__main__':
                 logger=logger,
             )
             conf_interpolation = [
-                short_mask[i]
-                for i, u in enumerate(uncertainties)
-                if u >= unc_threshold
+                short_mask[i] for i, u in enumerate(uncertainties) if u >= unc_threshold
             ]
             num_interpolating_frames = len(set(conf_interpolation))
             out_of_domain_frame_idx.extend(set(conf_interpolation))
