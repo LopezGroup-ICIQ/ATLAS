@@ -686,6 +686,11 @@ dft:
             type: int
             mandatory: true
             default: 240
+        first_check_delay_seconds:
+            description: "Delay in seconds before the very first queue check, so early failures and the first finished calculations surface without waiting a full interval. Capped to queue_check_interval_seconds."
+            type: int
+            mandatory: false
+            default: 30
         start_on_struct_idx:
             description: "Number of structures to skip before starting the calculations."
             type: int

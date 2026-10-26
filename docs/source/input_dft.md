@@ -49,6 +49,11 @@ General settings for the DFT script.
   - **Type**: `(int)`
   - **Default**: `240`.
 
+- {alt}`first_check_delay_seconds`:
+  - **Description**: Delay in seconds before the very first queue check, so early failures and the first finished calculations surface without waiting a full interval. Capped to queue_check_interval_seconds.
+  - **Type**: `(optional, int)`
+  - **Default**: `30`.
+
 - {alt}`start_on_struct_idx`:
   - **Description**: Number of structures to skip before starting the calculations.
   - **Type**: `(int)`
