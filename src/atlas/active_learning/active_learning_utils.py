@@ -2828,6 +2828,28 @@ def check_md_seed_agreement(
         return orm.Bool(True)
 
 
+@calcfunction
+def store_extrapolation_statistics(statistics: orm.Dict) -> orm.Dict:
+    """
+    Return a stored copy of aggregated extrapolation statistics.
+
+    Workchains cannot return ``Data`` nodes they created themselves, so the
+    per-step and cumulative statistics built in the workchain context are
+    passed through this calcfunction before being attached as outputs.
+
+    Parameters
+    ----------
+    statistics : orm.Dict
+        Aggregated extrapolation statistics.
+
+    Returns
+    -------
+    orm.Dict
+        Stored copy of ``statistics``.
+    """
+    return orm.Dict(dict=statistics.get_dict())
+
+
 def read_toml_settings(settings_file: str | Path) -> dict:
     """Read a TOML file containing settings for the active learning workflow."""
     with open(settings_file, 'rb') as f:
