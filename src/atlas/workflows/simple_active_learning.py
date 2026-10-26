@@ -4539,18 +4539,24 @@ class SimpleActiveLearningBaseWorkChain(BaseRestartWorkChain):
             # calculate the fingerprints for the structures in the seed generation
             # database.
             self.report('Calculating descriptors for seed generation database...')
-            descriptor_settings_dict = (
-                self.inputs.active_learning.descriptor_settings.get_dict()
+            descriptor_type = descriptor_fps_settings.get('descriptor_type', 'soap')
+            descriptor_fps_descriptor_settings = dict(
+                descriptor_fps_settings.get('descriptor', {})
             )
 
-            # Setting the average type for the descriptor to get global descriptors.
-            if descriptor_settings_dict.get('descriptor', {}).get('average') is None:
-                descriptor_settings_dict.get('descriptor', {})['average'] = 'inner'
+            # FPS ranks whole structures, so SOAP needs one vector per
+            # structure rather than the per-atom default.
+            if (
+                descriptor_type == 'soap'
+                and descriptor_fps_descriptor_settings.get('average', 'off') == 'off'
+            ):
+                descriptor_fps_descriptor_settings['average'] = 'outer'
 
             descr_dict, _, _ = atl_al_ut.generate_descriptors(
                 database=sorted_seed_db,
-                descriptor_type=descriptor_fps_settings.get('descriptor_type', 'soap'),
-                descriptor_settings=descriptor_fps_settings.get('descriptor', {}),
+                descriptor_type=descriptor_type,
+                descriptor_settings=descriptor_fps_descriptor_settings,
+                model_path=descriptor_fps_descriptor_settings.get('model_path'),
             )
             self.report('Done calculating descriptors!')
 

@@ -1381,10 +1381,10 @@ active_learning:
                             key: al_seed.seed_ranking_settings.descriptor_fps.descriptor_type
                             value: "soap"
                     average:
-                        description: "Averaging mode for SOAP descriptor."
+                        description: "Averaging mode for SOAP descriptor. FPS ranks whole structures, so this must produce one vector per structure; `off` (per-atom) is not suitable."
                         type: str
                         mandatory: false
-                        default: "off"
+                        default: "outer"
                         choices: ["inner", "outer", "off"]
                     # For MACE
                     model_path:
@@ -1404,7 +1404,7 @@ active_learning:
                             key: al_seed.seed_ranking_settings.descriptor_fps.descriptor_type
                             value: "mace"
                     dtype:
-                        description: "Floating point number precision for MACE."
+                        description: "Floating point number precision for MACE. This is the descriptor-section equivalent of `default_dtype` used in the MD and training sections."
                         type: str
                         mandatory: false
                         default: "float32"

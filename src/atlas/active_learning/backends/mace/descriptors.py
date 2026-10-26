@@ -65,6 +65,7 @@ def generate_descriptors_mace(
 
     device = descriptor_settings.get('device', 'cpu')
     dtype = descriptor_settings.get('dtype', 'float32')
+    enable_cueq = bool(descriptor_settings.get('enable_cueq', False))
 
     if isinstance(model_path, PosixPath | Path):
         model_path = str(model_path)
@@ -78,7 +79,10 @@ def generate_descriptors_mace(
 
     with _suppress_stdout():
         calculator = create_mace_calculator(
-            model_path=model_path, device=device, dtype=dtype
+            model_path=model_path,
+            device=device,
+            dtype=dtype,
+            enable_cueq=enable_cueq,
         )
 
     descriptor_dict = {}

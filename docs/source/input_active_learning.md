@@ -431,9 +431,9 @@ This section is optional.
   - **Default**: `True`.
 
 - {alt}`average`:
-  - **Description**: Averaging mode for SOAP descriptor.
+  - **Description**: Averaging mode for SOAP descriptor. FPS ranks whole structures, so this must produce one vector per structure; `off` (per-atom) is not suitable.
   - **Type**: `(optional, str)`
-  - **Default**: `'off'`.
+  - **Default**: `'outer'`.
   - Possible values are: `inner`, `outer`, `off`.
 
 - {alt}`model_path`:
@@ -447,7 +447,7 @@ This section is optional.
   - Possible values are: `cpu`, `cuda`.
 
 - {alt}`dtype`:
-  - **Description**: Floating point number precision for MACE.
+  - **Description**: Floating point number precision for MACE. This is the descriptor-section equivalent of `default_dtype` used in the MD and training sections.
   - **Type**: `(optional, str)`
   - **Default**: `'float32'`.
   - Possible values are: `float32`, `float64`.

@@ -50,6 +50,7 @@ def create_mace_calculator(
             model=model_variant,
             device=device,
             default_dtype=dtype,
+            **kwargs,
         )
 
     if 'mace:off-' in model_path:
@@ -60,6 +61,7 @@ def create_mace_calculator(
             model=model_variant,
             device=device,
             default_dtype=dtype,
+            **kwargs,
         )
 
     try:
