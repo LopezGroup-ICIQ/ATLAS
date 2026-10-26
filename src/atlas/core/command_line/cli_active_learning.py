@@ -442,6 +442,13 @@ def run_active_learning():
         const=True,
     )
 
+    al_loop_parser.add_argument(
+        '--debug',
+        action='store_true',
+        help='Enable debug mode. This will run the workchain in the foreground.',
+        default=argparse.SUPPRESS,
+    )
+
     # Add arguments specific to the 'dashboard' subcommand
     al_loop_parser.add_argument(
         '--update_interval',
@@ -458,7 +465,7 @@ def run_active_learning():
         metavar='port',
     )
     al_loop_parser.add_argument(
-        '--debug',
+        '--dashboard-debug',
         help=('Enable Flask debug for the dashboard.'),
         action='store_const',
         const=True,
@@ -817,6 +824,13 @@ def run_active_learning():
         default=None,
     )
 
+    resume_parser.add_argument(
+        '--debug',
+        action='store_true',
+        help='Enable debug mode. This will run the workchain in the foreground.',
+        default=argparse.SUPPRESS,
+    )
+
     # Create the subparser for the 'dashboard' command
     dashboard_parser = subparsers.add_parser(
         'dashboard', help='Launch a dashboard to keep track of the active learning loop'
@@ -841,6 +855,13 @@ def run_active_learning():
     dashboard_parser.add_argument(
         '--online',
         help=('Enable online'),
+        action='store_const',
+        const=True,
+        default=False,
+    )
+    dashboard_parser.add_argument(
+        '--dashboard-debug',
+        help=('Enable Flask debug for the dashboard.'),
         action='store_const',
         const=True,
         default=False,
@@ -961,7 +982,7 @@ def run_active_learning():
             process_id=str(args.pk),
             port=args.port,
             update_interval=args.update_interval,
-            debug=args.debug,
+            debug=args.dashboard_debug,
             online=args.online,
         )
 
@@ -1037,7 +1058,7 @@ def run_active_learning():
             process_id=str(node.pk),
             port=args.port,
             update_interval=args.update_interval,
-            debug=args.debug,
+            debug=args.dashboard_debug,
             online=args.online,
         )
 

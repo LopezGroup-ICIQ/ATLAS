@@ -17,6 +17,9 @@ Other available subcommands allow to generate reports or resume loops using file
   - **Description**: Path pointing to a TOML settings file. By default, `active_learning_settings.toml` will be searched in the current working directory (CWD).
   - **Type**: `Path`
   - **Default**: `./active_learning_settings.toml`
+- `--debug`
+  - **Description**: Run the workchain in the foreground instead of submitting it to the daemon. Also accepted after the `run` and `resume` subcommands.
+  - **Default**: `False`
 
 ### Subcommands
 
@@ -142,12 +145,18 @@ Resumes an active learning loop using a results folder. A resumed run will use t
 - `--config_file, -c` (`<PATH>`)
   - **Description**: Path pointing to a TOML settings file. Optional, as all calculation folders should contain a TOML file.
   - **Default**: `None`
+- `--old_log_path, -l` (`<PATH>`)
+  - **Description**: Path pointing to the previous run log file. Optional. Will prepend the previous contents to the new calculation log.
+  - **Default**: `None`
+- `--debug`
+  - **Description**: Run the workchain in the foreground instead of submitting it to the daemon.
+  - **Default**: `False`
 
-#### `gui` - Launch dashboard
+#### `dashboard` - Launch dashboard
 
 Launches a dashboard to track the active learning loop.
 
-**Usage:** `run_active_learning gui [-h] [--update_interval n_sec] [--port port] [--debug] [--online]`
+**Usage:** `atl_active_learning dashboard [-h] [--update_interval n_sec] [--port port] [--online] [--dashboard-debug] [-i <ID>]`
 
 - `--update_interval` (`n_sec`)
   - **Description**: Refresh time interval in seconds.
@@ -157,12 +166,17 @@ Launches a dashboard to track the active learning loop.
   - **Description**: Port to use for the webapp.
   - **Type**: `int`
   - **Default**: `8000`
-- `--debug`
+- `--dashboard-debug`
   - **Description**: Enable Flask debug mode.
   - **Default**: `False`
 - `--online`
   - **Description**: Enable online mode.
   - **Default**: `False`
+- `--pk, --loop_id, -i` (`<ID>`)
+  - **Description**: AiiDA PK/UUID of the active learning loop to monitor.
+  - **Type**: `str`
+
+To launch a new active learning loop together with its dashboard, use `atl_active_learning run --dashboard [--dashboard-debug]`. The `--debug` flag is unrelated to the dashboard: it runs the workchain in the foreground.
 
 ## Active Learning Dashboard - `monitor_al_loop`
 
