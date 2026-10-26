@@ -42,6 +42,9 @@ dependencies = [
     "scikit-image",
     "dash==4.1.0",
     "tomlkit",
+    # botocore (pulled in by mp_api) caps python-dateutil<3; without this cap the
+    # resolver backtracks boto3 to 0.0.3, which pins an ancient six (no six.moves)
+    "python-dateutil>=2.8.2,<3",
     "torch>=2.8.0,<2.13",
     "torchvision>=0.24.1",
 ]

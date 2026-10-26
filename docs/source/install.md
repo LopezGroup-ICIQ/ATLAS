@@ -2,17 +2,17 @@
 
 ## Installation procedure
 
-To install ATLAS, you can use pip in a python virtual environment or conda environment. Development has been made with `python3.11` in mind, which can be installed through the OS's package manager or conda.
+To install ATLAS, you can use pip in a python virtual environment or conda environment. ATLAS requires `python3.12` or newer, which can be installed through the OS's package manager or conda.
 
-### 1. Creating a pyton environment
+### 1. Creating a python environment
 
 First, **create a virtual environment** and activate it. This can be done in several ways, but we provide some examples using `conda`, python `venv` or `uv`.
 
 #### Option A - `conda`
 
 ```bash
-# Create a conda environment named atlas which uses python 3.11
-conda create -n atlas python=3.11
+# Create a conda environment named atlas which uses python 3.12
+conda create -n atlas python=3.12
 
 # Activate the environment
 conda activate atlas
@@ -20,30 +20,30 @@ conda activate atlas
 
 #### Option B - `venv`
 
-An example for an Ubuntu 22.04 system, using python3.11 and venv:
+An example for an Ubuntu 24.04 system, using python3.12 and venv:
 
 ```bash
-# Install python3.11 and venv
-sudo apt install python3.11 python3.11-venv
+# Install python3.12 and venv
+sudo apt install python3.12 python3.12-venv
 
 # Using python venv - create and activate the environment
-python3 -m venv atlas
+python3.12 -m venv atlas
 source atlas/bin/activate
 ```
 
 #### Option C - `uv`
 
-First, install the `uv` tool. Either as shown below using the standalone installer, or please refer to the [official uv installation guide](https://docs.astral.sh/uv/getting-started/installation/)) for more options.
+First, install the `uv` tool. Either as shown below using the standalone installer, or please refer to the [official uv installation guide](https://docs.astral.sh/uv/getting-started/installation/) for more options.
 
 ```bash
 wget -qO- https://astral.sh/uv/install.sh | sh
 ```
 
-Once `uv` is isntalled, create an environment named atlas specifically with Python 3.11:
+Once `uv` is installed, create an environment named atlas specifically with Python 3.12:
 
 ```bash
 # Create the virtual environment
-uv venv atlas --python 3.11
+uv venv atlas --python 3.12
 ```
 
 Make sure to navigate to a folder where you would like your python environment to be located, or specify the desired path.
@@ -58,7 +58,7 @@ With the environment now activated, the library can be installed.
 ### 2. Getting the ATLAS code
 
 ```bash
-# Clone the reposittory
+# Clone the repository
 git clone https://github.com/pol-sb/atlas.git
 ```
 
@@ -88,26 +88,36 @@ Some installation examples follow:
 > [!WARNING]
 > **Each MLIP framework needs its own environment.** The backends have mutually incompatible dependency stacks — for example MACE (`mace-torch`) pins `e3nn==0.4.4` while Allegro/NequIP need `e3nn>=0.6`, and fairchem/Orb pull `numpy>=2` against ATLAS's `numpy<2`. Install one framework per virtual environment. For a single active-learning run that mixes backends (e.g. training with MACE, MD sampling with Orb), run each backend from its own container image via the per-backend `container_settings`.
 
+> [!IMPORTANT]
+> **Match the PyTorch build to your NVIDIA driver.** The default PyPI `torch` wheels target the newest CUDA release (CUDA 13 for torch 2.10+), which needs NVIDIA driver 580 or newer. On an older driver, `torch.cuda.is_available()` returns `False`, or importing torch fails with `undefined symbol: ncclCommResume`. Check your driver's CUDA version with `nvidia-smi`, then install a matching build as shown below. The `mace` extra also pulls `cuequivariance-ops-torch-cu12`, which expects a CUDA 12 torch build.
+
 #### Using `pip`
 
 ```bash
+# Install a CUDA 12 build of PyTorch first (pick cu126/cu128/cu129 to match nvidia-smi)
+python3 -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cu129
+
 # Install the library and the MACE dependencies in the venv using pip
-python3 -m pip install ./ATLAS['mace']
+python3 -m pip install "./ATLAS[mace]"
 ```
 
 #### Using `uv`
 
+`uv` can detect the installed driver and select the matching PyTorch index automatically:
+
 ```bash
 # Install the library and the MACE and dev dependencies using uv
-uv pip install ./ATLAS['mace', 'dev']
+uv pip install --torch-backend=auto "./ATLAS[mace,dev]"
+```
+
+Verify that the GPU is visible with `python -c "import torch; print(torch.cuda.is_available())"`.
 
 #### Installing the GUI
 
 The ATLAS Hub desktop GUI requires the optional `gui` dependency:
 
 ```bash
-pip install -e '.[gui]'
-```
+python3 -m pip install "./ATLAS[gui]"
 ```
 
 ### 4. Initialize configuration files
