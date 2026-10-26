@@ -1,8 +1,10 @@
 """Active learning outputs panel.
 
 Post-hoc analysis of completed AL runs: 4-panel chart (DB evolution,
-DB delta, RMSE E, RMSE F), summary cards, and an iteration table.
-Data comes from the parsed log file and/or the project SQLite DB.
+DB delta, RMSE E, RMSE F), summary cards, and an iteration table with
+the per-step interpolating/extrapolating frame counts. Data comes from
+AiiDA (when the base workchain PK is known), the parsed log files and/or
+the project SQLite DB.
 """
 
 from __future__ import annotations
@@ -28,7 +30,10 @@ from PySide6.QtWidgets import (
 )
 
 from atlas.core.gui.project import Project
-from atlas.core.gui.widgets.al_monitor_panel import parse_al_log
+from atlas.core.gui.widgets.al_monitor_panel import (
+    fetch_run_details,
+    gather_run_stats,
+)
 
 COLORS = ['#6aa1f4', '#ffa6c8', '#3ed04e', '#e50e3f']
 LINE_COLOR = '#28282855'
@@ -126,7 +131,7 @@ class AlOutputsPanel(QWidget):
 
         # --- iteration table ---
         self._table = QTableWidget()
-        self._table.setColumnCount(7)
+        self._table.setColumnCount(11)
         self._table.setHorizontalHeaderLabels(
             [
                 'Iteration',
@@ -135,6 +140,10 @@ class AlOutputsPanel(QWidget):
                 'RMSE E (meV)',
                 'RMSE F (meV/A)',
                 'DB Delta',
+                'Interpolating',
+                'Extrapolating',
+                'Out-of-domain',
+                'To DFT',
                 'Status',
             ]
         )
@@ -228,28 +237,9 @@ class AlOutputsPanel(QWidget):
         self.refresh()
 
     def _gather_stats(self, run_id: int) -> dict:
+        details = fetch_run_details(self._project, run_id)
         log_path = self._find_log_for_run(run_id)
-        if log_path and log_path.exists():
-            stats = parse_al_log(log_path)
-            if stats:
-                return stats
-
-        rows = self._project.list_al_iterations(run_id)
-        if not rows:
-            return {}
-        stats = {}
-        for r in rows:
-            it = r['iteration']
-            stats[it] = {
-                'it_idx': it,
-                'mace_e': r.get('rmse_e'),
-                'mace_f': r.get('rmse_f'),
-                'train_db_size': r.get('db_size'),
-                'seed_gen_db_size': None,
-                'finished': True,
-                'max_iterations': None,
-            }
-        return stats
+        return gather_run_stats(self._project, run_id, log_path, details)
 
     def _find_log_for_run(self, run_id: int) -> Path | None:
         log_dir = self._project.dir / 'logs'
@@ -599,12 +589,27 @@ class AlOutputsPanel(QWidget):
             self._table.setItem(i, 4, _item(f'{f:.1f}' if f is not None else '—'))
             self._table.setItem(i, 5, _item(delta_str))
 
+            domain = s.get('domain') or {}
+            for col, key in enumerate(
+                (
+                    'interpolating_frames',
+                    'extrapolating_frames',
+                    'out_of_domain_frames',
+                    'submitted_to_dft',
+                ),
+                start=6,
+            ):
+                value = domain.get(key)
+                self._table.setItem(
+                    i, col, _item(f'{value:,}' if value is not None else '—')
+                )
+
             status_item = _item(status)
             if status == 'Done':
                 status_item.setForeground(Qt.darkGreen)
             else:
                 status_item.setForeground(Qt.darkYellow)
-            self._table.setItem(i, 6, status_item)
+            self._table.setItem(i, 10, status_item)
 
 
 def _item(text: str) -> QTableWidgetItem:
