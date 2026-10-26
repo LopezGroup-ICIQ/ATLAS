@@ -237,6 +237,151 @@ class MLIPDescriptorProvider(Protocol):
         ...
 
 
+class DescriptorBatchState(Protocol):
+    """State for one differentiable descriptor evaluation.
+
+    Produced by :meth:`DifferentiableDescriptorHandle.prepare` and consumed by
+    :meth:`DifferentiableDescriptorHandle.descriptors`. It bundles the leaf
+    tensors an optimizer differentiates with respect to together with the
+    neighbour-list data that geometric penalty terms need.
+
+    Tensor types are spelled ``Any`` so that this module stays free of a torch
+    import; in practice every attribute is a ``torch.Tensor``.
+    """
+
+    #: ``(n_atoms, 3)`` Cartesian positions. A leaf with ``requires_grad=True``
+    #: when the cell is fixed, or a strained (non-leaf) tensor when ``strain``
+    #: is the leaf being optimized.
+    positions: Any
+
+    #: ``(n_atoms, 3)`` unstrained positions. Identical to ``positions`` when
+    #: ``strain`` is None; otherwise the leaf that ``positions`` derives from.
+    free_positions: Any
+
+    #: ``(3, 3)`` strain leaf, or None when the cell is held fixed.
+    strain: Any
+
+    #: ``(3, 3)`` lattice vectors, strained when ``strain`` is present.
+    cell: Any
+
+    #: ``(2, n_edges)`` sender/receiver indices of the neighbour list.
+    edge_index: Any
+
+    #: ``(n_edges, 3)`` Cartesian periodic-image offset for each edge.
+    shifts: Any
+
+
+@runtime_checkable
+class DifferentiableDescriptorHandle(Protocol):
+    """A reusable, autograd-connected descriptor evaluator for one model.
+
+    Where :class:`MLIPDescriptorProvider` returns detached numpy arrays for a
+    whole database, this returns a torch tensor that is still attached to the
+    graph, so that ``d(descriptor)/d(positions)`` is available. That is what
+    makes latent-space inversion possible: composing it with a trained
+    autoencoder encoder gives a differentiable structure-to-latent map which
+    can be inverted by gradient descent on the positions.
+
+    Usage is a two-step cycle, because neighbour lists are fixed when a batch
+    is built and go stale once atoms have moved appreciably::
+
+        state = handle.prepare(atoms)
+        desc = handle.descriptors(state)     # (n_atoms, descriptor_dim)
+        loss = f(desc, state.positions)
+        loss.backward()                      # state.positions.grad is now set
+
+    Callers that move atoms far must call ``prepare`` again to rebuild the
+    neighbour list rather than reusing a stale state.
+    """
+
+    #: Torch device the tensors live on.
+    device: str
+
+    #: Torch dtype of the emitted descriptors (spelled ``Any`` to avoid a torch
+    #: import here).
+    dtype: Any
+
+    #: Width of the descriptor vector. Must match the input dimension of any
+    #: model consuming it, e.g. an autoencoder's first encoder layer.
+    descriptor_dim: int
+
+    #: Whether ``prepare`` accepts a ``strain`` argument and propagates
+    #: gradients into the cell.
+    supports_cell_gradients: bool
+
+    def prepare(self, atoms: Atoms, strain: Any = None) -> DescriptorBatchState:
+        """Build a batch with a freshly computed neighbour list.
+
+        Parameters
+        ----------
+        atoms : Atoms
+            Structure defining the species, cell and current geometry.
+        strain : Any
+            Optional ``(3, 3)`` strain leaf tensor. When given, positions and
+            cell are deformed by its symmetric part so that gradients flow into
+            the lattice as well. Only meaningful when
+            ``supports_cell_gradients`` is True.
+
+        Returns
+        -------
+        DescriptorBatchState
+            State to hand to :meth:`descriptors`.
+        """
+        ...
+
+    def descriptors(self, state: DescriptorBatchState) -> Any:
+        """Return the ``(n_atoms, descriptor_dim)`` differentiable descriptors.
+
+        The result must match, to numerical precision, what the backend's
+        :meth:`MLIPDescriptorProvider.generate_descriptors` produces for the
+        same structure and model -- otherwise an inversion would optimize
+        against a different quantity than the one the latent-space map was
+        built from.
+        """
+        ...
+
+
+@runtime_checkable
+class MLIPDifferentiableDescriptorProvider(Protocol):
+    """Protocol for backends whose descriptors carry position gradients.
+
+    A strict refinement of :class:`MLIPDescriptorProvider`: a backend can emit
+    descriptors without being able to differentiate them. SOAP, for instance,
+    has no analytic derivatives for periodic averaged output, and the Orb and
+    Equiformer paths detach inside their forward hooks. Consumers should gate
+    on ``isinstance(backend, MLIPDifferentiableDescriptorProvider)`` and on the
+    ``supports_descriptor_gradients`` flag before offering gradient-based
+    features.
+    """
+
+    @property
+    def supports_descriptor_gradients(self) -> bool:
+        """Whether this backend can emit autograd-connected descriptors."""
+        ...
+
+    def differentiable_descriptors(
+        self,
+        model_path: str | Path,
+        settings: dict,
+    ) -> DifferentiableDescriptorHandle:
+        """Create a handle that evaluates descriptors with gradients.
+
+        Parameters
+        ----------
+        model_path : str | Path
+            Path to a trained model, or a foundation-model identifier.
+        settings : dict
+            Descriptor settings; ``device`` and ``dtype`` are honoured.
+
+        Returns
+        -------
+        DifferentiableDescriptorHandle
+            Reusable evaluator bound to the loaded model.
+        """
+        ...
+
+
+
 @runtime_checkable
 class MLIPCommitteeEvaluator(Protocol):
     """Protocol for committee-based uncertainty quantification.

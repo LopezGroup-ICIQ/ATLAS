@@ -9,19 +9,23 @@ import pytest
 
 from atlas.active_learning.backends import (
     _BACKEND_REGISTRY,
+    differentiable_descriptor_backends,
     find_inference_model,
     get_backend,
     list_backends,
     parse_model_spec,
     register_backend,
     resolve_model_spec,
+    supports_descriptor_gradients,
     trainable_backends,
 )
 from atlas.active_learning.backends._base import (
+    DifferentiableDescriptorHandle,
     MLIPCalculatorFactory,
     MLIPCommitteeEvaluator,
     MLIPConfidenceEstimator,
     MLIPDescriptorProvider,
+    MLIPDifferentiableDescriptorProvider,
     MLIPPretrainedModel,
     MLIPTrainer,
 )
@@ -661,9 +665,12 @@ class TestFairchemBackend:
         assert get_backend('fairchem').default_pretrained_model == 'uma-s-1p2'
 
     def test_resolve_pretrained_passes_variant_through(self):
-        assert get_backend('fairchem').resolve_pretrained_model(
-            'esen-sm-conserving-all-omol'
-        ) == 'esen-sm-conserving-all-omol'
+        assert (
+            get_backend('fairchem').resolve_pretrained_model(
+                'esen-sm-conserving-all-omol'
+            )
+            == 'esen-sm-conserving-all-omol'
+        )
 
     def test_resolve_pretrained_none_is_default(self):
         assert get_backend('fairchem').resolve_pretrained_model(None) == 'uma-s-1p2'
@@ -1012,3 +1019,270 @@ class TestOrbConfidenceLive:
                 model='orb-v2',
                 device='cpu',
             )
+
+
+# ---------------------------------------------------------------------------
+# Differentiable descriptors
+# ---------------------------------------------------------------------------
+
+
+class TestDifferentiableDescriptorProtocol:
+    """Structural conformance for the gradient-capable descriptor path.
+
+    Latent-space inversion needs descriptors that stay attached to the autograd
+    graph, which is strictly narrower than ``MLIPDescriptorProvider``: the
+    ordinary path detaches to numpy. These tests are import-free with respect to
+    torch and MACE -- protocols are structural, so conformance is a property of
+    the class shape.
+    """
+
+    def test_minimal_provider_satisfies_protocol(self):
+        class Minimal:
+            @property
+            def supports_descriptor_gradients(self) -> bool:
+                return True
+
+            def differentiable_descriptors(self, model_path, settings):
+                return MagicMock()
+
+        assert isinstance(Minimal(), MLIPDifferentiableDescriptorProvider)
+
+    def test_provider_without_flag_does_not_satisfy_protocol(self):
+        class Incomplete:
+            def differentiable_descriptors(self, model_path, settings):
+                return MagicMock()
+
+        assert not isinstance(Incomplete(), MLIPDifferentiableDescriptorProvider)
+
+    def test_minimal_handle_satisfies_protocol(self):
+        class MinimalHandle:
+            device = 'cpu'
+            dtype = object()
+            descriptor_dim = 8
+            supports_cell_gradients = False
+
+            def prepare(self, atoms, strain=None):
+                return MagicMock()
+
+            def descriptors(self, state):
+                return MagicMock()
+
+        assert isinstance(MinimalHandle(), DifferentiableDescriptorHandle)
+
+    def test_handle_without_descriptors_does_not_satisfy_protocol(self):
+        class NoDescriptors:
+            device = 'cpu'
+            dtype = object()
+            descriptor_dim = 8
+            supports_cell_gradients = False
+
+            def prepare(self, atoms, strain=None):
+                return MagicMock()
+
+        assert not isinstance(NoDescriptors(), DifferentiableDescriptorHandle)
+
+
+class TestDifferentiableDescriptorRegistry:
+    """The registry-level gate the GUI uses to enable latent inversion."""
+
+    def test_mace_supports_descriptor_gradients(self):
+        assert supports_descriptor_gradients('mace')
+        assert isinstance(get_backend('mace'), MLIPDifferentiableDescriptorProvider)
+
+    def test_allegro_does_not_support_descriptor_gradients(self):
+        assert not supports_descriptor_gradients('allegro')
+
+    def test_unknown_backend_returns_false_rather_than_raising(self):
+        # Callers are driven by user configuration, so an unknown name has to
+        # disable the feature rather than blow up the panel that asks.
+        assert not supports_descriptor_gradients('not-a-backend')
+
+    def test_listing_is_consistent_with_the_predicate(self, _clean_registry):
+        listed = differentiable_descriptor_backends()
+        assert listed == sorted(listed)
+        assert all(supports_descriptor_gradients(n) for n in listed)
+        assert set(listed) <= set(list_backends())
+
+    def test_provider_reporting_false_is_excluded(self, _clean_registry):
+        @register_backend('_grad_optout')
+        class OptOut:
+            @property
+            def supports_descriptor_gradients(self) -> bool:
+                return False
+
+            def differentiable_descriptors(self, model_path, settings):
+                raise AssertionError('must not be called')
+
+        assert '_grad_optout' in list_backends()
+        assert not supports_descriptor_gradients('_grad_optout')
+        assert '_grad_optout' not in differentiable_descriptor_backends()
+
+
+class TestMaceDifferentiableDescriptorsLive:
+    """Live MACE gradient checks, skipped unless mace-torch is installed."""
+
+    MODELS = ('mace:mp-small', 'mace:mp-medium')
+
+    @staticmethod
+    def _cluster():
+        from ase import Atoms
+
+        return Atoms(
+            'Cu3O',
+            positions=[[0, 0, 0], [2.4, 0, 0], [0, 2.4, 0], [1.2, 1.2, 1.4]],
+        )
+
+    @pytest.mark.parametrize('model', MODELS)
+    def test_matches_calculator_descriptors(self, model):
+        """The handle must reproduce ``MACECalculator.get_descriptors`` exactly.
+
+        ``mace:mp-medium`` has ``l_max == 1``, where raw ``node_feats`` is
+        640-wide and the descriptor is 256-wide. That is the case a naive
+        implementation gets wrong, and it fails silently, so it is tested
+        explicitly rather than only on the ``l_max == 0`` model.
+        """
+        pytest.importorskip('mace')
+        from atlas.active_learning.backends.mace.calculator import (
+            create_mace_calculator,
+        )
+
+        atoms = self._cluster()
+        handle = get_backend('mace').differentiable_descriptors(
+            model, {'device': 'cpu', 'dtype': 'float64'}
+        )
+        ours = handle.descriptors(handle.prepare(atoms)).detach().numpy()
+
+        calc = create_mace_calculator(model, device='cpu', dtype='float64')
+        reference = calc.get_descriptors(atoms)
+
+        assert ours.shape == reference.shape
+        assert ours.shape[1] == handle.descriptor_dim
+        assert np.abs(ours - reference).max() < 1e-10
+
+    def test_position_gradients_match_finite_differences(self):
+        pytest.importorskip('mace')
+        import torch
+
+        atoms = self._cluster()
+        handle = get_backend('mace').differentiable_descriptors(
+            'mace:mp-small', {'device': 'cpu', 'dtype': 'float64'}
+        )
+
+        def scalar(positions, weights):
+            moved = atoms.copy()
+            moved.positions = positions
+            state = handle.prepare(moved)
+            return (handle.descriptors(state) * weights).sum(), state
+
+        rng = np.random.default_rng(0)
+        state = handle.prepare(atoms)
+        descriptors = handle.descriptors(state)
+        assert descriptors.requires_grad
+        weights = torch.tensor(
+            rng.normal(size=tuple(descriptors.shape)), dtype=handle.dtype
+        )
+        (descriptors * weights).sum().backward()
+        analytic = state.free_positions.grad.numpy().copy()
+        assert np.isfinite(analytic).all()
+
+        step = 1e-5
+        numeric = np.zeros_like(analytic)
+        for i in range(len(atoms)):
+            for j in range(3):
+                plus = atoms.positions.copy()
+                plus[i, j] += step
+                minus = atoms.positions.copy()
+                minus[i, j] -= step
+                numeric[i, j] = (
+                    float(scalar(plus, weights)[0].detach())
+                    - float(scalar(minus, weights)[0].detach())
+                ) / (2 * step)
+
+        assert np.abs(analytic - numeric).max() < 1e-6
+
+    def test_zero_strain_is_a_no_op(self):
+        pytest.importorskip('mace')
+        import torch
+        from ase.build import bulk
+
+        crystal = bulk('Cu', 'fcc', a=3.61, cubic=True)
+        handle = get_backend('mace').differentiable_descriptors(
+            'mace:mp-small', {'device': 'cpu', 'dtype': 'float64'}
+        )
+        strain = torch.zeros(3, 3, dtype=handle.dtype, requires_grad=True)
+
+        strained = handle.descriptors(handle.prepare(crystal, strain=strain))
+        plain = handle.descriptors(handle.prepare(crystal))
+
+        assert np.abs(strained.detach().numpy() - plain.detach().numpy()).max() < 1e-12
+
+    def test_strained_batch_matches_an_explicitly_deformed_structure(self):
+        """Deforming via the strain leaf must equal deforming the Atoms.
+
+        This is what makes cell relaxation trustworthy: the gradient path and
+        the geometry the user ends up with have to describe the same structure.
+        """
+        pytest.importorskip('mace')
+        import torch
+        from ase.build import bulk
+
+        crystal = bulk('Cu', 'fcc', a=3.61, cubic=True)
+        handle = get_backend('mace').differentiable_descriptors(
+            'mace:mp-small', {'device': 'cpu', 'dtype': 'float64'}
+        )
+
+        epsilon = np.zeros((3, 3))
+        epsilon[0, 0] = 0.02
+        epsilon[1, 2] = epsilon[2, 1] = 0.01
+        strain = torch.tensor(epsilon, dtype=handle.dtype, requires_grad=True)
+        via_strain = handle.descriptors(handle.prepare(crystal, strain=strain))
+
+        deformation = np.eye(3) + 0.5 * (epsilon + epsilon.T)
+        deformed = crystal.copy()
+        deformed.set_cell(crystal.cell[:] @ deformation, scale_atoms=False)
+        deformed.set_positions(crystal.positions @ deformation)
+        via_atoms = handle.descriptors(handle.prepare(deformed))
+
+        assert (
+            np.abs(via_strain.detach().numpy() - via_atoms.detach().numpy()).max()
+            < 1e-10
+        )
+
+    def test_strain_gradients_match_finite_differences(self):
+        pytest.importorskip('mace')
+        import torch
+        from ase.build import bulk
+
+        crystal = bulk('Cu', 'fcc', a=3.61, cubic=True)
+        handle = get_backend('mace').differentiable_descriptors(
+            'mace:mp-small', {'device': 'cpu', 'dtype': 'float64'}
+        )
+        assert handle.supports_cell_gradients
+
+        epsilon = np.zeros((3, 3))
+        epsilon[0, 0] = 0.02
+        strain = torch.tensor(epsilon, dtype=handle.dtype, requires_grad=True)
+        descriptors = handle.descriptors(handle.prepare(crystal, strain=strain))
+        weights = torch.tensor(
+            np.random.default_rng(1).normal(size=tuple(descriptors.shape)),
+            dtype=handle.dtype,
+        )
+        (descriptors * weights).sum().backward()
+        analytic = strain.grad.numpy().copy()
+
+        def scalar(matrix):
+            leaf = torch.tensor(matrix, dtype=handle.dtype, requires_grad=True)
+            state = handle.prepare(crystal, strain=leaf)
+            return float((handle.descriptors(state) * weights).sum().detach())
+
+        step = 1e-6
+        numeric = np.zeros((3, 3))
+        for i in range(3):
+            for j in range(3):
+                plus = epsilon.copy()
+                plus[i, j] += step
+                minus = epsilon.copy()
+                minus[i, j] -= step
+                numeric[i, j] = (scalar(plus) - scalar(minus)) / (2 * step)
+
+        assert np.abs(analytic - numeric).max() < 1e-6
