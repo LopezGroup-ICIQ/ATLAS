@@ -8,6 +8,7 @@ visible content pane.  Each pane is registered via :meth:`add_view`.
 from __future__ import annotations
 
 from PySide6.QtCore import QSize, Signal
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QButtonGroup,
     QFrame,
@@ -76,7 +77,7 @@ class SidePanel(QWidget):
         btn.setObjectName('sidePanelButton')
 
         colors = theme_colors(self._theme_name)
-        btn.setIcon(themed_icon(icon_name, colors['fg'], size=20))
+        btn.setIcon(self._stateful_icon(icon_name, colors))
 
         self._strip_layout.insertWidget(self._strip_layout.count() - 1, btn)
         self._button_group.addButton(btn, idx)
@@ -115,8 +116,32 @@ class SidePanel(QWidget):
         self._theme_name = theme_name
         colors = theme_colors(theme_name)
         for icon_name, btn in zip(self._icon_names, self._buttons, strict=True):
-            btn.setIcon(themed_icon(icon_name, colors['fg'], size=20))
+            btn.setIcon(self._stateful_icon(icon_name, colors))
         self._update_stylesheet(colors)
+
+    @staticmethod
+    def _stateful_icon(icon_name: str, colors: dict[str, str]) -> QIcon:
+        """Foreground icon normally, accent-readable icon while checked.
+
+        The checked background is the theme's primary colour, which is dark
+        enough in several themes that the ordinary foreground icon nearly
+        disappears on it.
+        """
+        size = 20
+        icon = QIcon()
+        icon.addPixmap(
+            themed_icon(icon_name, colors['fg'], size=size).pixmap(size, size),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
+        )
+        icon.addPixmap(
+            themed_icon(
+                icon_name, colors.get('on_primary', '#ffffff'), size=size
+            ).pixmap(size, size),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
+        )
+        return icon
 
     def showEvent(self, event) -> None:
         super().showEvent(event)

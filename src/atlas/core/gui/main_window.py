@@ -325,6 +325,7 @@ class MainWindow(QMainWindow):
 
             page.workflow_state_changed.connect(self._broadcast_workflow_refresh)
             page.process_running_changed.connect(self._on_process_running_changed)
+            page.progress_changed.connect(self._on_page_progress)
             if page.config_panel is not None:
                 page.config_panel.save_succeeded.connect(
                     lambda: self.statusBar().showMessage(
@@ -430,6 +431,20 @@ class MainWindow(QMainWindow):
             )
             if not any_running:
                 self._progress_bar.hide()
+
+    def _on_page_progress(self, value: int, maximum: int, message: str) -> None:
+        """Drive the shared status-bar progress bar from a page.
+
+        ``maximum == 0`` switches it to indeterminate; otherwise it becomes a
+        determinate bar for the duration of the task.
+        """
+        if maximum > 0:
+            self._progress_bar.setRange(0, maximum)
+            self._progress_bar.setValue(max(0, min(value, maximum)))
+        else:
+            self._progress_bar.setRange(0, 0)
+        self._progress_bar.setToolTip(message)
+        self._progress_bar.show()
 
     def _running_task_name(self) -> str | None:
         for p in self.pages:

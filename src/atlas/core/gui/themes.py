@@ -997,6 +997,26 @@ def theme_variant(name: str) -> str:
     return t.variant if t else 'light'
 
 
+def readable_on(hex_color: str) -> str:
+    """Return a foreground colour that stays legible on *hex_color*.
+
+    Used for icons drawn on top of an accent background (a checked side-panel
+    button, for instance): the theme's normal foreground is unreadable on a
+    dark accent, so pick white or near-black from the accent's luminance.
+    """
+    try:
+        channels = [int(hex_color[i : i + 2], 16) / 255 for i in (1, 3, 5)]
+    except (ValueError, IndexError):
+        return '#ffffff'
+
+    def _linear(value: float) -> float:
+        return value / 12.92 if value <= 0.04045 else ((value + 0.055) / 1.055) ** 2.4
+
+    r, g, b = (_linear(c) for c in channels)
+    luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
+    return '#1a1a2e' if luminance > 0.3 else '#ffffff'
+
+
 def theme_colors(name: str) -> dict[str, str]:
     """Return derived colors for the theme (bg, fg, surface, border, etc.)."""
     t = THEMES.get(name)
@@ -1009,6 +1029,7 @@ def theme_colors(name: str) -> dict[str, str]:
             'axes_bg': '#ffffff',
             'muted': '#888888',
             'primary': '#4a90d9',
+            'on_primary': readable_on('#4a90d9'),
         }
     is_dark = t.variant == 'dark'
     bg = t.background
@@ -1026,6 +1047,7 @@ def theme_colors(name: str) -> dict[str, str]:
         'axes_bg': axes_bg,
         'muted': muted,
         'primary': primary,
+        'on_primary': readable_on(primary),
     }
 
 

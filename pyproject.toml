@@ -51,7 +51,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pre-commit", "pytest", "pytest-cov", "commitizen==4.1.1", "ipdb"]
-gui = ["PySide6>=6.6","PySide6-addons", "tomli", "tomli_w"]
+gui = ["PySide6>=6.6","PySide6-addons", "pyqtgraph>=0.14", "tomli", "tomli_w"]
 mace = [
     "mace-torch==0.3.14",
     "cuequivariance",

@@ -416,6 +416,15 @@ class ConfigPanel(QWidget):
 
     # =========================================================== project
 
+    def reload_active_snapshot(self) -> None:
+        """Reload the form from the active snapshot.
+
+        Used when another panel edits the same configuration (e.g. the
+        latent-space generation pane updating ``[concave_hull]``), so the form
+        never shows stale values that a later save would write back.
+        """
+        self._load_active_snapshot()
+
     def _load_active_snapshot(self) -> None:
         if self._project is None:
             return

@@ -366,6 +366,21 @@ class InitDbPage(WorkflowPage):
         self.structures_panel = StructuresPanel(project)
         self.table_panel = StructuresTablePanel(project)
         self.boundary_panel = BoundaryPanel(project)
+        # The latent-space generation pane and the Config tab edit the same
+        # configuration, so each surface picks up the other's saves.
+        self.boundary_panel.config_updated.connect(
+            self.config_panel.reload_active_snapshot
+        )
+        self.config_panel.save_succeeded.connect(
+            self.boundary_panel.reload_generation_settings
+        )
+        self.boundary_panel.log_message.connect(self._log)
+        self.boundary_panel.database_missing.connect(
+            lambda: self.tabs.setCurrentIndex(0)
+        )
+        # Traversal and regeneration drive the shared status-bar progress bar.
+        self.boundary_panel.busy_changed.connect(self.process_running_changed.emit)
+        self.boundary_panel.progress_changed.connect(self.progress_changed.emit)
         self._manage_panel = DbManagePanel(project)
         self._manage_panel.database_deleted.connect(self._on_db_deleted)
 
@@ -482,6 +497,13 @@ class InitDbPage(WorkflowPage):
         self.boundary_panel.refresh()
         self._manage_panel.refresh()
         self._update_success_banner()
+
+    def set_theme(self, theme_name: str) -> None:
+        super().set_theme(theme_name)
+        # Output panels are not covered by the base class; the boundary
+        # panel's side-panel strip carries themed icons of its own.
+        if hasattr(self, 'boundary_panel'):
+            self.boundary_panel.set_theme(theme_name)
 
     def _try_reconnect_detached(self) -> None:
         if self.worker is not None and self.worker.isRunning():
