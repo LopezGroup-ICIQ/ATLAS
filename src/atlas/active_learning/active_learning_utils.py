@@ -2150,6 +2150,91 @@ def prepare_output_final_training_db(training_db_path):
     return train_db
 
 
+def build_ref_labelled_atoms(finished_dft_calc) -> Atoms | None:
+    """
+    Build an ASE Atoms object with ``REF_*`` labels from a finished VASP CalcJob.
+
+    This is the plain-function core of :func:`gather_dft_calcs_vasp`. It is kept
+    separate from the ``calcfunction`` wrapper so that read-only consumers (such
+    as the ``atl_export_dft_results`` CLI) can collect results without minting
+    AiiDA provenance nodes on every call, while still producing exactly the same
+    ``REF_energy`` / ``REF_forces`` / ``REF_stress`` keys.
+
+    Parameters
+    ----------
+    finished_dft_calc : aiida.orm.CalcJobNode
+        A loaded, finished VASP CalcJob node.
+
+    Returns
+    -------
+    ase.Atoms or None
+        The labelled structure, or ``None`` if the results could not be read.
+    """
+    try:
+        # Gathering the vasprun as an ASE Atoms object. This object won't
+        # collect automatically all of the extra information such as forces
+        # or energies, and must be collected using methods from ase.calc.u
+        vasprun: Atoms = atl_conv._gather_mace_req_calc_data_from_node(
+            finished_dft_calc
+        )
+
+        # Gathering extra DFT calculation information from vasprun.xml
+        calc_info_dict = atl_conv.gather_calc_data_from_node(
+            finished_dft_calc, units='mace'
+        )
+
+    except Exception:
+        # If the calculation fails for any reason, skip this calculation
+        return None
+
+    # Adding forces manually as an array into the atoms object.
+    # This is needed for the atoms object to be able to include the forces in the
+    # extxyz format `Properties` tag.
+    if 'forces' not in vasprun.arrays:
+        vasprun.new_array(
+            name='forces',
+            a=np.array(calc_info_dict['forces']),
+        )
+
+    # Adding the type of structure to the atoms.info dict
+    struct_type = atl_conv.get_struct_type(
+        vasprun=vasprun, dft_calc_node=finished_dft_calc
+    )
+    calc_info_dict['atl_struct_type'] = struct_type
+    vasprun = vasprun_add_info_dict(vasprun, calc_info_dict)
+
+    # Generate a structure name and gathering the aiida_uuid
+    vasprun: Atoms = atl_conv._add_entry_to_mace_input(
+        vasprun=vasprun,
+        node=finished_dft_calc,
+        to_file=False,
+        remove_dipole=True,
+        remove_stress=False,
+    )
+
+    if 'energy' in vasprun.info:
+        vasprun.info['REF_energy'] = vasprun.info.pop('energy')
+    elif vasprun.calc:
+        vasprun.info['REF_energy'] = vasprun.calc.get_potential_energy()
+
+    if 'forces' in vasprun.arrays:
+        vasprun.arrays['REF_forces'] = vasprun.arrays.pop('forces')
+    elif vasprun.calc:
+        vasprun.arrays['REF_forces'] = vasprun.calc.get_forces()
+
+    if 'stress' in vasprun.arrays:
+        vasprun.info['REF_stress'] = vasprun.arrays.pop('stress').tolist()
+    elif 'stress' in vasprun.info:
+        vasprun.info['REF_stress'] = vasprun.info.pop('stress')
+    elif vasprun.calc:
+        # another possible way could be:
+        # vasprun.get_stress(voigt=False).reshape(9)
+        # to get a str-like representation in extxyz
+        vasprun.info['REF_stress'] = vasprun.calc.get_stress(voigt=False).tolist()
+
+    return vasprun
+
+
 @calcfunction
 def gather_dft_calcs_vasp(dft_calc_list: list) -> orm.List:
     """
@@ -2189,69 +2274,11 @@ def gather_dft_calcs_vasp(dft_calc_list: list) -> orm.List:
 
     # Adding structures to the initial DB
     for finished_dft_calc in dft_calc_list:
-        finished_dft_calc = orm.load_node(finished_dft_calc)
+        vasprun = build_ref_labelled_atoms(orm.load_node(finished_dft_calc))
 
-        try:
-            # Gathering the vasprun as an ASE Atoms object. This object won't
-            # collect automatically all of the extra information such as forces
-            # or energies, and must be collected using methods from ase.calc.u
-            vasprun: Atoms = atl_conv._gather_mace_req_calc_data_from_node(
-                finished_dft_calc
-            )
-
-            # Gathering extra DFT calculation information from vasprun.xml
-            calc_info_dict = atl_conv.gather_calc_data_from_node(
-                finished_dft_calc, units='mace'
-            )
-
-        except Exception:
-            # If the calculation fails for any reason, skip this calculation
+        if vasprun is None:
+            # If the calculation failed for any reason, skip this calculation
             continue
-
-        # Adding forces manually as an array into the atoms object.
-        # This is needed for the atoms object to be able to include the forces in the
-        # extxyz format `Properties` tag.
-        if 'forces' not in vasprun.arrays:
-            vasprun.new_array(
-                name='forces',
-                a=np.array(calc_info_dict['forces']),
-            )
-
-        # Adding the type of structure to the atoms.info dict
-        struct_type = atl_conv.get_struct_type(
-            vasprun=vasprun, dft_calc_node=finished_dft_calc
-        )
-        calc_info_dict['atl_struct_type'] = struct_type
-        vasprun = vasprun_add_info_dict(vasprun, calc_info_dict)
-
-        # Generate a structure name and gathering the aiida_uuid
-        vasprun: Atoms = atl_conv._add_entry_to_mace_input(
-            vasprun=vasprun,
-            node=finished_dft_calc,
-            to_file=False,
-            remove_dipole=True,
-            remove_stress=False,
-        )
-
-        if 'energy' in vasprun.info:
-            vasprun.info['REF_energy'] = vasprun.info.pop('energy')
-        elif vasprun.calc:
-            vasprun.info['REF_energy'] = vasprun.calc.get_potential_energy()
-
-        if 'forces' in vasprun.arrays:
-            vasprun.arrays['REF_forces'] = vasprun.arrays.pop('forces')
-        elif vasprun.calc:
-            vasprun.arrays['REF_forces'] = vasprun.calc.get_forces()
-
-        if 'stress' in vasprun.arrays:
-            vasprun.info['REF_stress'] = vasprun.arrays.pop('stress').tolist()
-        elif 'stress' in vasprun.info:
-            vasprun.info['REF_stress'] = vasprun.info.pop('stress')
-        elif vasprun.calc:
-            # another possible way could be:
-            # vasprun.get_stress(voigt=False).reshape(9)
-            # to get a str-like representation in extxyz
-            vasprun.info['REF_stress'] = vasprun.calc.get_stress(voigt=False).tolist()
 
         vasprun: dict = serialize_ase(vasprun)
 
