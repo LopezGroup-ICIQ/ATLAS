@@ -45,6 +45,47 @@ def gen_initial_database(config_dict: dict):
     )
 
 
+def _read_config_file(config_file) -> dict:
+    """Load a TOML configuration, with a readable error when it is missing."""
+    try:
+        with open(config_file, 'rb') as f:
+            return tomllib.load(f)
+    except FileNotFoundError as e:
+        error_message = (
+            f"The config file '{config_file}' does not exist. "
+            'Please make sure that is the correct name or input a different path.'
+        )
+        raise FileNotFoundError(error_message) from e
+
+
+def gen_boundary(config_dict: dict, db_path: str):
+    """Recompute the latent-space map and boundary of an existing database.
+
+    Unlike ``generate`` this does not rebuild the database: it loads the
+    stored ``.xz`` and re-runs descriptor generation, autoencoder training and
+    boundary detection with the ``[concave_hull]`` block of the configuration.
+    """
+    from atlas.core.initial_db import (
+        InitialDatabase,
+        generate_latent_space_from_config,
+    )
+
+    db_file = pl.Path(db_path).resolve(strict=True)
+    database = InitialDatabase.load_database(db_file)
+
+    database_dict = config_dict.get('database') or {}
+    rng_seed = database_dict.get('rng_seed')
+    if rng_seed is not None:
+        rng_seed = int(rng_seed)
+
+    generate_latent_space_from_config(
+        database,
+        config_dict.get('concave_hull') or {},
+        db_dir=db_file.parent,
+        rng_seed=rng_seed,
+    )
+
+
 def run_gen_initial_database():
     parser = argparse.ArgumentParser(
         prog='atl_gen_init_db',
@@ -61,9 +102,7 @@ def run_gen_initial_database():
     report_parser = subparsers.add_parser(
         'report',
         help='Generate reports for atlas.',
-        usage=(
-            'atl_gen_init_db report [-h]\nGenerate a report for a ATLAS database'
-        ),
+        usage=('atl_gen_init_db report [-h]\nGenerate a report for a ATLAS database'),
     )
     report_parser.add_argument(
         '--db_path',
@@ -74,13 +113,43 @@ def run_gen_initial_database():
         required=True,
     )
 
+    # Create the subparser for the 'boundary' command
+    boundary_parser = subparsers.add_parser(
+        'boundary',
+        help='Recompute the latent-space map of an existing database.',
+        usage=(
+            'atl_gen_init_db boundary [-h] -c CONFIG -d DB_PATH\n'
+            'Recompute descriptors, autoencoder and boundary of an existing '
+            'database without rebuilding it.'
+        ),
+    )
+    boundary_parser.add_argument(
+        '-c',
+        '--config_file',
+        help=(
+            'path pointing to a TOML settings file.\n'
+            'By default `database_generation_settings.toml` will be '
+            'searched in the CWD.\n'
+            'Only its `[concave_hull]` section is used.'
+        ),
+        type=pl.Path,
+        default='./database_generation_settings.toml',
+        metavar='PATH',
+    )
+    boundary_parser.add_argument(
+        '-d',
+        '--db_path',
+        help='Path to the database file (.xz) to recompute the map for.',
+        metavar='<PATH>',
+        required=True,
+    )
+
     # Create the subparser for the 'report' command
     init_db_parser = subparsers.add_parser(
         'generate',
         help='Generate an initial database for atlas.',
         usage=(
-            'atl_gen_init_db generate [-h]\n'
-            'Generate an initial database for atlas.'
+            'atl_gen_init_db generate [-h]\nGenerate an initial database for atlas.'
         ),
     )
 
@@ -102,19 +171,12 @@ def run_gen_initial_database():
 
     # Generate an initial database
     if args.command == 'generate':
-        # Loading TOML config file
-        try:
-            with open(args.config_file, 'rb') as f:
-                toml_dict = tomllib.load(f)
-        except FileNotFoundError as e:
-            error_message = (
-                f"The config file '{args.config_file}' does not exist. "
-                'Please make sure that is the correct name or input a different path.'
-            )
-            raise FileNotFoundError(error_message) from e
+        # Loading TOML config file and generating the database
+        gen_initial_database(config_dict=_read_config_file(args.config_file))
 
-        # Calling the function to generate the initial database
-        gen_initial_database(config_dict=toml_dict)
+    # Recompute the latent-space map of an existing database
+    elif args.command == 'boundary':
+        gen_boundary(_read_config_file(args.config_file), args.db_path)
 
     # Generate an initial database report
     elif args.command == 'report':

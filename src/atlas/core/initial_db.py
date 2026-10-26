@@ -3187,6 +3187,22 @@ class InitialDatabase:
 
         return soap_structs
 
+    def ase_structures_with_ids(self) -> list:
+        """Every row of the database as ``Atoms``, tagged with its identifier.
+
+        ``AseAtomsAdaptor`` returns an empty ``info`` dict, while the MLIP
+        descriptor providers key their output on ``info['atl_id']`` and mint a
+        fresh UUID when it is absent. Without this tagging the latent map would
+        be labelled with identifiers matching no database row, which breaks
+        both click-to-inspect and inversion seeding.
+        """
+        structures = []
+        for _, row in self.df.iterrows():
+            atoms = AseAtomsAdaptor().get_atoms(row.structure)
+            atoms.info['atl_id'] = str(row.unique_id)
+            structures.append(atoms)
+        return structures
+
     def descriptors_concave_hull(
         self,
         descriptor_type: str = 'soap',
@@ -3222,26 +3238,52 @@ class InitialDatabase:
         match descriptor_type:
             case 'soap':
                 atl_cut.custom_print('Generating descriptors using SOAP...', 'info')
+                # SOAP takes no model; its r_cut/n_max/l_max are fixed in
+                # ``get_soap_descriptors``.
+                descriptor_model = ''
                 # Get the SOAP descriptors
                 descriptors: dict = self.get_soap_descriptors(**descriptor_settings)
             case 'mace':
-                # Get the MACE descriptors
-                raise NotImplementedError(
-                    'MACE descriptors are not yet implementedin database generation.'
-                )
                 atl_cut.custom_print('Generating descriptors using MACE...', 'info')
+                from atlas.active_learning.backends import get_backend
+
+                descriptor_model = descriptor_settings.get('model', 'mace:mp-small')
+                # Per-atom descriptors, not an outer average: the inversion
+                # objective matches the mean over a structure's atoms, so the
+                # map has to be built from the same per-atom quantity.
+                descriptors, _, _ = get_backend('mace').generate_descriptors(
+                    database=self.ase_structures_with_ids(),
+                    model_path=descriptor_model,
+                    settings={
+                        'device': str(device),
+                        'dtype': descriptor_settings.get('dtype', 'float64'),
+                    },
+                    outer_average=False,
+                    verbose=True,
+                )
             case 'acsf':
                 # Get the ACSF descriptors
                 raise NotImplementedError(
-                    'ASCF descriptors are not yet implementedin database generation'
+                    'ACSF descriptors are not yet implemented in database generation'
+                )
+            case _:
+                raise ValueError(
+                    f"Unknown descriptor type '{descriptor_type}'. "
+                    "Supported types are 'soap' and 'mace'."
                 )
         atl_cut.custom_print('Generated descriptors.', 'done')
 
         # Reduce dimensionality of the descriptors
+        # Keep the model, its standardization arrays and latent_space.npz in one
+        # directory. A CWD-relative path scattered them across wherever the
+        # process happened to start, which left the GUI unable to tell whether a
+        # map had a usable model behind it.
+        autoencoder_path = pl.Path(plot_filename).with_name('autoencoder_model.pth')
+
         match (load_autoencoder_path, dimensionality_reduction_method):
             case (None, 'autoencoder'):
                 descriptor_arr = np.vstack(
-                    [val['descriptors'] for key, val in descriptors.items()]
+                    [_as_descriptor_array(val) for val in descriptors.values()]
                 )
                 model = atl_tr_ae.run_training(
                     AutoencoderSettings(
@@ -3250,12 +3292,13 @@ class InitialDatabase:
                         dtype='float32',
                         dataset=descriptor_arr,
                         num_epochs=250,
-                        model_path='./autoencoder_model.pth',
+                        model_path=autoencoder_path,
                     )
                 )
 
             case (_, 'autoencoder'):
                 model = torch.load(load_autoencoder_path, weights_only=False)
+                autoencoder_path = pl.Path(load_autoencoder_path)
 
         match dimensionality_reduction_method:
             case 'pca':
@@ -3267,18 +3310,42 @@ class InitialDatabase:
                     autoencoder as atl_ae,
                 )
 
+                # Training standardizes the descriptors, so encoding has to as
+                # well. Without this the map is built by feeding raw descriptors
+                # to an encoder trained on z-scored ones, and every coordinate
+                # is wrong -- silently, since the plot still looks like a cloud.
                 descriptors = atl_ae.get_latent_space_autoencoder(
                     model=model,
                     descriptor_dict=descriptors,
                     device=device,
+                    standardize_data=True,
+                    autoencoder_path=autoencoder_path,
                 )
 
-        # Get boundary of the reduced descriptors
-        latent_space = np.vstack(
-            [val['latent_space'] for key, val in descriptors.items()]
-        )
+        # Two views of the same map. ``latent_space`` is one row per structure
+        # -- the mean over that structure's atoms, which is exactly the quantity
+        # latent inversion optimizes against, so targets and data stay on the
+        # same footing. ``atom_latent_space`` keeps the per-atom cloud for
+        # consumers that need it.
         unique_ids = np.array(list(descriptors.keys()), dtype=str)
+        atom_latent_space, atom_offsets, latent_space = _collect_latent_views(
+            descriptors, unique_ids
+        )
         npz_path = pl.Path(plot_filename).with_name('latent_space.npz')
+
+        # Recorded so a reader can tell whether a map supports gradient-based
+        # features, and reproduce it. Stored as 1-element string arrays to match
+        # the existing ``boundary_method`` convention and stay safe to load with
+        # ``allow_pickle=False``.
+        provenance = {
+            'descriptor_type': np.array([str(descriptor_type)]),
+            'descriptor_model': np.array([str(descriptor_model)]),
+            'autoencoder_path': np.array([str(autoencoder_path)]),
+            'latent_mode': np.array(['structure_mean']),
+            'dtype': np.array([str(descriptor_settings.get('dtype', 'float64'))]),
+            'atom_latent_space': atom_latent_space,
+            'atom_offsets': atom_offsets,
+        }
 
         match boundary_method:
             case 'concave_hull':
@@ -3292,6 +3359,7 @@ class InitialDatabase:
                     boundary_method=np.array(['concave_hull']),
                     hull_vertices=concave_hull,
                     alpha=np.array([alpha]),
+                    **provenance,
                 )
                 atl_cut.custom_print(f'Saved latent space data to {npz_path}', 'done')
 
@@ -3330,12 +3398,133 @@ class InitialDatabase:
                     boundary_coords=all_coords,
                     boundary_counts=counts,
                     morph_disk_size=np.array([morph_disk_size]),
+                    **provenance,
                 )
                 atl_cut.custom_print(f'Saved latent space data to {npz_path}', 'done')
 
                 _plot_morphological_closing(
                     latent_space, boundaries, morph_disk_size, plot_filename
                 )
+
+
+def _as_descriptor_array(entry: dict) -> np.ndarray:
+    """Return one structure's descriptors as a 2D ``(n_rows, n_features)`` array.
+
+    The descriptor providers append per call, so the stored value is a list of
+    arrays; SOAP's averaged output is a single row while MACE's is one row per
+    atom. Normalising here keeps the autoencoder input and the latent
+    bookkeeping consistent for both.
+    """
+    descriptors = entry['descriptors']
+    if isinstance(descriptors, list):
+        descriptors = (
+            descriptors[0] if len(descriptors) == 1 else np.vstack(descriptors)
+        )
+    descriptors = np.asarray(descriptors)
+    if descriptors.ndim == 1:
+        descriptors = descriptors.reshape(1, -1)
+    return descriptors
+
+
+def _collect_latent_views(descriptors: dict, unique_ids: np.ndarray):
+    """Split the latent coordinates into per-atom and per-structure views.
+
+    Returns ``(atom_latent_space, atom_offsets, structure_latent)`` where
+    ``atom_offsets`` has ``len(unique_ids) + 1`` entries delimiting each
+    structure's rows in ``atom_latent_space``, and ``structure_latent`` is the
+    per-structure mean, 1:1 with *unique_ids*.
+
+    The per-structure mean is not merely cosmetic: stacking the per-atom rows
+    and pairing them with *unique_ids* only lines up when each structure
+    contributes exactly one row, which is true for SOAP's averaged output and
+    false for any per-atom descriptor.
+    """
+    atom_rows = []
+    offsets = [0]
+    structure_latent = []
+
+    for unique_id in unique_ids:
+        latent = np.atleast_2d(np.asarray(descriptors[unique_id]['latent_space']))
+        atom_rows.append(latent)
+        offsets.append(offsets[-1] + latent.shape[0])
+        structure_latent.append(latent.mean(axis=0))
+
+    atom_latent_space = (
+        np.vstack(atom_rows) if atom_rows else np.empty((0, 2), dtype=float)
+    )
+    return (
+        atom_latent_space,
+        np.asarray(offsets, dtype=np.int64),
+        np.asarray(structure_latent, dtype=float).reshape(len(unique_ids), -1),
+    )
+
+
+def generate_latent_space_from_config(
+    db: 'InitialDatabase',
+    concave_dict: dict,
+    db_dir: str | pl.Path,
+    rng_seed: int | None = None,
+) -> None:
+    """Build descriptors, autoencoder and boundary from a ``[concave_hull]`` block.
+
+    Shared by the full database-generation pipeline and by the
+    ``atl_gen_init_db boundary`` command, which recomputes the latent-space map
+    of an existing database without rebuilding it.
+
+    Parameters
+    ----------
+    db : InitialDatabase
+        Database whose structures are embedded.
+    concave_dict : dict
+        The ``[concave_hull]`` configuration block.
+    db_dir : str | Path
+        Directory the database lives in. A relative ``plot_filename`` is
+        resolved against it, so the map, its plot and the autoencoder land next
+        to the database instead of in whatever directory the process started
+        in.
+    rng_seed : int | None
+        Seed for the autoencoder training split. Random when omitted.
+    """
+    boundary_method = concave_dict.get('boundary_method', 'concave_hull')
+    atl_cut.custom_print(f'Generating boundary ({boundary_method})...', 'info')
+
+    descriptor_type = concave_dict.get('descriptor', 'soap').lower()
+    if descriptor_type == 'soap':
+        atl_cut.custom_print(
+            'SOAP descriptors are not differentiable, so the resulting map can '
+            'be plotted but not inverted in the GUI. Use a MACE descriptor for '
+            'latent-space traversal.',
+            'warning',
+        )
+
+    descriptor_settings = dict(concave_dict.get('descriptor_settings', {}))
+    # A model only means anything for the MLIP descriptors; SOAP's parameters
+    # are fixed in ``get_soap_descriptors``.
+    if descriptor_type == 'mace' and concave_dict.get('descriptor_model'):
+        descriptor_settings.setdefault('model', concave_dict['descriptor_model'])
+
+    plot_path = pl.Path(
+        concave_dict.get('plot_filename') or 'descriptors_concave_hull.png'
+    )
+    if not plot_path.is_absolute():
+        plot_path = pl.Path(db_dir) / plot_path
+
+    db.descriptors_concave_hull(
+        descriptor_type=descriptor_type,
+        descriptor_settings=descriptor_settings,
+        load_autoencoder_path=concave_dict.get('load_autoencoder_path'),
+        dimensionality_reduction_method=concave_dict.get(
+            'dim_reduction', 'autoencoder'
+        ),
+        plot_filename=str(plot_path),
+        device=concave_dict.get('device', 'cpu'),
+        rng_seed=rng_seed,
+        boundary_method=boundary_method,
+        morph_disk_size=concave_dict.get('morph_disk_size', 10),
+        morph_threshold=concave_dict.get('morph_threshold', 250),
+        morph_dpi=concave_dict.get('morph_dpi', 100),
+    )
+    atl_cut.custom_print('Boundary generated!', 'done')
 
 
 def _plot_morphological_closing(latent_space, boundaries, disk_size, filename):
@@ -4044,30 +4233,13 @@ def cli_run_gen_initial_database(
 
     # Getting the concave hull if requested
     if config_dict.get('concave_hull', {}).get('gen_concave_hull', False):
-        concave_dict = config_dict['concave_hull']
-        boundary_method = concave_dict.get('boundary_method', 'concave_hull')
         print()
-        atl_cut.custom_print(
-            f'Generating boundary ({boundary_method})...',
-            'info',
-        )
-        structures.descriptors_concave_hull(
-            descriptor_type=concave_dict.get('descriptor', 'soap').lower(),
-            dimensionality_reduction_method=concave_dict.get(
-                'dim_reduction', 'autoencoder'
-            ),
-            plot_filename=concave_dict.get(
-                'plot_filename',
-                f'{pl.Path(db_path) / "descriptors_concave_hull.png"}',
-            ),
-            device=concave_dict.get('device', 'cpu'),
+        generate_latent_space_from_config(
+            structures,
+            config_dict['concave_hull'],
+            db_dir=db_dict['database_path'],
             rng_seed=rng_seed,
-            boundary_method=boundary_method,
-            morph_disk_size=concave_dict.get('morph_disk_size', 10),
-            morph_threshold=concave_dict.get('morph_threshold', 250),
-            morph_dpi=concave_dict.get('morph_dpi', 100),
         )
-        atl_cut.custom_print('Boundary generated!', 'done')
         print()
 
     # Export the database if requested

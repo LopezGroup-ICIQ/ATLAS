@@ -697,10 +697,25 @@ This section is optional.
   - Possible values are: `concave_hull`, `morphological_closing`.
 
 - {alt}`descriptor`:
-  - **Description**: Descriptor to use for the boundary generation.
+  - **Description**: Descriptor to use for the boundary generation. Only MACE descriptors are differentiable, which is what latent-space inversion in the GUI needs; SOAP cannot provide analytic gradients for periodic, averaged descriptors.
   - **Type**: `(optional, str)`
   - **Default**: `'SOAP'`.
   - Possible values are: `SOAP`, `MACE`.
+
+- {alt}`descriptor_model`:
+  - **Description**: Model used by the MLIP descriptor: a foundation model id such as 'mace:mp-small', or a path to a trained model file (assumed to be MACE-like). Ignored for SOAP, whose cutoff and basis sizes are fixed.
+  - **Type**: `(optional, str)`
+  - **Default**: `'mace:mp-small'`.
+
+- {alt}`load_autoencoder_path`:
+  - **Description**: Path to an existing autoencoder model to reuse instead of training a new one. Its standardization arrays ('ae_mean_vals.npy', 'ae_std_vals.npy') must sit alongside it.
+  - **Type**: `(optional, str)`
+
+- {alt}`device`:
+  - **Description**: Device used for descriptor generation and autoencoder training.
+  - **Type**: `(optional, str)`
+  - **Default**: `'cpu'`.
+  - Possible values are: `cpu`, `cuda`.
 
 - {alt}`dim_reduction`:
   - **Description**: Dimensionality reduction method for the boundary generation.

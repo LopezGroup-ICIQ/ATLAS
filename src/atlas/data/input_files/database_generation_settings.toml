@@ -428,8 +428,22 @@ gen_concave_hull = false
 
 # (str, optional) Descriptor to use for the concave hull generation
 # Either one of the following: 'SOAP', 'MACE'.
+# Only MACE is differentiable, which is what latent-space inversion in the
+# GUI needs; SOAP maps can be plotted but not decoded.
 # Default is 'SOAP'.
 descriptor = "SOAP"
+
+
+# (str, optional) Model used by the MLIP descriptor: a foundation model id
+# such as 'mace:mp-small', or a path to a trained model file (assumed to be
+# MACE-like). Ignored for SOAP.
+descriptor_model = "mace:mp-small"
+
+
+# (str, optional) Device used for descriptor generation and autoencoder
+# training. Either one of the following: 'cpu', 'cuda'.
+# Default is 'cpu'.
+device = "cpu"
 
 
 # (str, optional) Dimensionality reduction method to use for the concave hull

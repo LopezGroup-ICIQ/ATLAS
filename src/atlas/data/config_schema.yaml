@@ -605,11 +605,27 @@ database_generation:
             default: "concave_hull"
             choices: ["concave_hull", "morphological_closing"]
         descriptor:
-            description: "Descriptor to use for the boundary generation."
+            description: "Descriptor to use for the boundary generation. Only MACE descriptors are differentiable, which is what latent-space inversion in the GUI needs; SOAP cannot provide analytic gradients for periodic, averaged descriptors."
             type: str
             mandatory: false
             default: "SOAP"
             choices: ["SOAP", "MACE"]
+        descriptor_model:
+            description: "Model used by the MLIP descriptor: a foundation model id such as 'mace:mp-small', or a path to a trained model file (assumed to be MACE-like). Ignored for SOAP, whose cutoff and basis sizes are fixed."
+            type: str
+            mandatory: false
+            default: "mace:mp-small"
+        load_autoencoder_path:
+            description: "Path to an existing autoencoder model to reuse instead of training a new one. Its standardization arrays ('ae_mean_vals.npy', 'ae_std_vals.npy') must sit alongside it."
+            type: str
+            mandatory: false
+            default: null
+        device:
+            description: "Device used for descriptor generation and autoencoder training."
+            type: str
+            mandatory: false
+            default: "cpu"
+            choices: ["cpu", "cuda"]
         dim_reduction:
             description: "Dimensionality reduction method for the boundary generation."
             type: str
