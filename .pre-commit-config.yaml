@@ -33,8 +33,18 @@ repos:
             description: "Regenerate docs/source/input.md when config_schema.yaml changes"
           - id: run-tests
             name: Run pytest tests
-            # Added --setup-show and -vv to trace the exact hang
-            entry: python -m pytest tests/ -x --tb=short
+            # Use the ATLAS Python environment, and a throwaway AIIDA_PATH so
+            # tests do not depend on the developer's AiiDA configuration.
+            # Override the interpreter with ATLAS_TEST_PYTHON=/path/to/python.
+            entry: >-
+                bash -c '
+                PY="${ATLAS_TEST_PYTHON:-$HOME/.virtualenvs/atlas_mace/bin/python}";
+                AIIDA_PATH="$(mktemp -d)";
+                AIIDA_PATH="$AIIDA_PATH" "$PY" -m pytest tests/ -x --tb=short;
+                status=$?;
+                rm -rf "$AIIDA_PATH";
+                exit $status
+                '
             language: system
             pass_filenames: false
             always_run: true
