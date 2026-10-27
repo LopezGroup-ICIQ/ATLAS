@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.57.3 (2026-10-27)
+
+### Docs
+
+- **core**: document atl_cleanup_db CLI ([#7dc7a51](https://github.com/pol-sb/ATLAS/commit/7dc7a517e2af0626013acd233292a51e0df32676))
+- **readme**: Update README.md ([#0013542](https://github.com/pol-sb/ATLAS/commit/001354223b235c105f67b7d2a160af4c8b3c9c3d))
+- **readme**: update ChemRxiv DOI to v2 ([#4133ee4](https://github.com/pol-sb/ATLAS/commit/4133ee4819b16d9d97bcdb465b08992b2bb1c998))
+
 ## 0.57.2 (2026-10-27)
 
 ### Docs
