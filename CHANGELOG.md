@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.57.0 (2026-10-27)
+
+### Docs
+
+- **core**: document cleanup, filters and DFT convergence ([#892a722](https://github.com/pol-sb/ATLAS/commit/892a72269df59b35a887b5136736e1cdfa9313fc))
+
+### Feature
+
+- **dft**: add convergence metadata and filtering ([#5005c7a](https://github.com/pol-sb/ATLAS/commit/5005c7a6ac6dfe6e11d743eaa073c9bae353a01e))
+- **core**: add initial database cleanup CLI and filters ([#0884e76](https://github.com/pol-sb/ATLAS/commit/0884e763d000efa2d2637b3a696a5236161b32c2))
+- **gui**: monitor AL domain statistics and daemon workchain PK ([#df7d3f7](https://github.com/pol-sb/ATLAS/commit/df7d3f7bf0754177df88a0b9372ed609cddc5aa8))
+- **al_loop**: expose per-step domain statistics ([#5e42b32](https://github.com/pol-sb/ATLAS/commit/5e42b3262232d06878286e575b4f524938721d8d))
+- **dft**: add atomic result writer and partial-results export ([#814f2e4](https://github.com/pol-sb/ATLAS/commit/814f2e415d73cc8810907f8111924666f18dc84b))
+- **gui**: add GPU latent map with generation and traversal panes ([#fb94517](https://github.com/pol-sb/ATLAS/commit/fb945174b90ff2f98cfa1d62e9dbde3cac201740))
+- **domain_validity**: add invertible latent maps and boundary regeneration ([#5bbbd5b](https://github.com/pol-sb/ATLAS/commit/5bbbd5ba77a54a2db05238f9800744bf67c77e80))
+- **domain_validity**: add gradient-based latent-space inversion ([#19af21d](https://github.com/pol-sb/ATLAS/commit/19af21d75152c33bf2825f5355508c26eb9564de))
+- **mlip**: add differentiable descriptor protocol and MACE handle ([#34c7c20](https://github.com/pol-sb/ATLAS/commit/34c7c2095b21610cc1a3dfb1201c6a718c8476b1))
+
+### Fix
+
+- **core**: use Atoms.rattle for random atomic displacements ([#2519c4d](https://github.com/pol-sb/ATLAS/commit/2519c4db1cc5be61959c7b35333d36251e1901f2))
+- **al_loop**: fix MACE FPS seed descriptors and SOAP averaging ([#fa4e880](https://github.com/pol-sb/ATLAS/commit/fa4e880e0a0f52bef36da84125ab2a615cdf48b1))
+- **al_loop**: separate foreground and dashboard debug flags ([#578519b](https://github.com/pol-sb/ATLAS/commit/578519b110b75f2d2ff582dae482fa87ad2de45c))
+- **dft**: refresh results early and avoid trailing queue waits ([#d621adb](https://github.com/pol-sb/ATLAS/commit/d621adbec23b60375d8aa8ea859d2b142f021929))
+- **al_loop**: change incorrect indentation in FPS loop ([#403d5f6](https://github.com/pol-sb/ATLAS/commit/403d5f61aa6d901c490ad51d1b58cb05b801c025))
+- **dft**: allow empty prpend text ([#554285d](https://github.com/pol-sb/ATLAS/commit/554285d6da4bb774f8f037789697f4b0004e547b))
+
+### Misc
+
+- **build**: update uv lockfile and backend installation docs ([#2f2c577](https://github.com/pol-sb/ATLAS/commit/2f2c57723d3eb31b76db1b7ea3512f45e7da1306))
+- **core**: auto-detect the ATLAS environment for tests ([#06cfb31](https://github.com/pol-sb/ATLAS/commit/06cfb3134b5e321cc361290b08de0d542dfa7d38))
+- **core**: run tests with the ATLAS environment ([#10b2f43](https://github.com/pol-sb/ATLAS/commit/10b2f43c718fd667c949afd61d94e834ebfc899f))
+- **core**: require Python 3.12 and document CUDA-matched torch installs ([#dd86859](https://github.com/pol-sb/ATLAS/commit/dd868598c45028b5f1fd508806029dd7ca71b5bb))
+
 ## 0.56.0 (2026-07-26)
 
 ### Docs
