@@ -1,0 +1,571 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>atlas.core.filtering package &mdash; ATLAS 0.57.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=81d5dafa" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.svg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=70ddae8f"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="atlas.core.gui package" href="atlas.core.gui.html" />
+    <link rel="prev" title="atlas.core.database package" href="atlas.core.database.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo_dark.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">CLI Arguments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html">Input specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customization.html">Customizing your ATLAS installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="results_db_gen.html">Database Generation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package information</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package Information</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="atlas.html">atlas package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="atlas.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="atlas.active_learning.html">atlas.active_learning package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.benchmarks.html">atlas.benchmarks package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="atlas.core.html">atlas.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.training.html">atlas.training package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="atlas.workflows.html">atlas.workflows package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="atlas.html#module-atlas">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ATLAS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">atlas</a></li>
+          <li class="breadcrumb-item"><a href="atlas.html">atlas package</a></li>
+          <li class="breadcrumb-item"><a href="atlas.core.html">atlas.core package</a></li>
+      <li class="breadcrumb-item active">atlas.core.filtering package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/pol-sb/ATLAS/blob/master/docs/source/atlas.core.filtering.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="atlas-core-filtering-package">
+<h1>atlas.core.filtering package<a class="headerlink" href="#atlas-core-filtering-package" title="Link to this heading"></a></h1>
+<p>Structure quality filters for database generation and MD processing.</p>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-atlas.core.filtering.structure_filters">
+<span id="atlas-core-filtering-structure-filters-module"></span><h2>atlas.core.filtering.structure_filters module<a class="headerlink" href="#module-atlas.core.filtering.structure_filters" title="Link to this heading"></a></h2>
+<p>Functions to filter structures based on various criteria.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.DuplicateOutcome">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.filtering.structure_filters.</span></span><span class="sig-name descname"><span class="pre">DuplicateOutcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">duplicate_indices:</span> <span class="pre">list[int]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairs:</span> <span class="pre">list[dict]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.filtering.structure_filters.DuplicateOutcome" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Result of a SOAP duplicate search.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.DuplicateOutcome.duplicate_indices">
+<span class="sig-name descname"><span class="pre">duplicate_indices</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#atlas.core.filtering.structure_filters.DuplicateOutcome.duplicate_indices" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.DuplicateOutcome.pairs">
+<span class="sig-name descname"><span class="pre">pairs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#atlas.core.filtering.structure_filters.DuplicateOutcome.pairs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.FilterOutcome">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atlas.core.filtering.structure_filters.</span></span><span class="sig-name descname"><span class="pre">FilterOutcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kept:</span> <span class="pre">list[~ase.atoms.Atoms]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">removed:</span> <span class="pre">list[~ase.atoms.Atoms]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reasons:</span> <span class="pre">dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list[str]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by_filter:</span> <span class="pre">dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_filter:</span> <span class="pre">dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by_phase:</span> <span class="pre">dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by_type:</span> <span class="pre">dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by_modification:</span> <span class="pre">dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">failures:</span> <span class="pre">list[dict]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">invalid_filters:</span> <span class="pre">list[str]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.filtering.structure_filters.FilterOutcome" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Result of applying a set of structure filters.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.FilterOutcome.by_filter">
+<span class="sig-name descname"><span class="pre">by_filter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#atlas.core.filtering.structure_filters.FilterOutcome.by_filter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.FilterOutcome.by_modification">
+<span class="sig-name descname"><span class="pre">by_modification</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#atlas.core.filtering.structure_filters.FilterOutcome.by_modification" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.FilterOutcome.by_phase">
+<span class="sig-name descname"><span class="pre">by_phase</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#atlas.core.filtering.structure_filters.FilterOutcome.by_phase" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.FilterOutcome.by_type">
+<span class="sig-name descname"><span class="pre">by_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#atlas.core.filtering.structure_filters.FilterOutcome.by_type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.FilterOutcome.failures">
+<span class="sig-name descname"><span class="pre">failures</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#atlas.core.filtering.structure_filters.FilterOutcome.failures" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.FilterOutcome.first_filter">
+<span class="sig-name descname"><span class="pre">first_filter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#atlas.core.filtering.structure_filters.FilterOutcome.first_filter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.FilterOutcome.invalid_filters">
+<span class="sig-name descname"><span class="pre">invalid_filters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#atlas.core.filtering.structure_filters.FilterOutcome.invalid_filters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.FilterOutcome.kept">
+<span class="sig-name descname"><span class="pre">kept</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#atlas.core.filtering.structure_filters.FilterOutcome.kept" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.FilterOutcome.reasons">
+<span class="sig-name descname"><span class="pre">reasons</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#atlas.core.filtering.structure_filters.FilterOutcome.reasons" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.FilterOutcome.removed">
+<span class="sig-name descname"><span class="pre">removed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#atlas.core.filtering.structure_filters.FilterOutcome.removed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.apply_filter_dft_converged">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.filtering.structure_filters.</span></span><span class="sig-name descname"><span class="pre">apply_filter_dft_converged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">struct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">require_scf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">require_ionic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_unknown</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#atlas.core.filtering.structure_filters.apply_filter_dft_converged" title="Link to this definition"></a></dt>
+<dd><p>Detect structures whose DFT calculation is not converged.</p>
+<p>Missing convergence keys mean “unknown”; they are kept unless
+<code class="docutils literal notranslate"><span class="pre">remove_unknown</span></code> is set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>struct</strong> (<em>ase.Atoms</em>) – Structure to check.</p></li>
+<li><p><strong>require_scf</strong> (<em>bool</em><em>, </em><em>optional</em>) – Require explicit SCF convergence.</p></li>
+<li><p><strong>require_ionic</strong> (<em>bool</em><em>, </em><em>optional</em>) – Require explicit ionic convergence for relaxation calculations.
+Static calculations are unaffected.</p></li>
+<li><p><strong>remove_unknown</strong> (<em>bool</em><em>, </em><em>optional</em>) – Also flag structures whose convergence metadata is missing.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> when the structure should be removed.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.apply_filter_duplicate_slabs">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.filtering.structure_filters.</span></span><span class="sig-name descname"><span class="pre">apply_filter_duplicate_slabs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">struct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">miller_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#atlas.core.filtering.structure_filters.apply_filter_duplicate_slabs" title="Link to this definition"></a></dt>
+<dd><p>Detects duplicate slabs in a given structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atoms</strong> (<em>ase.Atoms</em>) – The slab structure.</p></li>
+<li><p><strong>miller_index</strong> (<em>tuple</em><em>, </em><em>optional</em>) – The miller index to identify layers along a direction, by default (0, 0, 1).</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em><em>, </em><em>optional</em>) – The tolerance in angstroms for layer separation, by default 0.2.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if duplicate slabs are detected, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.apply_filter_evaporation">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.filtering.structure_filters.</span></span><span class="sig-name descname"><span class="pre">apply_filter_evaporation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">struct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_allowed_thickness</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">miller_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#atlas.core.filtering.structure_filters.apply_filter_evaporation" title="Link to this definition"></a></dt>
+<dd><p>Check whether a slab expanded or an atom evaporated into the vacuum.</p>
+<p>The thickness is measured along the surface normal derived from
+<code class="docutils literal notranslate"><span class="pre">miller_index</span></code> (or <code class="docutils literal notranslate"><span class="pre">Atoms.info['surface_miller']</span></code>), rather than
+always along z.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>struct</strong> (<em>ase.Atoms</em>) – Slab structure to check.</p></li>
+<li><p><strong>max_allowed_thickness</strong> (<em>float</em>) – Maximum allowed slab thickness in Angstroms along the surface normal.</p></li>
+<li><p><strong>miller_index</strong> (<em>tuple</em><em> | </em><em>list</em><em>, </em><em>optional</em>) – Surface orientation. Defaults to <code class="docutils literal notranslate"><span class="pre">surface_miller</span></code> from <code class="docutils literal notranslate"><span class="pre">Atoms.info</span></code>
+or <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">1)</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> when the slab is thicker than <code class="docutils literal notranslate"><span class="pre">max_allowed_thickness</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.apply_filter_exploding_structures">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.filtering.structure_filters.</span></span><span class="sig-name descname"><span class="pre">apply_filter_exploding_structures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dyn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">struct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_F</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">25.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_V</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_T</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_T_multiplier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_positive_E</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#atlas.core.filtering.structure_filters.apply_filter_exploding_structures" title="Link to this definition"></a></dt>
+<dd><p>Check if the given structure has an unrealistic structure (explosion).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.apply_filter_exploding_structures_distances">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.filtering.structure_filters.</span></span><span class="sig-name descname"><span class="pre">apply_filter_exploding_structures_distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dyn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">struct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoffs_max_base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoffs_min_base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_T</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_T_multiplier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_positive_E</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#atlas.core.filtering.structure_filters.apply_filter_exploding_structures_distances" title="Link to this definition"></a></dt>
+<dd><p>Check if the given structure has an unrealistic structure (explosion).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.apply_filter_fragmented">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.filtering.structure_filters.</span></span><span class="sig-name descname"><span class="pre">apply_filter_fragmented</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">struct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov_rad_multiplier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_largest_fraction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#atlas.core.filtering.structure_filters.apply_filter_fragmented" title="Link to this definition"></a></dt>
+<dd><p>Detect structures split into disconnected fragments.</p>
+<p>A first-neighbour graph is built from ASE natural covalent cutoffs. A
+structure is flagged when its largest connected component contains less
+than <code class="docutils literal notranslate"><span class="pre">min_largest_fraction</span></code> of the atoms, or when the number of
+components exceeds <code class="docutils literal notranslate"><span class="pre">max_components</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>struct</strong> (<em>ase.Atoms</em>) – Structure to check.</p></li>
+<li><p><strong>cov_rad_multiplier</strong> (<em>float</em><em>, </em><em>optional</em>) – Multiplier applied to the natural covalent cutoffs.</p></li>
+<li><p><strong>min_largest_fraction</strong> (<em>float</em><em>, </em><em>optional</em>) – Minimum allowed fraction of atoms in the largest component.</p></li>
+<li><p><strong>max_components</strong> (<em>int</em><em>, </em><em>optional</em>) – Optional hard limit on the number of connected components.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> when the structure is fragmented.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.apply_filter_layer_distance">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.filtering.structure_filters.</span></span><span class="sig-name descname"><span class="pre">apply_filter_layer_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">struct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_layer_distance_ang</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_surface</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">miller_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#atlas.core.filtering.structure_filters.apply_filter_layer_distance" title="Link to this definition"></a></dt>
+<dd><p>Evaluates whether the layer distace is above max_layer_distance_ang.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>struct</strong> (<em>ase.Atoms</em>) – structure to check.</p></li>
+<li><p><strong>max_layer_distance_ang</strong> (<em>float</em>) – Maximum distance between layers</p></li>
+<li><p><strong>is_surface</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the structure is a surface. If omitted, the type is read
+from <code class="docutils literal notranslate"><span class="pre">Atoms.info</span></code>.</p></li>
+<li><p><strong>miller_index</strong> (<em>tuple</em><em> | </em><em>list</em><em>, </em><em>optional</em>) – Surface orientation. If omitted, it is read from
+<code class="docutils literal notranslate"><span class="pre">Atoms.info['surface_miller']</span></code> and defaults to <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">1)</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Returns <cite>True</cite> if the layer distace is above max_layer_distance_ang,
+<cite>False</cite> if otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.apply_filter_low_coordination">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.filtering.structure_filters.</span></span><span class="sig-name descname"><span class="pre">apply_filter_low_coordination</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">struct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov_rad_multiplier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_coord</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_low_coord_fraction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#atlas.core.filtering.structure_filters.apply_filter_low_coordination" title="Link to this definition"></a></dt>
+<dd><p>Detect structures with too many undercoordinated atoms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>struct</strong> (<em>ase.Atoms</em>) – Structure to check.</p></li>
+<li><p><strong>cov_rad_multiplier</strong> (<em>float</em><em>, </em><em>optional</em>) – Multiplier applied to the natural covalent cutoffs.</p></li>
+<li><p><strong>min_coord</strong> (<em>int</em><em>, </em><em>optional</em>) – Atoms with coordination &lt;= this value are considered undercoordinated.</p></li>
+<li><p><strong>max_low_coord_fraction</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum allowed fraction of undercoordinated atoms.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> when the undercoordinated fraction exceeds the threshold.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.apply_filter_no_neighbors">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.filtering.structure_filters.</span></span><span class="sig-name descname"><span class="pre">apply_filter_no_neighbors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">struct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov_rad_multiplier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_coord</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#atlas.core.filtering.structure_filters.apply_filter_no_neighbors" title="Link to this definition"></a></dt>
+<dd><p>Detect structures containing atoms below a coordination threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>struct</strong> (<em>ase.Atoms</em>) – Structure to check.</p></li>
+<li><p><strong>cov_rad_multiplier</strong> (<em>float</em><em>, </em><em>optional</em>) – Multiplier applied to the natural covalent cutoffs.</p></li>
+<li><p><strong>min_coord</strong> (<em>int</em><em>, </em><em>optional</em>) – Flag an atom when its coordination number is less than or equal to
+this value. The default <code class="docutils literal notranslate"><span class="pre">0</span></code> preserves the original behaviour of
+flagging only atoms with no neighbours.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> when at least one atom has coordination &lt;= <code class="docutils literal notranslate"><span class="pre">min_coord</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.apply_struct_filters_atl_db">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.filtering.structure_filters.</span></span><span class="sig-name descname"><span class="pre">apply_struct_filters_atl_db</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structures</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_filtered</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filtered_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'filtered_structures.xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_isolated_atoms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#atlas.core.filtering.structure_filters.apply_struct_filters_atl_db" title="Link to this definition"></a></dt>
+<dd><p>Apply user-specified structure filters to a database or a list.</p>
+<p>This is the backwards-compatible entry point used by the database
+generation pipeline. New code should call <a class="reference internal" href="#atlas.core.filtering.structure_filters.apply_structure_filters" title="atlas.core.filtering.structure_filters.apply_structure_filters"><code class="xref py py-func docutils literal notranslate"><span class="pre">apply_structure_filters()</span></code></a>
+directly when a <code class="docutils literal notranslate"><span class="pre">list[ase.Atoms]</span></code> is available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>structures</strong> (<em>list</em><em>[</em><em>ase.Atoms</em><em>] </em><em>| </em><a class="reference internal" href="atlas.core.html#atlas.core.initial_db.InitialDatabase" title="atlas.core.initial_db.InitialDatabase"><em>InitialDatabase</em></a>) – Database or list of structures to filter.</p></li>
+<li><p><strong>config_dict</strong> (<em>dict</em>) – Configuration dictionary containing the <code class="docutils literal notranslate"><span class="pre">[struct_filters]</span></code> section.</p></li>
+<li><p><strong>write_filtered</strong> (<em>bool</em><em>, </em><em>optional</em>) – Write removed structures to <code class="docutils literal notranslate"><span class="pre">filtered_path</span></code>.</p></li>
+<li><p><strong>filtered_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Destination for the removed structures in extended XYZ format.</p></li>
+<li><p><strong>skip_base</strong> (<em>bool</em><em>, </em><em>optional</em>) – Keep structures marked as <code class="docutils literal notranslate"><span class="pre">base</span></code> without filtering them.</p></li>
+<li><p><strong>skip_isolated_atoms</strong> (<em>bool</em><em>, </em><em>optional</em>) – Keep isolated atoms without filtering them.</p></li>
+<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – Show a progress bar while filtering.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary with filtered structure IDs and counters. Keys:
+<code class="docutils literal notranslate"><span class="pre">filtered_uuids</span></code>, <code class="docutils literal notranslate"><span class="pre">by_phase</span></code>, <code class="docutils literal notranslate"><span class="pre">by_type</span></code>, <code class="docutils literal notranslate"><span class="pre">by_modification</span></code>,
+<code class="docutils literal notranslate"><span class="pre">by_filter</span></code>, <code class="docutils literal notranslate"><span class="pre">removed_structures</span></code>, <code class="docutils literal notranslate"><span class="pre">kept_structures</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">failures</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.apply_structure_filters">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.filtering.structure_filters.</span></span><span class="sig-name descname"><span class="pre">apply_structure_filters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structures</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_isolated_atoms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#atlas.core.filtering.structure_filters.FilterOutcome" title="atlas.core.filtering.structure_filters.FilterOutcome"><span class="pre">FilterOutcome</span></a></span></span><a class="headerlink" href="#atlas.core.filtering.structure_filters.apply_structure_filters" title="Link to this definition"></a></dt>
+<dd><p>Apply the filters declared in <code class="docutils literal notranslate"><span class="pre">filter_settings</span></code> to a structure list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>structures</strong> (<em>list</em><em> of </em><em>ase.Atoms</em>) – Structures to filter. Metadata is read from <code class="docutils literal notranslate"><span class="pre">Atoms.info</span></code>.</p></li>
+<li><p><strong>filter_settings</strong> (<em>dict</em>) – Mapping of filter names to their keyword arguments, as read from the
+<code class="docutils literal notranslate"><span class="pre">[struct_filters]</span></code> TOML section.</p></li>
+<li><p><strong>skip_base</strong> (<em>bool</em><em>, </em><em>optional</em>) – Keep structures marked as <code class="docutils literal notranslate"><span class="pre">base</span></code> without filtering them.</p></li>
+<li><p><strong>skip_isolated_atoms</strong> (<em>bool</em><em>, </em><em>optional</em>) – Keep isolated atoms (used as MLIP reference energies) without
+filtering them. Enabled by default because such structures have no
+neighbours and would otherwise be removed by the neighbour filter.</p></li>
+<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – Show a progress bar while filtering.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Kept and removed structures plus per-filter and per-metadata counters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#atlas.core.filtering.structure_filters.FilterOutcome" title="atlas.core.filtering.structure_filters.FilterOutcome">FilterOutcome</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.check_disconn_neighbors">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.filtering.structure_filters.</span></span><span class="sig-name descname"><span class="pre">check_disconn_neighbors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn_matr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coord_nums</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_coord</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#atlas.core.filtering.structure_filters.check_disconn_neighbors" title="Link to this definition"></a></dt>
+<dd><p>Check if there are disconnected atoms in the structure.</p>
+<p>Uses the connectivity matrix and the coordination numbers to check if there are
+atoms with disconnected neighbors. This is done by checking if the coordination
+number of an atom is below a certain threshold and if any of its neighbors also
+have a coordination number below the threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>conn_matr</strong> (<em>np.array</em>) – Connectivity matrix as given by the ASE NeighborList.</p></li>
+<li><p><strong>coord_nums</strong> (<em>np.array</em>) – Array containing the coordination numbers of each atom.</p></li>
+<li><p><strong>min_coord</strong> (<em>int</em><em>, </em><em>optional</em>) – Threshold for the coordination number, by default 3.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Whether there are disconnected atoms in the structure.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.coerce_to_atoms_list">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.filtering.structure_filters.</span></span><span class="sig-name descname"><span class="pre">coerce_to_atoms_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structures</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#atlas.core.filtering.structure_filters.coerce_to_atoms_list" title="Link to this definition"></a></dt>
+<dd><p>Normalize supported structure containers into a list of ASE Atoms.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.find_duplicate_structures">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.filtering.structure_filters.</span></span><span class="sig-name descname"><span class="pre">find_duplicate_structures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structures</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_cut</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.999</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_by_phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#atlas.core.filtering.structure_filters.DuplicateOutcome" title="atlas.core.filtering.structure_filters.DuplicateOutcome"><span class="pre">DuplicateOutcome</span></a></span></span><a class="headerlink" href="#atlas.core.filtering.structure_filters.find_duplicate_structures" title="Link to this definition"></a></dt>
+<dd><p>Detect duplicate structures with SOAP average-kernel similarity.</p>
+<p>For two structures <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code> the similarity is the normalized
+average of <code class="docutils literal notranslate"><span class="pre">exp(-||d_a</span> <span class="pre">-</span> <span class="pre">d_b||^2)</span></code> over all atom-descriptor pairs
+<code class="docutils literal notranslate"><span class="pre">(a,</span> <span class="pre">b)</span></code>. This matches
+<code class="docutils literal notranslate"><span class="pre">dscribe.kernels.AverageKernel(metric='rbf',</span> <span class="pre">gamma=1)</span></code> while avoiding an
+<code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">x</span> <span class="pre">N</span></code> kernel matrix.</p>
+<p>Structures are grouped by phase (optional), atom count, and composition,
+then visited in input order. A structure is marked as a duplicate when it
+is similar to an earlier kept structure in the same group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>structures</strong> (<em>list</em><em> of </em><em>ase.Atoms</em>) – Structures to compare.</p></li>
+<li><p><strong>r_cut</strong> (<em>float</em><em>, </em><em>optional</em>) – SOAP cutoff radius in Angstrom.</p></li>
+<li><p><strong>n_max</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of radial basis functions.</p></li>
+<li><p><strong>l_max</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum angular momentum.</p></li>
+<li><p><strong>similarity_threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – Minimum similarity to consider two structures duplicates.</p></li>
+<li><p><strong>group_by_phase</strong> (<em>bool</em><em>, </em><em>optional</em>) – Compare structures only within the same phase.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of parallel jobs passed to dscribe.</p></li>
+<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – Show progress bars for descriptor generation and comparison.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Indices of structures to remove and the matched pairs with their
+similarity values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#atlas.core.filtering.structure_filters.DuplicateOutcome" title="atlas.core.filtering.structure_filters.DuplicateOutcome">DuplicateOutcome</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.get_available_filters">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.filtering.structure_filters.</span></span><span class="sig-name descname"><span class="pre">get_available_filters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#atlas.core.filtering.structure_filters.get_available_filters" title="Link to this definition"></a></dt>
+<dd><p>Dynamically gathers all module functions prefixed with <code class="docutils literal notranslate"><span class="pre">apply_filter_</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary mapping filter names to their function objects.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.get_coord_nums">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.filtering.structure_filters.</span></span><span class="sig-name descname"><span class="pre">get_coord_nums</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">struct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov_rad_multiplier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#atlas.core.filtering.structure_filters.get_coord_nums" title="Link to this definition"></a></dt>
+<dd><p>Get the connectivity matrix, check for disconnected atoms and get coord. numbers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>struct</strong> (<em>Atoms</em>) – Structure to check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple containing the connectivity matrix, a boolean indicating if there are
+disconnected atoms and an array with the coordination numbers.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="atlas.core.filtering.structure_filters.get_max_layer_distance">
+<span class="sig-prename descclassname"><span class="pre">atlas.core.filtering.structure_filters.</span></span><span class="sig-name descname"><span class="pre">get_max_layer_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">struct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">miller</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">1)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#atlas.core.filtering.structure_filters.get_max_layer_distance" title="Link to this definition"></a></dt>
+<dd><p>Get the maximum distance between layers along <code class="docutils literal notranslate"><span class="pre">miller</span></code>.</p>
+</dd></dl>
+
+</section>
+<section id="module-atlas.core.filtering">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-atlas.core.filtering" title="Link to this heading"></a></h2>
+<p>Structure quality filters for database generation.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="atlas.core.database.html" class="btn btn-neutral float-left" title="atlas.core.database package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="atlas.core.gui.html" class="btn btn-neutral float-right" title="atlas.core.gui package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pol Sanz.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Version(name='master', url='atlas.core.filtering.html', version='', release='0.57.3', is_released=False)
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
