@@ -260,7 +260,44 @@ def similarity_check_list(
     return replaced_structures
 
 
-def gauss_perturb(structure: Structure, center: float = 0.04):
+#: Convert the legacy ``center`` displacement parameter into an
+#: ``Atoms.rattle`` per-coordinate standard deviation. The previous
+#: implementation drew a uniform displacement magnitude in
+#: ``[center / 2, 2 * center]``; matching its RMS displacement requires
+#: ``sigma = center * sqrt(7 / 12)``.
+_RATTLE_STDEV_FACTOR = np.sqrt(7.0 / 12.0)
+
+
+def gauss_perturb(
+    structure: Structure,
+    center: float = 0.04,
+    seed: int | None = None,
+):
+    """Apply independent random atomic displacements to a structure.
+
+    ``center`` keeps the meaning of the previous perturbator: displacements
+    were drawn uniformly with a magnitude between ``center / 2`` and
+    ``2 * center``. The new implementation uses :meth:`ase.Atoms.rattle` with
+    a per-coordinate Gaussian standard deviation of
+    ``center * sqrt(7 / 12)``, which preserves the RMS displacement of that
+    uniform distribution. Pass a distinct ``seed`` for every perturbation to
+    obtain independent configurations.
+
+    Parameters
+    ----------
+    structure : pymatgen.core.Structure | atlas.core.structure.Structure
+        Structure to perturb.
+    center : float, optional
+        Legacy displacement-magnitude parameter in Angstroms.
+    seed : int, optional
+        Seed for the random displacements. When omitted, fresh entropy is
+        used, so repeated calls are independent but not reproducible.
+
+    Returns
+    -------
+    pymatgen.core.Structure | atlas.core.structure.Structure
+        A perturbed copy with the same container type as the input.
+    """
     ATL_STRUCT_TYPES = (
         atl_struct.Structure,
         atl_struct.Bulk,
@@ -270,11 +307,28 @@ def gauss_perturb(structure: Structure, center: float = 0.04):
     if isinstance(structure, ATL_STRUCT_TYPES):
         structure_obj = structure
         structure = structure.structure
+    else:
+        structure_obj = None
+
+    stdev = float(center) * _RATTLE_STDEV_FACTOR
+    rng = np.random.default_rng(seed)
+
+    ase_structure = AseAtomsAdaptor.get_atoms(structure)
+    original_positions = ase_structure.get_positions()
+    ase_structure.rattle(stdev=stdev, rng=rng)
+    displacements = ase_structure.get_positions() - original_positions
 
     new_structure = structure.copy()
-    new_structure.perturb(distance=center * 2, min_distance=center / 2)
+    for idx, displacement in enumerate(displacements):
+        if np.any(displacement):
+            new_structure.translate_sites(
+                idx,
+                displacement,
+                frac_coords=False,
+                to_unit_cell=False,
+            )
 
-    if isinstance(structure, ATL_STRUCT_TYPES):
+    if structure_obj is not None:
         structure_obj.structure = new_structure
         new_structure = structure_obj
 
@@ -972,9 +1026,13 @@ def find_supercell_indices(
     return structure_list, idx_list, supercell_vec_list
 
 
-def _apply_perturbation_atl_struct(center, row, per_idx):
+def _apply_perturbation_atl_struct(center, row, per_idx, seed=None):
     # Applying perturbation to the structure
-    new_struct_perturb = gauss_perturb(center=center, structure=row.structure)
+    new_struct_perturb = gauss_perturb(
+        center=center,
+        structure=row.structure,
+        seed=seed,
+    )
 
     # Getting current row information
     row_kwargs_dict = {**row}
@@ -1025,6 +1083,7 @@ def apply_gauss_perturb_db(
     phase: atl_pd.Phase,
     center: float = 0.04,
     limit_num_structures: int = None,
+    seed: int | None = None,
 ):
     perturbed_structs = []
 
@@ -1041,11 +1100,18 @@ def apply_gauss_perturb_db(
     custom_print(
         f'Perturbation will be applied to: {filtered_df.shape[0]} structures.', 'debug'
     )
+    rng = np.random.default_rng(seed)
     for _, row in filtered_df.iterrows():
         if row.perturb:
             continue
         for per_idx in range(repeat):
-            clust_obj = _apply_perturbation_atl_struct(center, row, per_idx)
+            perturb_seed = int(rng.integers(0, 2**32 - 1))
+            clust_obj = _apply_perturbation_atl_struct(
+                center,
+                row,
+                per_idx,
+                seed=perturb_seed,
+            )
 
             perturbed_structs.append(clust_obj)
 

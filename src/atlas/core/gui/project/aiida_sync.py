@@ -71,6 +71,74 @@ def _node_status(node) -> str:
     return 'submitted'
 
 
+@dataclass
+class AlRunDetails:
+    """Read-only view of an AL base workchain, used by the monitor panels.
+
+    ``domain_stats`` and ``safeguard_stats`` are keyed by the 1-based AL step
+    number (the ``N`` of the "Starting AL Loop iteration N/M" log lines).
+    """
+
+    status: str
+    terminated: bool
+    log_path: str | None = None
+    domain_stats: dict[int, dict] = field(default_factory=dict)
+    safeguard_stats: dict[int, dict] = field(default_factory=dict)
+
+
+def _step_number(step_stats: dict) -> int | None:
+    """Return the 1-based AL step of a per-step statistics dict."""
+    if step_stats.get('al_step') is not None:
+        return int(step_stats['al_step'])
+    if step_stats.get('iteration') is not None:
+        return int(step_stats['iteration']) + 1
+    return None
+
+
+def fetch_al_run_details(base_pk: int) -> AlRunDetails:
+    """Collect status, log path and per-step domain counts of an AL run.
+
+    Per-step counts are read from the ``extrapolation_statistics`` output of
+    each finished step workchain, so they are available while the loop is
+    still running. The cumulative output of the base workchain (only present
+    once it finishes) fills any gaps and provides the safeguard counts.
+    """
+    orm = _load_aiida()
+    node = orm.load_node(base_pk)
+
+    log_path = None
+    log_node = getattr(node.inputs, 'log_path', None)
+    if log_node is not None:
+        log_path = log_node.value
+
+    details = AlRunDetails(
+        status=_node_status(node),
+        terminated=node.is_terminated,
+        log_path=log_path,
+    )
+
+    for child in node.called:
+        stats_node = getattr(child.outputs, 'extrapolation_statistics', None)
+        if stats_node is None:
+            continue
+        step_stats = stats_node.get_dict()
+        step = _step_number(step_stats)
+        if step is not None:
+            details.domain_stats[step] = step_stats
+
+    cumulative_node = getattr(node.outputs, 'extrapolation_statistics', None)
+    if cumulative_node is not None:
+        cumulative = cumulative_node.get_dict()
+        # AiiDA stores dict keys as strings
+        for key, step_stats in cumulative.get('per_iteration', {}).items():
+            details.domain_stats.setdefault(int(key), step_stats)
+        safeguard = cumulative.get('safeguard', {}).get('per_iteration', {})
+        for key, step_stats in safeguard.items():
+            details.safeguard_stats[int(key)] = step_stats
+
+    return details
+
+
 def sync_al_runs(project) -> SyncResult:
     """Refresh AL run statuses from AiiDA."""
     orm = _load_aiida()

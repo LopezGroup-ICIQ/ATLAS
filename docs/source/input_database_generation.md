@@ -409,7 +409,7 @@ This section is optional.
   - **Default**: `100`.
 
 - {alt}`perturbation_ang`:
-  - **Description**: Gaussian perturbation magnitude in Angstroms.
+  - **Description**: Random-displacement magnitude in Angstroms. Mapped internally to an Atoms.rattle Gaussian sigma that preserves the RMS displacement of the previous uniform [0.5x, 2x] range.
   - **Type**: `(optional, float)`
   - **Default**: `0.04`.
 
@@ -498,7 +498,7 @@ This section is optional.
   - **Default**: `1`.
 
 - {alt}`perturbation_ang`:
-  - **Description**: Perturbation magnitude in Angstrom.
+  - **Description**: Random-displacement magnitude in Angstroms. Mapped internally to an Atoms.rattle Gaussian sigma that preserves the RMS displacement of the previous uniform [0.5x, 2x] range.
   - **Type**: `(optional, float)`
   - **Default**: `0.04`.
 
@@ -549,11 +549,20 @@ This section is optional.
 
 Filter for structures with atoms that have no neighbors.
 
+:::{attention}
+This section is optional.
+:::
+
 
 - {alt}`cov_rad_multiplier`:
   - **Description**: Multiplier applied to the covalent radii to be used as cutoff radius for the neighbor check.
   - **Type**: `(optional, float)`
   - **Default**: `1.2`.
+
+- {alt}`min_coord`:
+  - **Description**: Flag atoms with coordination number less than or equal to this value. 0 reproduces the original zero-neighbour check.
+  - **Type**: `(optional, int)`
+  - **Default**: `0`.
 
 #### Layer_Distance - `[struct_filters.layer_distance]`
 
@@ -582,6 +591,170 @@ This section is optional.
   - **Description**: Tolerance for the duplicate slabs filter.
   - **Type**: `(optional, float)`
   - **Default**: `0.2`.
+
+#### Fragmented - `[struct_filters.fragmented]`
+
+Filter structures split into disconnected fragments.
+
+:::{attention}
+This section is optional.
+:::
+
+
+- {alt}`cov_rad_multiplier`:
+  - **Description**: Multiplier applied to the natural covalent cutoffs when building the connectivity graph.
+  - **Type**: `(optional, float)`
+  - **Default**: `1.1`.
+
+- {alt}`min_largest_fraction`:
+  - **Description**: Minimum fraction of atoms that must belong to the largest connected component.
+  - **Type**: `(optional, float)`
+  - **Default**: `0.95`.
+
+#### Low_Coordination - `[struct_filters.low_coordination]`
+
+Filter structures with too many undercoordinated atoms.
+
+:::{attention}
+This section is optional.
+:::
+
+
+- {alt}`cov_rad_multiplier`:
+  - **Description**: Multiplier applied to the natural covalent cutoffs when computing coordination numbers.
+  - **Type**: `(optional, float)`
+  - **Default**: `1.1`.
+
+- {alt}`min_coord`:
+  - **Description**: Atoms with coordination number less than or equal to this value are considered undercoordinated.
+  - **Type**: `(optional, int)`
+  - **Default**: `3`.
+
+- {alt}`max_low_coord_fraction`:
+  - **Description**: Maximum allowed fraction of undercoordinated atoms.
+  - **Type**: `(optional, float)`
+  - **Default**: `0.5`.
+
+#### Evaporation - `[struct_filters.evaporation]`
+
+Filter surface slabs that expanded or lost atoms into the vacuum.
+
+:::{attention}
+This section is optional.
+:::
+
+
+- {alt}`max_allowed_thickness`:
+  - **Description**: Maximum allowed slab thickness in Angstroms along the surface normal.
+  - **Type**: `(float)`
+
+#### Dft_Converged - `[struct_filters.dft_converged]`
+
+Filter structures whose DFT calculation is not converged. Missing convergence metadata is treated as unknown unless remove_unknown is set.
+
+:::{attention}
+This section is optional.
+:::
+
+
+- {alt}`require_scf`:
+  - **Description**: Require explicit SCF convergence.
+  - **Type**: `(optional, bool)`
+  - **Default**: `True`.
+
+- {alt}`require_ionic`:
+  - **Description**: Require explicit ionic convergence for relaxation calculations.
+  - **Type**: `(optional, bool)`
+  - **Default**: `False`.
+
+- {alt}`remove_unknown`:
+  - **Description**: Also flag structures without convergence metadata.
+  - **Type**: `(optional, bool)`
+  - **Default**: `False`.
+
+### Cleanup - `[cleanup]`
+
+Settings for standardizing, filtering and deduplicating an initial database.
+
+:::{attention}
+This section is optional.
+:::
+
+
+- {alt}`enabled`:
+  - **Description**: Run the cleanup step during database generation. The standalone atl_cleanup_db command always runs.
+  - **Type**: `(optional, bool)`
+  - **Default**: `True`.
+
+- {alt}`standardize_metadata`:
+  - **Description**: Migrate legacy metadata keys and ensure every structure has an atl_id.
+  - **Type**: `(optional, bool)`
+  - **Default**: `True`.
+
+- {alt}`reassign_duplicate_ids`:
+  - **Description**: Assign a new atl_id to structures that repeat an existing ID.
+  - **Type**: `(optional, bool)`
+  - **Default**: `True`.
+
+- {alt}`remove_duplicates`:
+  - **Description**: Remove duplicate structures detected with SOAP descriptors.
+  - **Type**: `(optional, bool)`
+  - **Default**: `True`.
+
+- {alt}`duplicate_r_cut`:
+  - **Description**: SOAP cutoff radius in Angstrom for duplicate detection.
+  - **Type**: `(optional, float)`
+  - **Default**: `4.0`.
+
+- {alt}`duplicate_n_max`:
+  - **Description**: Number of radial basis functions for duplicate detection.
+  - **Type**: `(optional, int)`
+  - **Default**: `4`.
+
+- {alt}`duplicate_l_max`:
+  - **Description**: Maximum angular momentum for duplicate detection.
+  - **Type**: `(optional, int)`
+  - **Default**: `4`.
+
+- {alt}`duplicate_similarity_threshold`:
+  - **Description**: Minimum SOAP average-kernel similarity to consider two structures duplicates.
+  - **Type**: `(optional, float)`
+  - **Default**: `0.999`.
+
+- {alt}`group_duplicates_by_phase`:
+  - **Description**: Compare structures only within the same phase.
+  - **Type**: `(optional, bool)`
+  - **Default**: `True`.
+
+- {alt}`apply_struct_filters`:
+  - **Description**: Apply the filters defined in [struct_filters].
+  - **Type**: `(optional, bool)`
+  - **Default**: `True`.
+
+- {alt}`skip_base_structures`:
+  - **Description**: Keep structures marked as base without filtering them.
+  - **Type**: `(optional, bool)`
+  - **Default**: `False`.
+
+- {alt}`skip_isolated_atoms`:
+  - **Description**: Keep isolated atoms without filtering them.
+  - **Type**: `(optional, bool)`
+  - **Default**: `True`.
+
+- {alt}`write_removed`:
+  - **Description**: Write removed structures to a separate extended XYZ file.
+  - **Type**: `(optional, bool)`
+  - **Default**: `True`.
+
+- {alt}`removed_file_suffix`:
+  - **Description**: Suffix used for the removed-structures file written by atl_cleanup_db.
+  - **Type**: `(optional, str)`
+  - **Default**: `'_removed'`.
+
+- {alt}`output_suffix`:
+  - **Description**: Suffix used for the cleaned database written by atl_cleanup_db.
+  - **Type**: `(optional, str)`
+  - **Default**: `'_cleaned'`.
 
 ### Vacancies - `[vacancies]`
 
@@ -622,6 +795,26 @@ Settings for vacancy generation.
 ```python
 ['O']
 ```
+
+- {alt}`reject_fragmented`:
+  - **Description**: Discard vacancy candidates split into disconnected fragments.
+  - **Type**: `(optional, bool)`
+  - **Default**: `True`.
+
+- {alt}`fragmented_min_largest_fraction`:
+  - **Description**: Minimum fraction of atoms in the largest connected component for a vacancy candidate to be accepted.
+  - **Type**: `(optional, float)`
+  - **Default**: `0.95`.
+
+- {alt}`fragmented_cov_rad_multiplier`:
+  - **Description**: Covalent-radius multiplier used by the vacancy fragmentation check.
+  - **Type**: `(optional, float)`
+  - **Default**: `1.1`.
+
+- {alt}`max_fragmented_retries`:
+  - **Description**: Number of times to redraw a vacancy set when the candidate is fragmented.
+  - **Type**: `(optional, int)`
+  - **Default**: `3`.
 
 ### Targeted_Modification - `[targeted_modification]`
 
@@ -697,10 +890,25 @@ This section is optional.
   - Possible values are: `concave_hull`, `morphological_closing`.
 
 - {alt}`descriptor`:
-  - **Description**: Descriptor to use for the boundary generation.
+  - **Description**: Descriptor to use for the boundary generation. Only MACE descriptors are differentiable, which is what latent-space inversion in the GUI needs; SOAP cannot provide analytic gradients for periodic, averaged descriptors.
   - **Type**: `(optional, str)`
   - **Default**: `'SOAP'`.
   - Possible values are: `SOAP`, `MACE`.
+
+- {alt}`descriptor_model`:
+  - **Description**: Model used by the MLIP descriptor: a foundation model id such as 'mace:mp-small', or a path to a trained model file (assumed to be MACE-like). Ignored for SOAP, whose cutoff and basis sizes are fixed.
+  - **Type**: `(optional, str)`
+  - **Default**: `'mace:mp-small'`.
+
+- {alt}`load_autoencoder_path`:
+  - **Description**: Path to an existing autoencoder model to reuse instead of training a new one. Its standardization arrays ('ae_mean_vals.npy', 'ae_std_vals.npy') must sit alongside it.
+  - **Type**: `(optional, str)`
+
+- {alt}`device`:
+  - **Description**: Device used for descriptor generation and autoencoder training.
+  - **Type**: `(optional, str)`
+  - **Default**: `'cpu'`.
+  - Possible values are: `cpu`, `cuda`.
 
 - {alt}`dim_reduction`:
   - **Description**: Dimensionality reduction method for the boundary generation.

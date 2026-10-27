@@ -14,6 +14,7 @@ configuration. The whole module is skipped when aiida-core is unavailable.
 from __future__ import annotations
 
 import uuid
+from pathlib import Path
 
 import pytest
 
@@ -172,3 +173,39 @@ def test_mock_al_loop_completes(aiida_localhost, tmp_path, monkeypatch):
         f'mock AL loop did not finish ok: exit_status={node.exit_status}, '
         f'message={node.exit_message}'
     )
+
+    # Per-step extrapolation statistics are exposed on the step workchain and
+    # folded into the base workchain's cumulative output, keyed by AL step.
+    cumulative = node.outputs.extrapolation_statistics.get_dict()
+    step = cumulative['per_iteration']['1']
+    assert step['al_step'] == 1
+    assert step['total_frames'] > 0
+    assert step['extrapolating_frames'] == step['out_of_domain_frames']
+    assert step['interpolating_frames'] == 0
+    assert step['in_domain_frames'] == 0
+    assert cumulative['out_of_domain_frames'] == step['out_of_domain_frames']
+
+    step_nodes = [
+        child
+        for child in node.called
+        if hasattr(child.outputs, 'extrapolation_statistics')
+    ]
+    assert len(step_nodes) == 1
+    assert step_nodes[0].outputs.extrapolation_statistics.get_dict() == step
+
+    # The GUI reads the same per-step counts (and the workchain log path)
+    # through aiida_sync while the loop runs.
+    from atlas.core.gui.project.aiida_sync import fetch_al_run_details
+
+    details = fetch_al_run_details(node.pk)
+    assert details.terminated
+    assert details.status == 'completed'
+    assert details.log_path == node.inputs.log_path.value
+    assert details.domain_stats == {1: step}
+
+    # The workchain log carries the same counts for the log-parsing fallback.
+    from atlas.core.gui.widgets.al_monitor_panel import parse_al_log
+
+    parsed = parse_al_log(Path(details.log_path))
+    assert parsed[1]['domain']['out_of_domain_frames'] == step['out_of_domain_frames']
+    assert parsed[1]['domain']['submitted_to_dft'] == step['submitted_to_dft']

@@ -30,6 +30,8 @@ class WorkflowPage(QWidget):
 
     workflow_state_changed = Signal()
     process_running_changed = Signal(bool)
+    #: ``(value, maximum, message)``; ``maximum == 0`` means indeterminate.
+    progress_changed = Signal(int, int, str)
 
     def __init__(
         self,

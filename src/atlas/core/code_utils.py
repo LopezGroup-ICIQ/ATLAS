@@ -714,3 +714,40 @@ def check_atl_version(logger=None):
         logger.handlers.clear()
 
     return curr_version, last_tagged_version
+
+
+def atomic_write_extxyz(path: 'str | pl.Path', images: list) -> pl.Path:
+    """
+    Write a list of ASE Atoms to an extxyz file atomically.
+
+    The structures are written to a temporary file next to the target and then
+    moved onto it with ``os.replace``, which is atomic within a filesystem.
+    This means a reader copying the file while a long run keeps refreshing it
+    can never observe a half-written frame, and an interrupted write leaves the
+    previous file untouched instead of destroying it.
+
+    Parameters
+    ----------
+    path : str or pathlib.Path
+        Destination file. Written in the extxyz format regardless of suffix.
+    images : list[ase.Atoms]
+        Structures to write.
+
+    Returns
+    -------
+    pathlib.Path
+        The path the structures were written to.
+    """
+    from ase.io import write as ase_write
+
+    path = pl.Path(path)
+    tmp_path = path.with_name(path.name + '.tmp')
+
+    try:
+        ase_write(filename=tmp_path, images=images, format='extxyz')
+        os.replace(tmp_path, path)
+    except BaseException:
+        tmp_path.unlink(missing_ok=True)
+        raise
+
+    return path

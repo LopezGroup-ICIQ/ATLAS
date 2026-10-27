@@ -15,10 +15,12 @@ Usage
 from __future__ import annotations
 
 from atlas.active_learning.backends._base import (
+    DifferentiableDescriptorHandle,
     MLIPCalculatorFactory,
     MLIPCommitteeEvaluator,
     MLIPConfidenceEstimator,
     MLIPDescriptorProvider,
+    MLIPDifferentiableDescriptorProvider,
     MLIPModelCompiler,
     MLIPPretrainedModel,
     MLIPTrainer,
@@ -80,6 +82,32 @@ def trainable_backends() -> list[str]:
         name
         for name in _BACKEND_REGISTRY
         if isinstance(_BACKEND_REGISTRY[name](), MLIPTrainer)
+    )
+
+
+def supports_descriptor_gradients(name: str) -> bool:
+    """Whether a backend can emit autograd-connected descriptors.
+
+    Gradient-based features (latent-space inversion, in particular) need the
+    descriptor to stay attached to the autograd graph. Most descriptor paths
+    detach to numpy, so this is a strictly narrower capability than
+    ``MLIPDescriptorProvider``.
+
+    Unknown backend names return False rather than raising, so that callers
+    driven by user configuration can gate a feature without a try/except.
+    """
+    if name not in _BACKEND_REGISTRY:
+        return False
+    backend = _BACKEND_REGISTRY[name]()
+    if not isinstance(backend, MLIPDifferentiableDescriptorProvider):
+        return False
+    return bool(backend.supports_descriptor_gradients)
+
+
+def differentiable_descriptor_backends() -> list[str]:
+    """Return the registered backends that expose differentiable descriptors."""
+    return sorted(
+        name for name in _BACKEND_REGISTRY if supports_descriptor_gradients(name)
     )
 
 
@@ -281,13 +309,16 @@ for _backend_module in (
         _importlib.import_module(_backend_module)
 
 __all__ = [
+    'DifferentiableDescriptorHandle',
     'MLIPCalculatorFactory',
     'MLIPCommitteeEvaluator',
     'MLIPConfidenceEstimator',
     'MLIPDescriptorProvider',
+    'MLIPDifferentiableDescriptorProvider',
     'MLIPModelCompiler',
     'MLIPPretrainedModel',
     'MLIPTrainer',
+    'differentiable_descriptor_backends',
     'find_inference_model',
     'get_backend',
     'list_backends',
@@ -297,5 +328,6 @@ __all__ = [
     'parse_model_spec',
     'register_backend',
     'resolve_model_spec',
+    'supports_descriptor_gradients',
     'trainable_backends',
 ]

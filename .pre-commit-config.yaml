@@ -33,8 +33,48 @@ repos:
             description: "Regenerate docs/source/input.md when config_schema.yaml changes"
           - id: run-tests
             name: Run pytest tests
-            # Added --setup-show and -vv to trace the exact hang
-            entry: python -m pytest tests/ -x --tb=short
+            # Pick an ATLAS Python environment: ATLAS_TEST_PYTHON, then an
+            # activated venv, then the repo .venv, then the known dev envs.
+            # A temporary AIIDA_PATH avoids the developer's AiiDA config.
+            entry: |
+                bash -c '
+                AIIDA_PATH="$(mktemp -d)"
+                export AIIDA_PATH
+                trap "rm -rf \"$AIIDA_PATH\"" EXIT
+
+                usable() {
+                    command -v "$1" >/dev/null 2>&1 && "$1" -c "import atlas, pytest" >/dev/null 2>&1
+                }
+
+                if [ -n "${ATLAS_TEST_PYTHON:-}" ]; then
+                    PY="$ATLAS_TEST_PYTHON"
+                    if ! usable "$PY"; then
+                        echo "ATLAS_TEST_PYTHON=\"$PY\" cannot import atlas and pytest." >&2
+                        exit 1
+                    fi
+                else
+                    PY=""
+                    for candidate in \
+                        "${VIRTUAL_ENV:+$VIRTUAL_ENV/bin/python}" \
+                        ".venv/bin/python" \
+                        "venv/bin/python" \
+                        "$HOME/.virtualenvs/atlas_mace/bin/python" \
+                        "$HOME/.virtualenvs/atlas_mace_p312/bin/python" \
+                        "$HOME/.virtualenvs/test_atlas_env/bin/python" \
+                        "python3"; do
+                        if usable "$candidate"; then
+                            PY="$candidate"
+                            break
+                        fi
+                    done
+                    if [ -z "$PY" ]; then
+                        echo "No Python environment with atlas and pytest found. Set ATLAS_TEST_PYTHON." >&2
+                        exit 1
+                    fi
+                fi
+
+                "$PY" -m pytest tests/ -x --tb=short
+                '
             language: system
             pass_filenames: false
             always_run: true

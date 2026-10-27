@@ -28,7 +28,10 @@ from atlas.core.gui.process.runner import (
     find_detached_process,
 )
 from atlas.core.gui.project import Project
-from atlas.core.gui.widgets.al_monitor_panel import AlMonitorPanel
+from atlas.core.gui.widgets.al_monitor_panel import (
+    AlMonitorPanel,
+    parse_submitted_pk,
+)
 from atlas.core.gui.widgets.al_outputs_panel import AlOutputsPanel
 from atlas.core.gui.widgets.preflight_panel import Check, PreflightPanel
 from atlas.core.gui.widgets.prereq_banner import PrereqBanner
@@ -127,6 +130,7 @@ class ActiveLearningPage(WorkflowPage):
         layout.addWidget(self.tabs)
 
         self._pending_run_id: int | None = None
+        self._submitted_pk: int | None = None
         self._update_prereq_banner()
         self._preflight.run_checks()
 
@@ -157,7 +161,7 @@ class ActiveLearningPage(WorkflowPage):
             log_file=info['log_file'],
             pid_file=info['pid_file'],
         )
-        self.worker.log_message.connect(self._log)
+        self.worker.log_message.connect(self._on_log_message)
         self.worker.process_finished.connect(self._on_finished)
         self.worker.start()
 
@@ -412,6 +416,7 @@ class ActiveLearningPage(WorkflowPage):
         except Exception as exc:
             self._log(f'⚠ Could not record AL run: {exc}')
             self._pending_run_id = None
+        self._submitted_pk = None
 
         command = ['atl_active_learning', 'run', '-c', CANONICAL_CONFIG]
         self._set_running(self.run_button, self.cancel_button)
@@ -422,7 +427,7 @@ class ActiveLearningPage(WorkflowPage):
             log_file=log_file,
             detached=True,
         )
-        self.worker.log_message.connect(self._log)
+        self.worker.log_message.connect(self._on_log_message)
         self.worker.process_finished.connect(self._on_finished)
         self.worker.start()
 
@@ -433,16 +438,41 @@ class ActiveLearningPage(WorkflowPage):
 
         self.workflow_state_changed.emit()
 
+    def _on_log_message(self, message: str) -> None:
+        """Forward CLI output to the log and record the submitted workchain PK."""
+        self._log(message)
+        if self._pending_run_id is None or self._submitted_pk is not None:
+            return
+        pk = parse_submitted_pk(message)
+        if pk is None:
+            return
+        self._submitted_pk = pk
+        try:
+            self.project.set_al_run_workchain_pk(self._pending_run_id, pk)
+            self._log(f'AL run #{self._pending_run_id} linked to AiiDA PK {pk}.')
+        except Exception as exc:
+            self._log(f'Could not store the AL workchain PK: {exc}')
+
     def _on_finished(self, return_code: int) -> None:
         self._log(
             f'\n✅ atl_active_learning finished with exit code: {return_code}\n',
         )
         self._set_idle(self.run_button, self.cancel_button, 'Run Active Learning')
         self._notification('Active Learning', return_code == 0)
-        self._monitor_panel.stop_auto_refresh()
+
+        # A daemon submission returns as soon as the workchain is submitted:
+        # keep monitoring it through AiiDA instead of marking it completed.
+        submitted = return_code == 0 and self._submitted_pk is not None
+        if submitted:
+            self._log(
+                f'The AL loop keeps running in the AiiDA daemon (PK '
+                f'{self._submitted_pk}); the Monitor tab follows its progress.'
+            )
+        else:
+            self._monitor_panel.stop_auto_refresh()
 
         new_status = 'completed' if return_code == 0 else 'errored'
-        if self._pending_run_id is not None:
+        if not submitted and self._pending_run_id is not None:
             try:
                 self.project.update_al_run_status(
                     self._pending_run_id,

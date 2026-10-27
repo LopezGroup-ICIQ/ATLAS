@@ -281,7 +281,9 @@ limit_max_num_deformations = 100
 
 [perturbation]
 
-# (float) Perturbation magnitude in Angstrom
+# (float) Random-displacement magnitude in Angstroms. Mapped internally to
+# an Atoms.rattle Gaussian sigma preserving the RMS displacement of the
+# previous uniform [0.5x, 2x] range.
 perturbation_ang = 0.04
 
 # (list[str]) Only apply the perturbation to the following types of structures
@@ -334,6 +336,10 @@ adsorbate_species = ["H", "H2O"]
 # radius for the neighbor check. Default is 1.0
 cov_rad_multiplier = 1.05
 
+# (int) Flag atoms with coordination number <= this value.
+# 0 reproduces the original zero-neighbour check.
+min_coord = 0
+
 
 # Specific settings for the layer distance MD filter.
 [struct_filters.layer_distance]
@@ -346,6 +352,92 @@ max_layer_distance_ang = 3.5
 
 # (float) Tolerance for the duplicate slabs filter
 tolerance = 0.2
+
+
+[struct_filters.fragmented]
+
+# (float) Covalent-radius multiplier for the connectivity graph.
+cov_rad_multiplier = 1.1
+
+# (float) Minimum fraction of atoms in the largest connected component.
+min_largest_fraction = 0.95
+
+
+[struct_filters.low_coordination]
+
+# (float) Covalent-radius multiplier for coordination numbers.
+cov_rad_multiplier = 1.1
+
+# (int) Atoms with coordination <= this value are undercoordinated.
+min_coord = 3
+
+# (float) Maximum allowed fraction of undercoordinated atoms.
+max_low_coord_fraction = 0.5
+
+
+# Optional: reject slabs whose atoms evaporated into the vacuum.
+# [struct_filters.evaporation]
+# max_allowed_thickness = 15.0
+
+# Optional: reject DFT calculations that are not converged.
+# Missing metadata is kept unless remove_unknown is true.
+# [struct_filters.dft_converged]
+# require_scf = true
+# require_ionic = false
+# remove_unknown = false
+
+
+############################################
+# Database cleanup
+############################################
+
+[cleanup]
+
+# (bool) Run the cleanup step during database generation.
+# The standalone atl_cleanup_db command always runs.
+enabled = true
+
+# (bool) Migrate legacy metadata keys and ensure every structure has an atl_id.
+standardize_metadata = true
+
+# (bool) Assign a new atl_id to structures that repeat an existing ID.
+reassign_duplicate_ids = true
+
+# (bool) Remove duplicate structures detected with SOAP descriptors.
+remove_duplicates = true
+
+# (float) SOAP cutoff radius in Angstrom for duplicate detection.
+duplicate_r_cut = 4.0
+
+# (int) Number of radial basis functions for duplicate detection.
+duplicate_n_max = 4
+
+# (int) Maximum angular momentum for duplicate detection.
+duplicate_l_max = 4
+
+# (float) Minimum SOAP average-kernel similarity to consider duplicates.
+duplicate_similarity_threshold = 0.999
+
+# (bool) Compare structures only within the same phase.
+group_duplicates_by_phase = true
+
+# (bool) Apply the filters defined in [struct_filters].
+apply_struct_filters = true
+
+# (bool) Keep structures marked as base without filtering them.
+skip_base_structures = false
+
+# (bool) Keep isolated atoms (reference energies) without filtering them.
+skip_isolated_atoms = true
+
+# (bool) Write removed structures to a separate extended XYZ file.
+write_removed = true
+
+# (str) Suffix used for the removed-structures file written by atl_cleanup_db.
+removed_file_suffix = "_removed"
+
+# (str) Suffix used for the cleaned database written by atl_cleanup_db.
+output_suffix = "_cleaned"
 
 ############################################
 # Settings related to vacancy generation
@@ -377,6 +469,18 @@ min_vacancy_percentage = 0.025
 
 # (list[str]) List of elements to consider for the vacancies
 element_list = ["O"]
+
+# (bool) Discard vacancy candidates split into disconnected fragments.
+reject_fragmented = true
+
+# (float) Minimum fraction of atoms in the largest connected component.
+fragmented_min_largest_fraction = 0.95
+
+# (float) Covalent-radius multiplier for the vacancy fragmentation check.
+fragmented_cov_rad_multiplier = 1.1
+
+# (int) Number of times to redraw a vacancy set if the candidate is fragmented.
+max_fragmented_retries = 3
 
 
 ############################################
@@ -428,8 +532,22 @@ gen_concave_hull = false
 
 # (str, optional) Descriptor to use for the concave hull generation
 # Either one of the following: 'SOAP', 'MACE'.
+# Only MACE is differentiable, which is what latent-space inversion in the
+# GUI needs; SOAP maps can be plotted but not decoded.
 # Default is 'SOAP'.
 descriptor = "SOAP"
+
+
+# (str, optional) Model used by the MLIP descriptor: a foundation model id
+# such as 'mace:mp-small', or a path to a trained model file (assumed to be
+# MACE-like). Ignored for SOAP.
+descriptor_model = "mace:mp-small"
+
+
+# (str, optional) Device used for descriptor generation and autoencoder
+# training. Either one of the following: 'cpu', 'cuda'.
+# Default is 'cpu'.
+device = "cpu"
 
 
 # (str, optional) Dimensionality reduction method to use for the concave hull

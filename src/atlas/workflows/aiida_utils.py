@@ -18,7 +18,6 @@ from aiida.orm import Bool, Dict, Group, List, Str, StructureData
 from aiida.orm.nodes.data.array.kpoints import KpointsData
 from aiida.plugins import WorkflowFactory
 from ase import Atoms
-from ase.io import write as ase_write
 from pymatgen.core.surface import Slab
 from pymatgen.io.ase import AseAtomsAdaptor
 from pymatgen.io.vasp import Poscar
@@ -465,8 +464,10 @@ def choose_queue_from_struct(queue_data: dict, computer: orm.Computer):
     options['qos'] = queue_data.get('qos')
     options['max_wallclock_seconds'] = queue_data.get('max_wallclock_seconds')
     options['max_memory_kb'] = queue_data.get('max_memory_kb')
-    options['custom_scheduler_commands'] = queue_data.get('custom_scheduler_commands')
-    options['prepend_text'] = queue_data.get('prepend_text')
+    options['custom_scheduler_commands'] = (
+        queue_data.get('custom_scheduler_commands') or ''
+    )
+    options['prepend_text'] = queue_data.get('prepend_text') or ''
 
     # Getting code string
     code_string = queue_data['code_string']
@@ -684,9 +685,6 @@ def submit_aiida_vasp_calculation(
         queue_data=queue_dict,
         computer=curr_computer,
     )
-
-    if not options.get('custom_scheduler_commands'):
-        options['custom_scheduler_commands'] = ''
 
     # Defining the vasp.relax workchain object
     if 'single_point' in calc_type.value.lower():
@@ -1118,25 +1116,25 @@ def update_db_with_dft_results(sel_struct_db, queue):
                 if calcjob_nodes:
                     last_calcjob = calcjob_nodes[-1]
                     atl_cut.custom_print(
-                        f"Skipping calc. {node.process_label}<{node.pk}> "
-                        f"{node.process_state.value} [{status}]\n"
-                        f"    └── {last_calcjob.process_label}<{last_calcjob.pk}> "
-                        f"{last_calcjob.process_state.value} "
-                        f"[{last_calcjob.exit_status}]"
+                        f'Skipping calc. {node.process_label}<{node.pk}> '
+                        f'{node.process_state.value} [{status}]\n'
+                        f'    └── {last_calcjob.process_label}<{last_calcjob.pk}> '
+                        f'{last_calcjob.process_state.value} '
+                        f'[{last_calcjob.exit_status}]'
                         f" ('struct_id: {unique_id}')",
                         'warning',
                     )
                 else:
                     atl_cut.custom_print(
-                        f"Skipping calc. {node.process_label}<{node.pk}> "
-                        f"{node.process_state.value} [{status}]"
+                        f'Skipping calc. {node.process_label}<{node.pk}> '
+                        f'{node.process_state.value} [{status}]'
                         f" ('struct_id: {unique_id}')",
                         'warning',
                     )
                 num_error += 1
             else:
                 atl_cut.custom_print(
-                    f"Calculation {node.process_label}<{node.pk}> running...",
+                    f'Calculation {node.process_label}<{node.pk}> running...',
                     'debug',
                 )
                 running_calcs.append(node.pk)
@@ -1183,7 +1181,7 @@ def update_db_with_dft_results(sel_struct_db, queue):
         sel_struct_db[idx] = new_struct
 
         atl_cut.custom_print(
-            f"Calculation {node.process_label}<{node.pk}> completed!",
+            f'Calculation {node.process_label}<{node.pk}> completed!',
             'done',
         )
         num_correct += 1
@@ -1256,6 +1254,13 @@ def run_dataframe_vasp_aiida_queue(
     )
     queue_check_interval: int = config_dict.get('general', {}).get(
         'queue_check_interval_seconds', 240
+    )
+    # The very first check uses a shorter delay so that early failures and the
+    # first finished calculations surface quickly instead of after a full
+    # polling interval. Capped so it can never be longer than the interval.
+    first_check_delay: int = min(
+        config_dict.get('general', {}).get('first_check_delay_seconds', 30),
+        queue_check_interval,
     )
     aiida_potential_family: str = config_dict.get('calculation', {}).get(
         'aiida_potential_family'
@@ -1332,13 +1337,27 @@ def run_dataframe_vasp_aiida_queue(
     max_batch = min(max_batch, len(sel_struct_db))
 
     current_row_index = start_on_struct_idx
-    calcs_remaining = True
-    first_step = True
+    first_wait = True
 
     queue = []
     total_loops = 1
     correct_calcs = 0
     error_calcs = 0
+    loop_start = time.monotonic()
+
+    def write_results():
+        """Refresh the results file with the current state of the database."""
+        num_performed = sum(
+            [True for cal in sel_struct_db if cal.info.get('calc_performed', False)]
+        )
+        atl_cut.atomic_write_extxyz(results_path, sel_struct_db)
+        atl_cut.custom_print(
+            (
+                f"Results file '{results_path}' updated "
+                f'({num_performed}/{len(sel_struct_db)} structures labelled).'
+            ),
+            'info',
+        )
 
     # The potential mapping selects which potential to use
     # This could for instance be {'Si': 'Si_GW'} to use the GW ready potential
@@ -1354,26 +1373,20 @@ def run_dataframe_vasp_aiida_queue(
         'info',
     )
 
-    # Repeat while there are calculations to finish
-    while calcs_remaining:
+    # Repeat while there are calculations left to submit or to finish
+    while True:
         atl_cut.custom_print(
             (
                 f'[bold blue]Step {total_loops}[/] - '
-                f'Elapsed Time: {queue_check_interval * (total_loops - 1)} s '
+                f'Elapsed Time: {time.monotonic() - loop_start:.0f} s '
                 '- Checking items in queue...'
             ),
             'info',
         )
-        # Check all calculations and remove any that are finished.
-        # chunk_status contains True for finished calculations
-        chunk_status = []
-        for nod in queue:
-            chunk_status.append(nod.is_finished)
-        chunk_status_arr = np.array(chunk_status)
 
-        # Removing the finished ones from the queue and current chunk
-        if not first_step:
-            # Return results database with the dft results
+        # Collecting the results of every calculation in the queue that has
+        # finished, and dropping those from the queue.
+        if queue:
             num_performed_calcs = sum(
                 [True for cal in sel_struct_db if cal.info.get('calc_performed', False)]
             )
@@ -1395,34 +1408,19 @@ def run_dataframe_vasp_aiida_queue(
                 'info',
             )
 
-            # Writing the results to the results file
-            ase_write(filename=results_path, images=sel_struct_db, format='extxyz')
-            num_performed_calcs = sum(
-                [True for cal in sel_struct_db if cal.info.get('calc_performed', False)]
-            )
-            atl_cut.custom_print(
-                f'num_performed_calcs after updating: {num_performed_calcs}.', 'debug'
-            )
+            # Removing the finished calculations from the queue. The status is
+            # re-read here, *after* the results have been collected, so that a
+            # calculation that finishes while `update_db_with_dft_results` is
+            # running is not left in the queue and collected a second time.
+            queue = [nod for nod in queue if not nod.is_finished]
 
-            if len(chunk_status_arr) == 0:
-                print()
-                atl_cut.custom_print(
-                    f'len(chunk_status_arr) == 0: {len(chunk_status_arr) == 0}', 'debug'
-                )
-                calcs_remaining = False
-                break
-
-            # Removing the finished calculations from the queue
-            queue = list(np.array(queue)[~chunk_status_arr])
-            chunk_status_arr = chunk_status_arr[~chunk_status_arr]
+        # Refreshing the results file on every check, so partial results are
+        # always available on disk while the run is still in progress.
+        write_results()
 
         # Update the queue while the length of the queue is smaller
         # than the maximum allowed number of calculations.
-        while (
-            len(queue) < max_batch
-            and total_loops < len(sel_struct_db)
-            and current_row_index < len(sel_struct_db)
-        ):
+        while len(queue) < max_batch and current_row_index < len(sel_struct_db):
             # Choosing current structure and gathering information
             target_row = sel_struct_db[current_row_index]
             curr_structure = target_row
@@ -1500,18 +1498,23 @@ def run_dataframe_vasp_aiida_queue(
                 'debug',
             )
 
-        time.sleep(queue_check_interval)
-
-        first_step = False
-        total_loops += 1
-
         atl_cut.custom_print(f'current_row_index: {current_row_index}', 'debug')
         atl_cut.custom_print(f'len(sel_struct_db): {len(sel_struct_db)}', 'debug')
         atl_cut.custom_print(f'len(queue): {len(queue)}', 'debug')
         atl_cut.custom_print(f'total_loops: {total_loops}', 'debug')
-        if current_row_index >= len(sel_struct_db) and len(queue) == 0:
-            atl_cut.custom_print('Setting calcs_remaining to False', 'debug')
-            calcs_remaining = False
+
+        # Everything has been submitted and collected: leave without waiting
+        # another full interval.
+        if current_row_index >= len(sel_struct_db) and not queue:
+            atl_cut.custom_print('No calculations left, exiting loop', 'debug')
+            break
+
+        wait_time = first_check_delay if first_wait else queue_check_interval
+        atl_cut.custom_print(f'Waiting {wait_time} s before the next check...', 'debug')
+        time.sleep(wait_time)
+
+        first_wait = False
+        total_loops += 1
 
     atl_cut.custom_print('All calculations finished!', 'done')
     atl_cut.custom_print("Check 'verdi process list' for more information", 'info.')

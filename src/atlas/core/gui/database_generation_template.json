@@ -1322,7 +1322,14 @@
             'key_name': 'descriptor',
             'default_value': 'SOAP',
             'type': 'str',
-            'description': "Descriptor to use for the concave hull generation. Either one of the following: 'SOAP', 'MACE'. Default is 'SOAP'.",
+            'description': "Descriptor to use for the concave hull generation. Either one of the following: 'SOAP', 'MACE'. Default is 'SOAP'. Only MACE descriptors are differentiable, which is what latent-space inversion needs.",
+            'optional': true,
+        },
+        'descriptor_model': {
+            'key_name': 'descriptor_model',
+            'default_value': 'mace:mp-small',
+            'type': 'str',
+            'description': "Model used by the MLIP descriptor: a foundation model id such as 'mace:mp-small', or a path to a trained model file (assumed to be MACE-like). Ignored for SOAP.",
             'optional': true,
         },
         'dim_reduction': {

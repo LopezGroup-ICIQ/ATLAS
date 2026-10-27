@@ -29,7 +29,7 @@ dependencies = [
     "rich>=13.0.0",
     "scipy==1.16.2",
     "seaborn==0.13.2",
-    "aiida-core==2.7.3",
+    "aiida-core>=2.9,<2.10",
     "aiida-lammps==1.0.1",
     "aiida-vasp==4.1.0",
     "wonderwords==2.2.0",
@@ -42,13 +42,16 @@ dependencies = [
     "scikit-image",
     "dash==4.1.0",
     "tomlkit",
-    "torch>=2.8.0,<2.13",
+    # botocore (pulled in by mp_api) caps python-dateutil<3; without this cap the
+    # resolver backtracks boto3 to 0.0.3, which pins an ancient six (no six.moves)
+    "python-dateutil>=2.8.2,<3",
+    "torch>=2.8.0,<2.14",
     "torchvision>=0.24.1",
 ]
 
 [project.optional-dependencies]
 dev = ["pre-commit", "pytest", "pytest-cov", "commitizen==4.1.1", "ipdb"]
-gui = ["PySide6>=6.6","PySide6-addons", "tomli", "tomli_w"]
+gui = ["PySide6>=6.6","PySide6-addons", "pyqtgraph>=0.14", "tomli", "tomli_w"]
 mace = [
     "mace-torch==0.3.14",
     "cuequivariance",
@@ -63,9 +66,6 @@ allegro = [
 ]
 orb = [
     "orb-models>=0.7",
-]
-fairchem = [
-    "fairchem-core>=2.21",
 ]
 
 [project.urls]
@@ -130,9 +130,11 @@ Homepage = "https://github.com/LopezGroup-ICIQ/ATLAS"
 "atl_gen_docs" = "atlas.core.command_line.cli_generate_docs:generate_docs"
 "atl_monitor_al_loop" = "atlas.core.command_line.cli_dashboard:monitor_al_loop"
 "atl_gen_init_db" = "atlas.core.command_line.cli_generate_init_db:run_gen_initial_database"
+"atl_cleanup_db" = "atlas.core.command_line.cli_cleanup_database:run_cleanup_database"
 "atl_init_setup" = "atlas.core.command_line.cli_run_initial_config:run_initial_config"
 "atl_train_autoencoder" = "atlas.core.command_line.cli_train_autoencoder:run_train_autoencoder"
 "atl_run_dft_database" = "atlas.workflows.dft.vasp.aiida_run_vasp_dft_database:main"
+"atl_export_dft_results" = "atlas.core.command_line.cli_export_dft_results:run_export_dft_results"
 "atl_benchmark_mlip" = "atlas.benchmarks.mlip.evaluate_mlip_performance:main"
 "atl_dft_benchmark" = "atlas.benchmarks.dft.run_dft_benchmark:main"
 "atl_latent_space_analysis" = "atlas.core.command_line.cli_latent_space_analysis:run_latent_space_analysis"
@@ -143,6 +145,27 @@ Homepage = "https://github.com/LopezGroup-ICIQ/ATLAS"
 # package managers are becoming dangerous
 [tool.uv]
 exclude-newer = "7 days"
+# MACE pins e3nn==0.4.4 while NequIP/Allegro require e3nn>=0.6. Declare the
+# backends as conflicting extras so uv can resolve them in separate forks.
+conflicts = [
+    [{ extra = "mace" }, { extra = "nequip" }],
+    [{ extra = "mace" }, { extra = "allegro" }],
+]
+
+# Use a CUDA 12.9 torch build on Linux so the lockfile works with drivers
+# older than 580 (the default PyPI torch is a CUDA 13 build).
+[[tool.uv.index]]
+name = "pytorch-cu129"
+url = "https://download.pytorch.org/whl/cu129"
+explicit = true
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cu129", marker = "sys_platform == 'linux' and platform_machine == 'x86_64'" },
+]
+torchvision = [
+    { index = "pytorch-cu129", marker = "sys_platform == 'linux' and platform_machine == 'x86_64'" },
+]
 
 [tool.setuptools]
 include-package-data = true
@@ -165,7 +188,7 @@ dirty_template = "{tag}.post{ccount}+git-{branch}-{sha}"
 
 [tool.commitizen]
 name = "cz_customize"
-version = "0.56.0"
+version = "0.57.1"
 changelog_incremental = true
 update_changelog_on_bump = true
 version_files = [

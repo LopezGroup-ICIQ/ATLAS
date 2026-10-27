@@ -16,6 +16,7 @@ from ase.atoms import Atoms
 from pymatgen.core import Structure as pmg_structure
 
 import atlas.core.code_utils as atl_cut
+import atlas.core.dft_convergence as atl_dft_conv
 import atlas.core.initial_db as atl_indb
 import atlas.core.structure as atl_strc
 
@@ -97,6 +98,9 @@ def _add_entry_to_mace_input(
 
     if isinstance(vasprun, dict):
         vasprun = Atoms.fromdict(vasprun)
+
+    if atl_dft_conv.DFT_SCF_CONVERGED_KEY not in vasprun.info:
+        atl_dft_conv.add_dft_convergence_flags(vasprun, node=node)
 
     name = node.label
     if not name:
@@ -199,6 +203,7 @@ def gather_calc_data_from_node(node, units='atomic'):
     charge = 0
 
     struct_type = get_struct_type(vasprun, dft_calc_node=node)
+    convergence_flags = atl_dft_conv.extract_dft_convergence_from_node(node)
 
     # MACE by default checks the 'energy' key for the energies in the training files.
     # Which key is used by MACE training can be set on the launch arguments for
@@ -220,6 +225,7 @@ def gather_calc_data_from_node(node, units='atomic'):
         'atoms_obj': vasprun,
         'struct_type': struct_type,
     }
+    data_dict.update(convergence_flags)
 
     return data_dict
 

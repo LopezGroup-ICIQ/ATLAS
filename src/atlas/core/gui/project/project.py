@@ -508,6 +508,18 @@ class Project:
         cur = self.conn.execute('SELECT * FROM al_runs ORDER BY id DESC')
         return [_row_to_dict(r) for r in cur.fetchall()]
 
+    def get_al_run(self, run_id: int) -> dict | None:
+        cur = self.conn.execute('SELECT * FROM al_runs WHERE id = ?', (run_id,))
+        row = cur.fetchone()
+        return _row_to_dict(row) if row else None
+
+    def set_al_run_workchain_pk(self, run_id: int, base_workchain_pk: int) -> None:
+        with self.conn:
+            self.conn.execute(
+                'UPDATE al_runs SET base_workchain_pk = ? WHERE id = ?',
+                (base_workchain_pk, run_id),
+            )
+
     def update_al_run_status(
         self,
         run_id: int,

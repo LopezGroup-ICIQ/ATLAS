@@ -317,6 +317,32 @@ class MACEBackend:
             verbose=kwargs.get('verbose', False),
         )
 
+    # -- MLIPDifferentiableDescriptorProvider -------------------------------
+
+    @property
+    def supports_descriptor_gradients(self) -> bool:
+        """MACE descriptors are a differentiable function of the positions.
+
+        The message-passing stack is built from autograd ops throughout, and
+        the ``node_feats`` -> descriptor reduction is pure slicing, so the whole
+        map stays connected to the graph. This is what makes latent-space
+        inversion possible with MACE and not with SOAP.
+        """
+        return True
+
+    def differentiable_descriptors(
+        self,
+        model_path: str | Path,
+        settings: dict,
+    ):
+        from atlas.active_learning.backends.mace.differentiable import (
+            MaceDifferentiableDescriptors,
+        )
+
+        return MaceDifferentiableDescriptors(
+            model_path=model_path, settings=settings
+        )
+
     # -- MLIPCommitteeEvaluator ---------------------------------------------
 
     @property

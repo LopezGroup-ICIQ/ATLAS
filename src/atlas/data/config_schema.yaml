@@ -374,7 +374,7 @@ database_generation:
                 mandatory: false
                 default: 100
             perturbation_ang:
-                description: "Gaussian perturbation magnitude in Angstroms."
+                description: "Random-displacement magnitude in Angstroms. Mapped internally to an Atoms.rattle Gaussian sigma that preserves the RMS displacement of the previous uniform [0.5x, 2x] range."
                 type: float
                 mandatory: false
                 default: 0.04
@@ -462,7 +462,7 @@ database_generation:
             mandatory: true
             default: 1
         perturbation_ang:
-            description: "Perturbation magnitude in Angstrom."
+            description: "Random-displacement magnitude in Angstroms. Mapped internally to an Atoms.rattle Gaussian sigma that preserves the RMS displacement of the previous uniform [0.5x, 2x] range."
             type: float
             mandatory: false
             default: 0.04
@@ -496,11 +496,17 @@ database_generation:
         description: "Settings for filtering out incorrect structures."
         no_neighbors:
             description: "Filter for structures with atoms that have no neighbors."
+            mandatory: false
             cov_rad_multiplier:
                 description: "Multiplier applied to the covalent radii to be used as cutoff radius for the neighbor check."
                 type: float
                 mandatory: false
                 default: 1.2
+            min_coord:
+                description: "Flag atoms with coordination number less than or equal to this value. 0 reproduces the original zero-neighbour check."
+                type: int
+                mandatory: false
+                default: 0
         layer_distance:
             description: "Filter for layer distances in surface slabs."
             mandatory: false
@@ -517,6 +523,140 @@ database_generation:
                 type: float
                 mandatory: false
                 default: 0.2
+        fragmented:
+            description: "Filter structures split into disconnected fragments."
+            mandatory: false
+            cov_rad_multiplier:
+                description: "Multiplier applied to the natural covalent cutoffs when building the connectivity graph."
+                type: float
+                mandatory: false
+                default: 1.1
+            min_largest_fraction:
+                description: "Minimum fraction of atoms that must belong to the largest connected component."
+                type: float
+                mandatory: false
+                default: 0.95
+        low_coordination:
+            description: "Filter structures with too many undercoordinated atoms."
+            mandatory: false
+            cov_rad_multiplier:
+                description: "Multiplier applied to the natural covalent cutoffs when computing coordination numbers."
+                type: float
+                mandatory: false
+                default: 1.1
+            min_coord:
+                description: "Atoms with coordination number less than or equal to this value are considered undercoordinated."
+                type: int
+                mandatory: false
+                default: 3
+            max_low_coord_fraction:
+                description: "Maximum allowed fraction of undercoordinated atoms."
+                type: float
+                mandatory: false
+                default: 0.5
+        evaporation:
+            description: "Filter surface slabs that expanded or lost atoms into the vacuum."
+            mandatory: false
+            max_allowed_thickness:
+                description: "Maximum allowed slab thickness in Angstroms along the surface normal."
+                type: float
+                mandatory: true
+        dft_converged:
+            description: "Filter structures whose DFT calculation is not converged. Missing convergence metadata is treated as unknown unless remove_unknown is set."
+            mandatory: false
+            require_scf:
+                description: "Require explicit SCF convergence."
+                type: bool
+                mandatory: false
+                default: true
+            require_ionic:
+                description: "Require explicit ionic convergence for relaxation calculations."
+                type: bool
+                mandatory: false
+                default: false
+            remove_unknown:
+                description: "Also flag structures without convergence metadata."
+                type: bool
+                mandatory: false
+                default: false
+    cleanup:
+        mandatory: false
+        description: "Settings for standardizing, filtering and deduplicating an initial database."
+        enabled:
+            description: "Run the cleanup step during database generation. The standalone atl_cleanup_db command always runs."
+            type: bool
+            mandatory: false
+            default: true
+        standardize_metadata:
+            description: "Migrate legacy metadata keys and ensure every structure has an atl_id."
+            type: bool
+            mandatory: false
+            default: true
+        reassign_duplicate_ids:
+            description: "Assign a new atl_id to structures that repeat an existing ID."
+            type: bool
+            mandatory: false
+            default: true
+        remove_duplicates:
+            description: "Remove duplicate structures detected with SOAP descriptors."
+            type: bool
+            mandatory: false
+            default: true
+        duplicate_r_cut:
+            description: "SOAP cutoff radius in Angstrom for duplicate detection."
+            type: float
+            mandatory: false
+            default: 4.0
+        duplicate_n_max:
+            description: "Number of radial basis functions for duplicate detection."
+            type: int
+            mandatory: false
+            default: 4
+        duplicate_l_max:
+            description: "Maximum angular momentum for duplicate detection."
+            type: int
+            mandatory: false
+            default: 4
+        duplicate_similarity_threshold:
+            description: "Minimum SOAP average-kernel similarity to consider two structures duplicates."
+            type: float
+            mandatory: false
+            default: 0.999
+        group_duplicates_by_phase:
+            description: "Compare structures only within the same phase."
+            type: bool
+            mandatory: false
+            default: true
+        apply_struct_filters:
+            description: "Apply the filters defined in [struct_filters]."
+            type: bool
+            mandatory: false
+            default: true
+        skip_base_structures:
+            description: "Keep structures marked as base without filtering them."
+            type: bool
+            mandatory: false
+            default: false
+        skip_isolated_atoms:
+            description: "Keep isolated atoms without filtering them."
+            type: bool
+            mandatory: false
+            default: true
+        write_removed:
+            description: "Write removed structures to a separate extended XYZ file."
+            type: bool
+            mandatory: false
+            default: true
+        removed_file_suffix:
+            description: "Suffix used for the removed-structures file written by atl_cleanup_db."
+            type: str
+            mandatory: false
+            default: "_removed"
+        output_suffix:
+            description: "Suffix used for the cleaned database written by atl_cleanup_db."
+            type: str
+            mandatory: false
+            default: "_cleaned"
     vacancies:
         description: "Settings for vacancy generation."
         filter_struct_types:
@@ -550,6 +690,26 @@ database_generation:
             type: list[str]
             mandatory: true
             example: ["O"]
+        reject_fragmented:
+            description: "Discard vacancy candidates split into disconnected fragments."
+            type: bool
+            mandatory: false
+            default: true
+        fragmented_min_largest_fraction:
+            description: "Minimum fraction of atoms in the largest connected component for a vacancy candidate to be accepted."
+            type: float
+            mandatory: false
+            default: 0.95
+        fragmented_cov_rad_multiplier:
+            description: "Covalent-radius multiplier used by the vacancy fragmentation check."
+            type: float
+            mandatory: false
+            default: 1.1
+        max_fragmented_retries:
+            description: "Number of times to redraw a vacancy set when the candidate is fragmented."
+            type: int
+            mandatory: false
+            default: 3
     targeted_modification:
         description: "Settings for targeted structural modifications."
         mandatory: false
@@ -605,11 +765,27 @@ database_generation:
             default: "concave_hull"
             choices: ["concave_hull", "morphological_closing"]
         descriptor:
-            description: "Descriptor to use for the boundary generation."
+            description: "Descriptor to use for the boundary generation. Only MACE descriptors are differentiable, which is what latent-space inversion in the GUI needs; SOAP cannot provide analytic gradients for periodic, averaged descriptors."
             type: str
             mandatory: false
             default: "SOAP"
             choices: ["SOAP", "MACE"]
+        descriptor_model:
+            description: "Model used by the MLIP descriptor: a foundation model id such as 'mace:mp-small', or a path to a trained model file (assumed to be MACE-like). Ignored for SOAP, whose cutoff and basis sizes are fixed."
+            type: str
+            mandatory: false
+            default: "mace:mp-small"
+        load_autoencoder_path:
+            description: "Path to an existing autoencoder model to reuse instead of training a new one. Its standardization arrays ('ae_mean_vals.npy', 'ae_std_vals.npy') must sit alongside it."
+            type: str
+            mandatory: false
+            default: null
+        device:
+            description: "Device used for descriptor generation and autoencoder training."
+            type: str
+            mandatory: false
+            default: "cpu"
+            choices: ["cpu", "cuda"]
         dim_reduction:
             description: "Dimensionality reduction method for the boundary generation."
             type: str
@@ -670,6 +846,11 @@ dft:
             type: int
             mandatory: true
             default: 240
+        first_check_delay_seconds:
+            description: "Delay in seconds before the very first queue check, so early failures and the first finished calculations surface without waiting a full interval. Capped to queue_check_interval_seconds."
+            type: int
+            mandatory: false
+            default: 30
         start_on_struct_idx:
             description: "Number of structures to skip before starting the calculations."
             type: int
@@ -1360,10 +1541,10 @@ active_learning:
                             key: al_seed.seed_ranking_settings.descriptor_fps.descriptor_type
                             value: "soap"
                     average:
-                        description: "Averaging mode for SOAP descriptor."
+                        description: "Averaging mode for SOAP descriptor. FPS ranks whole structures, so this must produce one vector per structure; `off` (per-atom) is not suitable."
                         type: str
                         mandatory: false
-                        default: "off"
+                        default: "outer"
                         choices: ["inner", "outer", "off"]
                     # For MACE
                     model_path:
@@ -1383,7 +1564,7 @@ active_learning:
                             key: al_seed.seed_ranking_settings.descriptor_fps.descriptor_type
                             value: "mace"
                     dtype:
-                        description: "Floating point number precision for MACE."
+                        description: "Floating point number precision for MACE. This is the descriptor-section equivalent of `default_dtype` used in the MD and training sections."
                         type: str
                         mandatory: false
                         default: "float32"

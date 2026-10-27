@@ -396,6 +396,19 @@ def run_training(args):
         # Check if standardization files already exist (mean and std values)
         mean_vals, std_vals = ae.locate_standarization_files(model_path)
 
+        # Reusing arrays of the wrong width would standardize with another
+        # descriptor's statistics -- switching a project from SOAP (~10^4 dims)
+        # to MACE (256) is exactly the case that hits this, and it fails
+        # silently because the shapes are never compared.
+        if mean_vals is not None and len(np.atleast_1d(mean_vals)) != dataset.shape[1]:
+            atl_cut.custom_print(
+                f'Found standardization arrays of width '
+                f'{len(np.atleast_1d(mean_vals))} but the descriptors are '
+                f'{dataset.shape[1]}-dimensional; recomputing them.',
+                'warning',
+            )
+            mean_vals, std_vals = None, None
+
         if mean_vals is not None and std_vals is not None:
             atl_cut.custom_print('Loaded standardized values.')
         else:

@@ -26,6 +26,17 @@ _BOUNDARY_PATTERNS = (
     'descriptors_concave_hull*.png',
 )
 
+# The latent map is only reproducible together with the autoencoder that built
+# it and that model's standardization arrays, which are written beside it.
+# Leaving them behind means the next boundary run silently reuses a stale
+# mean/std and the new map does not match its own descriptors.
+_BOUNDARY_FILES = (
+    'latent_space.npz',
+    'autoencoder_model.pth',
+    'ae_mean_vals.npy',
+    'ae_std_vals.npy',
+)
+
 _EXPORT_PATTERNS = ('export_db_filename_structures_*.extxyz',)
 
 
@@ -62,9 +73,10 @@ def _collect_database_files(db_path: Path, db_dir: Path) -> list[Path]:
 def _collect_boundary_files(directory: Path) -> list[Path]:
     """Return all boundary artifact files in a single directory."""
     files: list[Path] = []
-    npz = directory / 'latent_space.npz'
-    if npz.is_file():
-        files.append(npz)
+    for name in _BOUNDARY_FILES:
+        artifact = directory / name
+        if artifact.is_file():
+            files.append(artifact)
     for pattern in _BOUNDARY_PATTERNS:
         for f in directory.glob(pattern):
             files.append(f)
@@ -73,9 +85,10 @@ def _collect_boundary_files(directory: Path) -> list[Path]:
 
 def _remove_boundary_files(directory: Path) -> None:
     """Remove latent-space boundary artifacts from a single directory."""
-    npz = directory / 'latent_space.npz'
-    if npz.is_file():
-        npz.unlink()
+    for name in _BOUNDARY_FILES:
+        artifact = directory / name
+        if artifact.is_file():
+            artifact.unlink()
     for pattern in _BOUNDARY_PATTERNS:
         for f in directory.glob(pattern):
             f.unlink()

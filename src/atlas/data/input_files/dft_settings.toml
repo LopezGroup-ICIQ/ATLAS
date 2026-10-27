@@ -18,6 +18,11 @@ max_batch = 100
 # (int) Every how many seconds to check the queue to submit new calculations
 queue_check_interval_seconds = 240
 
+# (int, optional) Seconds to wait before the very first queue check. Kept short so
+# early failures and the first finished calculations show up without waiting a full
+# `queue_check_interval_seconds`. Capped to `queue_check_interval_seconds`.
+first_check_delay_seconds = 30
+
 # (int) Number of structures to skip before starting the calculations.
 start_on_struct_idx = 0
 
