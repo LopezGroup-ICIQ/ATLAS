@@ -112,9 +112,10 @@ There are several installation mechanisms, and several optional dependencies dep
 - `allegro` — Allegro model support
 - `nequip` — NequIP model support
 - `orb` — Orb pretrained foundation potentials (inference only)
-- `fairchem` — fairchem UMA/eSEN pretrained potentials (inference only)
 - `dev` — Development dependencies (pytest, pre-commit, commitizen)
 - `gui` — Desktop GUI (PySide6)
+
+> fairchem is **not** a pip extra: `fairchem-core` requires `numpy>=2`, which conflicts with the `numpy<2` pin in the base dependencies. Install it directly in a dedicated environment or container.
 
 > EquiformerV3 is inference-only and is **not** a pip extra: it requires the OCP-era `fairchem` fork bundled with [atomicarchitects/equiformer_v3](https://github.com/atomicarchitects/equiformer_v3). Follow that repository's environment setup, then select it in ATLAS with `md_type = "equiformer:mptrj_gradient"`.
 
@@ -131,7 +132,7 @@ python3 -m pip install "./ATLAS[OPTIONAL_DEPENDENCY_NAME]"
 Some installation examples follow:
 
 > [!WARNING]
-> **Each MLIP framework needs its own environment.** The backends have mutually incompatible dependency stacks — for example MACE (`mace-torch`) pins `e3nn==0.4.4` while Allegro/NequIP need `e3nn>=0.6`, and fairchem/Orb pull `numpy>=2` against ATLAS's `numpy<2`. Install one framework per virtual environment. For a single active-learning run that mixes backends (e.g. training with MACE, MD sampling with Orb), run each backend from its own container image via the per-backend `container_settings` (see the active learning configuration docs).
+> **Each MLIP framework needs its own environment.** The backends have mutually incompatible dependency stacks — for example MACE (`mace-torch`) pins `e3nn==0.4.4` while Allegro/NequIP need `e3nn>=0.6`, and Orb plus fairchem (installed separately) require `numpy>=2` against ATLAS's `numpy<2`. Install one framework per virtual environment. For a single active-learning run that mixes backends (e.g. training with MACE, MD sampling with Orb), run each backend from its own container image via the per-backend `container_settings` (see the active learning configuration docs).
 
 > [!IMPORTANT]
 > **Match the PyTorch build to your NVIDIA driver.** The default PyPI `torch` wheels target the newest CUDA release (CUDA 13 for torch 2.10+), which needs NVIDIA driver 580 or newer. On an older driver, `torch.cuda.is_available()` returns `False`, or importing torch fails with `undefined symbol: ncclCommResume`. Check your driver's CUDA version with `nvidia-smi`, then install a matching build as shown below. The `mace` extra also pulls `cuequivariance-ops-torch-cu12`, which expects a CUDA 12 torch build.
@@ -160,6 +161,16 @@ uv pip install --torch-backend=auto "./ATLAS[mace]"
 ```
 
 Verify that the GPU is visible with `python -c "import torch; print(torch.cuda.is_available())"`.
+
+#### Using the uv lockfile
+
+The repository ships a `uv.lock` that resolves the mutually exclusive backend extras in separate forks. This workflow requires Python 3.12 or newer:
+
+```bash
+uv sync --extra mace
+```
+
+`uv sync` creates a local `.venv` by default. To install into an already-activated Python 3.12 environment, use `uv sync --active --extra mace`. Install only one training backend per environment (`mace`, `nequip`, or `allegro`); the `[tool.uv] conflicts` in `pyproject.toml` reject incompatible combinations. On Linux x86_64 the lockfile selects the CUDA 12.9 PyTorch build, which works with drivers older than 580. On other platforms, use the `uv pip install --torch-backend=auto` command above if the default PyPI build does not match your driver.
 
 ### 4. Initialize configuration files
 

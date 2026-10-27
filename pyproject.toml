@@ -67,9 +67,6 @@ allegro = [
 orb = [
     "orb-models>=0.7",
 ]
-fairchem = [
-    "fairchem-core>=2.21",
-]
 
 [project.urls]
 Homepage = "https://github.com/LopezGroup-ICIQ/ATLAS"
@@ -148,6 +145,27 @@ Homepage = "https://github.com/LopezGroup-ICIQ/ATLAS"
 # package managers are becoming dangerous
 [tool.uv]
 exclude-newer = "7 days"
+# MACE pins e3nn==0.4.4 while NequIP/Allegro require e3nn>=0.6. Declare the
+# backends as conflicting extras so uv can resolve them in separate forks.
+conflicts = [
+    [{ extra = "mace" }, { extra = "nequip" }],
+    [{ extra = "mace" }, { extra = "allegro" }],
+]
+
+# Use a CUDA 12.9 torch build on Linux so the lockfile works with drivers
+# older than 580 (the default PyPI torch is a CUDA 13 build).
+[[tool.uv.index]]
+name = "pytorch-cu129"
+url = "https://download.pytorch.org/whl/cu129"
+explicit = true
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cu129", marker = "sys_platform == 'linux' and platform_machine == 'x86_64'" },
+]
+torchvision = [
+    { index = "pytorch-cu129", marker = "sys_platform == 'linux' and platform_machine == 'x86_64'" },
+]
 
 [tool.setuptools]
 include-package-data = true
