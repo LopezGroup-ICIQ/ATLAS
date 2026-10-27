@@ -1563,10 +1563,13 @@ class InitialDatabase:
                     # Saving the structure to the db.
                     self.df = curr_struct_conv.save_to_db(self.df)
 
-    def _apply_gauss_perturb(self, structure: Structure, center: float = 0.04):
-        new_structure = structure.copy()
-        new_structure.perturb(distance=center * 2, min_distance=center / 2)
-        return new_structure
+    def _apply_gauss_perturb(
+        self,
+        structure: Structure,
+        center: float = 0.04,
+        seed: int | None = None,
+    ):
+        return ut.gauss_perturb(structure, center=center, seed=seed)
 
     def apply_min_deformation(
         self,
@@ -3990,6 +3993,7 @@ def cli_run_gen_initial_database(
                             ),
                             max_structures=_remaining,
                             phase=phase,
+                            seed=rng_seed,
                         )
 
             added_structs = len(structures) - ini_n_structs
@@ -4060,6 +4064,7 @@ def cli_run_gen_initial_database(
                 limit_num_structures=int(
                     perturb_dict.get('limit_max_num_perturbs', 100)
                 ),
+                seed=rng_seed,
             )
 
             added_structs = len(structures) - ini_n_structs

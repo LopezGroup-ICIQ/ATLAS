@@ -769,9 +769,13 @@ def apply_replacement_cluster_db(
     return replaced_clusters
 
 
-def _apply_perturbation_cluster(center, row, per_idx):
+def _apply_perturbation_cluster(center, row, per_idx, seed=None):
     # Applying deformation to the structure
-    new_struct_perturb = atl_utils.gauss_perturb(center=center, structure=row.structure)
+    new_struct_perturb = atl_utils.gauss_perturb(
+        center=center,
+        structure=row.structure,
+        seed=seed,
+    )
 
     # Creating perturbed cluster object
     mat_str = f'{row.material_name}_perturb_gauss_{per_idx + 1}'
@@ -785,11 +789,23 @@ def _apply_perturbation_cluster(center, row, per_idx):
     return clust_obj
 
 
-def apply_gauss_perturb_list(repeat: int, cluster_list: list, center: float = 0.04):
+def apply_gauss_perturb_list(
+    repeat: int,
+    cluster_list: list,
+    center: float = 0.04,
+    seed: int | None = None,
+):
     perturbed_clusters = []
+    rng = np.random.default_rng(seed)
     for cluster in cluster_list:
         for per_idx in range(repeat):
-            clust_obj = _apply_perturbation_cluster(center, cluster, per_idx)
+            perturb_seed = int(rng.integers(0, 2**32 - 1))
+            clust_obj = _apply_perturbation_cluster(
+                center,
+                cluster,
+                per_idx,
+                seed=perturb_seed,
+            )
             perturbed_clusters.append(clust_obj)
 
     return perturbed_clusters
@@ -801,6 +817,7 @@ def apply_gauss_perturb_db(
     center: float = 0.04,
     max_structures=None,
     phase: 'atl_phase.Phase' = None,
+    seed: int | None = None,
 ):
     perturbed_clusters = []
 
@@ -817,6 +834,7 @@ def apply_gauss_perturb_db(
         df_iter = db_obj.df
 
     atl_utils.custom_print(f'Perturbation db_obj shape: {df_iter.shape}', 'debug')
+    rng = np.random.default_rng(seed)
     _stop = False
     for _, row in riprg.track(
         df_iter.iterrows(),
@@ -826,7 +844,13 @@ def apply_gauss_perturb_db(
         if _stop:
             break
         for per_idx in range(repeat):
-            clust_obj = _apply_perturbation_cluster(center, row, per_idx)
+            perturb_seed = int(rng.integers(0, 2**32 - 1))
+            clust_obj = _apply_perturbation_cluster(
+                center,
+                row,
+                per_idx,
+                seed=perturb_seed,
+            )
             perturbed_clusters.append(clust_obj)
             if max_structures and len(perturbed_clusters) >= max_structures:
                 _stop = True
