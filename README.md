@@ -11,7 +11,7 @@
   </picture>
 </p>
 
-[![DOI](https://img.shields.io/badge/DOI-10.26434%2Fchemrxiv.15003942%2Fv1-blue)](https://doi.org/10.26434/chemrxiv.15003942/v1) 
+[![DOI](https://img.shields.io/badge/DOI-10.26434%2Fchemrxiv.15003942%2Fv2-blue)](https://doi.org/10.26434/chemrxiv.15003942/v2) 
 
 ![GitHub Tag](https://img.shields.io/github/v/tag/LopezGroup-ICIQ/ATLAS?label=current%20version)  ![GitHub last commit](https://img.shields.io/github/last-commit/LopezGroup-ICIQ/ATLAS) [![documentation](https://github.com/LopezGroup-ICIQ/ATLAS/actions/workflows/documentation.yml/badge.svg)](https://lopezgroup-iciq.github.io/ATLAS/master/index.html)
 
@@ -29,7 +29,7 @@ Validated on metals, alloys, and metal oxides, ATLAS produces datasets that exce
 
 
 > [!NOTE]
-> **Preprint Available:** The theoretical framework and benchmarking for this project are now available as a working paper on ChemRxiv: [Balancing Diversity and Efficiency in Training Datasets for Robust Machine Learning Potentials](https://doi.org/10.26434/chemrxiv.15003942/v1). 
+> **Preprint Available:** The theoretical framework and benchmarking for this project are now available as a working paper on ChemRxiv: [Balancing Diversity and Efficiency in Training Datasets for Robust Machine Learning Potentials](https://doi.org/10.26434/chemrxiv.15003942/v2). 
 
 
 ## Table of Contents
