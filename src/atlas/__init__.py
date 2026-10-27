@@ -3,7 +3,7 @@
 import pathlib as pl
 
 # Version of the package (managed with commitizen)
-__version__ = '0.57.0'
+__version__ = '0.57.1'
 __repo__ = 'https://github.com/LopezGroup-ICIQ/ATLAS.git'
 
 # Root of package

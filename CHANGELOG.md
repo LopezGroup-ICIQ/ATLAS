@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.57.1 (2026-10-27)
+
+### Misc
+
+- **build**: update dependencies to resolve Dependabot alerts ([#5873cc9](https://github.com/pol-sb/ATLAS/commit/5873cc9a4133989738315eab472495d9f6d1525f))
+
 ## 0.57.0 (2026-10-27)
 
 ### Docs
