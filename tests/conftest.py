@@ -10,12 +10,13 @@ os.environ['XDG_SESSION_TYPE'] = 'tty'
 # throwaway profile and computer, so integration tests never depend on a
 # developer's own AiiDA configuration. Loaded lazily: tests that use them are
 # skipped when aiida-core is unavailable.
-try:
-    import aiida.tools.pytest_fixtures  # noqa: F401
+if os.environ.get('ATLAS_REAL_AIIDA_TESTS') != '1':
+    try:
+        import aiida.tools.pytest_fixtures  # noqa: F401
 
-    pytest_plugins = ['aiida.tools.pytest_fixtures']
-except ImportError:
-    pass
+        pytest_plugins = ['aiida.tools.pytest_fixtures']
+    except ImportError:
+        pass
 
 import pathlib
 from unittest.mock import MagicMock
