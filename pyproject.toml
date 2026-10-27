@@ -29,7 +29,7 @@ dependencies = [
     "rich>=13.0.0",
     "scipy==1.16.2",
     "seaborn==0.13.2",
-    "aiida-core==2.7.3",
+    "aiida-core>=2.9,<2.10",
     "aiida-lammps==1.0.1",
     "aiida-vasp==4.1.0",
     "wonderwords==2.2.0",
@@ -45,7 +45,7 @@ dependencies = [
     # botocore (pulled in by mp_api) caps python-dateutil<3; without this cap the
     # resolver backtracks boto3 to 0.0.3, which pins an ancient six (no six.moves)
     "python-dateutil>=2.8.2,<3",
-    "torch>=2.8.0,<2.13",
+    "torch>=2.8.0,<2.14",
     "torchvision>=0.24.1",
 ]
 
