@@ -235,6 +235,63 @@ Generates an initial database for atlas. A `.toml` configuration is required, wh
   - **Type**: `Path`
   - **Default**: `./database_generation_settings.toml`
 
+## Clean Initial Database - `atl_cleanup_db`
+
+Standardizes metadata, applies unphysical-structure filters, and removes duplicate structures from an existing ATLAS database. The command can be used after database generation or on a database from an older run. It accepts extended XYZ files, compressed `.xz` databases, and legacy `.pkl` databases.
+
+**Usage:** `atl_cleanup_db [-h] [--input PATH] [--output PATH] [--config-file PATH] [--in-place] [--dry-run] [--skip-duplicates] [--skip-filters] [--skip-standardize] [--no-removed-file] [--removed PATH] [--report PATH] [--no-progress] [--list-filters]`
+
+- `--input PATH, -i PATH`
+  - **Description**: Database to clean (`.xyz`/`.extxyz`, `.xz`, or `.pkl`).
+  - **Type**: `Path`
+  - **Required**: Yes, unless `--list-filters` is used.
+- `--output PATH, -o PATH`
+  - **Description**: Destination for the cleaned database. Defaults to `<input>_cleaned<suffix>`.
+  - **Type**: `Path`
+  - **Default**: `<input>_cleaned<suffix>`
+- `--config-file PATH, -c PATH`
+  - **Description**: TOML file containing the `[cleanup]` and `[struct_filters]` sections. When omitted, `database_generation_settings.toml` is used if present; otherwise built-in defaults are used. See the [database generation inputs](input_database_generation.md) for the available settings and filters.
+  - **Type**: `Path`
+  - **Default**: `./database_generation_settings.toml` when present
+- `--in-place`
+  - **Description**: Overwrite the input database after creating a `.bak` backup.
+  - **Default**: `False`
+- `--dry-run`
+  - **Description**: Run the pipeline and write the JSON report without writing structures.
+  - **Default**: `False`
+- `--skip-duplicates`
+  - **Description**: Disable SOAP duplicate detection.
+  - **Default**: `False`
+- `--skip-filters`
+  - **Description**: Disable the `[struct_filters]` unphysical-structure checks.
+  - **Default**: `False`
+- `--skip-standardize`
+  - **Description**: Do not migrate legacy `mdb_*` metadata keys.
+  - **Default**: `False`
+- `--no-removed-file`
+  - **Description**: Do not write removed structures to a separate extended XYZ file.
+  - **Default**: `False`
+- `--removed PATH`
+  - **Description**: Destination for removed structures in extended XYZ format.
+  - **Type**: `Path`
+  - **Default**: `<output>_removed.extxyz`
+- `--report PATH`
+  - **Description**: Destination for the JSON cleanup report.
+  - **Type**: `Path`
+  - **Default**: `<output>_cleanup_report.json`
+- `--no-progress`
+  - **Description**: Disable progress bars.
+  - **Default**: `False`
+- `--list-filters`
+  - **Description**: List the available structure filters and exit.
+  - **Default**: `False`
+
+The cleaned database is written to the output path, removed structures are written with an `atl_cleanup_reason` field, and the JSON report contains the removal counts, per-filter breakdown, duplicate pairs, and DFT convergence coverage. Example:
+
+```bash
+atl_cleanup_db -i ./clean_cuzn_db.xyz -c ./cleanup.toml
+```
+
 ## Run DFT Database - `atl_run_dft_database`
 
 Runs VASP DFT calculations for a database of structures using AiiDA-VASP. A .toml configuration file is required to specify the input settings for HPC and VASP. Refer to the [corresponding inputs section](input_dft.md) for more details about the available configuration options.

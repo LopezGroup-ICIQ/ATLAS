@@ -230,6 +230,7 @@ ATLAS comes with several entry points will be added so that the user can easily 
 - `atl_run_dft_database`: Run DFT calculations for a ATLAS structure database.
 - `atl_gen_configuration_file`: Generate a `.toml` template configuration file to be used in any of the different operation modes of the code.
 - `atl_gen_init_db`: Generate a database containing structures for MLIP training.
+- `atl_cleanup_db`: Standardize, filter and deduplicate an existing ATLAS database.
 - `atl_active_learning`: Launch an AL loop using a configuration file and a labelled initial database.
 - `atl_monitor_al_loop:` Launch a flask dashboard locally to monitor a running active learning loop. Open <http://127.0.0.1:8000> (or port specified in the launch arguments) in a browser to visualize the dashboard.
 - `atl_benchmark_mlip`: Evaluate and compare the performance of MLIPs using a suite of benchmarks.
