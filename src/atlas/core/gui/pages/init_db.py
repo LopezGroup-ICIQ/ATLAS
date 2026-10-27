@@ -41,7 +41,7 @@ DB_GEN_TABS: list[tuple[str, list[str]]] = [
             'targeted_modification',
         ],
     ),
-    ('Filters', ['struct_filters']),
+    ('Filters', ['struct_filters', 'cleanup']),
     ('Hull', ['concave_hull']),
 ]
 
@@ -58,6 +58,7 @@ _STEP_NAV: dict[str, tuple[int, str]] = {
     'composition.size': (0, 'size'),
     'adsorbates': (3, 'adsorbate_species'),
     'struct_filters': (4, ''),
+    'cleanup': (4, 'enable'),
     'concave_hull': (5, 'gen_concave_hull'),
     'export': (0, 'export'),
 }
@@ -271,6 +272,18 @@ def _compute_workflow(
                 description='User-defined structure filters',
                 is_filter=True,
                 config_key='struct_filters',
+                category='filter',
+                group='post_phase',
+            )
+        )
+
+    if config.get('cleanup', {}).get('enabled', False):
+        steps.append(
+            WorkflowStep(
+                name='Database Cleanup',
+                description='Metadata standardization, filtering and deduplication',
+                is_filter=True,
+                config_key='cleanup',
                 category='filter',
                 group='post_phase',
             )

@@ -5,6 +5,7 @@ with an applied perturbation with respect to the temperature.
 """
 
 import itertools as it
+import json
 import lzma
 import pathlib
 import pathlib as pl
@@ -28,7 +29,6 @@ from aiida_vasp.calcs.vasp import VaspCalculation
 from ase import Atoms
 from ase import build as ase_build
 from dscribe.descriptors import SOAP
-from dscribe.kernels import AverageKernel
 from pymatgen.core.periodic_table import Element
 from pymatgen.core.structure import Structure
 from pymatgen.core.surface import Slab
@@ -50,7 +50,11 @@ from atlas.core import initial_db as indb
 from atlas.core import utils as ut
 
 # from atlas.active_learning.active_learning_utils import AVAILABLE_FILTERS
-from atlas.core.filtering.structure_filters import apply_struct_filters_atl_db
+from atlas.core.filtering.db_cleanup import CleanupSettings, clean_database
+from atlas.core.filtering.structure_filters import (
+    apply_filter_fragmented,
+    find_duplicate_structures,
+)
 
 # Filtering certain warnings
 warnings.filterwarnings('ignore', category=vasp.outputs.UnconvergedVASPWarning)
@@ -948,7 +952,7 @@ class InitialDatabase:
         Ensure every ASE structure has standardized ``atl_*`` info keys.
 
         Delegates to
-        :func:`atlas.active_learning.active_learning_utils.standardize_atoms_info`,
+        :func:`atlas.core.metadata.standardize_atoms_info`,
         which migrates legacy ``mdb_*`` keys to ``atl_*`` and ensures every
         structure has an ``atl_id`` UUID.
 
@@ -962,9 +966,7 @@ class InitialDatabase:
         list of ase.Atoms
             The updated list with standardized keys in ``info``.
         """
-        from atlas.active_learning.active_learning_utils import (
-            standardize_atoms_info,
-        )
+        from atlas.core.metadata import standardize_atoms_info
 
         return standardize_atoms_info(atoms_list)
 
@@ -973,138 +975,83 @@ class InitialDatabase:
         delete=False,
         filters: list = None,
         phase: atl_pd.Phase = None,
+        r_cut: float = 4.0,
+        n_max: int = 4,
+        l_max: int = 4,
+        similarity_threshold: float = 0.999,
     ):
-        """Find and delete repeated structures in the database.
+        """Find and optionally delete repeated structures in the database.
 
-        The SOAP descriptor is used to fingerprint structures in the database.
+        SOAP descriptors are used to fingerprint structures. Comparisons are
+        made within each phase, and the first structure in database order is
+        kept for every duplicate group.
+
+        Parameters
+        ----------
+        delete : bool, optional
+            Delete the repeated structures from the database.
+        filters : list, optional
+            Database column filters used to select the structures to check.
+        phase : atl_pd.Phase, optional
+            Restrict the check to a single phase.
+        r_cut, n_max, l_max : optional
+            SOAP descriptor settings.
+        similarity_threshold : float, optional
+            Minimum average-kernel similarity to consider two structures
+            duplicates.
         """
-        # Filtering the dataframe
-        # Filters allow to select certain subsets of structures
-        # from the database.
-        filtered_df = self.df
-        # remaining_df = self.df
-
-        filtered_df, remaining_df, phase_list = ut.apply_filters_db(
-            db_obj=filtered_df, phase=phase, filters=filters
+        filtered_df, _, _ = ut.apply_filters_db(
+            db_obj=self.df,
+            phase=phase,
+            filters=filters,
         )
 
-        # Getting the species from the current phase diagram
-        species = self.phase_diagram.alloy_set
-        species_str_list = [spec.symbol for spec in species]
+        atoms_list = [
+            self.db_struct_to_ase(row=row)
+            for _, row in filtered_df.iterrows()
+        ]
 
-        # Setting SOAP related parameters
-        r_cut = 4
-        n_max = 4
-        l_max = 4
-
-        atl_cut.custom_print(
-            f'Setting up SOAP with: r_cut = {r_cut}, n_max = {n_max}, l_max = {l_max}',
-            'debug',
-        )
-
-        # Setting up the SOAP descriptor
-        soap = SOAP(
-            species=species_str_list,
-            periodic=True,
+        duplicate_outcome = find_duplicate_structures(
+            atoms_list,
             r_cut=r_cut,
             n_max=n_max,
             l_max=l_max,
-            sparse=False,
+            similarity_threshold=similarity_threshold,
+            group_by_phase=True,
         )
 
-        # The uuids of the repeated structues will be stored.
-        tot_duplicate_uuid_list = []
+        duplicate_ids = {
+            str(atoms_list[idx].info['atl_id'])
+            for idx in duplicate_outcome.duplicate_indices
+        }
 
-        # Computing SOAP for every phase
-        for curr_phase in phase_list:
-            # This list will contain the descriptors for every structure
-            soap_structs = []
+        atl_cut.custom_print(
+            (
+                f'{len(duplicate_ids)} repeated structures found out of '
+                f'{len(atoms_list)} checked structures.'
+            ),
+            'info',
+        )
 
-            # Getting the current structures
-            structure_list = filtered_df.structure.values
-
-            # Getting the names for the current structures
-            uuid_list = filtered_df[filtered_df.phase == curr_phase]['atl_id'].values
-
-            # Getting the total structure count
-            tot_structures = len(structure_list)
-
-            # Counter for the total equivalent structure number
-            tot_equival = 0
-
-            for pym_struct in structure_list:
-                # Converting to ase structure
-                ase_struct = AseAtomsAdaptor().get_atoms(pym_struct)
-
-                # Create soap descriptors for current system and storing it
-                struct_soap = soap.create(ase_struct, n_jobs=-1, verbose=True)
-                soap_structs.append(struct_soap)
-
-            # Calculating similarity with an average kernel and a gaussan metric. The
-            # result will be a full similarity matrix.
-            kernel = AverageKernel(metric='rbf', gamma=1)
-            simi_matrix = kernel.create(soap_structs)
-
-            # Checking every structure in the similarity matrix.
-            # Similarity goes from 0 to 1. If a structure is very close to 1, it
-            # will return a True in the mask. There will be always one matching
-            # structure, as the algorithm compares the structure with itself.
-
-            for struct_idx, row in enumerate(simi_matrix):
-                row_n_repeat = np.count_nonzero(np.isclose(row, 1)) - 1
-
-                # If the structure is repeated, get its name
-                if row_n_repeat > 0:
-                    tot_duplicate_uuid_list.append(uuid_list[struct_idx])
-                    tot_equival += 1
-
+        if not delete:
             atl_cut.custom_print(
-                (
-                    f"Phase '{curr_phase.name}' - Total selected structures:"
-                    f' {tot_structures}, equivalent: {tot_equival}'
-                    f' ({(tot_equival / tot_structures) * 100:.2f}%)'
-                ),
-                'debug',
+                "Database untouched as 'delete' is set to False.",
+                'info',
             )
+            return
 
-        duplicate_structure_names = tot_duplicate_uuid_list
-
-        # If the deletion flag is set, the function will delete the duplicate stuctures.
-        if delete:
-            atl_cut.custom_print(
-                f'{len(duplicate_structure_names)} structures marked for deletion.',
-                'debug',
-            )
-
-            # Getting the dataframe entries that match the stored uuids
-            mat_name_match_mask = filtered_df.isin(
-                {'unique_id': duplicate_structure_names}
-            )['unique_id']
-            duplicate_structures_df = filtered_df[mat_name_match_mask]
-
-            # Dropping the matching entries
-            filtered_df = filtered_df.drop(duplicate_structures_df.index)
-
-            init_df_after_removal = pd.concat([remaining_df, filtered_df])
-
-            self.df = init_df_after_removal
+        if duplicate_ids:
+            self.df = self.df[
+                ~self.df['unique_id'].astype(str).isin(duplicate_ids)
+            ].reset_index(drop=True)
 
             atl_cut.custom_print(
-                f'Deleted {len(duplicate_structures_df)} structures.',
+                f'Deleted {len(duplicate_ids)} structures.',
                 'warn',
             )
-
             atl_cut.custom_print(
-                f'Dataframe shape after deleting: {self.df.shape}', 'debug'
-            )
-
-        else:
-            atl_cut.custom_print(
-                (
-                    f'{len(duplicate_structure_names)} repeated structures found. '
-                    "Database untouched as 'delete' is set to False."
-                ),
-                'info',
+                f'Dataframe shape after deleting: {self.df.shape}',
+                'debug',
             )
 
     def gather_base_structures(self, phase_diag_phases):
@@ -1333,8 +1280,18 @@ class InitialDatabase:
         min_vac_perc: float = 0.25,
         lim_num_struc: int = None,
         phase: atl_pd.Phase = None,
+        reject_fragmented: bool = True,
+        fragmented_min_largest_fraction: float = 0.95,
+        fragmented_cov_rad_multiplier: float = 1.1,
+        max_fragmented_retries: int = 3,
     ):
-        """Apply random vacancies to the structures in the database."""
+        """Apply random vacancies to the structures in the database.
+
+        When ``reject_fragmented`` is true, vacancy candidates whose largest
+        connected component is below ``fragmented_min_largest_fraction`` (or
+        that contain more than one component) are discarded. A new random
+        vacancy set is drawn up to ``max_fragmented_retries`` times.
+        """
         # Instantiating RNG
         rng = np.random.default_rng(seed=seed)
 
@@ -1359,6 +1316,8 @@ class InitialDatabase:
         # Getting the structures that will be perturbed
         target_entries = filtered_df.loc[sel_idx]
 
+        skipped_fragmented = 0
+
         # Applying deformation to all perturbed structures
         for _, entry in target_entries.iterrows():
             if isinstance(entry.phase, str):
@@ -1376,19 +1335,50 @@ class InitialDatabase:
 
             # Applying repeat times
             for vac_idx in range(repeat):
-                # Getting random vacancy percentage
-                vac_perc = rng.uniform(min_vac_perc, max_vac_perc)
+                new_struct_vac = None
 
-                # Getting random indices for the vacancies
-                vac_indices = rng.choice(
-                    available_sites,
-                    size=int(vac_perc * len(available_sites)),
-                    replace=False,
-                )
+                for _attempt in range(max(1, int(max_fragmented_retries))):
+                    # Getting random vacancy percentage
+                    vac_perc = rng.uniform(min_vac_perc, max_vac_perc)
 
-                # Removing site from the structure
-                new_struct_vac = entry.structure.copy()
-                new_struct_vac = new_struct_vac.remove_sites(vac_indices)
+                    # Getting random indices for the vacancies
+                    vac_indices = rng.choice(
+                        available_sites,
+                        size=int(vac_perc * len(available_sites)),
+                        replace=False,
+                    )
+
+                    # Removing site from the structure
+                    candidate_struct = entry.structure.copy()
+                    candidate_struct = candidate_struct.remove_sites(vac_indices)
+
+                    if reject_fragmented and len(candidate_struct) <= 1:
+                        continue
+
+                    if reject_fragmented:
+                        candidate_ase = AseAtomsAdaptor().get_atoms(candidate_struct)
+                        if apply_filter_fragmented(
+                            candidate_ase,
+                            cov_rad_multiplier=fragmented_cov_rad_multiplier,
+                            min_largest_fraction=fragmented_min_largest_fraction,
+                            max_components=1,
+                        ):
+                            continue
+
+                    new_struct_vac = candidate_struct
+                    break
+
+                if new_struct_vac is None:
+                    skipped_fragmented += 1
+                    atl_cut.custom_print(
+                        (
+                            f'Skipping vacancy {vac_idx + 1} for '
+                            f"'{entry.material_id}': all attempts produced "
+                            'fragmented structures.'
+                        ),
+                        'debug',
+                    )
+                    continue
 
                 mat_str = f'{entry.material_id}_{curr_phase.name}_vacancy_{vac_idx + 1}'
 
@@ -1439,6 +1429,15 @@ class InitialDatabase:
 
                 # Saving the bulk to the db.
                 self.df = curr_struct_conv.save_to_db(self.df)
+
+        if skipped_fragmented > 0:
+            atl_cut.custom_print(
+                (
+                    f'Rejected {skipped_fragmented} fragmented vacancy '
+                    'candidate(s) after all retries.'
+                ),
+                'warn',
+            )
 
     def gen_init_md_frames(
         self,
@@ -4092,6 +4091,18 @@ def cli_run_gen_initial_database(
                 seed=rng_seed,
                 element_list=vacancies_dict['element_list'],
                 phase=phase,
+                reject_fragmented=bool(
+                    vacancies_dict.get('reject_fragmented', True)
+                ),
+                fragmented_min_largest_fraction=float(
+                    vacancies_dict.get('fragmented_min_largest_fraction', 0.95)
+                ),
+                fragmented_cov_rad_multiplier=float(
+                    vacancies_dict.get('fragmented_cov_rad_multiplier', 1.1)
+                ),
+                max_fragmented_retries=int(
+                    vacancies_dict.get('max_fragmented_retries', 3)
+                ),
             )
             added_structs = len(structures) - ini_n_structs
             report_completed_step(phase, structures, added_structs, step_name=step_name)
@@ -4177,33 +4188,100 @@ def cli_run_gen_initial_database(
         report_completed_step(phase, structures, added_structs, step_name=step_name)
 
     print()
-    if 'struct_filters' in config_dict:
-        step_name = 'applying filters'
+
+    cleanup_dict = config_dict.get('cleanup')
+    if cleanup_dict is None:
+        # Backwards compatibility: configs without a [cleanup] section keep
+        # applying their [struct_filters] but do not enable the new duplicate
+        # detection by default.
+        cleanup_dict = {
+            'enabled': 'struct_filters' in config_dict,
+            'remove_duplicates': False,
+            'apply_struct_filters': 'struct_filters' in config_dict,
+        }
+    else:
+        cleanup_dict = dict(cleanup_dict)
+        cleanup_dict.setdefault('enabled', True)
+
+    cleanup_settings = CleanupSettings.from_dict(cleanup_dict)
+    if cleanup_settings.enabled:
+        step_name = 'database cleanup'
         atl_cut.custom_print(
-            f'Step {step_name} - Applying user-defined filters to structures...',
+            f'Step {step_name} - Standardizing, filtering and deduplicating '
+            'structures...',
             'info',
         )
         ini_n_structs = len(structures)
 
-        # Apply user-defined filters to the structures
-        filter_results = apply_struct_filters_atl_db(structures, config_dict)
-        total_removed = len(filter_results['filtered_uuids'])
+        filter_settings = (
+            config_dict.get('struct_filters', {})
+            if cleanup_settings.apply_struct_filters
+            else None
+        )
+        cleanup_result = clean_database(
+            structures,
+            cleanup_settings,
+            filter_settings=filter_settings,
+            progress=True,
+        )
+        cleanup_report = cleanup_result.report
+
+        total_removed = cleanup_report['n_removed']
         atl_cut.custom_print(
-            f'Removed {total_removed} structures based on user-defined filters.',
+            f'Removed {total_removed} structures during cleanup.',
             'info',
         )
         if total_removed > 0:
-            bp = dict(filter_results['by_phase'])
-            bt = dict(filter_results['by_type'])
-            bm = dict(filter_results['by_modification'])
-            bf = dict(filter_results['by_filter'])
-            atl_cut.custom_print(f'  By phase: {bp}', 'info')
-            atl_cut.custom_print(f'  By type: {bt}', 'info')
-            atl_cut.custom_print(f'  By modification: {bm}', 'info')
-            atl_cut.custom_print(f'  By filter: {bf}', 'info')
-            structures._removal_history['filtering'].update(filter_results)
+            atl_cut.custom_print(
+                f"  By filter: {dict(cleanup_report['first_filter'])}",
+                'info',
+            )
+            atl_cut.custom_print(
+                f"  Duplicates: {cleanup_report['removed_by_duplicate']}",
+                'info',
+            )
+            atl_cut.custom_print(
+                f"  By phase: {dict(cleanup_report['by_phase'])}",
+                'info',
+            )
+            atl_cut.custom_print(
+                f"  By type: {dict(cleanup_report['by_type'])}",
+                'info',
+            )
+            atl_cut.custom_print(
+                f"  By modification: {dict(cleanup_report['by_modification'])}",
+                'info',
+            )
+
+        if cleanup_settings.write_removed and cleanup_result.removed:
+            removed_path = (
+                pl.Path(db_dict['database_path']) / 'filtered_structures.xyz'
+            )
+            removed_path.parent.mkdir(parents=True, exist_ok=True)
+            aseio.write(
+                str(removed_path),
+                cleanup_result.removed,
+                format='extxyz',
+            )
+            atl_cut.custom_print(
+                f'Removed structures written to {removed_path}.',
+                'info',
+            )
+
+        cleanup_report_path = (
+            pl.Path(db_dict['database_path']) / 'cleanup_report.json'
+        )
+        cleanup_report_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(cleanup_report_path, 'w', encoding='utf-8') as report_file:
+            json.dump(cleanup_report, report_file, indent=2)
+        atl_cut.custom_print(
+            f'Cleanup report written to {cleanup_report_path}.',
+            'info',
+        )
+
         added_structs = len(structures) - ini_n_structs
         report_completed_step(phase, structures, added_structs, step_name=step_name)
+
     # Add function to check all atom type in database and
     # # create a structure for each atom type that contains a single atom
     # # in a vaccuum, and it is labelled with `config_type=IsolatedAtom`.
