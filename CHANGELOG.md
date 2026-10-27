@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.57.2 (2026-10-27)
+
+### Docs
+
+- **core**: update gui image (ii) ([#2dcaa61](https://github.com/pol-sb/ATLAS/commit/2dcaa619777e3d9a0fee2ed6b81cf3b4fc808f3e))
+- **core**: optimize image aspect ratio ([#2e5129c](https://github.com/pol-sb/ATLAS/commit/2e5129c1af13cb5f03fb347986f26b171eb3572d))
+- **core**: update gui image ([#592d0e5](https://github.com/pol-sb/ATLAS/commit/592d0e5d68115b5f5d5b3416774485585e5dcc33))
+
+### Fix
+
+- **deps**: update certifi and virtualenv for security fixes ([#9b7ecb5](https://github.com/pol-sb/ATLAS/commit/9b7ecb56ccdfa0c6a9ed143ef3a7aca8f81e0f92))
+- **docs**: use Python 3.12 in documentation workflow ([#94da5fd](https://github.com/pol-sb/ATLAS/commit/94da5fd3efc7d6750153a4986f2ba9c1b3f1850a))
+- re-apply verified bug fixes on synced master ([#2a43658](https://github.com/pol-sb/ATLAS/commit/2a43658f0f9abb8efddf16cf49260c9a8f7f2cd7))
+- re-apply verified bug fixes on synced master ([#5b37fb8](https://github.com/pol-sb/ATLAS/commit/5b37fb88cc4ee3ee3402294cf5e77f5fa80381c5))
+- skip base structures using the dataframe row in filters ([#c180ce0](https://github.com/pol-sb/ATLAS/commit/c180ce0591ff5196769dfa1481270249ea422465))
+- handle ndarray concave hull in check_traj_in_domain ([#2c9f7c4](https://github.com/pol-sb/ATLAS/commit/2c9f7c4b7bc29dd19efd87a67dc140b4c2eab8cb))
+- initialize is_ase in apply_replacement ([#fd7c9ea](https://github.com/pol-sb/ATLAS/commit/fd7c9eaed98ac38b04c82b8a966057f582cc673d))
+- use np.maximum in tanimoto_distance ([#54fe0eb](https://github.com/pol-sb/ATLAS/commit/54fe0ebab3332367df2c7840fc7166d8da8abefa))
+- return the Vendi score from get_vendi_score_db_rbf ([#96b7602](https://github.com/pol-sb/ATLAS/commit/96b7602135d2fd0c8b2e80db32e4b5b3f3fd9d48))
+- compute species fraction with atom count ([#2a46859](https://github.com/pol-sb/ATLAS/commit/2a46859acfb0a4d984396c6bd1a13ea563d9129e))
+- define MLIPModelFileData methods inside the class ([#90f50f2](https://github.com/pol-sb/ATLAS/commit/90f50f2ca05087aef2e6bb0e2875c7aba8049201))
+- call select_structures_fps with correct arguments ([#959875e](https://github.com/pol-sb/ATLAS/commit/959875e95293a8e4de2649037c6177911546f500))
+- honor XDG_CACHE_HOME in get_cache_path ([#2c38c72](https://github.com/pol-sb/ATLAS/commit/2c38c72e15b521bb619fcdb1386ecbe696bfc98b))
+- package the atlas/data directory ([#7894688](https://github.com/pol-sb/ATLAS/commit/7894688f6b1f331fc62880d7437f6621a4908331))
+
 ## 0.57.1 (2026-10-27)
 
 ### Misc
